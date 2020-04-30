@@ -1,0 +1,4 @@
+dot -Kdot -Tpng -o../out/grp-deployment__single-stakeholder.png grp-deployment__single-stakeholder.gv
+dot -Kdot -Tpng -o../out/code-to-deployment.png code-to-deployment.gv
+dot -Kdot -Tpng -o../out/grp-deployment__all-stakeholders.png grp-deployment__all-stakeholders.gv
+dot -Kdot -Tpng -o../out/grp-deployment.png grp-deployment.gv

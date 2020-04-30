@@ -1,0 +1,32 @@
+digraph g {
+    splines=ortho
+    compound=true
+    edge [ penwidth="0.5"; color="#202020"; style="solid,"];
+
+    NEA [label="NEA Bus" width=3.0]
+    subgraph cluster_BCC {
+        label="BCC"
+        labelloc=b
+        BCC_service [label="{{c1|c2|c3|c4|..}|{postgres}}" shape=record]
+    }
+    subgraph cluster_CCA {
+        label="CCA"
+        labelloc=b
+        CCA_service [label="{{c1|c2|c3|c4|..}|{postgres}}" shape=record]
+    }
+    subgraph cluster_XYZ {
+        label="..."
+        labelloc=b
+        XYZ_service [label="{{c1|c2|c3|c4|..}|{postgres}}" shape=record]
+    }
+    subgraph cluster_PC {
+        label="Planning Commission"
+        labelloc=b
+        PC_service [label="{{c1|c2|c3|c4|..}|{postgres}}" shape=record]
+    }
+
+    NEA -> BCC_service [constraint=true lhead=cluster_BCC]
+    NEA -> CCA_service [constraint=true lhead=cluster_CCA]
+    NEA -> XYZ_service [constraint=true lhead=cluster_XYZ]
+    NEA -> PC_service [constraint=true lhead=cluster_PC]
+}

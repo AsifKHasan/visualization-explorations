@@ -1,0 +1,102 @@
+digraph g {
+  graph [fontsize = 10 nodesep=0.5 ranksep=0.1 splines=ortho concentrate=true]
+
+  // swim-lanes
+  U [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="200">
+    <TR>
+      <TD BGCOLOR="#B0B0B0" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="60">
+        <FONT COLOR="#444444" FACE="Helvetica" POINT-SIZE="12">
+          <B>U</B>
+        </FONT>
+      </TD>
+      <TD BGCOLOR="#F0F0F0" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="140">
+        <FONT COLOR="#444444" FACE="Helvetica" POINT-SIZE="10">
+          User
+        </FONT>
+      </TD>
+    </TR> </TABLE>> color="#888888" margin=0 shape=none]
+
+  B [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="200">
+    <TR>
+      <TD BGCOLOR="#B0B0B0" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="60">
+        <FONT COLOR="#444444" FACE="Helvetica" POINT-SIZE="12">
+          <B>B</B>
+        </FONT>
+      </TD>
+      <TD BGCOLOR="#F0F0F0" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="140">
+        <FONT COLOR="#444444" FACE="Helvetica" POINT-SIZE="10">
+          Build Environment
+        </FONT>
+      </TD>
+    </TR> </TABLE>> color="#888888" margin=0 shape=none]
+
+  D [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="200">
+    <TR>
+      <TD BGCOLOR="#B0B0B0" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="60">
+        <FONT COLOR="#444444" FACE="Helvetica" POINT-SIZE="12">
+          <B>D</B>
+        </FONT>
+      </TD>
+      <TD BGCOLOR="#F0F0F0" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" FIXEDSIZE="TRUE" HEIGHT="100" WIDTH="140">
+        <FONT COLOR="#444444" FACE="Helvetica" POINT-SIZE="10">
+          Deployment Environment
+        </FONT>
+      </TD>
+    </TR> </TABLE>> color="#888888" margin=0 shape=none]
+
+  // swim-lane ranking
+  U -> B [constraint=true color="invis"]
+  B -> D [constraint=true color="invis"]
+
+  // tasks
+  node [fixedsize=false penwidth="0.75" color="#444444" fontcolor="#444444" fontname="Helvetica" fontsize="12" margin=0.2 shape=box]
+	START [label="" shape=circle]
+  RUN_SCRIPT [label="run deployment\nscript"]
+  NOTIFY_USER [label="email\nnotification"]
+  CHECKOUT [label="checkout code\nrepository"]
+  UNIT_TEST_COVERAGE [label="unit test\ncoverage analysis"]
+  BUILD [label="build"]
+  DOCKERIZE [label="Docker\ncontainerization"]
+  DEPLOYMENT_ENV [label="prepare deployment\nenvironment"]
+  CREATE_VM [label="create virtual\nmachines"]
+  DEPLOY_CONTAINER [label="deploy Docker\ncontainers"]
+  RUN_CONTAINER [label="run Docker\ncontainers"]
+  REGRESSION_TEST [label="regression\ntesting"]
+  INTEGRATION_TEST [label="integration\ntesting"]
+  END [label="" shape=circle penwidth=5.0]
+
+  // task relationship
+  edge [color="#888888" penwidth="0.5"]
+
+  START -> RUN_SCRIPT
+  RUN_SCRIPT -> CHECKOUT [constraint=true]
+  CHECKOUT -> UNIT_TEST_COVERAGE
+  UNIT_TEST_COVERAGE -> BUILD
+  BUILD -> DOCKERIZE
+  DOCKERIZE -> DEPLOYMENT_ENV
+  DEPLOYMENT_ENV -> CREATE_VM [constraint=false]
+  CREATE_VM -> DEPLOY_CONTAINER
+  DEPLOY_CONTAINER -> RUN_CONTAINER
+  RUN_CONTAINER -> REGRESSION_TEST
+  REGRESSION_TEST -> INTEGRATION_TEST
+  INTEGRATION_TEST -> END
+
+  edge [style="dashed" arrowhead="empty" constraint=false]
+  CHECKOUT -> NOTIFY_USER
+  UNIT_TEST_COVERAGE -> NOTIFY_USER
+  BUILD -> NOTIFY_USER
+  DOCKERIZE -> NOTIFY_USER
+  DEPLOYMENT_ENV -> NOTIFY_USER
+  CREATE_VM -> NOTIFY_USER
+  DEPLOY_CONTAINER -> NOTIFY_USER
+  RUN_CONTAINER -> NOTIFY_USER
+  REGRESSION_TEST -> NOTIFY_USER
+  INTEGRATION_TEST -> NOTIFY_USER
+
+  // task ranking
+  { newrank=true rank=same; U START RUN_SCRIPT NOTIFY_USER }
+  { newrank=true rank=same; B CHECKOUT UNIT_TEST_COVERAGE BUILD DOCKERIZE DEPLOYMENT_ENV }
+  { newrank=true rank=same; D CREATE_VM DEPLOY_CONTAINER RUN_CONTAINER REGRESSION_TEST INTEGRATION_TEST END }
+
+  //{ rankdir=TB rank=same; RUN_SCRIPT CHECKOUT CREATE_VM }
+}

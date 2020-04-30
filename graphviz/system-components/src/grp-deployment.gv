@@ -1,0 +1,103 @@
+digraph G {
+  ratio=fill
+  dpi=300
+  center=true
+  graph [fontsize=12 nodesep=0.1 ranksep=0.1 splines=ortho concentrate=true margin="0.2"]
+  labelloc=b; style=rounded; bgcolor="#FFFFFF"; color="#404040"; penwidth=0.5; fontname=Helvetica; fontsize=18; fontcolor="#606060";
+  label="GRP Live Deployment";
+
+  subgraph cluster_BCC {
+    labelloc=b; style=rounded; bgcolor="#F8F8F8"; color="#B0B0B0"; penwidth=0.5; margin="10"; fontname=Helvetica; fontsize=16; fontcolor="#606060";
+    label="GRP BCC";
+
+    subgraph cluster_BCC_access {
+      labelloc=b; style=rounded; bgcolor="#FFFFFF"; color="#D0D0D0"; penwidth=0.5; margin="10"; fontname=Helvetica; fontsize=12; fontcolor="#606060";
+      label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR>
+          <TD BGCOLOR="#F8F8F8" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" SIDES="B">
+            <FONT COLOR="#606060" FACE="Helvetica" POINT-SIZE="12">
+              Application Gateway VM
+            </FONT>
+          </TD>
+        </TR>
+        <TR>
+          <TD BGCOLOR="#F8F8F8" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="0">
+            <FONT COLOR="#606060" FACE="Helvetica" POINT-SIZE="8">
+              (8 GB, 4 core)
+            </FONT>
+          </TD>
+        </TR> </TABLE>>;
+
+
+      node [shape=box; style=filled; fillcolor="#F0F0F0"; penwidth=0.5; color="#A0A0A0"; fontname=Courier; fontsize=12; fontcolor="#606060"; margin="0.2,0.4";]
+      web [ label="Web Container"; ]
+      api [ label="API Gateway"; ]
+
+      { rank=same; web -> api [ constraint=true; style="invis"; ] }
+    }
+
+    subgraph cluster_BCC_service {
+      labelloc=b; style=rounded; bgcolor="#FFFFFF"; color="#D0D0D0"; penwidth=0.5; margin="10"; fontname=Helvetica; fontsize=12; fontcolor="#606060";
+      label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR>
+          <TD BGCOLOR="#F8F8F8" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" SIDES="B">
+            <FONT COLOR="#606060" FACE="Helvetica" POINT-SIZE="12">
+              Service Container VM
+            </FONT>
+          </TD>
+        </TR>
+        <TR>
+          <TD BGCOLOR="#F8F8F8" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="0">
+            <FONT COLOR="#606060" FACE="Helvetica" POINT-SIZE="8">
+              (16 GB, 8 core)
+            </FONT>
+          </TD>
+        </TR> </TABLE>>;
+
+      node [shape=box; style=filled; fillcolor="#F0F0F0"; penwidth=0.5; color="#A0A0A0"; fontname=Courier; fontsize=12; fontcolor="#606060"; margin="0.2,0.4";]
+
+      sec [ label="sec container"; ]
+      cmn [ label="cmn container"; ]
+      hrm [ label="hrm container"; ]
+      mem [ label="mem container"; ]
+      ast [ label="ast container"; ]
+      prc [ label="prc container"; ]
+
+      sec -> mem [ style="invis"; ]
+
+      { rank=same; sec -> cmn -> hrm [ constraint=true; style="invis"; ] }
+      { rank=same; mem -> ast -> prc [ constraint=true; style="invis"; ] }
+    }
+
+    subgraph cluster_BCC_database {
+      labelloc=b; style=rounded; bgcolor="#FFFFFF"; color="#D0D0D0"; penwidth=0.5; margin="10"; fontname=Helvetica; fontsize=12; fontcolor="#606060";
+      label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR>
+          <TD BGCOLOR="#F8F8F8" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="1" SIDES="B">
+            <FONT COLOR="#606060" FACE="Helvetica" POINT-SIZE="12">
+              Database VM
+            </FONT>
+          </TD>
+        </TR>
+        <TR>
+          <TD BGCOLOR="#F8F8F8" ALIGN="CENTER" VALIGN="MIDDLE" BALIGN="CENTER" CELLSPACING="0" CELLPADDING="1" BORDER="0">
+            <FONT COLOR="#606060" FACE="Helvetica" POINT-SIZE="8">
+              (16 GB, 4 core)
+            </FONT>
+          </TD>
+        </TR> </TABLE>>;
+
+      node [shape=box; style=filled; fillcolor="#F0F0F0"; penwidth=0.5; color="#A0A0A0"; fontname=Courier; fontsize=12; fontcolor="#606060"; margin="0.2,0.4";]
+
+      postgres [ label="Postgres"; ]
+      redis [ label=" Redis  "; ]
+
+      { rank=same; postgres -> redis [ constraint=true; style="invis"; ] }
+    }
+
+    web -> sec [ style="invis"; ]
+    api -> hrm [ style="invis"; ]
+    mem -> postgres [ style="invis"; ]
+    prc -> redis [ style="invis"; ]
+  }
+}

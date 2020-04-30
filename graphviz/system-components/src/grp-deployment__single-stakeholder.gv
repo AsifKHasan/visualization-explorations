@@ -1,0 +1,697 @@
+digraph g {
+  ratio=auto
+  splines=true
+  graph [ compound=true ];
+
+  edge [ penwidth="0.5"; color="#202020"; style="solid,"];
+
+  subgraph cluster_BCC {
+    label="Bangladesh Computer Council (BCC) GRP"
+    labelloc="b"
+
+    subgraph cluster_BCC_client {
+      node [style=filled; color="#F8F8F8"; fontcolor="#606060"; fontname="Helvetica"; fontsize=16; shape="box"; width=4.0];
+
+      style=filled; color=lightgrey; fontcolor="#606060"; fontname="Helvetica"; fontsize=14; margin=10.0
+      label="GRP Client Applications"
+      labelloc="t"
+
+      BCC_user_web1 [
+        label = "GRP User web 1"
+      ]
+
+      BCC_user_web2 [
+        label = "GRP User web 2"
+      ]
+
+      BCC_user_web3 [
+        label = "GRP User web 3"
+      ]
+
+      BCC_user_web4 [
+        label = "GRP User web 4"
+      ]
+
+      BCC_user_web5 [
+        label = "GRP User web .."
+      ]
+
+      BCC_user_web6 [
+        label = "GRP User web .."
+      ]
+
+      BCC_admin_web [
+        label = "GRP Admin web"
+      ]
+      BCC_user_app [
+        label = "GRP User app"
+      ]
+    }
+
+    subgraph BCC_service {
+      graph [style=dotted; penwidth=0.5; color="#B0B0B0"; margin=5;]
+      node [style=filled; color="#808080"; penwidth="0.5"; fillcolor="#E8E8E8"; fontcolor="#202020"; fontname="Helvetica"; fontsize=9; margin="0.05,0.1"];
+
+      subgraph cluster_BCC_ast {
+        label=""
+
+        subgraph cluster_BCC_ast_service_container1 {
+          label="ast svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_ast_service_container1 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_ast_service_container2 {
+          label="ast svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_ast_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_ast_service_container3 {
+          label="ast svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_ast_service_container3 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_inv {
+        label=""
+
+        subgraph cluster_BCC_inv_service_container1 {
+          label="inv svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_inv_service_container1 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_inv_service_container2 {
+          label="inv svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_inv_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_inv_service_container3 {
+          label="inv svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_inv_service_container3 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_prc {
+        label=""
+
+        subgraph cluster_BCC_prc_service_container1 {
+          label="prc svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_prc_service_container1 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_prc_service_container2 {
+          label="prc svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_prc_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_prc_service_container3 {
+          label="prc svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_prc_service_container3 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_prj {
+        label=""
+
+        subgraph cluster_BCC_prj_service_container1 {
+          label="prj svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_prj_service_container1 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_prj_service_container2 {
+          label="prj svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_prj_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_prj_service_container3 {
+          label="prj svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_prj_service_container3 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_mem {
+        label=""
+
+        subgraph cluster_BCC_mem_service_container1 {
+          label="mem svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_mem_service_container1 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_mem_service_container2 {
+          label="mem svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_mem_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_mem_service_container3 {
+          label="mem svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_mem_service_container3 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_aud {
+        label=""
+
+        subgraph cluster_BCC_aud_service_container1 {
+          label="aud svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_aud_service_container1 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_aud_service_container2 {
+          label="aud svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_aud_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_aud_service_container3 {
+          label="aud svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_aud_service_container3 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_acc {
+        label=""
+
+        subgraph cluster_BCC_acc_service_container1 {
+          label="acc svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_acc_service_container1 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_acc_service_container2 {
+          label="acc svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_acc_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_acc_service_container3 {
+          label="acc svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_acc_service_container3 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_bud {
+        label=""
+
+        subgraph cluster_BCC_bud_service_container1 {
+          label="bud svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_bud_service_container1 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_bud_service_container2 {
+          label="bud svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_bud_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_bud_service_container3 {
+          label="bud svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_bud_service_container3 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_hrm {
+        label=""
+
+        subgraph cluster_BCC_hrm_service_container1 {
+          label="hrm svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_hrm_service_container1 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_hrm_service_container2 {
+          label="hrm svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_hrm_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_hrm_service_container3 {
+          label="hrm svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_hrm_service_container3 [
+            shape = "record"
+            label = "<f1>m\ne\nm\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>m\ne\nm\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_cmn {
+        label=""
+
+        subgraph cluster_BCC_cmn_service_container1 {
+          label="cmn svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_cmn_service_container1 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_cmn_service_container2 {
+          label="cmn svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_cmn_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_cmn_service_container3 {
+          label="cmn svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_cmn_service_container3 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7\n7"
+          ]
+        }
+      }
+
+      subgraph cluster_BCC_sec {
+        label=""
+
+        subgraph cluster_BCC_sec_service_container1 {
+          label="sec svc\ncontainer 1"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10;
+
+          BCC_sec_service_container1 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7"
+          ]
+        }
+
+        subgraph cluster_BCC_sec_service_container2 {
+          label="sec svc\n..er ..."
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_sec_service_container2 [
+            shape = "record"
+            label = "<f2>.\n.\n.|<f1>.\n.\n."
+          ]
+        }
+
+        subgraph cluster_BCC_sec_service_container3 {
+          label="sec svc\ncontainer N"
+          labelloc="t"
+          style=filled; color="#F0F0F0"; fontcolor="#606060"; fontname="Helvetica"; fontsize=10
+
+          BCC_sec_service_container3 [
+            shape = "record"
+            label = "<f1>s\ne\nc\n\n\n1\n4\n3|<f2>.\n.\n.|<f3>s\ne\nc\n\n\n1\n7\n7"
+          ]
+        }
+      }
+    }
+
+    subgraph BCC_pg {
+      subgraph cluster_BCC_pg_active {
+        node [style=filled; color="#F8F8F8"; fontcolor="#606060"; fontname="Helvetica"; fontsize=16; shape = "ellipse"; width=2.5];
+
+        style=filled; color=lightgrey; fontcolor="#606060"; fontname="Helvetica"; fontsize=14; margin=10.0
+        label="Postgres (Active)"
+        labelloc="b"
+
+        BCC_pg_active_sec [
+          label = "sec\nschema"
+        ]
+        BCC_pg_active_cmn [
+          label = "cmn\nschema"
+        ]
+        BCC_pg_active_hrm [
+          label = "hrm\nschema"
+        ]
+        BCC_pg_active_bud [
+          label = "bud\nschema"
+        ]
+        BCC_pg_active_acc [
+          label = "acc\nschema"
+        ]
+        BCC_pg_active_aud [
+          label = "aud\nschema"
+        ]
+        BCC_pg_active_mem [
+          label = "mem\nschema"
+        ]
+        BCC_pg_active_prj [
+          label = "prj\nschema"
+        ]
+        BCC_pg_active_prc [
+          label = "prc\nschema"
+        ]
+        BCC_pg_active_inv [
+          label = "inv\nschema"
+        ]
+        BCC_pg_active_ast [
+          label = "ast\nschema"
+        ]
+      }
+
+      BCC_pg_replica1 [
+        color="#303030"; fontcolor="#404040"; fontname="Helvetica"; fontsize=12
+        label="{Postgres (Replica 1)|sec|cmn|...|ast}"
+        shape = "record"
+      ]
+
+      BCC_pg_replica2 [
+        color="#303030"; fontcolor="#404040"; fontname="Helvetica"; fontsize=12
+        label="{Postgres (Replica 2)|sec|cmn|...|ast}"
+        shape = "record"
+      ]
+    }
+
+    // ranks
+    { newrank=true rank=same; BCC_user_web1 BCC_user_web2 BCC_user_web3 BCC_user_web4 BCC_user_web5 BCC_user_web6 BCC_admin_web BCC_user_app }
+
+    { newrank=true rank=same; BCC_sec_service_container1 -> BCC_sec_service_container2 -> BCC_sec_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_cmn_service_container1 -> BCC_cmn_service_container2 -> BCC_cmn_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_hrm_service_container1 -> BCC_hrm_service_container2 -> BCC_hrm_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_bud_service_container1 -> BCC_bud_service_container2 -> BCC_bud_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_acc_service_container1 -> BCC_acc_service_container2 -> BCC_acc_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_aud_service_container1 -> BCC_aud_service_container2 -> BCC_aud_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_mem_service_container1 -> BCC_mem_service_container2 -> BCC_mem_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_prj_service_container1 -> BCC_prj_service_container2 -> BCC_prj_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_prc_service_container1 -> BCC_prc_service_container2 -> BCC_prc_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_inv_service_container1 -> BCC_inv_service_container2 -> BCC_inv_service_container3  [constraint=false color="invis"]}
+    { newrank=true rank=same; BCC_ast_service_container1 -> BCC_ast_service_container2 -> BCC_ast_service_container3  [constraint=false color="invis"]}
+
+    { newrank=true rank=same; BCC_pg_active_sec-> BCC_pg_active_cmn -> BCC_pg_active_hrm -> BCC_pg_active_bud -> BCC_pg_active_acc -> BCC_pg_active_aud -> BCC_pg_active_mem -> BCC_pg_active_prj -> BCC_pg_active_prc -> BCC_pg_active_inv -> BCC_pg_active_ast [color="invis"]}
+    { newrank=true rank=same; BCC_pg_replica1 BCC_pg_replica2 }
+
+    // relationships
+    {
+      BCC_user_web1 -> BCC_sec_service_container2 [constraint=true lhead=cluster_BCC_sec]
+      BCC_user_web2 -> BCC_hrm_service_container2 [constraint=true lhead=cluster_BCC_hrm]
+      BCC_user_web3 -> BCC_acc_service_container2 [constraint=true lhead=cluster_BCC_acc]
+      BCC_user_web4 -> BCC_aud_service_container2 [constraint=true lhead=cluster_BCC_aud]
+      BCC_user_web5 -> BCC_mem_service_container2 [constraint=true lhead=cluster_BCC_mem]
+      BCC_user_web6 -> BCC_prj_service_container2 [constraint=true lhead=cluster_BCC_prj]
+      BCC_admin_web -> BCC_inv_service_container2 [constraint=true lhead=cluster_BCC_inv]
+      BCC_user_app -> BCC_ast_service_container2 [constraint=true lhead=cluster_BCC_ast]
+    }
+
+    {
+      BCC_sec_service_container1:f1:s -> BCC_pg_active_sec [arrowhead=none]
+      BCC_sec_service_container1:f2:s -> BCC_pg_active_sec [arrowhead=none; style="dotted"]
+      BCC_sec_service_container1:f3:s -> BCC_pg_active_sec [arrowhead=none]
+
+      BCC_sec_service_container2:f1:s -> BCC_pg_active_sec [arrowhead=none; style="dotted"]
+      BCC_sec_service_container2:f2:s -> BCC_pg_active_sec [arrowhead=none; style="dotted"]
+
+      BCC_sec_service_container3:f1:s -> BCC_pg_active_sec [arrowhead=none]
+      BCC_sec_service_container3:f2:s -> BCC_pg_active_sec [arrowhead=none; style="dotted"]
+      BCC_sec_service_container3:f3:s -> BCC_pg_active_sec [arrowhead=none]
+    }
+
+    {
+      BCC_cmn_service_container1:f1:s -> BCC_pg_active_cmn [arrowhead=none]
+      BCC_cmn_service_container1:f2:s -> BCC_pg_active_cmn [arrowhead=none; style="dotted"]
+      BCC_cmn_service_container1:f3:s -> BCC_pg_active_cmn [arrowhead=none]
+
+      BCC_cmn_service_container2:f1:s -> BCC_pg_active_cmn [arrowhead=none; style="dotted"]
+      BCC_cmn_service_container2:f2:s -> BCC_pg_active_cmn [arrowhead=none; style="dotted"]
+
+      BCC_cmn_service_container3:f1:s -> BCC_pg_active_cmn [arrowhead=none]
+      BCC_cmn_service_container3:f2:s -> BCC_pg_active_cmn [arrowhead=none; style="dotted"]
+      BCC_cmn_service_container3:f3:s -> BCC_pg_active_cmn [arrowhead=none]
+    }
+
+    {
+      BCC_hrm_service_container1:f1:s -> BCC_pg_active_hrm [arrowhead=none]
+      BCC_hrm_service_container1:f2:s -> BCC_pg_active_hrm [arrowhead=none; style="dotted"]
+      BCC_hrm_service_container1:f3:s -> BCC_pg_active_hrm [arrowhead=none]
+
+      BCC_hrm_service_container2:f1:s -> BCC_pg_active_hrm [arrowhead=none; style="dotted"]
+      BCC_hrm_service_container2:f2:s -> BCC_pg_active_hrm [arrowhead=none; style="dotted"]
+
+      BCC_hrm_service_container3:f1:s -> BCC_pg_active_hrm [arrowhead=none]
+      BCC_hrm_service_container3:f2:s -> BCC_pg_active_hrm [arrowhead=none; style="dotted"]
+      BCC_hrm_service_container3:f3:s -> BCC_pg_active_hrm [arrowhead=none]
+    }
+
+    {
+      BCC_bud_service_container1:f1:s -> BCC_pg_active_bud [arrowhead=none]
+      BCC_bud_service_container1:f2:s -> BCC_pg_active_bud [arrowhead=none; style="dotted"]
+      BCC_bud_service_container1:f3:s -> BCC_pg_active_bud [arrowhead=none]
+
+      BCC_bud_service_container2:f1:s -> BCC_pg_active_bud [arrowhead=none; style="dotted"]
+      BCC_bud_service_container2:f2:s -> BCC_pg_active_bud [arrowhead=none; style="dotted"]
+
+      BCC_bud_service_container3:f1:s -> BCC_pg_active_bud [arrowhead=none]
+      BCC_bud_service_container3:f2:s -> BCC_pg_active_bud [arrowhead=none; style="dotted"]
+      BCC_bud_service_container3:f3:s -> BCC_pg_active_bud [arrowhead=none]
+    }
+
+    {
+      BCC_acc_service_container1:f1:s -> BCC_pg_active_acc [arrowhead=none]
+      BCC_acc_service_container1:f2:s -> BCC_pg_active_acc [arrowhead=none; style="dotted"]
+      BCC_acc_service_container1:f3:s -> BCC_pg_active_acc [arrowhead=none]
+
+      BCC_acc_service_container2:f1:s -> BCC_pg_active_acc [arrowhead=none; style="dotted"]
+      BCC_acc_service_container2:f2:s -> BCC_pg_active_acc [arrowhead=none; style="dotted"]
+
+      BCC_acc_service_container3:f1:s -> BCC_pg_active_acc [arrowhead=none]
+      BCC_acc_service_container3:f2:s -> BCC_pg_active_acc [arrowhead=none; style="dotted"]
+      BCC_acc_service_container3:f3:s -> BCC_pg_active_acc [arrowhead=none]
+    }
+
+    {
+      BCC_aud_service_container1:f1:s -> BCC_pg_active_aud [arrowhead=none]
+      BCC_aud_service_container1:f2:s -> BCC_pg_active_aud [arrowhead=none; style="dotted"]
+      BCC_aud_service_container1:f3:s -> BCC_pg_active_aud [arrowhead=none]
+
+      BCC_aud_service_container2:f1:s -> BCC_pg_active_aud [arrowhead=none; style="dotted"]
+      BCC_aud_service_container2:f2:s -> BCC_pg_active_aud [arrowhead=none; style="dotted"]
+
+      BCC_aud_service_container3:f1:s -> BCC_pg_active_aud [arrowhead=none]
+      BCC_aud_service_container3:f2:s -> BCC_pg_active_aud [arrowhead=none; style="dotted"]
+      BCC_aud_service_container3:f3:s -> BCC_pg_active_aud [arrowhead=none]
+    }
+
+    {
+      BCC_mem_service_container1:f1:s -> BCC_pg_active_mem [arrowhead=none]
+      BCC_mem_service_container1:f2:s -> BCC_pg_active_mem [arrowhead=none; style="dotted"]
+      BCC_mem_service_container1:f3:s -> BCC_pg_active_mem [arrowhead=none]
+
+      BCC_mem_service_container2:f1:s -> BCC_pg_active_mem [arrowhead=none; style="dotted"]
+      BCC_mem_service_container2:f2:s -> BCC_pg_active_mem [arrowhead=none; style="dotted"]
+
+      BCC_mem_service_container3:f1:s -> BCC_pg_active_mem [arrowhead=none]
+      BCC_mem_service_container3:f2:s -> BCC_pg_active_mem [arrowhead=none; style="dotted"]
+      BCC_mem_service_container3:f3:s -> BCC_pg_active_mem [arrowhead=none]
+    }
+
+    {
+      BCC_prj_service_container1:f1:s -> BCC_pg_active_prj [arrowhead=none]
+      BCC_prj_service_container1:f2:s -> BCC_pg_active_prj [arrowhead=none; style="dotted"]
+      BCC_prj_service_container1:f3:s -> BCC_pg_active_prj [arrowhead=none]
+
+      BCC_prj_service_container2:f1:s -> BCC_pg_active_prj [arrowhead=none; style="dotted"]
+      BCC_prj_service_container2:f2:s -> BCC_pg_active_prj [arrowhead=none; style="dotted"]
+
+      BCC_prj_service_container3:f1:s -> BCC_pg_active_prj [arrowhead=none]
+      BCC_prj_service_container3:f2:s -> BCC_pg_active_prj [arrowhead=none; style="dotted"]
+      BCC_prj_service_container3:f3:s -> BCC_pg_active_prj [arrowhead=none]
+    }
+
+    {
+      BCC_prc_service_container1:f1:s -> BCC_pg_active_prc [arrowhead=none]
+      BCC_prc_service_container1:f2:s -> BCC_pg_active_prc [arrowhead=none; style="dotted"]
+      BCC_prc_service_container1:f3:s -> BCC_pg_active_prc [arrowhead=none]
+
+      BCC_prc_service_container2:f1:s -> BCC_pg_active_prc [arrowhead=none; style="dotted"]
+      BCC_prc_service_container2:f2:s -> BCC_pg_active_prc [arrowhead=none; style="dotted"]
+
+      BCC_prc_service_container3:f1:s -> BCC_pg_active_prc [arrowhead=none]
+      BCC_prc_service_container3:f2:s -> BCC_pg_active_prc [arrowhead=none; style="dotted"]
+      BCC_prc_service_container3:f3:s -> BCC_pg_active_prc [arrowhead=none]
+    }
+
+    {
+      BCC_inv_service_container1:f1:s -> BCC_pg_active_inv [arrowhead=none]
+      BCC_inv_service_container1:f2:s -> BCC_pg_active_inv [arrowhead=none; style="dotted"]
+      BCC_inv_service_container1:f3:s -> BCC_pg_active_inv [arrowhead=none]
+
+      BCC_inv_service_container2:f1:s -> BCC_pg_active_inv [arrowhead=none; style="dotted"]
+      BCC_inv_service_container2:f2:s -> BCC_pg_active_inv [arrowhead=none; style="dotted"]
+
+      BCC_inv_service_container3:f1:s -> BCC_pg_active_inv [arrowhead=none]
+      BCC_inv_service_container3:f2:s -> BCC_pg_active_inv [arrowhead=none; style="dotted"]
+      BCC_inv_service_container3:f3:s -> BCC_pg_active_inv [arrowhead=none]
+    }
+
+    {
+      BCC_ast_service_container1:f1:s -> BCC_pg_active_ast [arrowhead=none]
+      BCC_ast_service_container1:f2:s -> BCC_pg_active_ast [arrowhead=none; style="dotted"]
+      BCC_ast_service_container1:f3:s -> BCC_pg_active_ast [arrowhead=none]
+
+      BCC_ast_service_container2:f1:s -> BCC_pg_active_ast [arrowhead=none; style="dotted"]
+      BCC_ast_service_container2:f2:s -> BCC_pg_active_ast [arrowhead=none; style="dotted"]
+
+      BCC_ast_service_container3:f1:s -> BCC_pg_active_ast [arrowhead=none]
+      BCC_ast_service_container3:f2:s -> BCC_pg_active_ast [arrowhead=none; style="dotted"]
+      BCC_ast_service_container3:f3:s -> BCC_pg_active_ast [arrowhead=none]
+    }
+
+    {
+      BCC_pg_active_aud -> BCC_pg_replica1 [constraint=true ltail=cluster_BCC_pg_active]
+      BCC_pg_active_aud -> BCC_pg_replica2 [constraint=true ltail=cluster_BCC_pg_active]
+    }
+  }
+}
