@@ -51,7 +51,7 @@ class BlockGroup(BpmnElement):
     def __init__(self):
         self.theme = self.current_theme['BlockGroup']
 
-    def to_svg(self, block_group_id, nodes, edges, width_hint, height_hint):
+    def to_svg(self, block_group_id, nodes, edges, width_hint):
         svg_group = G(id=block_group_id)
 
         # iterate the nodes and get the node svg's
@@ -70,7 +70,7 @@ class BlockGroup(BpmnElement):
         # get the max height and cumulative width of all elements and adjust block height and width accordingly
         # TODO: vertically stack elements when cumulative width is > max-width
         max_element_height = 0
-        cumulative_width = self.theme['pad-left'] + self.theme['pad-right']
+        cumulative_width = self.theme['pad-spec']['left'] + self.theme['pad-spec']['right']
         element_count = len(svg_elements)
         for svg_element in svg_elements:
             max_element_height = max(svg_element.specs['height'], max_element_height)
@@ -81,17 +81,17 @@ class BlockGroup(BpmnElement):
 
         # start with the height width hints
         group_width = max(width_hint, cumulative_width)
-        group_height = max(height_hint, max_element_height + self.theme['pad-top'] + self.theme['pad-bottom'])
+        group_height = max_element_height + self.theme['pad-spec']['top'] + self.theme['pad-spec']['bottom']
 
         # now we have height and width adjusted, we place the elements with proper displacement
         transformer = TransformBuilder()
-        current_x = self.theme['pad-left']
+        current_x = self.theme['pad-spec']['left']
         for svg_element in svg_elements:
             element_svg = svg_element.group
             current_y = group_height/2 - svg_element.specs['height']/2
             transformation_xy = '{0},{1}'.format(current_x, current_y)
             transformer.setTranslation(transformation_xy)
-            debug('........tranforming to {0}'.format(transformation_xy))
+            # debug('........tranforming to {0}'.format(transformation_xy))
             element_svg.set_transform(transformer.getTransform())
             svg_group.addElement(element_svg)
             current_x = current_x + svg_element.specs['width'] + self.theme['dx-between-elements']

@@ -25,23 +25,35 @@ class Bpmn(BpmnElement):
         # Bpmn is a text rectangle on top of another rectangle containing the lane groups
 
         # a bpmn's width is the width of inner lane group + margins + padding
-        bpmn_width = lane_group.specs['width'] + self.theme['pad-left'] + self.theme['pad-right']
+        bpmn_width = lane_group.specs['width'] + self.theme['pad-spec']['left'] + self.theme['pad-spec']['right']
 
-        # a bpmn's height is the sum of the heights of its pools + some padding
-        bpmn_height = lane_group.specs['height'] + self.theme['pad-top'] + self.theme['pad-bottom']
-
+        # to get the width, height we need to calculate the text rendering function
+        text_rendering_hint = break_text_inside_rect(bpmn_data['label'],
+                                self.theme['text-rect']['text-style']['font-family'],
+                                self.theme['text-rect']['text-style']['font-size'],
+                                self.theme['text-rect']['max-lines'],
+                                bpmn_width,
+                                bpmn_width,
+                                self.theme['text-rect']['pad-spec'])
 
         # text rect
         text_rect_width = bpmn_width
-        text_rect_height = self.theme['text-rect']['default-height']
+        text_rect_height = text_rendering_hint[2]
         text_rect = G()
         svg_rect = Rect(width=text_rect_width, height=text_rect_height)
         text_rect.addElement(svg_rect)
         # render the text
-        text_svg = center_text(bpmn_data['label'], svg_rect, self.theme['text-rect']['text-style'], vertical_text=self.theme['text-rect']['vertical-text'], text_wrap_at=self.theme['text-rect']['text-wrap-at'])
+        text_svg = center_text(bpmn_data['label'],
+                        svg_rect,
+                        self.theme['text-rect']['text-style'],
+                        vertical_text=self.theme['text-rect']['vertical-text'],
+                        pad_spec=self.theme['text-rect']['pad-spec'])
         text_rect.addElement(text_svg)
         text_rect.set_style(StyleBuilder(self.theme['text-rect']['style']).getStyle())
 
+
+        # a bpmn's height is the sum of the heights of its pools + some padding
+        bpmn_height = lane_group.specs['height'] + self.theme['pad-spec']['top'] + self.theme['pad-spec']['bottom']
 
         # pool rect
         bpmn_rect_width = bpmn_width
@@ -57,7 +69,7 @@ class Bpmn(BpmnElement):
 
         # add lane_group inside bpmn rect with a tranformation by margin
         transformer = TransformBuilder()
-        transformer.setTranslation("{0},{1}".format(self.theme['pad-left'], self.theme['pad-top']))
+        transformer.setTranslation("{0},{1}".format(self.theme['pad-spec']['left'], self.theme['pad-spec']['top']))
         lane_group_svg.set_transform(transformer.getTransform())
         lane_group_svg.set_style(StyleBuilder(self.theme['bpmn-rect']['style']).getStyle())
         bpmn_rect.addElement(lane_group_svg)
@@ -65,15 +77,15 @@ class Bpmn(BpmnElement):
         # group text rect and pool rect
         svg_group = G()
         transformer = TransformBuilder()
-        transformer.setTranslation("{0},{1}".format(self.theme['margin-left'], self.theme['margin-top']))
+        transformer.setTranslation("{0},{1}".format(self.theme['margin-spec']['left'], self.theme['margin-spec']['top']))
         svg_group.set_transform(transformer.getTransform())
         svg_group.addElement(text_rect)
         svg_group.addElement(bpmn_rect)
 
 
         # wrap in canvas
-        canvas_width = bpmn_width + self.theme['margin-left'] + self.theme['margin-right']
-        canvas_height = text_rect_height + bpmn_height + self.theme['margin-top'] + self.theme['margin-bottom']
+        canvas_width = bpmn_width + self.theme['margin-spec']['left'] + self.theme['margin-spec']['right']
+        canvas_height = text_rect_height + bpmn_height + self.theme['margin-spec']['top'] + self.theme['margin-spec']['bottom']
         svg = Svg(0, 0, width=canvas_width, height=canvas_height)
         svg.addElement(svg_group)
 

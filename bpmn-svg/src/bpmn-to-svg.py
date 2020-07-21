@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 '''
 https://www.bpmnquickguide.com/view-bpmn-quick-guide/
-cd C:\projects\asifhasan@github\bpmn-svg\src
-python bpmn-to-svg.py < ../data/bpmn-sample.json > ../out/bpmn-sample.svg
+cd C:\projects\asifhasan@github\visualization-explorations\bpmn-svg\src
+python bpmn-to-svg.py < ../data/bpmn-sample.json
 '''
 
 import sys, json;

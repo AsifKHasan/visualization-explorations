@@ -25,10 +25,17 @@ class ActivityTask(BpmnElement):
         debug('....processing node [{0}] ...'.format(node_id))
 
         # to get the width, height we need to calculate the text rendering function
-        text_rendering_hint = break_text_inside_rect(node_data['label'], self.theme['text-rect']['text-style']['font-family'], self.theme['text-rect']['text-style']['font-size'], self.theme['text-rect']['max-lines'], self.theme['text-rect']['min-width'] - self.theme['text-rect']['pad-left'] - self.theme['text-rect']['pad-right'], self.theme['text-rect']['max-width'] - self.theme['text-rect']['pad-left'] - self.theme['text-rect']['pad-right'])
+        text_rendering_hint = break_text_inside_rect(node_data['label'],
+                                self.theme['text-rect']['text-style']['font-family'],
+                                self.theme['text-rect']['text-style']['font-size'],
+                                self.theme['text-rect']['max-lines'],
+                                self.theme['text-rect']['min-width'],
+                                self.theme['text-rect']['max-width'],
+                                self.theme['text-rect']['pad-spec'])
 
-        group_width = text_rendering_hint[1] + self.theme['text-rect']['pad-left'] + self.theme['text-rect']['pad-right']
-        group_height = text_rendering_hint[2] + self.theme['text-rect']['pad-top'] + self.theme['text-rect']['pad-bottom']
+        group_width = text_rendering_hint[1]
+        group_height = text_rendering_hint[2]
+        info('{0} : ({1}, {2})'.format(node_id, group_width, group_height))
 
         # group to hold the objects
         svg_group = G(id=node_id)

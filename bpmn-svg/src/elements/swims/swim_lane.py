@@ -30,10 +30,10 @@ class SwimLane(BpmnElement):
         pool_group = PoolGroup().to_svg(pool_group_id, lane_data['pools'])
 
         # a bpmn's width is the width of inner lane group + margins + padding
-        lane_width = self.theme['text-rect']['default-width'] + pool_group.specs['width'] + self.theme['lane-rect']['pad-left'] + self.theme['lane-rect']['pad-right']
+        lane_width = self.theme['text-rect']['default-width'] + pool_group.specs['width'] + self.theme['lane-rect']['pad-spec']['left'] + self.theme['lane-rect']['pad-spec']['right']
 
         # a lane's width is pool group width + some padding
-        lane_height = pool_group.specs['height'] + self.theme['lane-rect']['pad-top'] + self.theme['lane-rect']['pad-bottom']
+        lane_height = pool_group.specs['height'] + self.theme['lane-rect']['pad-spec']['top'] + self.theme['lane-rect']['pad-spec']['bottom']
 
         # text rect
         text_rect_width = self.theme['text-rect']['default-width']
@@ -43,7 +43,11 @@ class SwimLane(BpmnElement):
         text_rect.addElement(svg_rect)
 
         # render the text
-        text_svg = center_text(lane_data['label'], svg_rect, self.theme['text-rect']['text-style'], vertical_text=self.theme['text-rect']['vertical-text'], text_wrap_at=self.theme['text-rect']['text-wrap-at'])
+        text_svg = center_text(lane_data['label'],
+                        svg_rect,
+                        self.theme['text-rect']['text-style'],
+                        vertical_text=self.theme['text-rect']['vertical-text'],
+                        pad_spec=self.theme['text-rect']['pad-spec'])
         text_rect.addElement(text_svg)
         text_rect.set_style(StyleBuilder(self.theme['text-rect']['style']).getStyle())
 
@@ -55,7 +59,7 @@ class SwimLane(BpmnElement):
 
         # pool group to be added into the lane rect with a transformation
         transformer = TransformBuilder()
-        transformer.setTranslation("{0},{1}".format(self.theme['lane-rect']['pad-left'], self.theme['lane-rect']['pad-top']))
+        transformer.setTranslation("{0},{1}".format(self.theme['lane-rect']['pad-spec']['left'], self.theme['lane-rect']['pad-spec']['top']))
         pool_group_svg = pool_group.group
         pool_group_svg.set_transform(transformer.getTransform())
         lane_rect.addElement(pool_group_svg)

@@ -28,19 +28,32 @@ class SwimPool(BpmnElement):
 
         # get the inner blocks as a group first, it will give us (actual calculated) width and height required for this pool
         block_group_id = '{0}_blocks'.format(pool_id)
-        block_group_svg = BlockGroup().to_svg(block_group_id, pool_data['nodes'], pool_data['edges'], self.theme['pool-rect']['default-width'], self.theme['pool-rect']['default-height'])
+        block_group_svg = BlockGroup().to_svg(block_group_id, pool_data['nodes'], pool_data['edges'], self.theme['pool-rect']['default-width'])
 
         # a horizontal pool is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing nodes and edges
 
+        # to get the width we need to calculate the text rendering function
+        text_rendering_hint = break_text_inside_rect(pool_data['label'],
+                                self.theme['text-rect']['text-style']['font-family'],
+                                self.theme['text-rect']['text-style']['font-size'],
+                                self.theme['text-rect']['max-lines'],
+                                block_group_svg.specs['height'],
+                                block_group_svg.specs['height'],
+                                self.theme['text-rect']['pad-spec'])
+
         # text rect
-        text_rect_width = self.theme['text-rect']['default-width']
+        text_rect_width = text_rendering_hint[1]
         text_rect_height = block_group_svg.specs['height']
         text_rect_group = G()
         text_rect_svg = Rect(width=text_rect_width, height=text_rect_height)
         text_rect_svg.set_style(StyleBuilder(self.theme['text-rect']['style']).getStyle())
         text_rect_group.addElement(text_rect_svg)
         # render the text
-        text_svg = center_text(pool_data['label'], text_rect_svg, self.theme['text-rect']['text-style'], vertical_text=self.theme['text-rect']['vertical-text'], text_wrap_at=self.theme['text-rect']['text-wrap-at'])
+        text_svg = center_text(text_rendering_hint[0],
+                        text_rect_svg,
+                        self.theme['text-rect']['text-style'],
+                        vertical_text=self.theme['text-rect']['vertical-text'],
+                        pad_spec=self.theme['text-rect']['pad-spec'])
         text_rect_group.addElement(text_svg)
 
         # pool rect
@@ -55,7 +68,7 @@ class SwimPool(BpmnElement):
 
         # pool rect is to be placed just right of text rect
         transformer = TransformBuilder()
-        transformer.setTranslation("{0},{1}".format(self.theme['text-rect']['default-width'], 0))
+        transformer.setTranslation("{0},{1}".format(text_rect_width, 0))
         pool_rect_group.set_transform(transformer.getTransform())
 
         # group text rect and pool rect
