@@ -33,9 +33,8 @@ default_theme = {
     },
     'SwimLane': {
         'text-rect': {
-            'default-width': 60,
             'pad-spec': {
-                'left': 2, 'top': 2, 'right': 2, 'bottom': 2
+                'left': 10, 'top': 10, 'right': 10, 'bottom': 10
             },
             'style': {
                 'fill': '#F0F0F0', 'stroke-width': 2, 'stroke': '#404040'
@@ -58,7 +57,7 @@ default_theme = {
     'SwimPool': {
         'text-rect': {
             'pad-spec': {
-                'left': 10, 'top': 5, 'right': 10, 'bottom': 5
+                'left': 10, 'top': 10, 'right': 10, 'bottom': 10
             },
             'style': {
                 'fill': '#F8F8F8', 'stroke-width': 1, 'stroke': '#A0A0A0'
@@ -78,9 +77,9 @@ default_theme = {
     },
     'BlockGroup': {
         'pad-spec': {
-            'left': 10, 'top': 5, 'right': 10, 'bottom': 5
+            'left': 10, 'top': 40, 'right': 10, 'bottom': 40
         },
-        'dx-between-elements': 30
+        'dx-between-elements': 40
     },
     'EventStart': {
         'outer-circle': {
@@ -118,7 +117,7 @@ default_theme = {
             'max-lines': 4,
             'rx': 5, 'ry': 5,
             'pad-spec': {
-                'left': 10, 'top': 10, 'right': 10, 'bottom': 10
+                'left': 5, 'top': 10, 'right': 5, 'bottom': 10
             },
             'style': {
                 'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'

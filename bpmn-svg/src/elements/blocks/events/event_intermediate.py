@@ -22,7 +22,7 @@ class EventIntermediate(BpmnElement):
         self.theme = self.current_theme['EventIntermediate']
 
     def to_svg(self, node_id, node_data):
-        debug('....processing node [{0}] ...'.format(node_id))
+        info('....processing node [{0}] ...'.format(node_id))
 
         group_width = self.theme['outer-circle']['radius'] * 2
         group_height = self.theme['outer-circle']['radius'] * 2
@@ -44,6 +44,6 @@ class EventIntermediate(BpmnElement):
 
         group_specs = {'width': group_width, 'height': group_height}
 
-        debug('....processing node [{0}] DONE ...'.format(node_id))
+        info('....processing node [{0}] DONE ...'.format(node_id))
 
         return SvgElement(group_specs, svg_group)

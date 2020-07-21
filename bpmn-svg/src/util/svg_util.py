@@ -12,6 +12,8 @@ from PIL import ImageFont
 
 import textwrap
 
+from util.logger import *
+
 '''
     text        : text that needs to be fitted
     font_family : the font to render the text in
@@ -19,15 +21,17 @@ import textwrap
     max_lines   : maximum lines the text can be broken into
     min_width   : returned width can not be less than this
     max_width   : returned width can not be more than this
+    pad_spec    : padding specifications
 
     returns     (text_lines, width, height)
 '''
-def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, max_width, pad_spec):
+def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, max_width, pad_spec=None, debug_enabled=False):
     if pad_spec is None:
         pad_spec = {'left': 10, 'top': 10, 'right': 10, 'bottom': 10}
 
     # first see the text size in pixel
     text_size = text_size_in_pixels(text, font_family, font_size)
+    # debug('{0} : ({1}, {2})'.format(text, text_size[0], text_size[1]))
 
     min_width = min_width - pad_spec['left'] - pad_spec['right']
     max_width = max_width - pad_spec['left'] - pad_spec['right']
@@ -36,29 +40,33 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
     if text_size[0] <= min_width:
         width = min_width + pad_spec['left'] + pad_spec['right']
         height = text_size[1] + pad_spec['top'] + pad_spec['bottom']
+        if debug_enabled: debug('text [{0} with font size {1} : ({2})] is below min_width [{3}]. computed width, height is [{4}, {5}]]'.format(text, font_size, text_size[0], min_width, width, height))
         return ([text], width, height)
 
-    # text size exceeds min_width, if it does not exceed min_width by more than 20%, we just adjust width
-    if text_size[0] <= min_width * 1.2:
+    # text size exceeds min_width, if it does not exceed min_width by more than 20% and less than mx width, we just adjust width
+    if text_size[0] <= min(min_width * 1.2, max_width):
         width = text_size[0] + pad_spec['left'] + pad_spec['right']
         height = text_size[1] + pad_spec['top'] + pad_spec['bottom']
+        if debug_enabled: debug('text [{0} with font size {1} : ({2})] is within 20% margin of min_width [{3}]. computed width, height is [{4}, {5}]'.format(text, font_size, text_size[0], min_width, width, height))
         return ([text], width, height)
 
     # well, text size exceeds min_width by a wider margin, we have to break the text into multiple lines
     # let us check how many lines we should have if we want to fit it into max_width
     approximate_lines = math.ceil(text_size[0] / max_width)
+    if debug_enabled: debug('text [{0} ({1})] will break into {2} lines within max width {3}'.format(text, text_size[0], approximate_lines, max_width))
 
     # if this exceeds the max_line, we have a problem, the output will look bad and we will need to make it as many line as we need
     if approximate_lines > max_lines:
         text_wrap_at = math.ceil(len(text) / approximate_lines)
         text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=False)
-        width = pad_spec['left'] + pad_spec['right']
+        width = 0
         height = pad_spec['top'] + pad_spec['bottom']
         for line in text_lines:
             line_size = text_size_in_pixels(line, font_family, font_size)
-            width = max(min_width, width, line_size[0])
-            height = height + line_size[1]
+            width = max(min_width, width, line_size[0]) + pad_spec['left'] + pad_spec['right']
+            height = height + line_size[1] * 1.5
 
+        if debug_enabled: debug('text [{0} ({1})] broken down into [{2}]. computed width, height is [{3}, {4}]'.format(text, text_size[0], len(text_lines), width, height))
         return (text_lines, width, height)
 
     # now we know that we can be between 2 to max_lines, our target will be to have fewer lines without crossing max_width
@@ -67,33 +75,36 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
         # break the text into equal sized parts (for better visuals)
         text_wrap_at = math.ceil(len(text) / break_into)
         text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=False)
-        width = pad_spec['left'] + pad_spec['right']
+        width = 0
         height = pad_spec['top'] + pad_spec['bottom']
         for line in text_lines:
             line_size = text_size_in_pixels(line, font_family, font_size)
             width = max(min_width, width, line_size[0])
-            height = height + line_size[1]
+            height = height + line_size[1] * 1.5
+
+        if debug_enabled: debug('text [{0} ({1})] broken down into [{2}]. computed width, height is [{3}, {4}]'.format(text, text_size[0], len(text_lines), width, height))
 
         # if we have not crossed max_width, we can stick to this
         if width <= max_width:
+            width = width + pad_spec['left'] + pad_spec['right']
             return (text_lines, width, height)
 
-    # we are here, which means something went wrong
-    return (['SOMETHING WENT WRONG'], min_width, text_size[1])
+        if break_into == max_lines:
+            # we are here at last iteration, which means something went wrong, we fall back to the last ever try
+            width = width + pad_spec['left'] + pad_spec['right']
+            return (text_lines, width, height)
 
-def center_text(text, shape, style, vertical_text=False, pad_spec=None, text_wrap_at=0):
+def center_text(text, shape, style, vertical_text=False, pad_spec=None, text_wrap_at=0, debug=False):
     if pad_spec is None:
         pad_spec = {'left': 10, 'top': 10, 'right': 10, 'bottom': 10}
 
     if vertical_text:
         style['writing-mode'] = 'vertical-lr'
-        shape_height = shape.get_width() - pad_spec['left'] - pad_spec['right']
-        shape_width = shape.get_height() - pad_spec['top'] - pad_spec['bottom']
     else:
         style['writing-mode'] = 'horizontal-tb'
-        shape_width = shape.get_width() - pad_spec['left'] - pad_spec['right']
-        shape_height = shape.get_height() - pad_spec['top'] - pad_spec['bottom']
 
+    shape_width = shape.get_width() - pad_spec['left'] - pad_spec['right']
+    shape_height = shape.get_height() - pad_spec['top'] - pad_spec['bottom']
     svg = Svg(pad_spec['left'], pad_spec['top'], width=shape_width, height=shape_height)
 
     t = Text(None)

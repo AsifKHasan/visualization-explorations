@@ -24,7 +24,7 @@ class SwimPool(BpmnElement):
         self.theme = self.current_theme['SwimPool']
 
     def to_svg(self, pool_id, pool_data):
-        debug('..processing pool [{0}] ...'.format(pool_id))
+        info('..processing pool [{0}] ...'.format(pool_id))
 
         # get the inner blocks as a group first, it will give us (actual calculated) width and height required for this pool
         block_group_id = '{0}_blocks'.format(pool_id)
@@ -33,25 +33,28 @@ class SwimPool(BpmnElement):
         # a horizontal pool is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing nodes and edges
 
         # to get the width we need to calculate the text rendering function
-        text_rendering_hint = break_text_inside_rect(pool_data['label'],
-                                self.theme['text-rect']['text-style']['font-family'],
-                                self.theme['text-rect']['text-style']['font-size'],
-                                self.theme['text-rect']['max-lines'],
-                                block_group_svg.specs['height'],
-                                block_group_svg.specs['height'],
-                                self.theme['text-rect']['pad-spec'])
+        text_rendering_hint = break_text_inside_rect(
+                                text=pool_data['label'],
+                                font_family=self.theme['text-rect']['text-style']['font-family'],
+                                font_size=self.theme['text-rect']['text-style']['font-size'],
+                                max_lines=self.theme['text-rect']['max-lines'],
+                                min_width=block_group_svg.specs['height'],
+                                max_width=block_group_svg.specs['height'],
+                                pad_spec=self.theme['text-rect']['pad-spec'],
+                                debug_enabled=True)
 
         # text rect
-        text_rect_width = text_rendering_hint[1]
+        text_rect_width = text_rendering_hint[2]
         text_rect_height = block_group_svg.specs['height']
         text_rect_group = G()
         text_rect_svg = Rect(width=text_rect_width, height=text_rect_height)
         text_rect_svg.set_style(StyleBuilder(self.theme['text-rect']['style']).getStyle())
         text_rect_group.addElement(text_rect_svg)
         # render the text
-        text_svg = center_text(text_rendering_hint[0],
-                        text_rect_svg,
-                        self.theme['text-rect']['text-style'],
+        text_svg = center_text(
+                        text=text_rendering_hint[0],
+                        shape=text_rect_svg,
+                        style=self.theme['text-rect']['text-style'],
                         vertical_text=self.theme['text-rect']['vertical-text'],
                         pad_spec=self.theme['text-rect']['pad-spec'])
         text_rect_group.addElement(text_svg)
@@ -78,6 +81,6 @@ class SwimPool(BpmnElement):
 
         group_specs = {'width': text_rect_width + pool_rect_width, 'height': max(text_rect_height, pool_rect_height)}
 
-        debug('..processing pool [{0}] DONE ...'.format(pool_id))
+        info('..processing pool [{0}] DONE ...'.format(pool_id))
 
         return SvgElement(group_specs, svg_group)

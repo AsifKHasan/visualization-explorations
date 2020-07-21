@@ -16,6 +16,7 @@ from util.svg_util import *
 
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
+
 from elements.swims.pool_group import PoolGroup
 
 class SwimLane(BpmnElement):
@@ -23,31 +24,42 @@ class SwimLane(BpmnElement):
         self.theme = self.current_theme['SwimLane']
 
     def to_svg(self, lane_id, lane_data):
-        debug('processing lane [{0}] DONE ...'.format(lane_id))
+        info('processing lane [{0}] DONE ...'.format(lane_id))
 
         # a horizontal lane is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing Pool elements stacked vertically
         pool_group_id = 'pools'
         pool_group = PoolGroup().to_svg(pool_group_id, lane_data['pools'])
 
-        # a bpmn's width is the width of inner lane group + margins + padding
-        lane_width = self.theme['text-rect']['default-width'] + pool_group.specs['width'] + self.theme['lane-rect']['pad-spec']['left'] + self.theme['lane-rect']['pad-spec']['right']
-
         # a lane's width is pool group width + some padding
         lane_height = pool_group.specs['height'] + self.theme['lane-rect']['pad-spec']['top'] + self.theme['lane-rect']['pad-spec']['bottom']
+        lane_width = pool_group.specs['width'] + self.theme['lane-rect']['pad-spec']['left'] + self.theme['lane-rect']['pad-spec']['right']
+
+        # to get the width we need to calculate the text rendering function
+        text_rendering_hint = break_text_inside_rect(
+                                text=lane_data['label'],
+                                font_family=self.theme['text-rect']['text-style']['font-family'],
+                                font_size=self.theme['text-rect']['text-style']['font-size'],
+                                max_lines=self.theme['text-rect']['max-lines'],
+                                min_width=lane_height,
+                                max_width=lane_height,
+                                pad_spec=self.theme['text-rect']['pad-spec'],
+                                debug_enabled=False)
 
         # text rect
-        text_rect_width = self.theme['text-rect']['default-width']
+        text_rect_width = text_rendering_hint[2]
         text_rect_height = lane_height
         text_rect = G()
         svg_rect = Rect(width=text_rect_width, height=text_rect_height)
         text_rect.addElement(svg_rect)
 
         # render the text
-        text_svg = center_text(lane_data['label'],
-                        svg_rect,
-                        self.theme['text-rect']['text-style'],
+        text_svg = center_text(
+                        text=lane_data['label'],
+                        shape=svg_rect,
+                        style=self.theme['text-rect']['text-style'],
                         vertical_text=self.theme['text-rect']['vertical-text'],
                         pad_spec=self.theme['text-rect']['pad-spec'])
+
         text_rect.addElement(text_svg)
         text_rect.set_style(StyleBuilder(self.theme['text-rect']['style']).getStyle())
 
@@ -66,7 +78,7 @@ class SwimLane(BpmnElement):
 
         # lane rect is to be placed just right of text rect
         transformer = TransformBuilder()
-        transformer.setTranslation("{0},{1}".format(self.theme['text-rect']['default-width'], 0))
+        transformer.setTranslation("{0},{1}".format(text_rect_width, 0))
         lane_rect.set_transform(transformer.getTransform())
         lane_rect.set_style(StyleBuilder(self.theme['lane-rect']['style']).getStyle())
 
@@ -77,6 +89,6 @@ class SwimLane(BpmnElement):
 
         group_specs = {'width': lane_width, 'height': lane_height}
 
-        debug('processing lane [{0}] DONE ...'.format(lane_id))
+        info('processing lane [{0}] DONE ...'.format(lane_id))
 
         return SvgElement(group_specs, svg_group)
