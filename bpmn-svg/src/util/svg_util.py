@@ -14,6 +14,40 @@ import textwrap
 
 from util.logger import *
 
+def rect_with_text(text, min_width, max_width, specs):
+    # to get the width, height we need to calculate the text rendering function
+    vertical_text = specs['vertical-text']
+    text_rendering_hint = break_text_inside_rect(
+                                text=text,
+                                font_family=specs['text-style']['font-family'],
+                                font_size=specs['text-style']['font-size'],
+                                max_lines=specs['max-lines'],
+                                min_width=min_width,
+                                max_width=max_width,
+                                pad_spec=specs['pad-spec'])
+
+    if vertical_text:
+        width = text_rendering_hint[2]
+        height = text_rendering_hint[1]
+    else:
+        width = text_rendering_hint[1]
+        height = text_rendering_hint[2]
+
+    rx = specs['rx'] if 'rx' in specs else 0
+    ry = specs['ry'] if 'ry' in specs else 0
+    text_rect = Rect(width=width, height=height, rx=rx, ry=ry)
+    text_rect.set_style(StyleBuilder(specs['style']).getStyle())
+
+    # render the text
+    text_svg = center_text(
+                    text=text_rendering_hint[0],
+                    shape=text_rect,
+                    style=specs['text-style'],
+                    vertical_text=vertical_text,
+                    pad_spec=specs['pad-spec'])
+
+    return [text_rect, text_svg]
+
 '''
     text        : text that needs to be fitted
     font_family : the font to render the text in

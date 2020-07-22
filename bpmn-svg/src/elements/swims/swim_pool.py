@@ -23,64 +23,87 @@ class SwimPool(BpmnElement):
     def __init__(self):
         self.theme = self.current_theme['SwimPool']
 
-    def to_svg(self, pool_id, pool_data):
-        info('..processing pool [{0}] ...'.format(pool_id))
-
-        # get the inner blocks as a group first, it will give us (actual calculated) width and height required for this pool
-        block_group_id = '{0}_blocks'.format(pool_id)
-        block_group_svg = BlockGroup().to_svg(block_group_id, pool_data['nodes'], pool_data['edges'], self.theme['pool-rect']['default-width'])
+    def to_svg(self, bpmn_id, lane_id, pool_id, pool_data):
+        info('....processing pool [{0}:{1}:{2}] ...'.format(bpmn_id, lane_id, pool_id))
 
         # a horizontal pool is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing nodes and edges
 
-        # to get the width we need to calculate the text rendering function
-        text_rendering_hint = break_text_inside_rect(
-                                text=pool_data['label'],
-                                font_family=self.theme['text-rect']['text-style']['font-family'],
-                                font_size=self.theme['text-rect']['text-style']['font-size'],
-                                max_lines=self.theme['text-rect']['max-lines'],
-                                min_width=block_group_svg.specs['height'],
-                                max_width=block_group_svg.specs['height'],
-                                pad_spec=self.theme['text-rect']['pad-spec'],
-                                debug_enabled=True)
+        # get the block group
+        block_group_svg_element = self.get_block_group_svg_element(bpmn_id, lane_id, pool_id, pool_data)
 
-        # text rect
-        text_rect_width = text_rendering_hint[2]
-        text_rect_height = block_group_svg.specs['height']
-        text_rect_group = G()
-        text_rect_svg = Rect(width=text_rect_width, height=text_rect_height)
-        text_rect_svg.set_style(StyleBuilder(self.theme['text-rect']['style']).getStyle())
-        text_rect_group.addElement(text_rect_svg)
-        # render the text
-        text_svg = center_text(
-                        text=text_rendering_hint[0],
-                        shape=text_rect_svg,
-                        style=self.theme['text-rect']['text-style'],
-                        vertical_text=self.theme['text-rect']['vertical-text'],
-                        pad_spec=self.theme['text-rect']['pad-spec'])
-        text_rect_group.addElement(text_svg)
+        # get the lane text rect, its min_width and max_width is the block group's height
+        pool_text_svg_element = self.get_pool_text_svg_element(bpmn_id, lane_id, pool_id, pool_data, block_group_svg_element.specs['height'], block_group_svg_element.specs['height'])
 
-        # pool rect
-        pool_rect_width = block_group_svg.specs['width']
-        pool_rect_height = block_group_svg.specs['height']
-        pool_rect_group = G()
-        pool_rect_svg = Rect(width=pool_rect_width, height=pool_rect_height)
+        # assemble the lane svg element
+        svg_element = self.assemble_element(bpmn_id, lane_id, pool_id, pool_text_svg_element, block_group_svg_element)
+
+        info('....processing pool [{0}:{1}:{2}] DONE ...'.format(bpmn_id, lane_id, pool_id))
+        return svg_element
+
+    def get_block_group_svg_element(self, bpmn_id, lane_id, pool_id, pool_data):
+        block_group = BlockGroup()
+        block_group_svg_element = block_group.to_svg(bpmn_id, lane_id, pool_id, pool_data['nodes'], pool_data['edges'], self.theme['pool-rect']['default-width'])
+        return block_group_svg_element
+
+    def get_pool_text_svg_element(self, bpmn_id, lane_id, pool_id, pool_data, min_width, max_width):
+        # wrap in a svg group
+        group_id = '{0}:{1}:{2}-text'.format(bpmn_id, lane_id, pool_id)
+        svg_group = G(id=group_id)
+
+        # get the svg list of the text, first elemnt is the rect, second element is the text
+        svg_list = rect_with_text(text=pool_data['label'],
+                                    min_width=min_width,
+                                    max_width=max_width,
+                                    specs=self.theme['text-rect'])
+
+        rect_svg = svg_list[0]
+        text_svg = svg_list[1]
+
+        # place the node rect
+        svg_group.addElement(rect_svg)
+
+        # place the node text
+        svg_group.addElement(text_svg)
+
+        group_width = rect_svg.get_width()
+        group_height = rect_svg.get_height()
+
+        # wrap it in a svg element
+        group_specs = {'width': group_width, 'height': group_height}
+        return SvgElement(group_specs, svg_group)
+
+    def assemble_element(self, bpmn_id, lane_id, pool_id, pool_text_svg_element, block_group_svg_element):
+        # wrap it in a svg group
+        group_id = '{0}:{1}:{2}'.format(bpmn_id, lane_id, pool_id)
+        svg_group = G(id=group_id)
+
+        # a pool's width is pool text width + block group width + some padding
+        group_height = block_group_svg_element.specs['height'] + self.theme['pool-rect']['pad-spec']['top'] + self.theme['pool-rect']['pad-spec']['bottom']
+        group_width = pool_text_svg_element.specs['width'] + block_group_svg_element.specs['width'] + self.theme['pool-rect']['pad-spec']['left'] + self.theme['pool-rect']['pad-spec']['right']
+
+        # add the pool ractangle
+        pool_rect_svg = Rect(width=group_width, height=group_height)
         pool_rect_svg.set_style(StyleBuilder(self.theme['pool-rect']['style']).getStyle())
-        # add the inner block group
-        pool_rect_group.addElement(pool_rect_svg)
-        pool_rect_group.addElement(block_group_svg.group)
 
-        # pool rect is to be placed just right of text rect
+        pool_text_svg = pool_text_svg_element.group
+        block_group_svg = block_group_svg_element.group
+
+        # add the pool text svg
+        pool_text_svg_xy = '{0},{1}'.format(self.theme['pool-rect']['pad-spec']['left'], self.theme['pool-rect']['pad-spec']['top'])
         transformer = TransformBuilder()
-        transformer.setTranslation("{0},{1}".format(text_rect_width, 0))
-        pool_rect_group.set_transform(transformer.getTransform())
+        transformer.setTranslation(pool_text_svg_xy)
+        pool_text_svg.set_transform(transformer.getTransform())
 
-        # group text rect and pool rect
-        svg_group = G(id=pool_id)
-        svg_group.addElement(text_rect_group)
-        svg_group.addElement(pool_rect_group)
+        # add the block group svg
+        block_group_svg_xy = '{0},{1}'.format(self.theme['pool-rect']['pad-spec']['left'] + pool_text_svg_element.specs['width'], self.theme['pool-rect']['pad-spec']['top'])
+        transformer = TransformBuilder()
+        transformer.setTranslation(block_group_svg_xy)
+        block_group_svg.set_transform(transformer.getTransform())
 
-        group_specs = {'width': text_rect_width + pool_rect_width, 'height': max(text_rect_height, pool_rect_height)}
+        svg_group.addElement(pool_rect_svg)
+        svg_group.addElement(pool_text_svg)
+        svg_group.addElement(block_group_svg)
 
-        info('..processing pool [{0}] DONE ...'.format(pool_id))
-
+        # wrap it in a svg element
+        group_specs = {'width': group_width, 'height': group_height}
         return SvgElement(group_specs, svg_group)

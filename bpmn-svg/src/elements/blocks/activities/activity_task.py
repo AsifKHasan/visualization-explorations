@@ -24,41 +24,42 @@ class ActivityTask(BpmnElement):
     def to_svg(self, node_id, node_data):
         info('....processing node [{0}] ...'.format(node_id))
 
-        # to get the width, height we need to calculate the text rendering function
-        text_rendering_hint = break_text_inside_rect(
-                                    text=node_data['label'],
-                                    font_family=self.theme['text-rect']['text-style']['font-family'],
-                                    font_size=self.theme['text-rect']['text-style']['font-size'],
-                                    max_lines=self.theme['text-rect']['max-lines'],
-                                    min_width=self.theme['text-rect']['min-width'],
-                                    max_width=self.theme['text-rect']['max-width'],
-                                    pad_spec=self.theme['text-rect']['pad-spec'])
+        # a task activity is a rounded rectangle with a text inside
 
-        group_width = text_rendering_hint[1]
-        group_height = text_rendering_hint[2]
-        # debug('{0} : ({1}, {2})'.format(node_id, group_width, group_height))
+        # get the svg element with the text inside a rect
+        # we get a list of svg where the first one is the rect and the second one is the text
+        svg_list = self.node_svgs(node_data)
 
-        # group to hold the objects
-        svg_group = G(id=node_id)
-
-        # text rect
-        text_rect = Rect(width=group_width, height=group_height, rx=self.theme['text-rect']['rx'], ry=self.theme['text-rect']['ry'])
-        text_rect.set_style(StyleBuilder(self.theme['text-rect']['style']).getStyle())
-
-        # render the text
-        text_svg = center_text(
-                        text=text_rendering_hint[0],
-                        shape=text_rect,
-                        style=self.theme['text-rect']['text-style'],
-                        vertical_text=self.theme['text-rect']['vertical-text'],
-                        pad_spec=self.theme['text-rect']['pad-spec'])
-
-        # add into the group
-        svg_group.addElement(text_rect)
-        svg_group.addElement(text_svg)
-
-        group_specs = {'width': group_width, 'height': group_height}
+        # assemble the two svg's into a final one
+        svg_element = self.assemble_element(node_id, svg_list[0], svg_list[1])
 
         info('....processing node [{0}] DONE ...'.format(node_id))
+        return svg_element
 
+    def node_svgs(self, node_data):
+        # get the inner svg's in a list
+        svg_list = rect_with_text(
+                                    text=node_data['label'],
+                                    min_width=self.theme['text-rect']['min-width'],
+                                    max_width=self.theme['text-rect']['max-width'],
+                                    specs=self.theme['text-rect'])
+
+        return svg_list
+
+    def assemble_element(self, node_id, rect_svg, text_svg):
+        # wrap it in a svg group
+        group_id = 'node-{0}'.format(node_id)
+        svg_group = G(id=group_id)
+
+        # place the node rect
+        svg_group.addElement(rect_svg)
+
+        # place the node text
+        svg_group.addElement(text_svg)
+
+        group_width = rect_svg.get_width()
+        group_height = rect_svg.get_height()
+
+        # wrap it in a svg element
+        group_specs = {'width': group_width, 'height': group_height}
         return SvgElement(group_specs, svg_group)

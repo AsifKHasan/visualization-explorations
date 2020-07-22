@@ -51,33 +51,25 @@ class BlockGroup(BpmnElement):
     def __init__(self):
         self.theme = self.current_theme['BlockGroup']
 
-    def to_svg(self, block_group_id, nodes, edges, width_hint):
-        svg_group = G(id=block_group_id)
+    def to_svg(self, bpmn_id, lane_id, pool_id, nodes, edges, width_hint):
+        # get the svg elements inside the block
+        svg_elements = self.get_svg_elements(nodes)
 
-        # iterate the nodes and get the node svg's
-        svg_elements = []
-        for node_id, node_data in nodes.items():
-            # we know the node type
-            if node_data['type'] in CLASSES:
-                # get the svg element
-                element_class = getattr(importlib.import_module(CLASSES[node_data['type']]['module']), CLASSES[node_data['type']]['class'])
-                element_instance = element_class()
-                svg_elements.append(element_instance.to_svg(node_id, node_data))
-            else:
-                warn('node type [{0}] is not supported. skipping ..'.format(node_data['type']))
+        # get the laid out svg element
+        svg_element = self.layout_elements(bpmn_id, lane_id, pool_id, nodes, edges, width_hint, svg_elements)
+        return svg_element
+
+    def layout_elements(self, bpmn_id, lane_id, pool_id, nodes, edges, width_hint, svg_elements):
+        # wrap it in a svg group
+        group_id = '{0}:{1}:{2}-blocks'.format(bpmn_id, lane_id, pool_id)
+        svg_group = G(id=group_id)
+
+        # get the max height and cumulative width of all elements and adjust block height and width accordingly
+        max_element_height = self.get_max_height(svg_elements)
+        cumulative_width = self.get_cumulative_width(svg_elements)
 
         # we have found the bpmn elements, now render them within the block
-        # get the max height and cumulative width of all elements and adjust block height and width accordingly
         # TODO: vertically stack elements when cumulative width is > max-width
-        max_element_height = 0
-        cumulative_width = self.theme['pad-spec']['left'] + self.theme['pad-spec']['right']
-        element_count = len(svg_elements)
-        for svg_element in svg_elements:
-            max_element_height = max(svg_element.specs['height'], max_element_height)
-            cumulative_width = cumulative_width + svg_element.specs['width'] + self.theme['dx-between-elements']
-
-        if element_count > 0:
-            cumulative_width = cumulative_width - self.theme['dx-between-elements']
 
         # start with the height width hints
         group_width = max(width_hint, cumulative_width)
@@ -96,6 +88,39 @@ class BlockGroup(BpmnElement):
             svg_group.addElement(element_svg)
             current_x = current_x + svg_element.specs['width'] + self.theme['dx-between-elements']
 
+        # wrap it in a svg element
         group_specs = {'width': group_width, 'height': group_height}
-
         return SvgElement(group_specs, svg_group)
+
+    def get_svg_elements(self, nodes):
+        # iterate the nodes and get the node svg's
+        svg_elements = []
+        for node_id, node_data in nodes.items():
+            # we know the node type
+            if node_data['type'] in CLASSES:
+                # get the svg element
+                element_class = getattr(importlib.import_module(CLASSES[node_data['type']]['module']), CLASSES[node_data['type']]['class'])
+                element_instance = element_class()
+                svg_elements.append(element_instance.to_svg(node_id, node_data))
+            else:
+                warn('node type [{0}] is not supported. skipping ..'.format(node_data['type']))
+
+        return svg_elements
+
+    def get_max_height(self, svg_elements):
+        max_element_height = 0
+        for svg_element in svg_elements:
+            max_element_height = max(svg_element.specs['height'], max_element_height)
+
+        return max_element_height
+
+    def get_cumulative_width(self, svg_elements):
+        cumulative_width = self.theme['pad-spec']['left'] + self.theme['pad-spec']['right']
+        element_count = len(svg_elements)
+        for svg_element in svg_elements:
+            cumulative_width = cumulative_width + svg_element.specs['width'] + self.theme['dx-between-elements']
+
+        if element_count > 0:
+            cumulative_width = cumulative_width - self.theme['dx-between-elements']
+
+        return cumulative_width

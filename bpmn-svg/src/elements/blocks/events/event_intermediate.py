@@ -24,26 +24,39 @@ class EventIntermediate(BpmnElement):
     def to_svg(self, node_id, node_data):
         info('....processing node [{0}] ...'.format(node_id))
 
-        group_width = self.theme['outer-circle']['radius'] * 2
-        group_height = self.theme['outer-circle']['radius'] * 2
+        # an intermediate event is two concentric circles. get a list of svg where the first one is the outer circle and the second one is the inner circle
+        svg_list = self.node_svgs(node_data)
 
-        # group to hold the objects
-        svg_group = G(id=node_id)
+        # assemble the two svg's into a final one
+        svg_element = self.assemble_element(node_id, svg_list[0], svg_list[1])
 
+        info('....processing node [{0}] DONE ...'.format(node_id))
+        return svg_element
+
+    def node_svgs(self, node_data):
+        # get the inner svg's in a list
         # outer circle
         outer_circle = Circle(cx=self.theme['outer-circle']['radius'], cy=self.theme['outer-circle']['radius'], r=self.theme['outer-circle']['radius'])
         outer_circle.set_style(StyleBuilder(self.theme['outer-circle']['style']).getStyle())
 
         # inner circle
-        inner_circle = Circle(cx=self.theme['inner-circle']['radius'], cy=self.theme['inner-circle']['radius'], r=self.theme['inner-circle']['radius'])
+        inner_circle = Circle(cx=self.theme['outer-circle']['radius'], cy=self.theme['outer-circle']['radius'], r=self.theme['inner-circle']['radius'])
         inner_circle.set_style(StyleBuilder(self.theme['inner-circle']['style']).getStyle())
 
-        # add into the group
-        svg_group.addElement(outer_circle)
-        svg_group.addElement(inner_circle)
+        return [outer_circle, inner_circle]
 
+    def assemble_element(self, node_id, outer_circle_svg, inner_circle_svg):
+        # wrap it in a svg group
+        group_id = 'node-{0}'.format(node_id)
+        svg_group = G(id=group_id)
+
+        # place the node circles
+        svg_group.addElement(outer_circle_svg)
+        svg_group.addElement(inner_circle_svg)
+
+        group_width = outer_circle_svg.get_r() * 2
+        group_height = outer_circle_svg.get_r() * 2
+
+        # wrap it in a svg element
         group_specs = {'width': group_width, 'height': group_height}
-
-        info('....processing node [{0}] DONE ...'.format(node_id))
-
         return SvgElement(group_specs, svg_group)

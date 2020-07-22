@@ -3,9 +3,6 @@ default_theme = {
         'margin-spec': {
             'left': 2, 'top': 2, 'right': 2, 'bottom': 2
         },
-        'pad-spec': {
-            'left': 4, 'top': 4, 'right': 4, 'bottom': 4
-        },
         'text-rect': {
             'max-lines': 2,
             'pad-spec': {
@@ -20,6 +17,9 @@ default_theme = {
             }
         },
         'bpmn-rect': {
+            'pad-spec': {
+                'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+            },
             'style': {
                 'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#A0A0A0'
             }
@@ -47,7 +47,7 @@ default_theme = {
         },
         'lane-rect': {
             'pad-spec': {
-                'left': 1, 'top': 1, 'right': 1, 'bottom': 1
+                'left': 0, 'top': 0, 'right': 0, 'bottom': 0
             },
             'style': {
                 'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#404040'
@@ -70,6 +70,9 @@ default_theme = {
         },
         'pool-rect': {
             'default-width': 600,
+            'pad-spec': {
+                'left': 0, 'top': 0, 'right': 0, 'bottom': 0
+            },
             'style': {
                 'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#A0A0A0'
             }
@@ -117,7 +120,7 @@ default_theme = {
             'max-lines': 4,
             'rx': 5, 'ry': 5,
             'pad-spec': {
-                'left': 5, 'top': 10, 'right': 5, 'bottom': 10
+                'left': 10, 'top': 10, 'right': 10, 'bottom': 10
             },
             'style': {
                 'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
