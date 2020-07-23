@@ -23,27 +23,36 @@ class LaneGroup(BpmnElement):
         self.theme = self.current_theme['LaneGroup']
 
     def to_svg(self, bpmn_id, lanes):
+        # a lane group is a vertical stack of lanes
         info('processing lanes for [{0}] ...'.format(bpmn_id))
 
-        # a lane group is a vertical stack of lanes
-        lane_svg_element_list = self.lane_svg_elements(bpmn_id, lanes)
+        # We go through a collect -> tune -> assemble flow
 
-        # assemble the lane svg's into a final one
-        svg_element = self.assemble_element(bpmn_id, lane_svg_element_list)
+        # collect the svg elements, but do not assemble now. we need tuning before assembly
+        svg_elements = self.collect_elements(bpmn_id, lanes)
+
+        # tune the svg elements as needed
+        svg_elements = self.tune_elements(bpmn_id, lanes, svg_elements)
+
+        # finally assemble the svg elements into a final one
+        final_svg_element = self.assemble_elements(bpmn_id, svg_elements)
 
         info('processing lanes for [{0}] DONE ...'.format(bpmn_id))
-        return svg_element
+        return final_svg_element
 
-    def lane_svg_elements(self, bpmn_id, lanes):
+    def tune_elements(self, bpmn_id, lanes, svg_elements):
+        return svg_elements
+
+    def collect_elements(self, bpmn_id, lanes):
         # get the inner lane svg elements in a list
-        lane_svg_element_list = []
+        svg_elements = []
         for lane_id, lane_data in lanes.items():
-            swim_lane_svg_element = SwimLane().to_svg(bpmn_id, lane_id, lane_data)
-            lane_svg_element_list.append(swim_lane_svg_element)
+            svg_element = SwimLane().to_svg(bpmn_id, lane_id, lane_data)
+            svg_elements.append(svg_element)
 
-        return lane_svg_element_list
+        return svg_elements
 
-    def assemble_element(self, bpmn_id, lane_svg_element_list):
+    def assemble_elements(self, bpmn_id, lane_svg_element_list):
         # wrap it in a svg group
         group_id = '{0}-lanes'.format(bpmn_id)
         svg_group = G(id=group_id)

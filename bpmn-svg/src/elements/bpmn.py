@@ -29,18 +29,7 @@ class Bpmn(BpmnElement):
         # assemble the two svg's into a final one
         svg = self.assemble_bpmn(bpmn_id, bpmn_text_svg_element, bpmn_body_svg_element)
 
-        # this svg needs some tuning
-        self.tune_svg(bpmn_id, bpmn_data, svg)
-
         return svg
-
-    def tune_svg(self, bpmn_id, bpmn_data, svg):
-        # pool text widths may be different, we want them all to have the same width
-        # pool_text_group = svg.getElementByID('office_setup:global_common:global_admin1-text')
-        lanes_group = svg.getElementByID(bpmn_id)[0].getElementByID('{0}-body'.format(bpmn_id))[0].getElementByID('{0}-lanes'.format(bpmn_id))[0]
-        for lane_id, lane_data in bpmn_data['lanes'].items():
-            lane_text_group = lanes_group.getElementByID('{0}:{1}'.format(bpmn_id, lane_id))[0].getElementByID('{0}:{1}-text'.format(bpmn_id, lane_id))[0]
-            lane_text_group.set_width(200)
 
     def get_bpmn_body_svg_element(self, bpmn_id, bpmn_data):
         # wrap it in a svg group

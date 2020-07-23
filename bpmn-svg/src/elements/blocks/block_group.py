@@ -52,14 +52,22 @@ class BlockGroup(BpmnElement):
         self.theme = self.current_theme['BlockGroup']
 
     def to_svg(self, bpmn_id, lane_id, pool_id, nodes, edges, width_hint):
-        # get the svg elements inside the block
-        svg_elements = self.get_svg_elements(nodes)
+        # We go through a collect -> tune -> assemble flow
 
-        # get the laid out svg element
-        svg_element = self.layout_elements(bpmn_id, lane_id, pool_id, nodes, edges, width_hint, svg_elements)
-        return svg_element
+        # collect the svg elements, but do not assemble now. we need tuning before assembly
+        svg_elements = self.collect_elements(bpmn_id, lane_id, pool_id, nodes)
 
-    def layout_elements(self, bpmn_id, lane_id, pool_id, nodes, edges, width_hint, svg_elements):
+        # tune the svg elements as needed
+        svg_elements = self.tune_elements(bpmn_id, lane_id, pool_id, nodes, svg_elements)
+
+        # finally assemble the svg elements into a final one
+        final_svg_element = self.assemble_elements(bpmn_id, lane_id, pool_id, nodes, width_hint, svg_elements)
+        return final_svg_element
+
+    def tune_elements(self, bpmn_id, lane_id, pool_id, nodes, svg_elements):
+        return svg_elements
+
+    def assemble_elements(self, bpmn_id, lane_id, pool_id, nodes, width_hint, svg_elements):
         # wrap it in a svg group
         group_id = '{0}:{1}:{2}-blocks'.format(bpmn_id, lane_id, pool_id)
         svg_group = G(id=group_id)
@@ -92,7 +100,7 @@ class BlockGroup(BpmnElement):
         group_specs = {'width': group_width, 'height': group_height}
         return SvgElement(group_specs, svg_group)
 
-    def get_svg_elements(self, nodes):
+    def collect_elements(self, bpmn_id, lane_id, pool_id, nodes):
         # iterate the nodes and get the node svg's
         svg_elements = []
         for node_id, node_data in nodes.items():
