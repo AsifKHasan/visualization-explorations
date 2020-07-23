@@ -19,65 +19,70 @@ from elements.svg_element import SvgElement
 from elements.swims.swim_pool import SwimPool
 
 class PoolGroup(BpmnElement):
-    def __init__(self):
+    # a pool group is a vertical stack of pools
+    def __init__(self, bpmn_id, lane_id, pools):
         self.theme = self.current_theme['PoolGroup']
+        self.bpmn_id, self.lane_id, self.pools = bpmn_id, lane_id, pools
 
-    def to_svg(self, bpmn_id, lane_id, pools):
-        # a pool group is a vertical stack of pools
-        info('..processing pools for [{0}:{1}] ...'.format(bpmn_id, lane_id))
+    def tune_elements(self):
+        info('..tuning pools for [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
+        info('..tuning pools for [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
 
-        # We go through a collect -> tune -> assemble flow
+    def collect_elements(self):
+        info('..processing pools for [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
 
-        # collect the svg elements, but do not assemble now. we need tuning before assembly
-        svg_elements = self.collect_elements(bpmn_id, lane_id, pools)
-
-        # tune the svg elements as needed
-        svg_elements = self.tune_elements(bpmn_id, lane_id, pools, svg_elements)
-
-        # finally assemble the svg elements into a final one
-        final_svg_element = self.assemble_elements(bpmn_id, lane_id, svg_elements)
-
-        info('..processing pools for [{0}:{1}] DONE ...'.format(bpmn_id, lane_id))
-        return final_svg_element
-
-    def tune_elements(self, bpmn_id, lane_id, pools, svg_elements):
-        return svg_elements
-
-    def collect_elements(self, bpmn_id, lane_id, pools):
         # get the inner pool svg elements in a list
-        svg_elements = []
-        for pool_id, pool_data in pools.items():
-            svg_element = SwimPool().to_svg(bpmn_id, lane_id, pool_id, pool_data)
-            svg_elements.append(svg_element)
+        self.child_element_classes = []
+        for pool_id, pool_data in self.pools.items():
+            child_element_class = SwimPool(self.bpmn_id, self.lane_id, pool_id, pool_data)
+            child_element_class.collect_elements()
+            self.child_element_classes.append(child_element_class)
 
-        return svg_elements
+        info('..processing pools for [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
 
-    def assemble_elements(self, bpmn_id, lane_id, svg_elements):
+    def assemble_elements(self):
+        info('..assembling pools for [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
+
         # wrap it in a svg group
-        group_id = '{0}:{1}-pools'.format(bpmn_id, lane_id)
+        group_id = '{0}:{1}-pools'.format(self.bpmn_id, self.lane_id)
         svg_group = G(id=group_id)
 
         # height of the pool group is sum of height of all pools with gaps between pools
         group_height = 0
         group_width = 0
-        pool_count = 0
-        for pool_svg_element in svg_elements:
+        counter = 0
+        for child_element_class in self.child_element_classes:
+            swim_pool_svg_element = child_element_class.assemble_elements()
             # if this is not the first pool add gap to height
-            if pool_count > 0:
+            if counter > 0:
                 group_height = group_height + self.theme['gap-between-pools']
+
+            counter = counter + 1
 
             # this specific pool should be vertically moved to the current height
             transformer = TransformBuilder()
             transformer.setTranslation("{0},{1}".format(0, group_height))
-            swim_pool_svg = pool_svg_element.group
+            swim_pool_svg = swim_pool_svg_element.group
             swim_pool_svg.set_transform(transformer.getTransform())
 
             # adjust height
-            group_height = group_height + pool_svg_element.specs['height']
-            group_width = max(group_width, pool_svg_element.specs['width'])
+            group_height = group_height + swim_pool_svg_element.specs['height']
+            group_width = max(group_width, swim_pool_svg_element.specs['width'])
 
             svg_group.addElement(swim_pool_svg)
 
         # wrap it in a svg element
         group_specs = {'width': group_width, 'height': group_height}
+
+        info('..assembling pools for [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
         return SvgElement(group_specs, svg_group)
+
+    def get_height(self):
+        height = 0
+        for child_element_class in self.child_element_classes:
+            height = height + child_element_class.get_height()
+
+        if len(self.child_element_classes) > 0:
+            height = height + self.theme['gap-between-pools'] * (len(self.child_element_classes) - 1)
+
+        return height

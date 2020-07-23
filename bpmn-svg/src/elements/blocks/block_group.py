@@ -48,33 +48,34 @@ CLASSES = {
 }
 
 class BlockGroup(BpmnElement):
-    def __init__(self):
+    def __init__(self, bpmn_id, lane_id, pool_id, nodes, edges):
         self.theme = self.current_theme['BlockGroup']
+        self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges = bpmn_id, lane_id, pool_id, nodes, edges
 
-    def to_svg(self, bpmn_id, lane_id, pool_id, nodes, edges, width_hint):
+    def to_svg(self, width_hint):
         # We go through a collect -> tune -> assemble flow
 
         # collect the svg elements, but do not assemble now. we need tuning before assembly
-        svg_elements = self.collect_elements(bpmn_id, lane_id, pool_id, nodes)
+        self.collect_elements()
 
         # tune the svg elements as needed
-        svg_elements = self.tune_elements(bpmn_id, lane_id, pool_id, nodes, svg_elements)
+        self.tune_elements()
 
         # finally assemble the svg elements into a final one
-        final_svg_element = self.assemble_elements(bpmn_id, lane_id, pool_id, nodes, width_hint, svg_elements)
+        final_svg_element = self.assemble_elements(width_hint)
         return final_svg_element
 
-    def tune_elements(self, bpmn_id, lane_id, pool_id, nodes, svg_elements):
-        return svg_elements
+    def tune_elements(self):
+        pass
 
-    def assemble_elements(self, bpmn_id, lane_id, pool_id, nodes, width_hint, svg_elements):
+    def assemble_elements(self, width_hint):
         # wrap it in a svg group
-        group_id = '{0}:{1}:{2}-blocks'.format(bpmn_id, lane_id, pool_id)
+        group_id = '{0}:{1}:{2}-blocks'.format(self.bpmn_id, self.lane_id, self.pool_id)
         svg_group = G(id=group_id)
 
         # get the max height and cumulative width of all elements and adjust block height and width accordingly
-        max_element_height = self.get_max_height(svg_elements)
-        cumulative_width = self.get_cumulative_width(svg_elements)
+        max_element_height = self.get_max_height(self.svg_elements)
+        cumulative_width = self.get_cumulative_width(self.svg_elements)
 
         # we have found the bpmn elements, now render them within the block
         # TODO: vertically stack elements when cumulative width is > max-width
@@ -86,7 +87,7 @@ class BlockGroup(BpmnElement):
         # now we have height and width adjusted, we place the elements with proper displacement
         transformer = TransformBuilder()
         current_x = self.theme['pad-spec']['left']
-        for svg_element in svg_elements:
+        for svg_element in self.svg_elements:
             element_svg = svg_element.group
             current_y = group_height/2 - svg_element.specs['height']/2
             transformation_xy = '{0},{1}'.format(current_x, current_y)
@@ -100,20 +101,18 @@ class BlockGroup(BpmnElement):
         group_specs = {'width': group_width, 'height': group_height}
         return SvgElement(group_specs, svg_group)
 
-    def collect_elements(self, bpmn_id, lane_id, pool_id, nodes):
+    def collect_elements(self):
         # iterate the nodes and get the node svg's
-        svg_elements = []
-        for node_id, node_data in nodes.items():
+        self.svg_elements = []
+        for node_id, node_data in self.nodes.items():
             # we know the node type
             if node_data['type'] in CLASSES:
                 # get the svg element
                 element_class = getattr(importlib.import_module(CLASSES[node_data['type']]['module']), CLASSES[node_data['type']]['class'])
                 element_instance = element_class()
-                svg_elements.append(element_instance.to_svg(node_id, node_data))
+                self.svg_elements.append(element_instance.to_svg(node_id, node_data))
             else:
                 warn('node type [{0}] is not supported. skipping ..'.format(node_data['type']))
-
-        return svg_elements
 
     def get_max_height(self, svg_elements):
         max_element_height = 0
