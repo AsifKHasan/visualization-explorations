@@ -83,9 +83,6 @@ class SwimLane(BpmnElement):
         info('..assembling lane [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
         return SvgElement(group_specs, svg_group)
 
-    def get_pool_group_svg_element(self):
-        return pool_group_svg_element
-
     def get_lane_text_svg_element(self, min_width, max_width):
         # wrap in a svg group
         group_id = '{0}:{1}-text'.format(self.bpmn_id, self.lane_id)

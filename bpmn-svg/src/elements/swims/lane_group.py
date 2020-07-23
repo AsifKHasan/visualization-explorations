@@ -24,19 +24,6 @@ class LaneGroup(BpmnElement):
         self.theme = self.current_theme['LaneGroup']
         self.bpmn_id, self.lanes = bpmn_id, lanes
 
-    def to_svg(self):
-        # We go through a collect -> tune -> assemble flow
-
-        # collect the svg elements, but do not assemble now. we need tuning before assembly
-        self.collect_elements()
-
-        # tune the svg elements as needed
-        self.tune_elements()
-
-        # finally assemble the svg elements into a final one
-        final_svg_element = self.assemble_elements()
-        return final_svg_element
-
     def tune_elements(self):
         info('tuning lanes for [{0}]'.format(self.bpmn_id))
         info('tuning lanes for [{0}] DONE'.format(self.bpmn_id))

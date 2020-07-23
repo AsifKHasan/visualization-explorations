@@ -40,42 +40,6 @@ class SwimPool(BpmnElement):
 
         info('....processing pool [{0}:{1}:{2}] DONE ...'.format(self.bpmn_id, self.lane_id, self.pool_id))
 
-    def get_block_group_svg_element(self):
-        block_group = BlockGroup(self.bpmn_id, self.lane_id, self.pool_id, self.pool_data['nodes'], self.pool_data['edges'])
-        block_group_svg_element = block_group.to_svg(self.theme['pool-rect']['default-width'])
-        return block_group_svg_element
-
-    def get_pool_text_svg_element(self):
-        info('....tuning pool [{0}:{1}:{2}]'.format(self.bpmn_id, self.lane_id, self.pool_id))
-
-        # wrap in a svg group
-        group_id = '{0}:{1}:{2}-text'.format(self.bpmn_id, self.lane_id, self.pool_id)
-        svg_group = G(id=group_id)
-
-        # get the svg list of the text, first elemnt is the rect, second element is the text
-        svg_list = rect_with_text(text=self.pool_data['label'],
-                                    min_width=self.block_group_svg_element.specs['height'],
-                                    max_width=self.block_group_svg_element.specs['height'],
-                                    specs=self.theme['text-rect'])
-
-        rect_svg = svg_list[0]
-        text_svg = svg_list[1]
-
-        # place the node rect
-        svg_group.addElement(rect_svg)
-
-        # place the node text
-        svg_group.addElement(text_svg)
-
-        group_width = rect_svg.get_width()
-        group_height = rect_svg.get_height()
-
-        # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
-
-        info('....tuning pool [{0}:{1}:{2}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id))
-        return SvgElement(group_specs, svg_group)
-
     def assemble_elements(self):
         # wrap it in a svg group
         group_id = '{0}:{1}:{2}'.format(self.bpmn_id, self.lane_id, self.pool_id)
@@ -110,6 +74,42 @@ class SwimPool(BpmnElement):
 
         # wrap it in a svg element
         group_specs = {'width': group_width, 'height': group_height}
+        return SvgElement(group_specs, svg_group)
+
+    def get_block_group_svg_element(self):
+        block_group = BlockGroup(self.bpmn_id, self.lane_id, self.pool_id, self.pool_data['nodes'], self.pool_data['edges'])
+        block_group_svg_element = block_group.to_svg(self.theme['pool-rect']['default-width'])
+        return block_group_svg_element
+
+    def get_pool_text_svg_element(self):
+        info('....tuning pool [{0}:{1}:{2}]'.format(self.bpmn_id, self.lane_id, self.pool_id))
+
+        # wrap in a svg group
+        group_id = '{0}:{1}:{2}-text'.format(self.bpmn_id, self.lane_id, self.pool_id)
+        svg_group = G(id=group_id)
+
+        # get the svg list of the text, first elemnt is the rect, second element is the text
+        svg_list = rect_with_text(text=self.pool_data['label'],
+                                    min_width=self.block_group_svg_element.specs['height'],
+                                    max_width=self.block_group_svg_element.specs['height'],
+                                    specs=self.theme['text-rect'])
+
+        rect_svg = svg_list[0]
+        text_svg = svg_list[1]
+
+        # place the node rect
+        svg_group.addElement(rect_svg)
+
+        # place the node text
+        svg_group.addElement(text_svg)
+
+        group_width = rect_svg.get_width()
+        group_height = rect_svg.get_height()
+
+        # wrap it in a svg element
+        group_specs = {'width': group_width, 'height': group_height}
+
+        info('....tuning pool [{0}:{1}:{2}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id))
         return SvgElement(group_specs, svg_group)
 
     def get_height(self):
