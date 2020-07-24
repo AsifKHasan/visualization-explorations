@@ -34,6 +34,10 @@ class Bpmn(BpmnElement):
 
     def tune_elements(self):
         info('tuning BPMN [{0}]'.format(self.bpmn_id))
+
+        # tune the children
+        self.child_element_class.tune_elements()
+
         info('tuning BPMN [{0}] DONE'.format(self.bpmn_id))
 
     def collect_elements(self):

@@ -84,6 +84,11 @@ class BlockGroup(BpmnElement):
         group_width = max(width_hint, cumulative_width)
         group_height = max_element_height + self.theme['pad-spec']['top'] + self.theme['pad-spec']['bottom']
 
+        # add the block ractangle
+        block_rect_svg = Rect(width=group_width, height=group_height)
+        block_rect_svg.set_style(StyleBuilder(self.theme['style']).getStyle())
+        svg_group.addElement(block_rect_svg)
+
         # now we have height and width adjusted, we place the elements with proper displacement
         transformer = TransformBuilder()
         current_x = self.theme['pad-spec']['left']

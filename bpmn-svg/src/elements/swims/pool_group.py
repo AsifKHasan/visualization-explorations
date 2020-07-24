@@ -24,8 +24,24 @@ class PoolGroup(BpmnElement):
         self.theme = self.current_theme['PoolGroup']
         self.bpmn_id, self.lane_id, self.pools = bpmn_id, lane_id, pools
 
-    def tune_elements(self):
+    def get_max_width_of_elements_of_children(self):
+        pool_text_element_max_width = 0
+        pool_block_group_max_width = 0
+        for child_element_class in self.child_element_classes:
+            child_pool_text_element_max_width, child_block_group_max_width = child_element_class.get_max_width_of_elements_of_children()
+
+            pool_text_element_max_width = max(pool_text_element_max_width, child_pool_text_element_max_width)
+            pool_block_group_max_width = max(pool_block_group_max_width, child_block_group_max_width)
+
+        return pool_text_element_max_width, pool_block_group_max_width
+
+    def tune_elements(self, tune_spec):
         info('..tuning pools for [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
+
+        # tune the children
+        for child_element_class in self.child_element_classes:
+            child_element_class.tune_elements(tune_spec)
+
         info('..tuning pools for [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
 
     def collect_elements(self):

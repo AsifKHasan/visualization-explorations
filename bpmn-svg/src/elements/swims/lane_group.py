@@ -24,8 +24,32 @@ class LaneGroup(BpmnElement):
         self.theme = self.current_theme['LaneGroup']
         self.bpmn_id, self.lanes = bpmn_id, lanes
 
+    def get_max_width_of_elements_of_children(self):
+        lane_text_element_max_width = 0
+        pool_text_element_max_width = 0
+        pool_block_group_max_width = 0
+        for child_element_class in self.child_element_classes:
+            child_lane_width, child_pool_text_element_max_width, child_pool_block_group_max_width = child_element_class.get_max_width_of_elements_of_children()
+
+            lane_text_element_max_width = max(lane_text_element_max_width, child_lane_width)
+            pool_text_element_max_width = max(pool_text_element_max_width, child_pool_text_element_max_width)
+            pool_block_group_max_width = max(pool_block_group_max_width, child_pool_block_group_max_width)
+
+        tune_spec = {'lane-text-element-target-width': lane_text_element_max_width, 'pool-text-element-target-width': pool_text_element_max_width, 'pool-block-group-target-width': pool_block_group_max_width}
+
+        return tune_spec
+
     def tune_elements(self):
         info('tuning lanes for [{0}]'.format(self.bpmn_id))
+
+        # lane text width may be different for lanes, we make them all same width having the width of the maximum width among the lane texts
+        # pool text width may be different for pools within the lanes, we make them all same width having the width of the maximum width among all pools under all the lanes
+        tune_spec = self.get_max_width_of_elements_of_children()
+
+        # tune the children
+        for child_element_class in self.child_element_classes:
+            child_element_class.tune_elements(tune_spec)
+
         info('tuning lanes for [{0}] DONE'.format(self.bpmn_id))
 
     def collect_elements(self):
