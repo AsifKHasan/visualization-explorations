@@ -1,0 +1,51 @@
+# this is bpmn DSL, it starts with keyword bpmn (case matters in our DSL) and an identifier for the graph
+# this is pretty much close to GraphViz's dot language
+# _ is a special keyword for specifying properties for the scope and its children, scopes are nested like graph --> lane --> pool --> task cells etc.
+# properties are always inside [] and are key value pairs
+# this .bpmn can be generated with the following command line
+# node generate_bpmn.js [-s path-to-styleheet.css] [-r html|svg|png] [-o path-to-output.[html|svg|png]] path-to-input.bpmn
+
+graph office_setup {
+
+    _ [class=none; fontname='Helvetica'; fontsize='16'; fontcolor='#202020';]
+    _ [bordercolor='#A0A0A0'; borderwidth='0.5';]
+    _ [fillolor='#E0E0E0';]
+
+    label = 'Office Setup Flow'
+
+    lane global_common {
+        label = 'Global Common'
+        pool global_admin {
+            label = 'Global Admin'
+
+            start start1 [class=none;]
+            process login [class=none; label='Login';]
+            process create_office_a [class=none; label='Create Office A';]
+            process create_user_procurement_entity_1 [class=none; label='Create User Procurement Entity 1';]
+            process assign_pe_role_to_procurement_entity_1 [class=none; label='Assign PE Role to User Procurement Entity 1';]
+            process logout [class=none; label='Logout';]
+            end end1 [class=none;]
+
+            start1 ..> login <-- create_office_a <-> create_user_procurement_entity_1 <.> assign_pe_role_to_procurement_entity_1 <.. logout ... end1 [class=none;]
+        }
+    }
+    lane procurement {
+        label = 'Procurement'
+        pool procurement_entity_1 {
+            label = 'Procurement Entity 1'
+
+            start start1 [class=none;]
+            process login [class=none; label='Login';]
+            process goto_procurement [class=none; label='Goto Procurement';]
+            process switch_role_to_pe [class=none; label='Switch Role to PE';]
+            process verify_pe_role [class=none; label='Verify PE Role Access';]
+            process logout [class=none; label='Logout';]
+            end end1 [class=none;]
+
+            start1 --> login --> goto_procurement --> switch_role_to_pe --> verify_pe_role --> logout --> end1 [class=none;]
+        }
+    }
+
+    # global_common:global_admin:create_user_procurement_entity_1 ..> procurement:procurement_entity_1:login []
+    # global_common:global_admin:assign_pe_role_to_procurement_entity_1 ..> procurement:procurement_entity_1:goto_procurement []
+}

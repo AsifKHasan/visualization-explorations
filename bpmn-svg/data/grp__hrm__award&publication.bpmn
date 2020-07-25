@@ -1,0 +1,43 @@
+graph award_publication {
+    label = 'Awand and Publication Management'
+
+    lane ictd {
+        label = 'ICT Division'
+        pool employee {
+            label = 'Global Admin'
+
+            start start1
+            process upload_form [label='Upload award publication information form';]
+            process send_to_authority [label='Send request to authority';]
+            process modify [label='Create User Procurement Entity 1';]
+
+            start1 ..> upload_form
+        }
+        pool authority {
+            label = 'Authority'
+            process receice_request [label='Receive request';]
+            process verify_request [label='Verify employee request';]
+            exclusive request_approval [label='Approved?';]
+            process send_back_for_modification [label='Send back form for modification';]
+
+            receice_request ..> verify_request ..> request_approval
+            request_approval ..> send_back_for_modification [label='No';]
+        }
+        pool system {
+            label = 'System'
+            process notify_employee [label='Notify employee';]
+            process update_employee_details [label='Update employee details';]
+            process set_view_status [label='Set view status of the award(s)/publication(s)';]
+            end end1
+
+            notify_employee ..> update_employee_details ..> set_view_status ..> end1
+        }
+    }
+    lane mopa {
+        label = 'Ministry of Public Administration'
+        pool pmis {
+            label = 'Personnel Management Information System (PMIS)'
+            process employee_details [label='Employee Details';]
+        }
+    }
+}
