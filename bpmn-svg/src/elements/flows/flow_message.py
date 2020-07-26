@@ -18,7 +18,7 @@ from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
 
 class FlowMessage(BpmnElement):
-    def __init__(self):
+    def __init__(self, bpmn_id, lane_id, pool_id):
         self.theme = self.current_theme['FlowMessage']
 
     def to_svg(spec_def):

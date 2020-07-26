@@ -25,10 +25,6 @@ class SwimLane(BpmnElement):
         self.theme = self.current_theme['SwimLane']
         self.bpmn_id, self.lane_id, self.lane_data = bpmn_id, lane_id, lane_data
 
-    def get_max_width_of_elements_of_children(self):
-        pool_text_element_max_width, pool_block_group_max_width = self.child_element_class.get_max_width_of_elements_of_children()
-        return self.lane_text_svg_element.specs['width'], pool_text_element_max_width, pool_block_group_max_width
-
     def tune_elements(self, tune_spec):
         info('..tuning lane [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
 
@@ -107,7 +103,8 @@ class SwimLane(BpmnElement):
         svg_list = rect_with_text(text=self.lane_data['label'],
                                     min_width=min_width,
                                     max_width=max_width,
-                                    specs=self.theme['text-rect'])
+                                    specs=self.theme['text-rect'],
+                                    debug_enabled=False)
 
         rect_svg = svg_list[0]
         text_svg = svg_list[1]
@@ -137,3 +134,7 @@ class SwimLane(BpmnElement):
             rect.set_width(rect.get_width() + width_to_increase)
             svg.set_width(svg.get_width() + width_to_increase)
             self.lane_text_svg_element.specs['width'] = self.lane_text_svg_element.specs['width'] + width_to_increase
+
+    def get_max_width_of_elements_of_children(self):
+        pool_text_element_max_width, pool_block_group_max_width = self.child_element_class.get_max_width_of_elements_of_children()
+        return self.lane_text_svg_element.specs['width'], pool_text_element_max_width, pool_block_group_max_width

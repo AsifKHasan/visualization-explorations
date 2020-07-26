@@ -3,8 +3,8 @@
 https://www.bpmnquickguide.com/view-bpmn-quick-guide/
 cd C:\projects\asifhasan@github\visualization-explorations\bpmn-svg\src
 python bpmn-to-svg.py < ../data/bpmn-sample.json
+python bpmn-parser.py < ../data/grp__hrm__award-and-publication.bpmn | tee ../data/grp__hrm__award-and-publication.json | python bpmn-to-svg.py
 '''
-
 import sys, json;
 
 from util.logger import *

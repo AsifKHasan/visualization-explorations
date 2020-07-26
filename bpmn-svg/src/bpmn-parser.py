@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+'''
+https://www.bpmnquickguide.com/view-bpmn-quick-guide/
+cd C:\projects\asifhasan@github\visualization-explorations\bpmn-svg\src
+python bpmn-parser.py < ../data/grp__hrm__award-and-publication.bpmn > ../data/grp__hrm__award-and-publication.json
+'''
 import sys
 import os
 import json
@@ -32,8 +38,13 @@ def tokenize(str):
         ('String', (r'"[^"]*"',)), # '\"' escapes are ignored
         ('String', (r"'[^']*'",)), # "\'" escapes are ignored
         ('NodeType', (r'start',)),
-        ('NodeType', (r'process',)),
+        ('NodeType', (r'intermediate',)),
         ('NodeType', (r'end',)),
+        ('NodeType', (r'task',)),
+        ('NodeType', (r'process',)),
+        ('NodeType', (r'inclusive',)),
+        ('NodeType', (r'parallel',)),
+        ('NodeType', (r'exclusive',)),
         ('EdgeOp', (r'---',)),
         ('EdgeOp', (r'-->',)),
         ('EdgeOp', (r'<--',)),
@@ -56,7 +67,7 @@ def parse(seq):
     op = lambda s: a(Token('Op', s)) >> tokval
     op_ = lambda s: skip(op(s))
 
-    node_type = some(lambda t: t.value in ['start', 'process', 'end']).named('type') >> tokval
+    node_type = some(lambda t: t.value in ['start', 'intermediate', 'end', 'task', 'process', 'inclusive', 'exclusive', 'parallel']).named('type') >> tokval
 
     id_types = ['Name', 'Number', 'String']
     id = some(lambda t: t.type in id_types).named('id') >> tokval
@@ -183,10 +194,10 @@ def pretty_parse_tree(x):
 def process_defattrs(o, parent):
     if o.object == '_':
         for attr in o.attrs:
-            parent['styles'][attr.name] = attr.value
+            parent['styles'][attr.name] = attr.value.strip("'").strip('"')
     elif o.object == 'graph':
         for attr in o.attrs:
-            parent[attr.name] = attr.value
+            parent[attr.name] = attr.value.strip("'").strip('"')
     else:
         print('unknown object in DefAttrs: {0}. exiting ...'.format(o.object))
         sys.exit(1)
@@ -194,7 +205,7 @@ def process_defattrs(o, parent):
 def process_edges(o, parent):
     styles = {}
     for attr in o.attrs:
-        styles[attr.name] = attr.value
+        styles[attr.name] = attr.value.strip("'").strip('"')
 
     current_head = o.node
     for t in o.edges:
@@ -205,9 +216,9 @@ def process_node(o, parent):
     node = {'type': o.type, 'label': {}, 'styles': {}}
     for attr in o.attrs:
         if attr.name == 'label':
-            node[attr.name] = attr.value
+            node[attr.name] = attr.value.strip("'").strip('"')
         else:
-            node['styles'][attr.name] = attr.value
+            node['styles'][attr.name] = attr.value.strip("'").strip('"')
 
     parent[o.id] = node
 

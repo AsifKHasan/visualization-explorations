@@ -47,7 +47,7 @@ class SwimPool(BpmnElement):
         # get the lane text rect, its min_width and max_width is the block group's height
         self.pool_text_svg_element = self.get_pool_text_svg_element()
 
-        info('....processing pool [{0}:{1}:{2}] DONE ...'.format(self.bpmn_id, self.lane_id, self.pool_id))
+        info('....processing pool [{0}:{1}:{2}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id))
 
     def assemble_elements(self):
         info('....assembling pool [{0}:{1}:{2}]'.format(self.bpmn_id, self.lane_id, self.pool_id))
@@ -103,7 +103,8 @@ class SwimPool(BpmnElement):
         svg_list = rect_with_text(text=self.pool_data['label'],
                                     min_width=self.block_group_svg_element.specs['height'],
                                     max_width=self.block_group_svg_element.specs['height'],
-                                    specs=self.theme['text-rect'])
+                                    specs=self.theme['text-rect'],
+                                    debug_enabled=False)
 
         rect_svg = svg_list[0]
         text_svg = svg_list[1]
@@ -119,7 +120,6 @@ class SwimPool(BpmnElement):
 
         # wrap it in a svg element
         group_specs = {'width': group_width, 'height': group_height}
-        debug('lane [{0}] text rect ({1}, {2})'.format(self.lane_id, group_width, group_height))
         return SvgElement(group_specs, svg_group)
 
     def adjust_width_pool_text_element(self, pool_text_element_target_width):

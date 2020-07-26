@@ -22,7 +22,7 @@ from elements.svg_element import SvgElement
 CLASSES = {
     # activities
     'task':         {'module': 'elements.blocks.activities.activity_task',              'class': 'ActivityTask'},
-    'subprocess':   {'module': 'elements.blocks.activities.activity_subprocess',        'class': 'ActivitySubprocess'},
+    'process':      {'module': 'elements.blocks.activities.activity_subprocess',        'class': 'ActivitySubprocess'},
     'call':         {'module': 'elements.blocks.activities.activity_call',              'class': 'ActivityCall'},
 
     # artifacts
@@ -38,7 +38,9 @@ CLASSES = {
     'intermediate': {'module': 'elements.blocks.events.event_intermediate',             'class': 'EventIntermediate'},
 
     # gateways
+    'inclusive':    {'module': 'elements.blocks.gateways.gateway_inclusive',            'class': 'GatewayInclusive'},
     'exclusive':    {'module': 'elements.blocks.gateways.gateway_exclusive',            'class': 'GatewayExclusive'},
+    'parallel':    {'module': 'elements.blocks.gateways.gateway_parallel',            'class': 'GatewayParallel'},
 
     # flows
     'sequence':     {'module': 'elements.blocks.flows.flow_sequence',                   'class': 'FlowSequence'},
@@ -114,8 +116,8 @@ class BlockGroup(BpmnElement):
             if node_data['type'] in CLASSES:
                 # get the svg element
                 element_class = getattr(importlib.import_module(CLASSES[node_data['type']]['module']), CLASSES[node_data['type']]['class'])
-                element_instance = element_class()
-                self.svg_elements.append(element_instance.to_svg(node_id, node_data))
+                element_instance = element_class(self.bpmn_id, self.lane_id, self.pool_id, node_id, node_data)
+                self.svg_elements.append(element_instance.to_svg())
             else:
                 warn('node type [{0}] is not supported. skipping ..'.format(node_data['type']))
 

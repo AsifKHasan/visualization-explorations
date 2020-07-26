@@ -13,8 +13,9 @@ from PIL import ImageFont
 import textwrap
 
 from util.logger import *
+from util.geometry import Point
 
-def rect_with_text(text, min_width, max_width, specs):
+def rect_with_text(text, min_width, max_width, specs, debug_enabled=False):
     # to get the width, height we need to calculate the text rendering function
     vertical_text = specs['vertical-text']
     text_rendering_hint = break_text_inside_rect(
@@ -24,7 +25,8 @@ def rect_with_text(text, min_width, max_width, specs):
                                 max_lines=specs['max-lines'],
                                 min_width=min_width,
                                 max_width=max_width,
-                                pad_spec=specs['pad-spec'])
+                                pad_spec=specs['pad-spec'],
+                                debug_enabled=debug_enabled)
 
     if vertical_text:
         width = text_rendering_hint[2]
@@ -90,25 +92,28 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
     if debug_enabled: debug('text [{0} ({1})] will break into {2} lines within max width {3}'.format(text, text_size[0], approximate_lines, max_width))
 
     # if this exceeds the max_line, we have a problem, the output will look bad and we will need to make it as many line as we need
+    # we will actually show upto max_lines
     if approximate_lines > max_lines:
         text_wrap_at = math.ceil(len(text) / approximate_lines)
-        text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=False)
+        text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=True)
         width = 0
         height = pad_spec['top'] + pad_spec['bottom']
-        for line in text_lines:
+        for line in text_lines[:max_lines]:
             line_size = text_size_in_pixels(line, font_family, font_size)
-            width = max(min_width, width, line_size[0]) + pad_spec['left'] + pad_spec['right']
+            width = max(min_width, width, line_size[0])
             height = height + line_size[1] * 1.5
 
-        if debug_enabled: debug('text [{0} ({1})] broken down into [{2}]. computed width, height is [{3}, {4}]'.format(text, text_size[0], len(text_lines), width, height))
-        return (text_lines, width, height)
+        if debug_enabled: debug('text [{0} ({1})] truncated down into [{2}] lines. computed width, height is [{3}, {4}]'.format(text, text_size[0], len(text_lines[:max_lines]), width, height))
+
+        width = width + pad_spec['left'] + pad_spec['right']
+        return (text_lines[:max_lines], width, height)
 
     # now we know that we can be between 2 to max_lines, our target will be to have fewer lines without crossing max_width
     # start iteration
     for break_into in range(2, max_lines + 1):
         # break the text into equal sized parts (for better visuals)
         text_wrap_at = math.ceil(len(text) / break_into)
-        text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=False)
+        text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=True)
         width = 0
         height = pad_spec['top'] + pad_spec['bottom']
         for line in text_lines:
@@ -116,17 +121,18 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
             width = max(min_width, width, line_size[0])
             height = height + line_size[1] * 1.5
 
-        if debug_enabled: debug('text [{0} ({1})] broken down into [{2}]. computed width, height is [{3}, {4}]'.format(text, text_size[0], len(text_lines), width, height))
-
         # if we have not crossed max_width, we can stick to this
         if width <= max_width:
+            if debug_enabled: debug('text [{0} ({1})] broken down into [{2}]. computed width, height is [{3}, {4}]'.format(text, text_size[0], len(text_lines), width, height))
+
             width = width + pad_spec['left'] + pad_spec['right']
             return (text_lines, width, height)
 
-        if break_into == max_lines:
-            # we are here at last iteration, which means something went wrong, we fall back to the last ever try
-            width = width + pad_spec['left'] + pad_spec['right']
-            return (text_lines, width, height)
+    # we are here at last iteration, which means something went wrong, we fall back to the last ever try
+    if debug_enabled: debug('text [{0} ({1})] broken down into [{2}]. computed width, height is [{3}, {4}]'.format(text, text_size[0], len(text_lines), width, height))
+
+    width = width + pad_spec['left'] + pad_spec['right']
+    return (text_lines, width, height)
 
 def center_text(text, shape, style, vertical_text=False, pad_spec=None, text_wrap_at=0, debug=False):
     if pad_spec is None:
@@ -149,7 +155,7 @@ def center_text(text, shape, style, vertical_text=False, pad_spec=None, text_wra
         text_list = text
     else:
         if text_wrap_at > 0:
-            text_list = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=False)
+            text_list = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=True)
         else:
             text_list = [text]
 
@@ -187,3 +193,6 @@ def em_range(n):
         return [x for x in range(-m, m+1)]
     else:
         return [x+0.5 for x in range(-m, m)]
+
+def points_to_str(points):
+    return ' '.join([str(point) for point in points])

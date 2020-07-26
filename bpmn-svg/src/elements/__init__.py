@@ -35,7 +35,7 @@ default_theme = {
         'gap-between-text-and-pool-group': 1,
         'text-rect': {
             'pad-spec': {
-                'left': 10, 'top': 10, 'right': 10, 'bottom': 10
+                'left': 5, 'top': 5, 'right': 5, 'bottom': 5
             },
             'style': {
                 'fill': '#F0F0F0', 'stroke-width': 1, 'stroke': '#475F94'
@@ -59,7 +59,7 @@ default_theme = {
         'gap-between-text-and-block-group': 0,
         'text-rect': {
             'pad-spec': {
-                'left': 10, 'top': 10, 'right': 10, 'bottom': 10
+                'left': 2, 'top': 2, 'right': 2, 'bottom': 2
             },
             'style': {
                 'fill': '#D0D0D0', 'stroke-width': 1, 'stroke': '#B8B8B8'
@@ -90,6 +90,21 @@ default_theme = {
         'dx-between-elements': 40
     },
     'EventStart': {
+        'text-rect': {
+            'min-width': 40, 'max-width': 120,
+            'max-lines': 4,
+            'rx': 0, 'ry': 0,
+            'pad-spec': {
+                'left': 2, 'top': 5, 'right': 2, 'bottom': 5
+            },
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+            },
+            'vertical-text': False,
+            'text-style': {
+                'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'calibri', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+            }
+        },
         'outer-circle': {
             'radius': 20,
             'style': {
@@ -98,6 +113,21 @@ default_theme = {
         }
     },
     'EventIntermediate': {
+        'text-rect': {
+            'min-width': 40, 'max-width': 120,
+            'max-lines': 4,
+            'rx': 0, 'ry': 0,
+            'pad-spec': {
+                'left': 2, 'top': 5, 'right': 2, 'bottom': 5
+            },
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+            },
+            'vertical-text': False,
+            'text-style': {
+                'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'calibri', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+            }
+        },
         'outer-circle': {
             'radius': 20,
             'style': {
@@ -112,6 +142,21 @@ default_theme = {
         }
     },
     'EventEnd': {
+        'text-rect': {
+            'min-width': 40, 'max-width': 120,
+            'max-lines': 4,
+            'rx': 0, 'ry': 0,
+            'pad-spec': {
+                'left': 2, 'top': 5, 'right': 2, 'bottom': 5
+            },
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+            },
+            'vertical-text': False,
+            'text-style': {
+                'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'calibri', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+            }
+        },
         'outer-circle': {
             'radius': 20,
             'style': {
@@ -134,6 +179,101 @@ default_theme = {
             'text-style': {
                 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'calibri', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
             }
+        }
+    },
+    'ActivitySubprocess': {
+        'text-rect': {
+            'min-width': 80, 'max-width': 160,
+            'max-lines': 4,
+            'rx': 5, 'ry': 5,
+            'pad-spec': {
+                'left': 10, 'top': 10, 'right': 10, 'bottom': 10
+            },
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#80FF80'
+            },
+            'vertical-text': False,
+            'text-style': {
+                'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'calibri', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+            }
+        }
+    },
+    'GatewayInclusive': {
+        'text-rect': {
+            'min-width': 80, 'max-width': 120,
+            'max-lines': 4,
+            'rx': 5, 'ry': 5,
+            'pad-spec': {
+                'left': 5, 'top': 5, 'right': 5, 'bottom': 5
+            },
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+            },
+            'vertical-text': False,
+            'text-style': {
+                'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'calibri', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+            }
+        },
+        'diamond': {
+            'diagonal': 40,
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+            },
+            'inner-shape-style': {
+                'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
+            },
+        }
+    },
+    'GatewayExclusive': {
+        'text-rect': {
+            'min-width': 80, 'max-width': 120,
+            'max-lines': 4,
+            'rx': 5, 'ry': 5,
+            'pad-spec': {
+                'left': 5, 'top': 5, 'right': 5, 'bottom': 5
+            },
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+            },
+            'vertical-text': False,
+            'text-style': {
+                'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'calibri', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+            }
+        },
+        'diamond': {
+            'diagonal': 40,
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+            },
+            'inner-shape-style': {
+                'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
+            },
+        }
+    },
+    'GatewayParallel': {
+        'text-rect': {
+            'min-width': 80, 'max-width': 120,
+            'max-lines': 4,
+            'rx': 5, 'ry': 5,
+            'pad-spec': {
+                'left': 5, 'top': 5, 'right': 5, 'bottom': 5
+            },
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+            },
+            'vertical-text': False,
+            'text-style': {
+                'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'calibri', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+            }
+        },
+        'diamond': {
+            'diagonal': 40,
+            'style': {
+                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+            },
+            'inner-shape-style': {
+                'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
+            },
         }
     }
 }

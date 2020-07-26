@@ -1,0 +1,160 @@
+{
+    "award_publication": {
+        "styles": {},
+        "label": "Award and Publication Management",
+        "lanes": {
+            "ictd": {
+                "styles": {},
+                "label": "ICT Division",
+                "pools": {
+                    "employee": {
+                        "styles": {},
+                        "label": "Global Admin",
+                        "nodes": {
+                            "start1": {
+                                "type": "intermediate",
+                                "label": "New award/publication",
+                                "styles": {}
+                            },
+                            "upload_form": {
+                                "type": "task",
+                                "label": "Upload award publication information form",
+                                "styles": {}
+                            },
+                            "send_to_authority": {
+                                "type": "task",
+                                "label": "Send request to authority",
+                                "styles": {}
+                            },
+                            "modify": {
+                                "type": "task",
+                                "label": "Create User Procurement Entity 1",
+                                "styles": {}
+                            }
+                        },
+                        "edges": [
+                            {
+                                "head": "start1",
+                                "tail": "upload_form",
+                                "type": "..>",
+                                "styles": {}
+                            }
+                        ]
+                    },
+                    "authority": {
+                        "styles": {},
+                        "label": "Authority",
+                        "nodes": {
+                            "receice_request": {
+                                "type": "task",
+                                "label": "Receive request",
+                                "styles": {}
+                            },
+                            "verify_request": {
+                                "type": "task",
+                                "label": "Verify employee request",
+                                "styles": {}
+                            },
+                            "request_approval": {
+                                "type": "exclusive",
+                                "label": "Approved?",
+                                "styles": {}
+                            },
+                            "send_back_for_modification": {
+                                "type": "task",
+                                "label": "Send back form for modification",
+                                "styles": {}
+                            }
+                        },
+                        "edges": [
+                            {
+                                "head": "receice_request",
+                                "tail": "verify_request",
+                                "type": "..>",
+                                "styles": {}
+                            },
+                            {
+                                "head": "verify_request",
+                                "tail": "request_approval",
+                                "type": "..>",
+                                "styles": {}
+                            },
+                            {
+                                "head": "request_approval",
+                                "tail": "send_back_for_modification",
+                                "type": "..>",
+                                "styles": {
+                                    "label": "No"
+                                }
+                            }
+                        ]
+                    },
+                    "system": {
+                        "styles": {},
+                        "label": "System",
+                        "nodes": {
+                            "notify_employee": {
+                                "type": "task",
+                                "label": "Notify employee",
+                                "styles": {}
+                            },
+                            "update_employee_details": {
+                                "type": "task",
+                                "label": "Update employee details",
+                                "styles": {}
+                            },
+                            "set_view_status": {
+                                "type": "task",
+                                "label": "Set view status of the award(s)/publication(s)",
+                                "styles": {}
+                            },
+                            "end1": {
+                                "type": "end",
+                                "label": "Completed",
+                                "styles": {}
+                            }
+                        },
+                        "edges": [
+                            {
+                                "head": "notify_employee",
+                                "tail": "update_employee_details",
+                                "type": "..>",
+                                "styles": {}
+                            },
+                            {
+                                "head": "update_employee_details",
+                                "tail": "set_view_status",
+                                "type": "..>",
+                                "styles": {}
+                            },
+                            {
+                                "head": "set_view_status",
+                                "tail": "end1",
+                                "type": "..>",
+                                "styles": {}
+                            }
+                        ]
+                    }
+                }
+            },
+            "mopa": {
+                "styles": {},
+                "label": "Ministry of Public Administration (MoPA)",
+                "pools": {
+                    "pmis": {
+                        "styles": {},
+                        "label": "Personnel Management Information System (PMIS)",
+                        "nodes": {
+                            "employee_details": {
+                                "type": "process",
+                                "label": "Employee Details",
+                                "styles": {}
+                            }
+                        },
+                        "edges": []
+                    }
+                }
+            }
+        }
+    }
+}
