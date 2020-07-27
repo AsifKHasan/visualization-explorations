@@ -38,44 +38,22 @@ class GatewayParallel(BpmnElement):
     def collect_elements(self):
         info('......processing node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
-        # get the inner svg's in a list
-        self.node_svgs = rect_with_text(
+        # get the inner svg elements in a list
+        self.node_elements = []
+
+        # the label element
+        label_group, group_width, group_height = rectangle_with_text_inside(
                                     text=self.node_data['label'],
                                     min_width=self.theme['text-rect']['min-width'],
                                     max_width=self.theme['text-rect']['max-width'],
                                     specs=self.theme['text-rect'])
+        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
-        self.node_diamond()
+        # the diamond element
+        diamond_group, group_width, group_height = diaomond_with_cross_inside(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y'], self.theme['diamond']['style'], self.theme['diamond']['inner-shape-style'])
+        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, diamond_group))
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-
-    def node_diamond(self):
-        svg_group = G()
-
-        # make the diamond
-        diagonal = self.theme['diamond']['diagonal']
-        points = [Point(0, diagonal/2), Point(diagonal/2, 0), Point(diagonal, diagonal/2), Point(diagonal/2, diagonal), Point(0, diagonal/2)]
-        diamond_svg = Polyline(points=points_to_str(points))
-        diamond_svg.set_style(StyleBuilder(self.theme['diamond']['style']).getStyle())
-
-        # make the + inside the diamond
-        line1_svg = Line(x1=diagonal * 0.5, y1=diagonal * 0.2, x2=diagonal * 0.5, y2=diagonal * 0.8)
-        line1_svg.set_style(StyleBuilder(self.theme['diamond']['inner-shape-style']).getStyle())
-
-        line2_svg = Line(x1=diagonal * 0.2, y1=diagonal * 0.5, x2=diagonal * 0.8, y2=diagonal * 0.5)
-        line2_svg.set_style(StyleBuilder(self.theme['diamond']['inner-shape-style']).getStyle())
-
-        # add to group
-        svg_group.addElement(diamond_svg)
-        svg_group.addElement(line1_svg)
-        svg_group.addElement(line2_svg)
-
-        group_width = diagonal
-        group_height = diagonal
-
-        # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
-        self.node_svgs.append(SvgElement(group_specs, svg_group))
 
     def assemble_elements(self):
         info('......assembling node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
@@ -83,35 +61,29 @@ class GatewayParallel(BpmnElement):
         # wrap it in a svg group
         svg_group = G(id=self.group_id)
 
-        rect_svg = self.node_svgs[0]
-        text_svg = self.node_svgs[1]
-        diamond_svg_element = self.node_svgs[2]
+        # get the elements
+        label_svg_element = self.node_elements[0]
+        label_svg = label_svg_element.group
+
+        diamond_svg_element = self.node_elements[1]
         diamond_svg = diamond_svg_element.group
 
         # the diamond is to be positioned vertically after the rect_svg and center should be the center of the rect_svg
-        diamond_svg_xy = '{0},{1}'.format((rect_svg.get_width() - diamond_svg_element.specs['width'])/2, rect_svg.get_height())
+        diamond_svg_xy = '{0},{1}'.format((label_svg_element.specs['width'] - diamond_svg_element.specs['width'])/2, label_svg_element.specs['height'])
         transformer = TransformBuilder()
         transformer.setTranslation(diamond_svg_xy)
         diamond_svg.set_transform(transformer.getTransform())
 
-        # place the node rect
-        svg_group.addElement(rect_svg)
-
-        # place the node text
-        svg_group.addElement(text_svg)
-
-        # place the diamond
+        # place the elements
+        svg_group.addElement(label_svg)
         svg_group.addElement(diamond_svg)
 
         # extend the height so that a blank space of the same height as text is at the bottom so that the diamond left edge is at dead vertical center
-        group_width = rect_svg.get_width()
-        group_height = rect_svg.get_height() + diamond_svg_element.specs['height'] + rect_svg.get_height()
-
-        # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
+        group_width = label_svg_element.specs['width']
+        group_height = label_svg_element.specs['height'] + diamond_svg_element.specs['height'] + label_svg_element.specs['height']
 
         info('......assembling node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement(group_specs, svg_group)
+        return SvgElement({'width': group_width, 'height': group_height}, svg_group)
 
     def tune_elements(self):
         info('......tuning node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))

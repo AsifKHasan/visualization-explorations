@@ -38,12 +38,16 @@ class ActivityTask(BpmnElement):
     def collect_elements(self):
         info('......processing node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
-        # get the inner svg's in a list
-        self.node_svgs = rect_with_text(
+        # get the inner svg elements in a list
+        self.node_elements = []
+
+        # the label element
+        label_group, group_width, group_height = rectangle_with_text_inside(
                                     text=self.node_data['label'],
                                     min_width=self.theme['text-rect']['min-width'],
                                     max_width=self.theme['text-rect']['max-width'],
                                     specs=self.theme['text-rect'])
+        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
@@ -53,23 +57,18 @@ class ActivityTask(BpmnElement):
         # wrap it in a svg group
         svg_group = G(id=self.group_id)
 
-        rect_svg = self.node_svgs[0]
-        text_svg = self.node_svgs[1]
+        # get the elements
+        label_svg_element = self.node_elements[0]
+        label_svg = label_svg_element.group
 
-        # place the node rect
-        svg_group.addElement(rect_svg)
+        # place the elements
+        svg_group.addElement(label_svg)
 
-        # place the node text
-        svg_group.addElement(text_svg)
-
-        group_width = rect_svg.get_width()
-        group_height = rect_svg.get_height()
-
-        # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
+        group_width = label_svg_element.specs['width']
+        group_height = label_svg_element.specs['height']
 
         info('......assembling node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement(group_specs, svg_group)
+        return SvgElement({'width': group_width, 'height': group_height}, svg_group)
 
     def tune_elements(self):
         info('......tuning node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))

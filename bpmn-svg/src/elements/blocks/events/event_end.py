@@ -37,34 +37,22 @@ class EventEnd(BpmnElement):
     def collect_elements(self):
         info('......processing node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
-        # get the inner svg's in a list
-        self.node_svgs = rect_with_text(
+        # get the inner svg elements in a list
+        self.node_elements = []
+
+        # the label element
+        label_group, group_width, group_height = rectangle_with_text_inside(
                                     text=self.node_data['label'],
                                     min_width=self.theme['text-rect']['min-width'],
                                     max_width=self.theme['text-rect']['max-width'],
                                     specs=self.theme['text-rect'])
+        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
-        # get the inner svg's in a list
-        self.node_circle()
+        # the circle element
+        circle_group, group_width, group_height = circle(radius=self.theme['outer-circle']['radius'], style=self.theme['outer-circle']['style'])
+        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, circle_group))
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-
-    def node_circle(self):
-        svg_group = G()
-
-        # make the circle
-        circle_svg = Circle(cx=self.theme['outer-circle']['radius'], cy=self.theme['outer-circle']['radius'], r=self.theme['outer-circle']['radius'])
-        circle_svg.set_style(StyleBuilder(self.theme['outer-circle']['style']).getStyle())
-
-        # add to group
-        svg_group.addElement(circle_svg)
-
-        group_width = self.theme['outer-circle']['radius'] * 2
-        group_height = self.theme['outer-circle']['radius'] * 2
-
-        # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
-        self.node_svgs.append(SvgElement(group_specs, svg_group))
 
     def assemble_elements(self):
         info('......assembling node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
@@ -72,36 +60,29 @@ class EventEnd(BpmnElement):
         # wrap it in a svg group
         svg_group = G(id=self.group_id)
 
-        # place the node circle
-        rect_svg = self.node_svgs[0]
-        text_svg = self.node_svgs[1]
-        circle_svg_element = self.node_svgs[2]
+        # get the elements
+        label_svg_element = self.node_elements[0]
+        label_svg = label_svg_element.group
+
+        circle_svg_element = self.node_elements[1]
         circle_svg = circle_svg_element.group
 
         # the circle is vertically below the label
-        circle_svg_xy = '{0},{1}'.format((rect_svg.get_width() - circle_svg_element.specs['width'])/2, rect_svg.get_height())
+        circle_svg_xy = '{0},{1}'.format((label_svg_element.specs['width'] - circle_svg_element.specs['width'])/2, label_svg_element.specs['height'])
         transformer = TransformBuilder()
         transformer.setTranslation(circle_svg_xy)
         circle_svg.set_transform(transformer.getTransform())
 
-        # place the node rect
-        svg_group.addElement(rect_svg)
-
-        # place the node text
-        svg_group.addElement(text_svg)
-
-        # place the diamond
+        # place the elements
+        svg_group.addElement(label_svg)
         svg_group.addElement(circle_svg)
 
         # extend the height so that a blank space of the same height as text is at the bottom so that the circle's left edge is at dead vertical center
-        group_width = rect_svg.get_width()
-        group_height = rect_svg.get_height() + circle_svg_element.specs['height'] + rect_svg.get_height()
-
-        # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
+        group_width = label_svg_element.specs['width']
+        group_height = label_svg_element.specs['height'] + circle_svg_element.specs['height'] + label_svg_element.specs['height']
 
         info('......assembling node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement(group_specs, svg_group)
+        return SvgElement({'width': group_width, 'height': group_height}, svg_group)
 
     def tune_elements(self):
         info('......tuning node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))

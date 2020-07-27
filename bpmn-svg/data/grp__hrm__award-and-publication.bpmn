@@ -6,7 +6,7 @@ graph award_publication {
         pool employee {
             label = "Global Admin"
 
-            intermediate start1 [label="New award/publication";]
+            start start1 [label="New award/publication";]
             task upload_form [label="Upload award publication information form";]
             task send_to_authority [label="Send request to authority";]
             task modify [label="Create User Procurement Entity 1";]
@@ -37,7 +37,11 @@ graph award_publication {
         label = "Ministry of Public Administration (MoPA)"
         pool pmis {
             label = "Personnel Management Information System (PMIS)"
-            process employee_details [label="Employee Details";]
+            adhoc employee_adhoc [label="Employee Adhoc";]
+            process employee_details [label="Employee Details - who is the employee";]
+            transaction employee_transaction [label="Employee Transaction";]
+            event employee_event [label="Employee Event";]
+            call employee_call [label="Employee Call";]
         }
     }
 }

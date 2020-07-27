@@ -55,11 +55,16 @@ class Bpmn(BpmnElement):
         # wrap it in a svg group
         svg_group = G(id=self.bpmn_id)
 
-        lane_group_svg_element = self.child_element_class.assemble_elements()
-        bpmn_body_svg_element = self.get_body_element(lane_group_svg_element)
+        bpmn_body_svg_element = self.get_body_element()
+        bpmn_body_svg = bpmn_body_svg_element.group
 
-        # get the svg element for the text area on top
-        bpmn_text_svg_element = self.get_bpmn_text_svg_element(bpmn_body_svg_element.specs['width'], bpmn_body_svg_element.specs['width'])
+        # get the svg element for the label on top
+        bpmn_label_svg, label_width, label_height = rectangle_with_text_inside(
+                                                    text=self.bpmn_data['label'],
+                                                    min_width=bpmn_body_svg_element.specs['width'],
+                                                    max_width=bpmn_body_svg_element.specs['width'],
+                                                    specs=self.theme['text-rect'],
+                                                    debug_enabled=False)
 
         # assemble bpmn text and bpmn body. text stacked on top of body
         # bpmn has a margin, so the outer group needs a transformation
@@ -68,33 +73,32 @@ class Bpmn(BpmnElement):
         transformer.setTranslation(svg_group_xy)
         svg_group.set_transform(transformer.getTransform())
 
-        # place the bpmn text group
-        svg_group.addElement(bpmn_text_svg_element.group)
-
         # place the bpmn body group just below the text group
-        bpmn_body_svg_xy = '{0},{1}'.format(0, bpmn_text_svg_element.specs['height'])
-        bpmn_body_svg = bpmn_body_svg_element.group
+        bpmn_body_svg_xy = '{0},{1}'.format(0, label_height)
         transformer = TransformBuilder()
         transformer.setTranslation(bpmn_body_svg_xy)
         bpmn_body_svg.set_transform(transformer.getTransform())
 
+        # place the bpmn label
+        svg_group.addElement(bpmn_label_svg)
         svg_group.addElement(bpmn_body_svg)
 
         # wrap in canvas
         canvas_width = bpmn_body_svg_element.specs['width'] + self.theme['margin-spec']['left'] + self.theme['margin-spec']['right']
-        canvas_height = bpmn_text_svg_element.specs['height'] + bpmn_body_svg_element.specs['height'] + self.theme['margin-spec']['top'] + self.theme['margin-spec']['bottom']
+        canvas_height = label_height + bpmn_body_svg_element.specs['height'] + self.theme['margin-spec']['top'] + self.theme['margin-spec']['bottom']
         svg = Svg(0, 0, width=canvas_width, height=canvas_height)
         svg.addElement(svg_group)
 
         info('assembling BPMN [{0}]'.format(self.bpmn_id))
         return svg
 
-    def get_body_element(self, lane_group_svg_element):
+    def get_body_element(self):
         # wrap it in a svg group
         group_id = '{0}-body'.format(self.bpmn_id)
         svg_group = G(id=group_id)
 
         # bpmn's body is the lane group
+        lane_group_svg_element = self.child_element_class.assemble_elements()
         lane_group_svg = lane_group_svg_element.group
 
         # a bpmn body's width is the width of inner lane group + padding
@@ -117,32 +121,4 @@ class Bpmn(BpmnElement):
         svg_group.addElement(lane_group_svg)
 
         # wrap it in a svg element
-        group_specs = {'width': bpmn_body_width, 'height': bpmn_body_height}
-        return SvgElement(group_specs, svg_group)
-
-    def get_bpmn_text_svg_element(self, min_width, max_width):
-        # wrap in a svg group
-        group_id = '{0}-text'.format(self.bpmn_id)
-        svg_group = G(id=group_id)
-
-        # get the svg list of the text, first elemnt is the rect, second element is the text
-        svg_list = rect_with_text(text=self.bpmn_data['label'],
-                                    min_width=min_width,
-                                    max_width=max_width,
-                                    specs=self.theme['text-rect'])
-
-        rect_svg = svg_list[0]
-        text_svg = svg_list[1]
-
-        # place the node rect
-        svg_group.addElement(rect_svg)
-
-        # place the node text
-        svg_group.addElement(text_svg)
-
-        group_width = rect_svg.get_width()
-        group_height = rect_svg.get_height()
-
-        # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
-        return SvgElement(group_specs, svg_group)
+        return SvgElement({'width': bpmn_body_width, 'height': bpmn_body_height}, svg_group)

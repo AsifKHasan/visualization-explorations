@@ -41,7 +41,11 @@ def tokenize(str):
         ('NodeType', (r'intermediate',)),
         ('NodeType', (r'end',)),
         ('NodeType', (r'task',)),
+        ('NodeType', (r'call',)),
         ('NodeType', (r'process',)),
+        ('NodeType', (r'transaction',)),
+        ('NodeType', (r'event',)),
+        ('NodeType', (r'adhoc',)),
         ('NodeType', (r'inclusive',)),
         ('NodeType', (r'parallel',)),
         ('NodeType', (r'exclusive',)),
@@ -67,7 +71,7 @@ def parse(seq):
     op = lambda s: a(Token('Op', s)) >> tokval
     op_ = lambda s: skip(op(s))
 
-    node_type = some(lambda t: t.value in ['start', 'intermediate', 'end', 'task', 'process', 'inclusive', 'exclusive', 'parallel']).named('type') >> tokval
+    node_type = some(lambda t: t.value in ['start', 'intermediate', 'end', 'task', 'call', 'process', 'transaction', 'event', 'adhoc', 'inclusive', 'exclusive', 'parallel']).named('type') >> tokval
 
     id_types = ['Name', 'Number', 'String']
     id = some(lambda t: t.type in id_types).named('id') >> tokval

@@ -15,7 +15,125 @@ import textwrap
 from util.logger import *
 from util.geometry import Point
 
-def rect_with_text(text, min_width, max_width, specs, debug_enabled=False):
+# returns a tuple (svg group, group_width, group_height)
+def circle(radius, style):
+    svg_group = G()
+
+    circle_svg = Circle(cx=radius, cy=radius, r=radius)
+    circle_svg.set_style(StyleBuilder(style).getStyle())
+
+    # add to group
+    svg_group.addElement(circle_svg)
+    return svg_group, radius * 2, radius * 2
+
+# returns a tuple (svg group, group_width, group_height)
+def rectangle(width, height, rx, ry, style):
+    svg_group = G()
+
+    rect_svg = Rect(width=width, height=height, rx=rx, ry=ry)
+    rect_svg.set_style(StyleBuilder(style).getStyle())
+
+    # add to group
+    svg_group.addElement(rect_svg)
+    return svg_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def diamond(diagonal_x, diagonal_y, style):
+    svg_group = G()
+
+    points = [Point(0, diagonal_y/2), Point(diagonal_x/2, 0), Point(diagonal_x, diagonal_y/2), Point(diagonal_x/2, diagonal_y), Point(0, diagonal_y/2)]
+    diamond_svg = Polyline(points=points_to_str(points))
+    diamond_svg.set_style(StyleBuilder(style).getStyle())
+
+    # add to group
+    svg_group.addElement(diamond_svg)
+    return svg_group, diagonal_x, diagonal_y
+
+# returns a tuple (svg group, group_width, group_height)
+def circle_with_circle_inside(outer_radius, inner_radius, outer_style, inner_style):
+    svg_group = G()
+
+    # outer circle
+    outer_circle_svg = Circle(cx=outer_radius, cy=outer_radius, r=outer_radius)
+    outer_circle_svg.set_style(StyleBuilder(outer_style).getStyle())
+
+    # inner circle
+    inner_circle_svg = Circle(cx=outer_radius, cy=outer_radius, r=inner_radius)
+    inner_circle_svg.set_style(StyleBuilder(inner_style).getStyle())
+
+    # add to group
+    svg_group.addElement(outer_circle_svg)
+    svg_group.addElement(inner_circle_svg)
+
+    return svg_group, outer_radius * 2, outer_radius * 2
+
+# returns a tuple (svg group, group_width, group_height)
+def rectangle_with_cross_inside(width, height, rx, ry, style, x_style):
+    svg_group, group_width, group_height = rectangle(width, height, rx, ry, style)
+
+    # make the X inside the diamond
+    line1_svg = Line(x1=width * 0.2, y1=height * 0.5, x2=width * 0.8, y2=height * 0.5)
+    line1_svg.set_style(StyleBuilder(x_style).getStyle())
+
+    line2_svg = Line(x1=width * 0.5, y1=height * 0.2, x2=width * 0.5, y2=height * 0.8)
+    line2_svg.set_style(StyleBuilder(x_style).getStyle())
+
+    # add to group
+    svg_group.addElement(line1_svg)
+    svg_group.addElement(line2_svg)
+
+    return svg_group, group_width, group_height
+
+# returns a tuple (svg group, group_width, group_height)
+def diaomond_with_x_inside(diagonal_x, diagonal_y, style, x_style):
+    svg_group, group_width, group_height = diamond(diagonal_x, diagonal_y, style)
+
+    # make the X inside the diamond
+    line1_svg = Line(x1=diagonal_x * 0.33, y1=diagonal_y * 0.33, x2=diagonal_x * 0.67, y2=diagonal_y * 0.67)
+    line1_svg.set_style(StyleBuilder(x_style).getStyle())
+
+    line2_svg = Line(x1=diagonal_x * 0.67, y1=diagonal_y * 0.33, x2=diagonal_x * 0.33, y2=diagonal_y * 0.67)
+    line2_svg.set_style(StyleBuilder(x_style).getStyle())
+
+    # add to group
+    svg_group.addElement(line1_svg)
+    svg_group.addElement(line2_svg)
+
+    return svg_group, group_width, group_height
+
+# returns a tuple (svg group, group_width, group_height)
+def diaomond_with_cross_inside(diagonal_x, diagonal_y, style, x_style):
+    svg_group, group_width, group_height = diamond(diagonal_x, diagonal_y, style)
+
+    # make the X inside the diamond
+    line1_svg = Line(x1=diagonal_x * 0.5, y1=diagonal_y * 0.2, x2=diagonal_x * 0.5, y2=diagonal_y * 0.8)
+    line1_svg.set_style(StyleBuilder(x_style).getStyle())
+
+    line2_svg = Line(x1=diagonal_x * 0.2, y1=diagonal_y * 0.5, x2=diagonal_x * 0.8, y2=diagonal_y * 0.5)
+    line2_svg.set_style(StyleBuilder(x_style).getStyle())
+
+    # add to group
+    svg_group.addElement(line1_svg)
+    svg_group.addElement(line2_svg)
+
+    return svg_group, group_width, group_height
+
+# returns a tuple (svg group, group_width, group_height)
+def diaomond_with_circle_inside(diagonal_x, diagonal_y, style, x_style):
+    svg_group, group_width, group_height = diamond(diagonal_x, diagonal_y, style)
+
+    # make the circle inside the diamond
+    circle_svg = Circle(cx=diagonal_x * 0.5, cy=diagonal_y * 0.5, r=min(diagonal_x, diagonal_y) * 0.25)
+    circle_svg.set_style(StyleBuilder(x_style).getStyle())
+
+    # add to group
+    svg_group.addElement(circle_svg)
+
+    return svg_group, group_width, group_height
+
+# returns a tuple (svg group, group_width, group_height)
+def rectangle_with_text_inside(text, min_width, max_width, specs, debug_enabled=False):
+
     # to get the width, height we need to calculate the text rendering function
     vertical_text = specs['vertical-text']
     text_rendering_hint = break_text_inside_rect(
@@ -37,19 +155,53 @@ def rect_with_text(text, min_width, max_width, specs, debug_enabled=False):
 
     rx = specs['rx'] if 'rx' in specs else 0
     ry = specs['ry'] if 'ry' in specs else 0
-    text_rect = Rect(width=width, height=height, rx=rx, ry=ry)
-    text_rect.set_style(StyleBuilder(specs['style']).getStyle())
+
+    # create the rectangle
+    svg_group, group_width, group_height = rectangle(width=width, height=height, rx=rx, ry=ry, style=specs['style'])
 
     # render the text
-    text_svg = center_text(
+    text_svg = center_text_inside_rect(
                     text=text_rendering_hint[0],
-                    shape=text_rect,
+                    width=group_width,
+                    height=group_height,
                     style=specs['text-style'],
                     vertical_text=vertical_text,
                     pad_spec=specs['pad-spec'])
 
-    return [text_rect, text_svg]
+    # add the svg's into group
+    svg_group.addElement(text_svg)
 
+    return svg_group, group_width, group_height
+
+# returns a tuple (svg group, group_width, group_height)
+def align_and_combine_horizontally(svg_elements):
+    svg_group = G()
+
+    # we are aligning horizontally, so we need the height of the element which is maximum
+    group_height = 0
+    for svg_element in svg_elements:
+        group_height = max(group_height, svg_element.specs['height'])
+
+    # now we place the elements in the group side by side with height adjustment
+    group_width = 0
+    for svg_element in svg_elements:
+        element_svg = svg_element.group
+        height_to_adjust = (group_height - svg_element.specs['height']) / 2
+        # now do the transformation
+        element_svg_xy = '{0},{1}'.format(group_width, height_to_adjust)
+        transformer = TransformBuilder()
+        transformer.setTranslation(element_svg_xy)
+        element_svg.set_transform(transformer.getTransform())
+        svg_group.addElement(element_svg)
+
+        group_width = group_width + svg_element.specs['width']
+
+    return svg_group, group_width, group_height
+
+
+#   -----------------------------------------------------------------------------------------------------------------------------------------------------
+#   internal utility functions
+#   -----------------------------------------------------------------------------------------------------------------------------------------------------
 '''
     text        : text that needs to be fitted
     font_family : the font to render the text in
@@ -95,7 +247,7 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
     # we will actually show upto max_lines
     if approximate_lines > max_lines:
         text_wrap_at = math.ceil(len(text) / approximate_lines)
-        text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=True)
+        text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=False)
         width = 0
         height = pad_spec['top'] + pad_spec['bottom']
         for line in text_lines[:max_lines]:
@@ -113,7 +265,7 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
     for break_into in range(2, max_lines + 1):
         # break the text into equal sized parts (for better visuals)
         text_wrap_at = math.ceil(len(text) / break_into)
-        text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=True)
+        text_lines = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=False)
         width = 0
         height = pad_spec['top'] + pad_spec['bottom']
         for line in text_lines:
@@ -134,7 +286,7 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
     width = width + pad_spec['left'] + pad_spec['right']
     return (text_lines, width, height)
 
-def center_text(text, shape, style, vertical_text=False, pad_spec=None, text_wrap_at=0, debug=False):
+def center_text_inside_rect(text, width, height, style, vertical_text=False, pad_spec=None, text_wrap_at=0, debug=False):
     if pad_spec is None:
         pad_spec = {'left': 10, 'top': 10, 'right': 10, 'bottom': 10}
 
@@ -143,8 +295,8 @@ def center_text(text, shape, style, vertical_text=False, pad_spec=None, text_wra
     else:
         style['writing-mode'] = 'horizontal-tb'
 
-    shape_width = shape.get_width() - pad_spec['left'] - pad_spec['right']
-    shape_height = shape.get_height() - pad_spec['top'] - pad_spec['bottom']
+    shape_width = width - pad_spec['left'] - pad_spec['right']
+    shape_height = height - pad_spec['top'] - pad_spec['bottom']
     svg = Svg(pad_spec['left'], pad_spec['top'], width=shape_width, height=shape_height)
 
     t = Text(None)
@@ -155,7 +307,7 @@ def center_text(text, shape, style, vertical_text=False, pad_spec=None, text_wra
         text_list = text
     else:
         if text_wrap_at > 0:
-            text_list = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=True)
+            text_list = textwrap.wrap(text=text, width=text_wrap_at, break_long_words=False)
         else:
             text_list = [text]
 

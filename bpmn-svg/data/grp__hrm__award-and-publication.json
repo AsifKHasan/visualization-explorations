@@ -12,7 +12,7 @@
                         "label": "Global Admin",
                         "nodes": {
                             "start1": {
-                                "type": "intermediate",
+                                "type": "start",
                                 "label": "New award/publication",
                                 "styles": {}
                             },
@@ -145,9 +145,29 @@
                         "styles": {},
                         "label": "Personnel Management Information System (PMIS)",
                         "nodes": {
+                            "employee_adhoc": {
+                                "type": "adhoc",
+                                "label": "Employee Adhoc",
+                                "styles": {}
+                            },
                             "employee_details": {
                                 "type": "process",
-                                "label": "Employee Details",
+                                "label": "Employee Details - who is the employee",
+                                "styles": {}
+                            },
+                            "employee_transaction": {
+                                "type": "transaction",
+                                "label": "Employee Transaction",
+                                "styles": {}
+                            },
+                            "employee_event": {
+                                "type": "event",
+                                "label": "Employee Event",
+                                "styles": {}
+                            },
+                            "employee_call": {
+                                "type": "call",
+                                "label": "Employee Call",
                                 "styles": {}
                             }
                         },

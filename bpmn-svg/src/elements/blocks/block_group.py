@@ -21,9 +21,12 @@ from elements.svg_element import SvgElement
 
 CLASSES = {
     # activities
-    'task':         {'module': 'elements.blocks.activities.activity_task',              'class': 'ActivityTask'},
-    'process':      {'module': 'elements.blocks.activities.activity_subprocess',        'class': 'ActivitySubprocess'},
-    'call':         {'module': 'elements.blocks.activities.activity_call',              'class': 'ActivityCall'},
+    'task':         {'module': 'elements.blocks.activities.activity_task',                      'class': 'ActivityTask'},
+    'call':         {'module': 'elements.blocks.activities.activity_call',                      'class': 'ActivityCall'},
+    'process':      {'module': 'elements.blocks.activities.activity_subprocess',                'class': 'ActivitySubprocess'},
+    'transaction':  {'module': 'elements.blocks.activities.activity_subprocess_transaction',    'class': 'ActivityTransactionSubprocess'},
+    'event':        {'module': 'elements.blocks.activities.activity_subprocess_event',          'class': 'ActivityEventSubprocess'},
+    'adhoc':        {'module': 'elements.blocks.activities.activity_subprocess_adhoc',          'class': 'ActivityAdhocSubprocess'},
 
     # artifacts
     'group':        {'module': 'elements.blocks.artifacts.artifact_group',              'class': 'ArtifactGroup'},
@@ -40,7 +43,7 @@ CLASSES = {
     # gateways
     'inclusive':    {'module': 'elements.blocks.gateways.gateway_inclusive',            'class': 'GatewayInclusive'},
     'exclusive':    {'module': 'elements.blocks.gateways.gateway_exclusive',            'class': 'GatewayExclusive'},
-    'parallel':    {'module': 'elements.blocks.gateways.gateway_parallel',            'class': 'GatewayParallel'},
+    'parallel':     {'module': 'elements.blocks.gateways.gateway_parallel',            'class': 'GatewayParallel'},
 
     # flows
     'sequence':     {'module': 'elements.blocks.flows.flow_sequence',                   'class': 'FlowSequence'},

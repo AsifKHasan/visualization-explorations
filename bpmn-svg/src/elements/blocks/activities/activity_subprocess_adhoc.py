@@ -17,10 +17,10 @@ from util.svg_util import *
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
 
-class ActivitySubprocess(BpmnElement):
-    # a subprocess activity is a rounded rectangle with text inside and a + at the bottom floor of the rectangle below the text
+class ActivityAdhocSubprocess(BpmnElement):
+    # a subprocess activity is a rounded rectangle with text inside and a + and a ~ side by side at the bottom floor of the rectangle below the text
     def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        self.theme = self.current_theme['ActivitySubprocess']
+        self.theme = self.current_theme['ActivityAdhocSubprocess']
         self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
         self.group_id = 'N-{0}:{1}:{2}:{3}'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id)
 
@@ -43,10 +43,10 @@ class ActivitySubprocess(BpmnElement):
 
         # the label element
         label_group, group_width, group_height = rectangle_with_text_inside(
-                                    text=self.node_data['label'],
-                                    min_width=self.theme['text-rect']['min-width'],
-                                    max_width=self.theme['text-rect']['max-width'],
-                                    specs=self.theme['text-rect'])
+                                                    text=self.node_data['label'],
+                                                    min_width=self.theme['text-rect']['min-width'],
+                                                    max_width=self.theme['text-rect']['max-width'],
+                                                    specs=self.theme['text-rect'])
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
         rect_group, group_width, group_height = rectangle_with_cross_inside(
@@ -57,6 +57,13 @@ class ActivitySubprocess(BpmnElement):
                                                     style=self.theme['inner-rect']['style'],
                                                     x_style=self.theme['inner-rect']['style'])
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, rect_group))
+
+        wave_group, group_width, group_height = rectangle_with_text_inside(
+                                                    text='~',
+                                                    min_width=self.theme['wave-rect']['min-width'],
+                                                    max_width=self.theme['wave-rect']['max-width'],
+                                                    specs=self.theme['wave-rect'])
+        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, wave_group))
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
@@ -71,21 +78,22 @@ class ActivitySubprocess(BpmnElement):
         label_svg = label_svg_element.group
 
         rect_svg_element = self.node_elements[1]
-        rect_svg = rect_svg_element.group
+        wave_svg_element = self.node_elements[2]
 
-        # place the elements
-        svg_group.addElement(label_svg)
+        combined_svg, combined_svg_width, combined_svg_height = align_and_combine_horizontally([rect_svg_element, wave_svg_element])
 
-        # the rect is inside teh label, we keep a gap betwwen the bottom edge of the label and the botto edge of the rect
+        # the rect is inside the label, we keep a gap betwwen the bottom edge of the label and the botto edge of the rect
         gap_between_label_and_rect_bootom_edges = 5
-        rect_svg_xy = '{0},{1}'.format((label_svg_element.specs['width'] - rect_svg_element.specs['width'])/2, label_svg_element.specs['height'] - rect_svg_element.specs['height'] - gap_between_label_and_rect_bootom_edges)
+        combined_svg_xy = '{0},{1}'.format((label_svg_element.specs['width'] - combined_svg_width)/2, label_svg_element.specs['height'] - combined_svg_height - gap_between_label_and_rect_bootom_edges)
         transformer = TransformBuilder()
-        transformer.setTranslation(rect_svg_xy)
-        rect_svg.set_transform(transformer.getTransform())
+        transformer.setTranslation(combined_svg_xy)
+        combined_svg.set_transform(transformer.getTransform())
+
+        # the wave is inside teh label, we keep a gap betwwen the bottom edge of the label and the bottom edge of the rect
 
         # place the elements
         svg_group.addElement(label_svg)
-        svg_group.addElement(rect_svg)
+        svg_group.addElement(combined_svg)
 
         group_width = label_svg_element.specs['width']
         group_height = label_svg_element.specs['height']
