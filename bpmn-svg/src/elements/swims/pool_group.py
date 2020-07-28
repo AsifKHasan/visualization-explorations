@@ -21,7 +21,7 @@ from elements.swims.swim_pool import SwimPool
 class PoolGroup(BpmnElement):
     # a pool group is a vertical stack of pools
     def __init__(self, bpmn_id, lane_id, pools):
-        self.theme = self.current_theme['PoolGroup']
+        self.theme = self.current_theme['swims']['PoolGroup']
         self.bpmn_id, self.lane_id, self.pools = bpmn_id, lane_id, pools
 
     def get_max_width_of_elements_of_children(self):

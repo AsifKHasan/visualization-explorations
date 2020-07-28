@@ -17,10 +17,9 @@ from util.svg_util import *
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
 
-class GatewayInclusive(BpmnElement):
-    # an exclusive Gateway is a diamond with a circle inside the diamond and label outside the diamong either on top or bottom
+class EventEnd(BpmnElement):
     def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        self.theme = self.current_theme['GatewayInclusive']
+        self.theme = self.current_theme['events']['ends']['EventEnd']
         self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
         self.group_id = 'N-{0}:{1}:{2}:{3}'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id)
 
@@ -49,14 +48,14 @@ class GatewayInclusive(BpmnElement):
                                     specs=self.theme['text-rect'])
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
-        # the diamond element
-        diamond_group, group_width, group_height = diaomond_with_circle_inside(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y'], self.theme['diamond']['style'], self.theme['diamond']['inner-shape-style'])
-        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, diamond_group))
+        # the circle element
+        circle_group, group_width, group_height = circle(radius=self.theme['outer-circle']['radius'], style=self.theme['outer-circle']['style'])
+        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, circle_group))
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
     def assemble_elements(self):
-        info('......assembling node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
+        info('......assembling node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
         # wrap it in a svg group
         svg_group = G(id=self.group_id)
@@ -65,22 +64,22 @@ class GatewayInclusive(BpmnElement):
         label_svg_element = self.node_elements[0]
         label_svg = label_svg_element.group
 
-        diamond_svg_element = self.node_elements[1]
-        diamond_svg = diamond_svg_element.group
+        circle_svg_element = self.node_elements[1]
+        circle_svg = circle_svg_element.group
 
-        # the diamond is to be positioned vertically after the rect_svg and center should be the center of the rect_svg
-        diamond_svg_xy = '{0},{1}'.format((label_svg_element.specs['width'] - diamond_svg_element.specs['width'])/2, label_svg_element.specs['height'])
+        # the circle is vertically below the label
+        circle_svg_xy = '{0},{1}'.format((label_svg_element.specs['width'] - circle_svg_element.specs['width'])/2, label_svg_element.specs['height'])
         transformer = TransformBuilder()
-        transformer.setTranslation(diamond_svg_xy)
-        diamond_svg.set_transform(transformer.getTransform())
+        transformer.setTranslation(circle_svg_xy)
+        circle_svg.set_transform(transformer.getTransform())
 
         # place the elements
         svg_group.addElement(label_svg)
-        svg_group.addElement(diamond_svg)
+        svg_group.addElement(circle_svg)
 
-        # extend the height so that a blank space of the same height as text is at the bottom so that the diamond left edge is at dead vertical center
+        # extend the height so that a blank space of the same height as text is at the bottom so that the circle's left edge is at dead vertical center
         group_width = label_svg_element.specs['width']
-        group_height = label_svg_element.specs['height'] + diamond_svg_element.specs['height'] + label_svg_element.specs['height']
+        group_height = label_svg_element.specs['height'] + circle_svg_element.specs['height'] + label_svg_element.specs['height']
 
         info('......assembling node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
         return SvgElement({'width': group_width, 'height': group_height}, svg_group)

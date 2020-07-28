@@ -17,10 +17,10 @@ from util.svg_util import *
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
 
-class ActivityTransactionSubprocess(BpmnElement):
-    # a subprocess activity is a rounded rectangle containing another rounded rectangle with text inside and a + at the bottom floor of the rectangle below the text
+class ActivitySubprocess(BpmnElement):
+    # a subprocess activity is a rounded rectangle with text inside and a + at the bottom floor of the rectangle below the text
     def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        self.theme = self.current_theme['ActivityTransactionSubprocess']
+        self.theme = self.current_theme['activities']['subprocesses']['ActivitySubprocess']
         self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
         self.group_id = 'N-{0}:{1}:{2}:{3}'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id)
 
@@ -70,37 +70,25 @@ class ActivityTransactionSubprocess(BpmnElement):
         label_svg_element = self.node_elements[0]
         label_svg = label_svg_element.group
 
-        inner_rect_svg_element = self.node_elements[1]
-        inner_rect_svg = inner_rect_svg_element.group
+        rect_svg_element = self.node_elements[1]
+        rect_svg = rect_svg_element.group
 
-        # there is an outer rect
-        group_width = label_svg_element.specs['width'] + self.theme['outer-rect']['pad-spec']['left'] + self.theme['outer-rect']['pad-spec']['right']
-        group_height = label_svg_element.specs['height'] + self.theme['outer-rect']['pad-spec']['top'] + self.theme['outer-rect']['pad-spec']['bottom']
-
-        outer_rect_svg, group_width, group_height = rectangle(width=group_width, height=group_height, rx=self.theme['outer-rect']['rx'], ry=self.theme['outer-rect']['ry'], style=self.theme['outer-rect']['style'])
-
-        # label svg will move
-        label_svg_x = self.theme['outer-rect']['pad-spec']['left']
-        label_svg_y = self.theme['outer-rect']['pad-spec']['top']
-        label_svg_xy = '{0},{1}'.format(label_svg_x, label_svg_y)
-        transformer = TransformBuilder()
-        transformer.setTranslation(label_svg_xy)
-        label_svg.set_transform(transformer.getTransform())
+        # place the elements
+        svg_group.addElement(label_svg)
 
         # the rect is inside teh label, we keep a gap betwwen the bottom edge of the label and the botto edge of the rect
         gap_between_label_and_rect_bootom_edges = 5
-        inner_rect_svg_x = (group_width - inner_rect_svg_element.specs['width'])/2
-        inner_rect_svg_y = group_height - inner_rect_svg_element.specs['height'] - gap_between_label_and_rect_bootom_edges - self.theme['outer-rect']['pad-spec']['top']
-        inner_rect_svg_xy = '{0},{1}'.format(inner_rect_svg_x, inner_rect_svg_y)
+        rect_svg_xy = '{0},{1}'.format((label_svg_element.specs['width'] - rect_svg_element.specs['width'])/2, label_svg_element.specs['height'] - rect_svg_element.specs['height'] - gap_between_label_and_rect_bootom_edges)
         transformer = TransformBuilder()
-        transformer.setTranslation(inner_rect_svg_xy)
-        inner_rect_svg.set_transform(transformer.getTransform())
+        transformer.setTranslation(rect_svg_xy)
+        rect_svg.set_transform(transformer.getTransform())
 
         # place the elements
-        svg_group.addElement(outer_rect_svg)
         svg_group.addElement(label_svg)
-        svg_group.addElement(inner_rect_svg)
+        svg_group.addElement(rect_svg)
 
+        group_width = label_svg_element.specs['width']
+        group_height = label_svg_element.specs['height']
 
         info('......assembling node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
         return SvgElement({'width': group_width, 'height': group_height}, svg_group)

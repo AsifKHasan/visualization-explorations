@@ -16,7 +16,7 @@ from elements.swims.lane_group import LaneGroup
 class Bpmn(BpmnElement):
     # Bpmn is a text rectangle on top of another rectangle containing the lane groups
     def __init__(self, bpmn_id, bpmn_data):
-        self.theme = self.current_theme['Bpmn']
+        self.theme = self.current_theme['bpmn']
         self.bpmn_id, self.bpmn_data = bpmn_id, bpmn_data
 
     def to_svg(self):

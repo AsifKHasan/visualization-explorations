@@ -16,6 +16,16 @@
                                 "label": "New award/publication",
                                 "styles": {}
                             },
+                            "start2": {
+                                "type": "startSignal",
+                                "label": "New award/publication",
+                                "styles": {}
+                            },
+                            "start3": {
+                                "type": "startSignalNon",
+                                "label": "New award/publication",
+                                "styles": {}
+                            },
                             "upload_form": {
                                 "type": "task",
                                 "label": "Upload award publication information form",

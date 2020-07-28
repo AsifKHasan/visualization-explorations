@@ -21,7 +21,7 @@ from elements.swims.swim_lane import SwimLane
 class LaneGroup(BpmnElement):
     # a lane group is a vertical stack of lanes
     def __init__(self, bpmn_id, lanes):
-        self.theme = self.current_theme['LaneGroup']
+        self.theme = self.current_theme['swims']['LaneGroup']
         self.bpmn_id, self.lanes = bpmn_id, lanes
 
     def get_max_width_of_elements_of_children(self):

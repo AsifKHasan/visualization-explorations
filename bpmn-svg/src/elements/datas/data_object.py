@@ -19,7 +19,7 @@ from elements.svg_element import SvgElement
 
 class DataObject(BpmnElement):
     def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        self.theme = self.current_theme['DataObject']
+        self.theme = self.current_theme['datas']['DataObject']
         self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
         self.group_id = 'N-{0}:{1}:{2}:{3}'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id)
 

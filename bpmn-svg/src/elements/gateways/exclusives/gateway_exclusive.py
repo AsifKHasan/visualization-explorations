@@ -13,14 +13,15 @@ from pysvg.text import *
 
 from util.logger import *
 from util.svg_util import *
+from util.geometry import Point
 
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
 
-class GatewayParallel(BpmnElement):
-    # an exclusive Gateway is a diamond with a + inside the diamond and label outside the diamong either on top or bottom
+class GatewayExclusive(BpmnElement):
+    # an exclusive Gateway is a diamond with a X inside the diamond and label outside the diamong either on top or bottom
     def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        self.theme = self.current_theme['GatewayParallel']
+        self.theme = self.current_theme['gateways']['exclusives']['GatewayExclusive']
         self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
         self.group_id = 'N-{0}:{1}:{2}:{3}'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id)
 
@@ -50,7 +51,7 @@ class GatewayParallel(BpmnElement):
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
         # the diamond element
-        diamond_group, group_width, group_height = diaomond_with_cross_inside(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y'], self.theme['diamond']['style'], self.theme['diamond']['inner-shape-style'])
+        diamond_group, group_width, group_height = diaomond_with_x_inside(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y'], self.theme['diamond']['style'], self.theme['diamond']['inner-shape-style'])
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, diamond_group))
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))

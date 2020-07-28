@@ -37,18 +37,30 @@ def tokenize(str):
         ('Number', (r'-?(\.[0-9]+)|([0-9]+(\.[0-9]*)?)',)),
         ('String', (r'"[^"]*"',)), # '\"' escapes are ignored
         ('String', (r"'[^']*'",)), # "\'" escapes are ignored
+
         ('NodeType', (r'start',)),
+        ('NodeType', (r'startSignal',)),
+        ('NodeType', (r'startSignalNon',)),
+
         ('NodeType', (r'intermediate',)),
         ('NodeType', (r'end',)),
+
         ('NodeType', (r'task',)),
         ('NodeType', (r'call',)),
         ('NodeType', (r'process',)),
         ('NodeType', (r'transaction',)),
         ('NodeType', (r'event',)),
         ('NodeType', (r'adhoc',)),
+
+        ('NodeType', (r'exclusive',)),
         ('NodeType', (r'inclusive',)),
         ('NodeType', (r'parallel',)),
-        ('NodeType', (r'exclusive',)),
+        ('NodeType', (r'complex',)),
+        ('NodeType', (r'parallel',)),
+        ('NodeType', (r'eventBased',)),
+        ('NodeType', (r'eventBasedStart',)),
+        ('NodeType', (r'eventBasedParallelStart',)),
+
         ('EdgeOp', (r'---',)),
         ('EdgeOp', (r'-->',)),
         ('EdgeOp', (r'<--',)),
@@ -71,7 +83,22 @@ def parse(seq):
     op = lambda s: a(Token('Op', s)) >> tokval
     op_ = lambda s: skip(op(s))
 
-    node_type = some(lambda t: t.value in ['start', 'intermediate', 'end', 'task', 'call', 'process', 'transaction', 'event', 'adhoc', 'inclusive', 'exclusive', 'parallel']).named('type') >> tokval
+    node_type_keywords = [
+        'start', 'startSignal', 'startSignalNon',
+        'intermediate',
+        'end',
+        'task',
+        'call',
+        'process',
+        'transaction',
+        'event',
+        'adhoc',
+        'inclusive',
+        'exclusive',
+        'parallel'
+    ]
+
+    node_type = some(lambda t: t.value in node_type_keywords).named('type') >> tokval
 
     id_types = ['Name', 'Number', 'String']
     id = some(lambda t: t.type in id_types).named('id') >> tokval

@@ -19,7 +19,7 @@ from elements.svg_element import SvgElement
 
 class FlowDataAssociation(BpmnElement):
     def __init__(self, bpmn_id, lane_id, pool_id):
-        self.theme = self.current_theme['FlowDataAssociation']
+        self.theme = self.current_theme['flows']['FlowDataAssociation']
 
     def to_svg(spec_def):
         pass

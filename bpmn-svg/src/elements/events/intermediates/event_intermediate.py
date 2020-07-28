@@ -17,10 +17,10 @@ from util.svg_util import *
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
 
-class EventStart(BpmnElement):
-    # a start event is circle. get a list of svg where the first one is the node circle
+class EventIntermediate(BpmnElement):
+    # an intermediate event is two concentric circles
     def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        self.theme = self.current_theme['EventStart']
+        self.theme = self.current_theme['events']['intermediates']['EventIntermediate']
         self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
         self.group_id = 'N-{0}:{1}:{2}:{3}'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id)
 
@@ -50,7 +50,11 @@ class EventStart(BpmnElement):
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
         # the circle element
-        circle_group, group_width, group_height = circle(radius=self.theme['outer-circle']['radius'], style=self.theme['outer-circle']['style'])
+        circle_group, group_width, group_height = circle_with_circle_inside(
+                                                    outer_radius=self.theme['outer-circle']['radius'],
+                                                    inner_radius=self.theme['inner-circle']['radius'],
+                                                    outer_style=self.theme['outer-circle']['style'],
+                                                    inner_style=self.theme['inner-circle']['style'])
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, circle_group))
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
