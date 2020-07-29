@@ -15,22 +15,14 @@ from util.logger import *
 from util.svg_util import *
 
 from elements.svg_element import SvgElement
-
 from elements.events.starts.event_start import EventStart
 
 class EventStartSignalNon(EventStart):
     # a start event is circle. get a list of svg where the first one is the node circle
     def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data, non_interrupting=True)
-        self.theme.update(self.current_theme['events']['starts']['EventStartSignalNon'])
-
-    def to_svg(self):
-        # get what is to be placed inside the outer circle as an element
-        inside_svg_element = self.get_inside_element()
-
-        # call the parent for doing the label and circle, just supply the inner svg to be placed inside the circle as an element
-        svg_element = super().to_svg(inside_svg_element)
-        return svg_element
+        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+        self.theme = {**self.theme, **self.current_theme['events']['starts']['EventStartSignalNon']}
 
     def get_inside_element(self):
-        return None
+        svg_group, width, height = an_equilateral_triangle_inside_a_circular_shape(radius=self.theme['circle']['radius'], pad=4, style=self.theme['inner-shape-style'])
+        return SvgElement({'width': width, 'height': height}, svg_group)

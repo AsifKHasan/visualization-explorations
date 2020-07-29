@@ -55,7 +55,8 @@ class SwimLane(BpmnElement):
                                                     text=self.lane_data['label'],
                                                     min_width=pool_group_height,
                                                     max_width=pool_group_height,
-                                                    specs=self.theme['text-rect'],
+                                                    rect_specs=self.theme['rectangle'],
+                                                    text_specs=self.theme['text'],
                                                     debug_enabled=False)
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
@@ -79,7 +80,7 @@ class SwimLane(BpmnElement):
         group_width = self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.specs['width'] + self.theme['gap-between-text-and-pool-group'] + pool_group_svg_element.specs['width'] + self.theme['lane-rect']['pad-spec']['right']
 
         # add the lane outline
-        outline_svg, group_width, group_height = rectangle(width=group_width, height=group_height, rx=0, ry=0, style=self.theme['lane-rect']['style'])
+        outline_svg, group_width, group_height = a_rectangle(width=group_width, height=group_height, rx=0, ry=0, style=self.theme['lane-rect']['style'])
 
         # the lane label
         label_svg_xy = '{0},{1}'.format(self.theme['lane-rect']['pad-spec']['left'], self.theme['lane-rect']['pad-spec']['top'])

@@ -18,27 +18,17 @@
                             },
                             "start2": {
                                 "type": "startSignal",
-                                "label": "New award/publication",
+                                "label": "Start Signal",
                                 "styles": {}
                             },
                             "start3": {
                                 "type": "startSignalNon",
-                                "label": "New award/publication",
+                                "label": "Start Signal Non",
                                 "styles": {}
                             },
-                            "upload_form": {
-                                "type": "task",
-                                "label": "Upload award publication information form",
-                                "styles": {}
-                            },
-                            "send_to_authority": {
-                                "type": "task",
-                                "label": "Send request to authority",
-                                "styles": {}
-                            },
-                            "modify": {
-                                "type": "task",
-                                "label": "Create User Procurement Entity 1",
+                            "intermediate": {
+                                "type": "intermediate",
+                                "label": "Intermediate",
                                 "styles": {}
                             }
                         },
@@ -55,24 +45,19 @@
                         "styles": {},
                         "label": "Authority",
                         "nodes": {
-                            "receice_request": {
-                                "type": "task",
-                                "label": "Receive request",
+                            "request_approval5": {
+                                "type": "eventBased",
+                                "label": "Event Based Approved?",
                                 "styles": {}
                             },
-                            "verify_request": {
-                                "type": "task",
-                                "label": "Verify employee request",
+                            "request_approval6": {
+                                "type": "eventBasedStart",
+                                "label": "Event Based Start Approved?",
                                 "styles": {}
                             },
-                            "request_approval": {
-                                "type": "exclusive",
-                                "label": "Approved?",
-                                "styles": {}
-                            },
-                            "send_back_for_modification": {
-                                "type": "task",
-                                "label": "Send back form for modification",
+                            "request_approval7": {
+                                "type": "eventBasedParallelStart",
+                                "label": "Event Based Parallel Start Approved?",
                                 "styles": {}
                             }
                         },
@@ -118,6 +103,11 @@
                                 "label": "Set view status of the award(s)/publication(s)",
                                 "styles": {}
                             },
+                            "end2": {
+                                "type": "endMultiple",
+                                "label": "Completed (Multiple End)",
+                                "styles": {}
+                            },
                             "end1": {
                                 "type": "end",
                                 "label": "Completed",
@@ -155,14 +145,14 @@
                         "styles": {},
                         "label": "Personnel Management Information System (PMIS)",
                         "nodes": {
-                            "employee_adhoc": {
-                                "type": "adhoc",
-                                "label": "Employee Adhoc",
-                                "styles": {}
-                            },
                             "employee_details": {
                                 "type": "process",
                                 "label": "Employee Details - who is the employee",
+                                "styles": {}
+                            },
+                            "employee_adhoc": {
+                                "type": "adhoc",
+                                "label": "Employee Adhoc",
                                 "styles": {}
                             },
                             "employee_transaction": {

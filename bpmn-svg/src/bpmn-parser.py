@@ -39,11 +39,58 @@ def tokenize(str):
         ('String', (r"'[^']*'",)), # "\'" escapes are ignored
 
         ('NodeType', (r'start',)),
+        ('NodeType', (r'startCompensation',)),
+        ('NodeType', (r'startConditional',)),
+        ('NodeType', (r'startConditionalNon',)),
+        ('NodeType', (r'startError',)),
+        ('NodeType', (r'startEscalation',)),
+        ('NodeType', (r'startEscalationNon',)),
+        ('NodeType', (r'startMessage',)),
+        ('NodeType', (r'startMessageNon',)),
+        ('NodeType', (r'startMultiple',)),
+        ('NodeType', (r'startMultipleNon',)),
+        ('NodeType', (r'startParallelMultiple',)),
+        ('NodeType', (r'startParallelMultipleNon',)),
         ('NodeType', (r'startSignal',)),
         ('NodeType', (r'startSignalNon',)),
+        ('NodeType', (r'startTimer',)),
+        ('NodeType', (r'startTimerNon',)),
+
+        ('NodeType', (r'end',)),
+        ('NodeType', (r'endCancel',)),
+        ('NodeType', (r'endCompensate',)),
+        ('NodeType', (r'endError',)),
+        ('NodeType', (r'endEscalation',)),
+        ('NodeType', (r'endMessage',)),
+        ('NodeType', (r'endMultiple',)),
+        ('NodeType', (r'endSignal',)),
+        ('NodeType', (r'endTerminate',)),
 
         ('NodeType', (r'intermediate',)),
-        ('NodeType', (r'end',)),
+        ('NodeType', (r'catchCancel',)),
+        ('NodeType', (r'catchCompensation',)),
+        ('NodeType', (r'throwCompensation',)),
+        ('NodeType', (r'catchError',)),
+        ('NodeType', (r'catchEscalation',)),
+        ('NodeType', (r'catchEscalationNon',)),
+        ('NodeType', (r'throwEscalation',)),
+        ('NodeType', (r'catchLink',)),
+        ('NodeType', (r'throwLink',)),
+        ('NodeType', (r'catchMessage',)),
+        ('NodeType', (r'catchMessageNon',)),
+        ('NodeType', (r'throwMessage',)),
+        ('NodeType', (r'catchMultiple',)),
+        ('NodeType', (r'catchMultipleNon',)),
+        ('NodeType', (r'throwMultiple',)),
+        ('NodeType', (r'catchParallelMultiple',)),
+        ('NodeType', (r'catchParallelMultipleNon',)),
+        ('NodeType', (r'catchSignal',)),
+        ('NodeType', (r'catchSignalNon',)),
+        ('NodeType', (r'throwSignal',)),
+        ('NodeType', (r'conditional',)),
+        ('NodeType', (r'conditionalNon',)),
+        ('NodeType', (r'timer',)),
+        ('NodeType', (r'timerNon',)),
 
         ('NodeType', (r'task',)),
         ('NodeType', (r'call',)),
@@ -56,7 +103,6 @@ def tokenize(str):
         ('NodeType', (r'inclusive',)),
         ('NodeType', (r'parallel',)),
         ('NodeType', (r'complex',)),
-        ('NodeType', (r'parallel',)),
         ('NodeType', (r'eventBased',)),
         ('NodeType', (r'eventBasedStart',)),
         ('NodeType', (r'eventBasedParallelStart',)),
@@ -84,18 +130,18 @@ def parse(seq):
     op_ = lambda s: skip(op(s))
 
     node_type_keywords = [
-        'start', 'startSignal', 'startSignalNon',
-        'intermediate',
-        'end',
+        'start', 'startCompensation', 'startConditional', 'startConditionalNon', 'startError', 'startEscalation', 'startEscalationNon', 'startMessage', 'startMessageNon', 'startMultiple', 'startMultipleNon', 'startParallelMultiple', 'startParallelMultipleNon', 'startSignal', 'startSignalNon', 'startTimer', 'startTimerNon',
+        'end', 'endCancel', 'endCompensate', 'endError', 'endEscalation', 'endMessage', 'endMultiple', 'endSignal', 'endTerminate',
+        'intermediate', 'catchCancel', 'catchCompensation', 'throwCompensation', 'catchError', 'catchEscalation', 'catchEscalationNon', 'throwEscalation', 'catchLink', 'throwLink', 'catchMessage', 'catchMessageNon', 'throwMessage', 'catchMultiple', 'catchMultipleNon', 'throwMultiple', 'catchParallelMultiple', 'catchParallelMultipleNon', 'catchSignal', 'catchSignalNon', 'throwSignal', 'conditional', 'conditionalNon', 'timer', 'timerNon',
+
         'task',
         'call',
         'process',
         'transaction',
         'event',
         'adhoc',
-        'inclusive',
-        'exclusive',
-        'parallel'
+
+        'inclusive', 'exclusive', 'parallel', 'complex', 'eventBased', 'eventBasedStart', 'eventBasedParallelStart'
     ]
 
     node_type = some(lambda t: t.value in node_type_keywords).named('type') >> tokval

@@ -96,9 +96,13 @@ CLASSES = {
     'timerNon':                 {'m': 'elements.events.intermediates.event_intermediate_timer_non',                     'c': 'EventIntermediateTimerNon'},
 
     # gateways
-    'inclusive':    {'m': 'elements.gateways.inclusives.gateway_inclusive',             'c': 'GatewayInclusive'},
-    'exclusive':    {'m': 'elements.gateways.exclusives.gateway_exclusive',             'c': 'GatewayExclusive'},
-    'parallel':     {'m': 'elements.gateways.parallel.gateway_parallel',                'c': 'GatewayParallel'},
+    'inclusive':                {'m': 'elements.gateways.gateway_inclusive',                    'c': 'GatewayInclusive'},
+    'exclusive':                {'m': 'elements.gateways.gateway_exclusive',                    'c': 'GatewayExclusive'},
+    'parallel':                 {'m': 'elements.gateways.gateway_parallel',                     'c': 'GatewayParallel'},
+    'complex':                  {'m': 'elements.gateways.gateway_complex',                      'c': 'GatewayComplex'},
+    'eventBased':               {'m': 'elements.gateways.gateway_event_based',                  'c': 'GatewayEventBased'},
+    'eventBasedStart':          {'m': 'elements.gateways.gateway_event_based_start',            'c': 'GatewayEventBasedStart'},
+    'eventBasedParallelStart':  {'m': 'elements.gateways.gateway_event_based_parallel_start',   'c': 'GatewayEventBasedParallelStart'},
 
     # flows
     'sequence':     {'m': 'elements.flows.flow_sequence',                   'c': 'FlowSequence'},

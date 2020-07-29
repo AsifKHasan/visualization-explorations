@@ -3,16 +3,17 @@ default_theme = {
         'margin-spec': {
             'left': 2, 'top': 2, 'right': 2, 'bottom': 2
         },
-        'text-rect': {
-            'max-lines': 2,
+        'rectangle': {
             'pad-spec': {
                 'left': 10, 'top': 10, 'right': 10, 'bottom': 10
             },
             'style': {
                 'fill': '#F0F0F0', 'stroke-width': 2, 'stroke': '#A0A0A0'
-            },
-            'vertical-text': False,
-            'text-style': {
+            }
+        },
+        'text': {
+            'vertical-text': False, 'max-lines': 2,
+            'style': {
                 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 24, 'font-weight': 'bold', 'fill': '#02066F', 'stroke': '#000000', 'stroke-width': 0
             }
         },
@@ -34,16 +35,17 @@ default_theme = {
         },
         'SwimLane': {
             'gap-between-text-and-pool-group': 1,
-            'text-rect': {
+            'rectangle': {
                 'pad-spec': {
                     'left': 5, 'top': 5, 'right': 5, 'bottom': 5
                 },
                 'style': {
                     'fill': '#F0F0F0', 'stroke-width': 1, 'stroke': '#475F94'
-                },
-                'vertical-text': True,
-                'max-lines': 3,
-                'text-style': {
+                }
+            },
+            'text': {
+                'vertical-text': True, 'max-lines': 3,
+                'style': {
                     'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 20, 'font-weight': 'bold', 'fill': '#02066F', 'stroke': '#000000', 'stroke-width': 0
                 }
             },
@@ -58,16 +60,17 @@ default_theme = {
         },
         'SwimPool': {
             'gap-between-text-and-block-group': 0,
-            'text-rect': {
+            'rectangle': {
                 'pad-spec': {
                     'left': 2, 'top': 2, 'right': 2, 'bottom': 2
                 },
                 'style': {
                     'fill': '#D0D0D0', 'stroke-width': 1, 'stroke': '#B8B8B8'
-                },
-                'vertical-text': True,
-                'max-lines': 3,
-                'text-style': {
+                }
+            },
+            'text': {
+                'vertical-text': True, 'max-lines': 3,
+                'style': {
                     'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 14, 'font-weight': 'bold', 'fill': '#1F3B4D', 'stroke': '#000000', 'stroke-width': 0
                 }
             },
@@ -92,245 +95,157 @@ default_theme = {
         }
     },
     'events': {
+        'Event': {
+            'rectangle': {
+                'min-width': 40, 'max-width': 120, 'rx': 0, 'ry': 0,
+                'pad-spec': {
+                    'left': 2, 'top': 5, 'right': 2, 'bottom': 5
+                },
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+                }
+            },
+            'text': {
+                'vertical-text': False, 'max-lines': 4,
+                'style': {
+                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                }
+            },
+        },
         'starts': {
             'EventStart': {
-                'text-rect': {
-                    'min-width': 40, 'max-width': 120,
-                    'max-lines': 4,
-                    'rx': 0, 'ry': 0,
-                    'pad-spec': {
-                        'left': 2, 'top': 5, 'right': 2, 'bottom': 5
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                },
-                'outer-circle': {
+                'circle': {
                     'radius': 20,
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     }
                 },
-                'outer-circle-non-interrupting': {
-                    'radius': 20,
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
-                    }
+                'inner-shape-style': {
+                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                 }
             },
             'EventStartSignal': {
             },
             'EventStartSignalNon': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
             }
         },
         'intermediates': {
             'EventIntermediate': {
-                'text-rect': {
-                    'min-width': 40, 'max-width': 120,
-                    'max-lines': 4,
-                    'rx': 0, 'ry': 0,
-                    'pad-spec': {
-                        'left': 2, 'top': 5, 'right': 2, 'bottom': 5
-                    },
+                'circle': {
+                    'radius': 22,
                     'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                },
-                'outer-circle': {
-                    'radius': 20,
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#808080'
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     }
                 },
                 'inner-circle': {
-                    'radius': 15,
+                    'radius': 18,
                     'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#808080'
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     }
                 }
             }
         },
         'ends': {
             'EventEnd': {
-                'text-rect': {
-                    'min-width': 40, 'max-width': 120,
-                    'max-lines': 4,
-                    'rx': 0, 'ry': 0,
-                    'pad-spec': {
-                        'left': 2, 'top': 5, 'right': 2, 'bottom': 5
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                },
-                'outer-circle': {
+                'circle': {
                     'radius': 20,
                     'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
+                        'fill': '#FFFFFF', 'stroke-width': 5, 'stroke': '#808080'
                     }
+                }
+            },
+            'EventEndMultiple': {
+                'inner-shape-style': {
+                    'fill': '#000000', 'stroke-width': 0, 'stroke': '#808080'
                 }
             }
         }
     },
     'activities': {
+        'Activity': {
+            'rectangle': {
+                'min-width': 80, 'max-width': 160,
+                'rx': 5, 'ry': 5,
+                'pad-spec': {
+                    'left': 10, 'top': 15, 'right': 10, 'bottom': 10
+                },
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                },
+            },
+            'text': {
+                'vertical-text': False, 'max-lines': 4,
+                'style': {
+                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                }
+            }
+        },
         'tasks': {
             'ActivityTask': {
-                'text-rect': {
-                    'min-width': 80, 'max-width': 160,
-                    'max-lines': 4,
-                    'rx': 5, 'ry': 5,
-                    'pad-spec': {
-                        'left': 10, 'top': 10, 'right': 10, 'bottom': 10
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                }
             }
         },
         'subprocesses': {
             'ActivitySubprocess': {
-                'text-rect': {
+                'rectangle': {
                     'min-width': 80, 'max-width': 160,
-                    'max-lines': 4,
-                    'rx': 4, 'ry': 4,
+                    'rx': 5, 'ry': 5,
                     'pad-spec': {
-                        'left': 10, 'top': 10, 'right': 10, 'bottom': 20
+                        'left': 10, 'top': 10, 'right': 10, 'bottom': 15
                     },
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
                 },
-                'inner-rect': {
+                'bottom-center-rectangle': {
                     'width': 10, 'height': 10,
                     'rx': 0, 'ry': 0,
+                    'margin-spec': {
+                        'left': 2, 'top': 2, 'right': 2, 'bottom': 5
+                    },
+                    'pad-spec': {
+                        'left': 2, 'top': 2, 'right': 2, 'bottom': 2
+                    },
                     'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
+                        'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#808080'
                     }
                 }
             },
             'ActivityTransactionSubprocess': {
-                'outer-rect': {
-                    'rx': 4, 'ry': 4,
+                'outer-rectangle': {
+                    'rx': 5, 'ry': 5,
                     'pad-spec': {
-                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                        'left': 5, 'top': 5, 'right': 5, 'bottom': 5
                     },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
-                    },
-                },
-                'text-rect': {
-                    'min-width': 80, 'max-width': 160,
-                    'max-lines': 4,
-                    'rx': 4, 'ry': 4,
-                    'pad-spec': {
-                        'left': 10, 'top': 10, 'right': 10, 'bottom': 20
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                },
-                'inner-rect': {
-                    'width': 10, 'height': 10,
-                    'rx': 0, 'ry': 0,
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
                     }
                 }
             },
             'ActivityEventSubprocess': {
-                'text-rect': {
+                'rectangle': {
                     'min-width': 80, 'max-width': 160,
-                    'max-lines': 4,
-                    'rx': 4, 'ry': 4,
+                    'rx': 5, 'ry': 5,
                     'pad-spec': {
-                        'left': 10, 'top': 10, 'right': 10, 'bottom': 20
+                        'left': 10, 'top': 15, 'right': 10, 'bottom': 15
                     },
                     'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '2,2'
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
                     },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                },
-                'inner-rect': {
-                    'width': 10, 'height': 10,
-                    'rx': 0, 'ry': 0,
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
-                    }
                 }
             },
             'ActivityAdhocSubprocess': {
-                'text-rect': {
-                    'min-width': 80, 'max-width': 160,
-                    'max-lines': 4,
-                    'rx': 4, 'ry': 4,
-                    'pad-spec': {
-                        'left': 10, 'top': 10, 'right': 10, 'bottom': 25
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                },
-                'inner-rect': {
-                    'width': 10, 'height': 10,
-                    'rx': 0, 'ry': 0,
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
-                    }
-                },
-                'wave-rect': {
-                    'min-width': 20, 'max-width': 50,
-                    'max-lines': 1,
-                    'rx': 0, 'ry': 0,
-                    'pad-spec': {
-                        'left': 1, 'top': 1, 'right': 1, 'bottom': 1
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#808080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'times', 'font-size': 18, 'font-weight': 'bold', 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 1
-                    }
-                }
             }
         },
         'calls': {
             'ActivityCall': {
-                'text-rect': {
+                'rectangle': {
                     'min-width': 80, 'max-width': 160,
-                    'max-lines': 4,
                     'rx': 5, 'ry': 5,
                     'pad-spec': {
                         'left': 10, 'top': 10, 'right': 10, 'bottom': 10
@@ -338,97 +253,67 @@ default_theme = {
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
                     },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
                 }
             }
         }
     },
     'gateways': {
-        'exclusives': {
-            'GatewayExclusive': {
-                'text-rect': {
-                    'min-width': 80, 'max-width': 120,
-                    'max-lines': 4,
-                    'rx': 5, 'ry': 5,
-                    'pad-spec': {
-                        'left': 5, 'top': 5, 'right': 5, 'bottom': 5
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
+        'Gateway': {
+            'rectangle': {
+                'min-width': 80, 'max-width': 120, 'rx': 5, 'ry': 5,
+                'pad-spec': {
+                    'left': 5, 'top': 5, 'right': 5, 'bottom': 5
                 },
-                'diamond': {
-                    'diagonal-x': 40, 'diagonal-y': 40,
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
-                    },
-                    'inner-shape-style': {
-                        'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
-                    },
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
                 }
+            },
+            'text': {
+                'vertical-text': False, 'max-lines': 4,
+                'style': {
+                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                }
+            },
+            'diamond': {
+                'diagonal-x': 40, 'diagonal-y': 40,
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                },
+                'inner-shape-style': {
+                    'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
+                },
+            },
+            'inner-circle-style': {
+                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+            },
+            'inner-shape-style': {
+                'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
+            },
+        },
+        'GatewayExclusive': {
+        },
+        'GatewayInclusive': {
+        },
+        'GatewayParallel': {
+        },
+        'GatewayComplex': {
+        },
+        'GatewayEventBased': {
+            'inner-circle-style': {
+                'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
+            },
+            'inner-shape-style': {
+                'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
             }
         },
-        'inclusives': {
-            'GatewayInclusive': {
-                'text-rect': {
-                    'min-width': 80, 'max-width': 120,
-                    'max-lines': 4,
-                    'rx': 5, 'ry': 5,
-                    'pad-spec': {
-                        'left': 5, 'top': 5, 'right': 5, 'bottom': 5
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                },
-                'diamond': {
-                    'diagonal-x': 40, 'diagonal-y': 40,
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
-                    },
-                    'inner-shape-style': {
-                        'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
-                    },
-                }
+        'GatewayEventBasedStart': {
+            'inner-shape-style': {
+                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
             }
         },
-        'parallels': {
-            'GatewayParallel': {
-                'text-rect': {
-                    'min-width': 80, 'max-width': 120,
-                    'max-lines': 4,
-                    'rx': 5, 'ry': 5,
-                    'pad-spec': {
-                        'left': 5, 'top': 5, 'right': 5, 'bottom': 5
-                    },
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
-                    },
-                    'vertical-text': False,
-                    'text-style': {
-                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
-                    }
-                },
-                'diamond': {
-                    'diagonal-x': 40, 'diagonal-y': 40,
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
-                    },
-                    'inner-shape-style': {
-                        'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
-                    },
-                }
+        'GatewayEventBasedParallelStart': {
+            'inner-shape-style': {
+                'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
             }
         }
     },

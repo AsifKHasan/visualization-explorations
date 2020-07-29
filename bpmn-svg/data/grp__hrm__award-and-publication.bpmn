@@ -7,18 +7,27 @@ graph award_publication {
             label = "Global Admin"
 
             start start1 [label="New award/publication";]
-            task upload_form [label="Upload award publication information form";]
-            task send_to_authority [label="Send request to authority";]
-            task modify [label="Create User Procurement Entity 1";]
+            startSignal start2 [label="Start Signal";]
+            startSignalNon start3 [label="Start Signal Non";]
+            intermediate intermediate [label="Intermediate";]
+            # task upload_form [label="Upload award publication information form";]
+            # task send_to_authority [label="Send request to authority";]
+            # task modify [label="Create User Procurement Entity 1";]
 
             start1 ..> upload_form
         }
         pool authority {
             label = "Authority"
-            task receice_request [label="Receive request";]
-            task verify_request [label="Verify employee request";]
-            exclusive request_approval [label="Approved?";]
-            task send_back_for_modification [label="Send back form for modification";]
+            # task receice_request [label="Receive request";]
+            # task verify_request [label="Verify employee request";]
+            # exclusive request_approval [label="Exclusive Approved?";]
+            # inclusive request_approval2 [label="Inclusive Approved?";]
+            # parallel request_approval3 [label="Parallel Approved?";]
+            # complex request_approval4 [label="Complex Approved?";]
+            eventBased request_approval5 [label="Event Based Approved?";]
+            eventBasedStart request_approval6 [label="Event Based Start Approved?";]
+            eventBasedParallelStart request_approval7 [label="Event Based Parallel Start Approved?";]
+            # task send_back_for_modification [label="Send back form for modification";]
 
             receice_request ..> verify_request ..> request_approval
             request_approval ..> send_back_for_modification [label="No";]
@@ -28,6 +37,7 @@ graph award_publication {
             task notify_employee [label="Notify employee";]
             task update_employee_details [label="Update employee details";]
             task set_view_status [label="Set view status of the award(s)/publication(s)";]
+            endMultiple end2 [label="Completed (Multiple End)";]
             end end1 [label="Completed";]
 
             notify_employee ..> update_employee_details ..> set_view_status ..> end1
@@ -37,8 +47,8 @@ graph award_publication {
         label = "Ministry of Public Administration (MoPA)"
         pool pmis {
             label = "Personnel Management Information System (PMIS)"
-            adhoc employee_adhoc [label="Employee Adhoc";]
             process employee_details [label="Employee Details - who is the employee";]
+            adhoc employee_adhoc [label="Employee Adhoc";]
             transaction employee_transaction [label="Employee Transaction";]
             event employee_event [label="Employee Event";]
             call employee_call [label="Employee Call";]
