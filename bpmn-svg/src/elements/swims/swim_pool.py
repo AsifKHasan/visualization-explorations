@@ -50,7 +50,7 @@ class SwimPool(BpmnElement):
         self.node_elements.append(block_group_svg_element)
 
         # get the lane label, its min_width and max_width is the block group's height
-        label_group, group_width, group_height = rectangle_with_text_inside(
+        label_group, group_width, group_height = text_inside_a_rectangle(
                                                     text=self.pool_data['label'],
                                                     min_width=block_group_svg_element.specs['height'],
                                                     max_width=block_group_svg_element.specs['height'],

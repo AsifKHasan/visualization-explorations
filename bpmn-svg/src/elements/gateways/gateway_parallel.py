@@ -24,8 +24,6 @@ class GatewayParallel(Gateway):
         self.theme = {**self.theme, **self.current_theme['gateways']['GatewayParallel']}
 
     def get_inside_element(self):
-        svg_group, width, height = a_cross(
-                                    width=self.theme['diamond']['diagonal-x'],
-                                    height=self.theme['diamond']['diagonal-y'],
-                                    style=self.theme['inner-shape-style'])
+        radius = radius_of_the_circle_inside_the_diamond(width=self.theme['diamond']['diagonal-x'], height=self.theme['diamond']['diagonal-y']) + 4
+        svg_group, width, height = a_cross_inside_a_circular_shape(radius=radius, style=self.theme['inner-shape-style'])
         return SvgElement({'width': width, 'height': height}, svg_group)

@@ -24,11 +24,9 @@ class GatewayEventBasedParallelStart(Gateway):
         self.theme = {**self.theme, **self.current_theme['gateways']['GatewayEventBasedParallelStart']}
 
     def get_inside_element(self):
-        pad = 0
-        radius = min(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y']) / 4
+        radius = radius_of_the_circle_inside_the_diamond(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y']) - 4
         svg_group, width, height = a_cross_in_a_circle(
                                     radius=radius,
-                                    pad=pad,
                                     circle_style=self.theme['inner-circle-style'],
                                     cross_style=self.theme['inner-shape-style'])
         return SvgElement({'width': width, 'height': height}, svg_group)

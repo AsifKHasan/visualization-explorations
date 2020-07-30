@@ -112,28 +112,34 @@ default_theme = {
                 }
             },
         },
-        'starts': {
-            'EventStart': {
+        'ends': {
+            'EventEnd': {
                 'circle': {
                     'radius': 20,
                     'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                        'fill': '#FFFFFF', 'stroke-width': 5, 'stroke': '#808080'
                     }
                 },
                 'inner-shape-style': {
-                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    'fill': '#808080', 'stroke-width': 0, 'stroke': '#808080'
                 }
             },
-            'EventStartSignal': {
+            'EventEndCancel':{
             },
-            'EventStartSignalNon': {
-                'circle': {
-                    'radius': 20,
-                    'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
-                    }
-                }
-            }
+            'EventEndCompensate':{
+            },
+            'EventEndError':{
+            },
+            'EventEndEscalation':{
+            },
+            'EventEndMessage':{
+            },
+            'EventEndMultiple':{
+            },
+            'EventEndSignal':{
+            },
+            'EventEndTerminate':{
+            },
         },
         'intermediates': {
             'EventIntermediate': {
@@ -148,21 +154,228 @@ default_theme = {
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     }
+                },
+                'inner-shape-style': {
+                    'fill': '#000000', 'stroke-width': 0, 'stroke': '#808080'
                 }
-            }
-        },
-        'ends': {
-            'EventEnd': {
+            },
+            'EventIntermediateCatchCancel': {
+            },
+            'EventIntermediateCatchCompensation': {
+            },
+            'EventIntermediateThrowCompensation': {
+            },
+            'EventIntermediateCatchError': {
+            },
+            'EventIntermediateCatchEscalation': {
+            },
+            'EventIntermediateCatchEscalationNon': {
                 'circle': {
-                    'radius': 20,
+                    'radius': 22,
                     'style': {
-                        'fill': '#FFFFFF', 'stroke-width': 5, 'stroke': '#808080'
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                },
+                'inner-circle': {
+                    'radius': 18,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
                     }
                 }
             },
-            'EventEndMultiple': {
+            'EventIntermediateThrowEscalation': {
+            },
+            'EventIntermediateCatchLink': {
+            },
+            'EventIntermediateThrowLink': {
+            },
+            'EventIntermediateCatchMessage': {
+            },
+            'EventIntermediateCatchMessageNon': {
+                'circle': {
+                    'radius': 22,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                },
+                'inner-circle': {
+                    'radius': 18,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventIntermediateThrowMessage': {
+            },
+            'EventIntermediateCatchMultiple': {
+            },
+            'EventIntermediateCatchMultipleNon': {
+                'circle': {
+                    'radius': 22,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                },
+                'inner-circle': {
+                    'radius': 18,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventIntermediateThrowMultiple': {
+            },
+            'EventIntermediateCatchParallelMultiple': {
+            },
+            'EventIntermediateCatchParallelMultipleNon': {
+                'circle': {
+                    'radius': 22,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                },
+                'inner-circle': {
+                    'radius': 18,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventIntermediateCatchSignal': {
+            },
+            'EventIntermediateCatchSignalNon': {
+                'circle': {
+                    'radius': 22,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                },
+                'inner-circle': {
+                    'radius': 18,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventIntermediateThrowSignal': {
+            },
+            'EventIntermediateConditional': {
+            },
+            'EventIntermediateConditionalNon': {
+                'circle': {
+                    'radius': 22,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                },
+                'inner-circle': {
+                    'radius': 18,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventIntermediateTimer': {
+            },
+            'EventIntermediateTimerNon': {
+                'circle': {
+                    'radius': 22,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                },
+                'inner-circle': {
+                    'radius': 18,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+        },
+        'starts': {
+            'EventStart': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    }
+                },
                 'inner-shape-style': {
-                    'fill': '#000000', 'stroke-width': 0, 'stroke': '#808080'
+                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                }
+            },
+            'EventStartCompensation': {
+            },
+            'EventStartConditional': {
+            },
+            'EventStartConditionalNon': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventStartError': {
+            },
+            'EventStartEscalation': {
+            },
+            'EventStartEscalationNon': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventStartMessage': {
+            },
+            'EventStartMessageNon': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventStartMultiple': {
+            },
+            'EventStartMultipleNon': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventStartParallelMultiple': {
+            },
+            'EventStartParallelMultipleNon': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventStartSignal': {
+            },
+            'EventStartSignalNon': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                }
+            },
+            'EventStartTimer': {
+            },
+            'EventStartTimerNon': {
+                'circle': {
+                    'radius': 20,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
                 }
             }
         }
@@ -295,6 +508,9 @@ default_theme = {
         'GatewayInclusive': {
         },
         'GatewayParallel': {
+            'inner-shape-style': {
+                'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+            },
         },
         'GatewayComplex': {
         },
@@ -313,7 +529,7 @@ default_theme = {
         },
         'GatewayEventBasedParallelStart': {
             'inner-shape-style': {
-                'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
+                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
             }
         }
     },

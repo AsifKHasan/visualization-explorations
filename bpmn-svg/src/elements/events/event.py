@@ -28,7 +28,7 @@ class Event(BpmnElement):
         info('......processing node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
         # the label element
-        label_group, label_group_width, label_group_height = rectangle_with_text_inside(
+        label_group, label_group_width, label_group_height = text_inside_a_rectangle(
                                     text=self.node_data['label'],
                                     min_width=self.theme['rectangle']['min-width'],
                                     max_width=self.theme['rectangle']['max-width'],

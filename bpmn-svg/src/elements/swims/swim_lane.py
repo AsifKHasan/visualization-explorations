@@ -51,7 +51,7 @@ class SwimLane(BpmnElement):
         pool_group_height = self.child_element_class.get_height()
 
         # get the lane label, its min_width and max_width is the pool group's height + all
-        label_group, group_width, group_height = rectangle_with_text_inside(
+        label_group, group_width, group_height = text_inside_a_rectangle(
                                                     text=self.lane_data['label'],
                                                     min_width=pool_group_height,
                                                     max_width=pool_group_height,

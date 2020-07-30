@@ -59,7 +59,7 @@ class Bpmn(BpmnElement):
         bpmn_body_svg = bpmn_body_svg_element.group
 
         # get the svg element for the label on top
-        bpmn_label_svg, label_width, label_height = rectangle_with_text_inside(
+        bpmn_label_svg, label_width, label_height = text_inside_a_rectangle(
                                                     text=self.bpmn_data['label'],
                                                     min_width=bpmn_body_svg_element.specs['width'],
                                                     max_width=bpmn_body_svg_element.specs['width'],
