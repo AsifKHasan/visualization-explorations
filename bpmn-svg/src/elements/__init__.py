@@ -128,7 +128,12 @@ default_theme = {
             },
             'EventEndCancel':{
             },
-            'EventEndCompensate':{
+            'EventEndCompensation':{
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                    }
+                }
             },
             'EventEndError':{
             },
@@ -168,6 +173,11 @@ default_theme = {
             'EventIntermediateCatchCompensation': {
             },
             'EventIntermediateThrowCompensation': {
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                    }
+                }
             },
             'EventIntermediateCatchError': {
             },
@@ -188,10 +198,20 @@ default_theme = {
                 }
             },
             'EventIntermediateThrowEscalation': {
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                    }
+                }
             },
             'EventIntermediateCatchLink': {
             },
             'EventIntermediateThrowLink': {
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                    }
+                }
             },
             'EventIntermediateCatchMessage': {
             },
@@ -210,6 +230,11 @@ default_theme = {
                 }
             },
             'EventIntermediateThrowMessage': {
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 1.5, 'stroke': '#FFFFFF'
+                    }
+                }
             },
             'EventIntermediateCatchMultiple': {
             },
@@ -228,6 +253,11 @@ default_theme = {
                 }
             },
             'EventIntermediateThrowMultiple': {
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                    }
+                }
             },
             'EventIntermediateCatchParallelMultiple': {
             },
@@ -262,6 +292,11 @@ default_theme = {
                 }
             },
             'EventIntermediateThrowSignal': {
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                    }
+                }
             },
             'EventIntermediateConditional': {
             },

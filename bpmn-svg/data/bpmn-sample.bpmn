@@ -64,7 +64,7 @@ graph bpmn_sample {
 
             end              end1 [label="End";]
             endCancel        end2 [label="End Cancel";]
-            endCompensate    end3 [label="End Compensate";]
+            endCompensation  end3 [label="End Compensation";]
             endError         end4 [label="End Error";]
             endEscalation    end5 [label="End Escalation";]
         }
@@ -107,8 +107,8 @@ graph bpmn_sample {
         pool intermediates_4 {
             label = "Intermediate Events 4"
 
-            catchParallelMultiple       intermediate17 [label="Intermediate Catch ParallelMultiple";]
-            catchParallelMultipleNon    intermediate18 [label="Intermediate Catch ParallelMultiple Non";]
+            catchParallelMultiple       intermediate17 [label="Intermediate Catch Parallel Multiple";]
+            catchParallelMultipleNon    intermediate18 [label="Intermediate Catch Parallel Multiple Non";]
             catchSignal                 intermediate19 [label="Intermediate Catch Signal";]
             catchSignalNon              intermediate20 [label="Intermediate Catch Signal Non";]
             throwSignal                 intermediate21 [label="Intermediate Throw Signal";]

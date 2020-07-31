@@ -182,7 +182,7 @@ def a_clock(radius, spec):
 
 # returns a tuple (svg group, group_width, group_height)
 def a_page(width, height, spec):
-    rect_svg, _, _ = a_rectangle(width=width, height=height, spec=spec)
+    rect_svg_group, _, _ = a_rectangle(width=width, height=height, spec=spec)
 
     left_edge = width * 0.1
     right_edge = width * 0.1
@@ -194,9 +194,92 @@ def a_page(width, height, spec):
         right_point = Point(width - right_edge, y_len)
         line_svg = Line(x1=left_point.x, y1=left_point.y, x2=right_point.x, y2=right_point.y)
         line_svg.set_style(StyleBuilder(spec['style']).getStyle())
-        rect_svg.addElement(line_svg)
+        rect_svg_group.addElement(line_svg)
 
-    return rect_svg, width, height
+    return rect_svg_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_triangular_rewind(width, height, spec):
+    svg_group = G()
+
+    left_arrow_point_left = Point(0, height/2)
+    left_arrow_point_top = Point(width/2, 0)
+    left_arrow_point_bottom = Point(width/2, height)
+
+    right_arrow_point_left = Point(width/2, height/2)
+    right_arrow_point_top = Point(width, 0)
+    right_arrow_point_bottom = Point(width, height)
+
+    left_arrow_points = [left_arrow_point_left, left_arrow_point_top, left_arrow_point_bottom]
+    right_arrow_points = [right_arrow_point_left, right_arrow_point_top, right_arrow_point_bottom]
+
+    left_arrow_svg = Polygon(points=points_to_str(left_arrow_points))
+    left_arrow_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    right_arrow_svg = Polygon(points=points_to_str(right_arrow_points))
+    right_arrow_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    svg_group.addElement(left_arrow_svg)
+    svg_group.addElement(right_arrow_svg)
+
+    return svg_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def an_upword_arrowhead(width, height, spec):
+    mid_point = Point(width/2, height/2)
+    top_point = Point(width/2, 0)
+    left_point = Point(0, height)
+    right_point = Point(width, height)
+
+    arrowhead_points = [mid_point, left_point, top_point, right_point]
+
+    arrowhead_svg = Polygon(points=points_to_str(arrowhead_points))
+    arrowhead_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    return arrowhead_svg, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_right_arrow(width, height, spec):
+    arrow_height = height/3
+
+    top_left = Point(0, (height - arrow_height)/2)
+    mid_top = Point(width/2, (height - arrow_height)/2)
+    top = Point(width/2, 0)
+    right = Point(width, height/2)
+    bottom = Point(width/2, height)
+    mid_bottom = Point(width/2, (height + arrow_height)/2)
+    bottom_left = Point(0, (height + arrow_height)/2)
+
+    arrow_points = [top_left, mid_top, top, right, bottom, mid_bottom, bottom_left]
+
+    arrow_svg = Polygon(points=points_to_str(arrow_points))
+    arrow_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    return arrow_svg, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_lightning(width, height, spec):
+    diagonal = math.sqrt(width * width + height * height)
+    len_mb_mt = (diagonal/2) * 0.3
+    len_mt_tl = (diagonal/2) * 0.4
+    angle_bl_tr = math.atan(height/width)
+    angle_mt_tl = math.pi/2
+
+    bottom_left = Point(0, height)
+    mid_top = bottom_left.to_point(-math.degrees(angle_bl_tr), diagonal/2 + len_mb_mt/2)
+    mid_bottom = bottom_left.to_point(-math.degrees(angle_bl_tr), diagonal/2 - len_mb_mt/2)
+    top_left = mid_top.to_point(-math.degrees(angle_mt_tl + angle_bl_tr), len_mt_tl)
+
+    top_right = Point(width, 0)
+    bottom_right = mid_bottom.to_point(math.degrees(angle_mt_tl - angle_bl_tr), len_mt_tl)
+
+    lightning_points = [bottom_left, top_left, mid_top, top_right, bottom_right, mid_bottom]
+    # lightning_points = [bottom_left, top_left, mid_top]
+
+    lightning_svg = Polygon(points=points_to_str(lightning_points))
+    lightning_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    return lightning_svg, width, height
 
 # --------------------------------------------------------------------------------------
 # shapes inside a circular shape ---------------------------------------------------------------
@@ -206,14 +289,14 @@ def a_page(width, height, spec):
 def a_circle_inside_a_circular_shape(outer_radius, inner_radius, inner_shape_spec):
     pad = outer_radius - inner_radius
 
-    circle_group_svg, width, height = a_circle(inner_radius, spec=inner_shape_spec)
+    circle_group, width, height = a_circle(inner_radius, spec=inner_shape_spec)
 
     circle_group_xy = '{0},{1}'.format(pad, pad)
     transformer = TransformBuilder()
     transformer.setTranslation(circle_group_xy)
-    circle_group_svg.set_transform(transformer.getTransform())
+    circle_group.set_transform(transformer.getTransform())
 
-    return circle_group_svg, width, height
+    return circle_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def an_envelop_inside_a_circular_shape(radius, inner_shape_spec):
@@ -288,9 +371,9 @@ def a_cross_inside_a_circular_shape(radius, inner_shape_spec):
     height = radius * 2 - pad * 2
     x_bar_height = radius * 0.2
     y_bar_width = radius * 0.2
-    cross_group_svg, _, _ = a_cross(width=width, height=height, x_bar_height=x_bar_height, y_bar_width=y_bar_width, spec=inner_shape_spec)
+    cross_group, _, _ = a_cross(width=width, height=height, x_bar_height=x_bar_height, y_bar_width=y_bar_width, spec=inner_shape_spec)
 
-    return cross_group_svg, width, height
+    return cross_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def an_x_inside_a_circular_shape(radius, inner_shape_spec):
@@ -298,9 +381,9 @@ def an_x_inside_a_circular_shape(radius, inner_shape_spec):
     width = radius * 2 - pad * 2
     height = radius * 2 - pad * 2
     x = width * 0.3
-    x_group_svg, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
+    x_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
 
-    return x_group_svg, width, height
+    return x_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def something_missing_inside_a_circular_shape(radius, inner_shape_spec):
@@ -309,17 +392,17 @@ def something_missing_inside_a_circular_shape(radius, inner_shape_spec):
     height = radius * 2 - pad * 2
     x = width * 0.2
     inner_shape_spec = {'style': {'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#FF8080'}}
-    missing_group_svg, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
+    missing_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
 
-    return missing_group_svg, width, height
+    return missing_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def a_clock_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
 
-    clock_group_svg, width, height = a_clock(radius - pad, spec=inner_shape_spec)
+    clock_group, width, height = a_clock(radius - pad, spec=inner_shape_spec)
 
-    return clock_group_svg, width, height
+    return clock_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def a_page_inside_a_circular_shape(radius, inner_shape_spec):
@@ -328,9 +411,45 @@ def a_page_inside_a_circular_shape(radius, inner_shape_spec):
     width = (radius - pad_x) * 2
     height = (radius - pad_y) * 2
 
-    page_group_svg, _, _ = a_page(width=width, height=height, spec=inner_shape_spec)
+    page_group, _, _ = a_page(width=width, height=height, spec=inner_shape_spec)
 
-    return page_group_svg, width, height
+    return page_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_triangular_rewind_inside_a_circular_shape(radius, inner_shape_spec):
+    width = radius * 1.1
+    height = radius * 1.0
+
+    triangular_rewind_group, _, _ = a_triangular_rewind(width=width, height=height, spec=inner_shape_spec)
+
+    return triangular_rewind_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def an_upword_arrowhead_inside_a_circular_shape(radius, inner_shape_spec):
+    width = radius * 1.3
+    height = radius * 1.3
+
+    arrowhead_group, _, _ = an_upword_arrowhead(width=width, height=height, spec=inner_shape_spec)
+
+    return arrowhead_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_right_arrow_inside_a_circular_shape(radius, inner_shape_spec):
+    width = radius * 1.2
+    height = radius * 1.0
+
+    arrow_group, _, _ = a_right_arrow(width=width, height=height, spec=inner_shape_spec)
+
+    return arrow_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_lightning_inside_a_circular_shape(radius, inner_shape_spec):
+    width = radius * 1.0
+    height = radius * 1.2
+
+    lightning_group, _, _ = a_lightning(width=width, height=height, spec=inner_shape_spec)
+
+    return lightning_group, width, height
 
 # --------------------------------------------------------------------------------------
 # shapes inside a rectangle ---------------------------------------------------------------

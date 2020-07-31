@@ -60,7 +60,7 @@ CLASSES = {
     #   end events
     'end':                      {'m': 'elements.events.ends.event_end',                                                 'c': 'EventEnd'},
     'endCancel':                {'m': 'elements.events.ends.event_end_cancel',                                          'c': 'EventEndCancel'},
-    'endCompensate':            {'m': 'elements.events.ends.event_end_compensate',                                      'c': 'EventEndCompensate'},
+    'endCompensation':          {'m': 'elements.events.ends.event_end_compensation',                                    'c': 'EventEndCompensation'},
     'endError':                 {'m': 'elements.events.ends.event_end_error',                                           'c': 'EventEndError'},
     'endEscalation':            {'m': 'elements.events.ends.event_end_escalation',                                      'c': 'EventEndEscalation'},
     'endMessage':               {'m': 'elements.events.ends.event_end_message',                                         'c': 'EventEndMessage'},

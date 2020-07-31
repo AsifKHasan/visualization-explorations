@@ -58,7 +58,7 @@ def tokenize(str):
 
         ('NodeType', (r'end',)),
         ('NodeType', (r'endCancel',)),
-        ('NodeType', (r'endCompensate',)),
+        ('NodeType', (r'endCompensation',)),
         ('NodeType', (r'endError',)),
         ('NodeType', (r'endEscalation',)),
         ('NodeType', (r'endMessage',)),
@@ -131,7 +131,7 @@ def parse(seq):
 
     node_type_keywords = [
         'start', 'startCompensation', 'startConditional', 'startConditionalNon', 'startError', 'startEscalation', 'startEscalationNon', 'startMessage', 'startMessageNon', 'startMultiple', 'startMultipleNon', 'startParallelMultiple', 'startParallelMultipleNon', 'startSignal', 'startSignalNon', 'startTimer', 'startTimerNon',
-        'end', 'endCancel', 'endCompensate', 'endError', 'endEscalation', 'endMessage', 'endMultiple', 'endSignal', 'endTerminate',
+        'end', 'endCancel', 'endCompensation', 'endError', 'endEscalation', 'endMessage', 'endMultiple', 'endSignal', 'endTerminate',
         'intermediate', 'catchCancel', 'catchCompensation', 'throwCompensation', 'catchError', 'catchEscalation', 'catchEscalationNon', 'throwEscalation', 'catchLink', 'throwLink', 'catchMessage', 'catchMessageNon', 'throwMessage', 'catchMultiple', 'catchMultipleNon', 'throwMultiple', 'catchParallelMultiple', 'catchParallelMultipleNon', 'catchSignal', 'catchSignalNon', 'throwSignal', 'conditional', 'conditionalNon', 'timer', 'timerNon',
 
         'task',
