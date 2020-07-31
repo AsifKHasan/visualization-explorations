@@ -27,5 +27,5 @@ class GatewayInclusive(Gateway):
         radius = min(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y']) * 0.25
         svg_group, width, height = a_circle(
                                     radius=radius,
-                                    style=self.theme['inner-shape-style'])
+                                    spec=self.theme['inner-shape'])
         return SvgElement({'width': width, 'height': height}, svg_group)

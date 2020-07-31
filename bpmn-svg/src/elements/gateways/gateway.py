@@ -32,11 +32,14 @@ class Gateway(BpmnElement):
                                                                 text=self.node_data['label'],
                                                                 min_width=self.theme['rectangle']['min-width'],
                                                                 max_width=self.theme['rectangle']['max-width'],
-                                                                rect_specs=self.theme['rectangle'],
-                                                                text_specs=self.theme['text'])
+                                                                rect_spec=self.theme['rectangle'],
+                                                                text_spec=self.theme['text'])
 
         # the diamond element
-        diamond_group, diamond_group_width, diamond_group_height = a_diamond(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y'], self.theme['diamond']['style'])
+        diamond_group, diamond_group_width, diamond_group_height = a_diamond(
+                                                                    diagonal_x=self.theme['diamond']['diagonal-x'],
+                                                                    diagonal_y=self.theme['diamond']['diagonal-y'],
+                                                                    spec=self.theme['diamond'])
 
         # the inside element
         inside_element = self.get_inside_element()

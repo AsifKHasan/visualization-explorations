@@ -54,8 +54,8 @@ class SwimPool(BpmnElement):
                                                     text=self.pool_data['label'],
                                                     min_width=block_group_svg_element.specs['height'],
                                                     max_width=block_group_svg_element.specs['height'],
-                                                    rect_specs=self.theme['rectangle'],
-                                                    text_specs=self.theme['text'],
+                                                    rect_spec=self.theme['rectangle'],
+                                                    text_spec=self.theme['text'],
                                                     debug_enabled=False)
         self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
 
@@ -78,7 +78,7 @@ class SwimPool(BpmnElement):
         group_width = label_svg_element.specs['width'] + block_group_svg_element.specs['width'] + self.theme['pool-rect']['pad-spec']['left'] + self.theme['pool-rect']['pad-spec']['right'] + self.theme['gap-between-text-and-block-group']
 
         # add the pool outline
-        outline_svg, group_width, group_height = a_rectangle(width=group_width, height=group_height, rx=0, ry=0, style=self.theme['pool-rect']['style'])
+        outline_svg, group_width, group_height = a_rectangle(width=group_width, height=group_height, spec=self.theme['pool-rect'])
 
         # add the label svg
         label_svg_xy = '{0},{1}'.format(self.theme['pool-rect']['pad-spec']['left'], self.theme['pool-rect']['pad-spec']['top'])

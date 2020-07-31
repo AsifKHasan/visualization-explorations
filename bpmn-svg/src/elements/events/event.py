@@ -32,14 +32,14 @@ class Event(BpmnElement):
                                     text=self.node_data['label'],
                                     min_width=self.theme['rectangle']['min-width'],
                                     max_width=self.theme['rectangle']['max-width'],
-                                    rect_specs=self.theme['rectangle'],
-                                    text_specs=self.theme['text'])
+                                    rect_spec=self.theme['rectangle'],
+                                    text_spec=self.theme['text'])
 
         # the circle element
         if 'inner-circle' in self.theme:
-            circle_group, circle_group_width, circle_group_height = two_concentric_circles(outer_radius=self.theme['circle']['radius'], inner_radius=self.theme['inner-circle']['radius'], outer_style=self.theme['circle']['style'], inner_style=self.theme['inner-circle']['style'])
+            circle_group, circle_group_width, circle_group_height = two_concentric_circles(outer_radius=self.theme['circle']['radius'], inner_radius=self.theme['inner-circle']['radius'], outer_circle_spec=self.theme['circle'], inner_circle_spec=self.theme['inner-circle'])
         else:
-            circle_group, circle_group_width, circle_group_height = a_circle(radius=self.theme['circle']['radius'], style=self.theme['circle']['style'])
+            circle_group, circle_group_width, circle_group_height = a_circle(radius=self.theme['circle']['radius'], spec=self.theme['circle'])
 
         # get the inside element
         inside_element = self.get_inside_element()

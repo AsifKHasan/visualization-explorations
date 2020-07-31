@@ -24,5 +24,5 @@ class EventIntermediateCatchCompensation(EventIntermediate):
         self.theme.update(self.current_theme['events']['intermediates']['EventIntermediateCatchCompensation'])
 
     def get_inside_element(self):
-        svg_group, width, height = something_missing_inside_a_circular_shape(radius=self.theme['inner-circle']['radius'], style=self.theme['inner-shape-style'])
+        svg_group, width, height = something_missing_inside_a_circular_shape(radius=self.theme['inner-circle']['radius'], inner_shape_spec=self.theme['inner-shape'])
         return SvgElement({'width': width, 'height': height}, svg_group)

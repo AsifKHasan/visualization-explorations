@@ -120,8 +120,10 @@ default_theme = {
                         'fill': '#FFFFFF', 'stroke-width': 5, 'stroke': '#808080'
                     }
                 },
-                'inner-shape-style': {
-                    'fill': '#808080', 'stroke-width': 0, 'stroke': '#808080'
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 0, 'stroke': '#808080'
+                    }
                 }
             },
             'EventEndCancel':{
@@ -155,8 +157,10 @@ default_theme = {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     }
                 },
-                'inner-shape-style': {
-                    'fill': '#000000', 'stroke-width': 0, 'stroke': '#808080'
+                'inner-shape': {
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    }
                 }
             },
             'EventIntermediateCatchCancel': {
@@ -300,19 +304,33 @@ default_theme = {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     }
                 },
-                'inner-shape-style': {
-                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                'inner-shape': {
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    }
                 }
             },
             'EventStartCompensation': {
             },
             'EventStartConditional': {
+                'inner-shape': {
+                    'rx': 2, 'ry': 2,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    }
+                }
             },
             'EventStartConditionalNon': {
                 'circle': {
                     'radius': 20,
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
+                    }
+                },
+                'inner-shape': {
+                    'rx': 2, 'ry': 2,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     }
                 }
             },
@@ -496,40 +514,59 @@ default_theme = {
                     'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
                 },
             },
-            'inner-circle-style': {
-                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+            'inner-circle': {
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                }
             },
-            'inner-shape-style': {
-                'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
+            'inner-shape': {
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 3, 'stroke': '#808080'
+                }
             },
         },
         'GatewayExclusive': {
+            'inner-shape': {
+                'style': {
+                    'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                }
+            },
         },
         'GatewayInclusive': {
         },
         'GatewayParallel': {
-            'inner-shape-style': {
-                'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+            'inner-shape': {
+                'style': {
+                    'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                }
             },
         },
         'GatewayComplex': {
         },
         'GatewayEventBased': {
-            'inner-circle-style': {
-                'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
+            'inner-circle': {
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
+                }
             },
-            'inner-shape-style': {
-                'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
+            'inner-shape': {
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#808080'
+                }
             }
         },
         'GatewayEventBasedStart': {
-            'inner-shape-style': {
-                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+            'inner-shape': {
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                }
             }
         },
         'GatewayEventBasedParallelStart': {
-            'inner-shape-style': {
-                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+            'inner-shape': {
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                }
             }
         }
     },

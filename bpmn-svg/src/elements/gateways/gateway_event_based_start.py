@@ -27,6 +27,6 @@ class GatewayEventBasedStart(Gateway):
         radius = min(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y']) * 0.27
         svg_group, width, height = an_equilateral_pentagon_in_a_circle(
                                     radius=radius,
-                                    circle_style=self.theme['inner-circle-style'],
-                                    pentagon_style=self.theme['inner-shape-style'])
+                                    circle_spec=self.theme['inner-circle'],
+                                    pentagon_spec=self.theme['inner-shape'])
         return SvgElement({'width': width, 'height': height}, svg_group)

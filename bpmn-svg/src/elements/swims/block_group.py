@@ -167,8 +167,8 @@ class BlockGroup(BpmnElement):
             current_x = current_x + svg_element.specs['width'] + self.theme['dx-between-elements']
 
         # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
-        return SvgElement(group_specs, svg_group)
+        group_spec = {'width': group_width, 'height': group_height}
+        return SvgElement(group_spec, svg_group)
 
     def collect_elements(self):
         # iterate the nodes and get the node svg's

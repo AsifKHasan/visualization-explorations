@@ -27,5 +27,5 @@ class GatewayComplex(Gateway):
         svg_group, width, height = a_star(
                                     width=self.theme['diamond']['diagonal-x'],
                                     height=self.theme['diamond']['diagonal-y'],
-                                    style=self.theme['inner-shape-style'])
+                                    spec=self.theme['inner-shape'])
         return SvgElement({'width': width, 'height': height}, svg_group)

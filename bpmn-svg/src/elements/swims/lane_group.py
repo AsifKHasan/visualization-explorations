@@ -96,7 +96,7 @@ class LaneGroup(BpmnElement):
             svg_group.addElement(swim_lane_svg)
 
         # wrap it in a svg element
-        group_specs = {'width': group_width, 'height': group_height}
+        group_spec = {'width': group_width, 'height': group_height}
 
         info('assembling lanes for [{0}] DONE'.format(self.bpmn_id))
-        return SvgElement(group_specs, svg_group)
+        return SvgElement(group_spec, svg_group)

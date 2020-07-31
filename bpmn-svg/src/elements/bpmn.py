@@ -63,8 +63,8 @@ class Bpmn(BpmnElement):
                                                     text=self.bpmn_data['label'],
                                                     min_width=bpmn_body_svg_element.specs['width'],
                                                     max_width=bpmn_body_svg_element.specs['width'],
-                                                    rect_specs=self.theme['rectangle'],
-                                                    text_specs=self.theme['text'],
+                                                    rect_spec=self.theme['rectangle'],
+                                                    text_spec=self.theme['text'],
                                                     debug_enabled=False)
 
         # assemble bpmn text and bpmn body. text stacked on top of body

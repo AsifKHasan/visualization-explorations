@@ -30,8 +30,8 @@ class GatewayEventBased(Gateway):
         svg_group, width, height = an_equilateral_pentagon_in_two_concentric_circles(
                                     outer_radius=outer_radius,
                                     inner_radius=inner_radius,
-                                    outer_style=self.theme['inner-circle-style'],
-                                    inner_style=self.theme['inner-circle-style'],
+                                    outer_circle_spec=self.theme['inner-circle'],
+                                    inner_circle_spec=self.theme['inner-circle'],
                                     pad=pad,
-                                    pentagon_style=self.theme['inner-shape-style'])
+                                    pentagon_spec=self.theme['inner-shape'])
         return SvgElement({'width': width, 'height': height}, svg_group)
