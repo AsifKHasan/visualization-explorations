@@ -1,0 +1,25 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="102"
+    height="62"
+    >
+    <path d="
+            M   1 0
+            v   20
+            h   100
+            V   0
+            Z" fill="#626262" stroke="#626262" stroke-width="5"  stroke-linecap="round"/>
+    <path d="
+            M   1 20
+            v   20
+            h   100
+            V   20
+            M   1 40
+            v   20
+            h   100
+            v   -20
+            M   30 20
+            v   40
+            Z"
+        fill="none" stroke="#626262" stroke-width="5" stroke-linecap="round"/>
+</svg>

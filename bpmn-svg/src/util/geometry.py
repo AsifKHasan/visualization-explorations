@@ -68,5 +68,8 @@ class Point:
         """Return the angle to the vector other"""
         return math.acos(self.dot(other) / (self.magnitude()*other.magnitude()))
 
-    def to_point(self, angle, distance):
-        return Point(self.x + distance * math.cos(math.radians(angle)), self.y + distance * math.sin(math.radians(angle)))
+    def to_point(self, angle, distance, cartesian=False):
+        if cartesian:
+            return Point(self.x + distance * math.cos(math.radians(angle)), self.y + distance * math.sin(math.radians(angle)))
+        else:
+            return Point(self.x + distance * math.cos(math.radians(angle)), self.y - distance * math.sin(math.radians(angle)))

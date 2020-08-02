@@ -27,9 +27,7 @@ class ActivitySubprocess(Activity):
         svg_group, width, height = a_cross_in_a_rectangle(
                                                     width=self.theme['bottom-center-rectangle']['width'],
                                                     height=self.theme['bottom-center-rectangle']['height'],
-                                                    rx=self.theme['bottom-center-rectangle']['rx'],
-                                                    ry=self.theme['bottom-center-rectangle']['ry'],
-                                                    rect_style=self.theme['bottom-center-rectangle']['style'],
-                                                    cross_style=self.theme['bottom-center-rectangle']['style'])
+                                                    rect_spec=self.theme['bottom-center-rectangle'],
+                                                    cross_spec=self.theme['bottom-center-inner-shape'])
 
         return SvgElement({'width': width, 'height': height}, svg_group)

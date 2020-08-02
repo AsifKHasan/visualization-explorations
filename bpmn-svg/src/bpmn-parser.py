@@ -38,6 +38,7 @@ def tokenize(str):
         ('String', (r'"[^"]*"',)), # '\"' escapes are ignored
         ('String', (r"'[^']*'",)), # "\'" escapes are ignored
 
+        # start events
         ('NodeType', (r'start',)),
         ('NodeType', (r'startCompensation',)),
         ('NodeType', (r'startConditional',)),
@@ -56,6 +57,7 @@ def tokenize(str):
         ('NodeType', (r'startTimer',)),
         ('NodeType', (r'startTimerNon',)),
 
+        # end events
         ('NodeType', (r'end',)),
         ('NodeType', (r'endCancel',)),
         ('NodeType', (r'endCompensation',)),
@@ -66,6 +68,7 @@ def tokenize(str):
         ('NodeType', (r'endSignal',)),
         ('NodeType', (r'endTerminate',)),
 
+        # intermediate events
         ('NodeType', (r'intermediate',)),
         ('NodeType', (r'catchCancel',)),
         ('NodeType', (r'catchCompensation',)),
@@ -92,13 +95,48 @@ def tokenize(str):
         ('NodeType', (r'timer',)),
         ('NodeType', (r'timerNon',)),
 
+        # task activities
         ('NodeType', (r'task',)),
-        ('NodeType', (r'call',)),
-        ('NodeType', (r'process',)),
-        ('NodeType', (r'transaction',)),
-        ('NodeType', (r'event',)),
-        ('NodeType', (r'adhoc',)),
+        ('NodeType', (r'businessRuleTask',)),
+        ('NodeType', (r'manualTask',)),
+        ('NodeType', (r'receiveTask',)),
+        ('NodeType', (r'scriptTask',)),
+        ('NodeType', (r'sendTask',)),
+        ('NodeType', (r'serviceTask',)),
+        ('NodeType', (r'userTask',)),
 
+        # call activities
+        ('NodeType', (r'call',)),
+        ('NodeType', (r'businessRuleCall',)),
+        ('NodeType', (r'manualCall',)),
+        ('NodeType', (r'scriptCall',)),
+        ('NodeType', (r'userCall',)),
+
+        # subprocess activities
+        ('NodeType', (r'process',)),
+        ('NodeType', (r'adhoc',)),
+        ('NodeType', (r'transaction',)),
+
+        # event subprocess activities
+        ('NodeType', (r'event',)),
+        ('NodeType', (r'eventCompensation',)),
+        ('NodeType', (r'eventConditional',)),
+        ('NodeType', (r'eventConditionalNon',)),
+        ('NodeType', (r'eventError',)),
+        ('NodeType', (r'eventEscalation',)),
+        ('NodeType', (r'eventEscalationNon',)),
+        ('NodeType', (r'eventMessage',)),
+        ('NodeType', (r'eventMessageNon',)),
+        ('NodeType', (r'eventMultiple',)),
+        ('NodeType', (r'eventMultipleNon',)),
+        ('NodeType', (r'eventParallelMultiple',)),
+        ('NodeType', (r'eventParallelMultipleNon',)),
+        ('NodeType', (r'eventSignal',)),
+        ('NodeType', (r'eventSignalNon',)),
+        ('NodeType', (r'eventTimer',)),
+        ('NodeType', (r'eventTimerNon',)),
+
+        # gateways
         ('NodeType', (r'exclusive',)),
         ('NodeType', (r'inclusive',)),
         ('NodeType', (r'parallel',)),
@@ -107,6 +145,16 @@ def tokenize(str):
         ('NodeType', (r'eventBasedStart',)),
         ('NodeType', (r'eventBasedParallelStart',)),
 
+        # data
+        ('NodeType', (r'data',)),
+        ('NodeType', (r'dataCollection',)),
+        ('NodeType', (r'dataInput',)),
+        ('NodeType', (r'dataInputCollection',)),
+        ('NodeType', (r'dataOutput',)),
+        ('NodeType', (r'dataOutputCollection',)),
+        ('NodeType', (r'dataStore',)),
+
+        # edges
         ('EdgeOp', (r'---',)),
         ('EdgeOp', (r'-->',)),
         ('EdgeOp', (r'<--',)),
@@ -133,15 +181,12 @@ def parse(seq):
         'start', 'startCompensation', 'startConditional', 'startConditionalNon', 'startError', 'startEscalation', 'startEscalationNon', 'startMessage', 'startMessageNon', 'startMultiple', 'startMultipleNon', 'startParallelMultiple', 'startParallelMultipleNon', 'startSignal', 'startSignalNon', 'startTimer', 'startTimerNon',
         'end', 'endCancel', 'endCompensation', 'endError', 'endEscalation', 'endMessage', 'endMultiple', 'endSignal', 'endTerminate',
         'intermediate', 'catchCancel', 'catchCompensation', 'throwCompensation', 'catchError', 'catchEscalation', 'catchEscalationNon', 'throwEscalation', 'catchLink', 'throwLink', 'catchMessage', 'catchMessageNon', 'throwMessage', 'catchMultiple', 'catchMultipleNon', 'throwMultiple', 'catchParallelMultiple', 'catchParallelMultipleNon', 'catchSignal', 'catchSignalNon', 'throwSignal', 'conditional', 'conditionalNon', 'timer', 'timerNon',
-
-        'task',
-        'call',
-        'process',
-        'transaction',
-        'event',
-        'adhoc',
-
-        'inclusive', 'exclusive', 'parallel', 'complex', 'eventBased', 'eventBasedStart', 'eventBasedParallelStart'
+        'task', 'businessRuleTask', 'manualTask', 'receiveTask', 'scriptTask', 'sendTask', 'serviceTask', 'userTask',
+        'call', 'businessRuleCall', 'manualCall', 'scriptCall', 'userCall',
+        'process', 'adhoc', 'transaction',
+        'event', 'eventCompensation', 'eventConditional', 'eventConditionalNon', 'eventError', 'eventEscalation', 'eventEscalationNon', 'eventMessage', 'eventMessageNon', 'eventMultiple', 'eventMultipleNon', 'eventParallelMultiple', 'eventParallelMultipleNon', 'eventSignal', 'eventSignalNon', 'eventTimer', 'eventTimerNon',
+        'inclusive', 'exclusive', 'parallel', 'complex', 'eventBased', 'eventBasedStart', 'eventBasedParallelStart',
+        'data', 'dataCollection', 'dataInput', 'dataInputCollection', 'dataOutput', 'dataOutputCollection', 'dataStore'
     ]
 
     node_type = some(lambda t: t.value in node_type_keywords).named('type') >> tokval

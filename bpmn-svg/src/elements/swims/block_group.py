@@ -21,21 +21,60 @@ from elements.svg_element import SvgElement
 
 CLASSES = {
     ### activity    ------------------------------------------------------------------------------------------------------------------------------
-    # activities
-    'task':         {'m': 'elements.activities.tasks.activity_task',                            'c': 'ActivityTask'},
-    'call':         {'m': 'elements.activities.calls.activity_call',                            'c': 'ActivityCall'},
-    'process':      {'m': 'elements.activities.subprocesses.activity_subprocess',               'c': 'ActivitySubprocess'},
-    'transaction':  {'m': 'elements.activities.subprocesses.activity_subprocess_transaction',   'c': 'ActivityTransactionSubprocess'},
-    'event':        {'m': 'elements.activities.subprocesses.activity_subprocess_event',         'c': 'ActivityEventSubprocess'},
-    'adhoc':        {'m': 'elements.activities.subprocesses.activity_subprocess_adhoc',         'c': 'ActivityAdhocSubprocess'},
+    # tasks
+    'task':                     {'m': 'elements.activities.tasks.activity_task',                                        'c': 'ActivityTask'},
+    'businessRuleTask':         {'m': 'elements.activities.tasks.activity_task_business_rule',                          'c': 'ActivityTaskBusinessRule'},
+    'manualTask':               {'m': 'elements.activities.tasks.activity_task_manual',                                 'c': 'ActivityTaskManual'},
+    'receiveTask':              {'m': 'elements.activities.tasks.activity_task_receive',                                'c': 'ActivityTaskReceive'},
+    'scriptTask':               {'m': 'elements.activities.tasks.activity_task_script',                                 'c': 'ActivityTaskScript'},
+    'sendTask':                 {'m': 'elements.activities.tasks.activity_task_send',                                   'c': 'ActivityTaskSend'},
+    'serviceTask':              {'m': 'elements.activities.tasks.activity_task_service',                                'c': 'ActivityTaskService'},
+    'userTask':                 {'m': 'elements.activities.tasks.activity_task_user',                                   'c': 'ActivityTaskUser'},
+
+    # calls
+    'call':                     {'m': 'elements.activities.calls.activity_call',                                        'c': 'ActivityCall'},
+    'businessRuleCall':         {'m': 'elements.activities.calls.activity_call_business_rule',                          'c': 'ActivityCallBusinessRule'},
+    'manualCall':               {'m': 'elements.activities.calls.activity_call_manual',                                 'c': 'ActivityCallManual'},
+    'scriptCall':               {'m': 'elements.activities.calls.activity_call_script',                                 'c': 'ActivityCallScript'},
+    'userCall':                 {'m': 'elements.activities.calls.activity_call_user',                                   'c': 'ActivityCallUser'},
+
+    # subprocesses
+    'process':                  {'m': 'elements.activities.subprocesses.activity_subprocess',                           'c': 'ActivitySubprocess'},
+    'adhoc':                    {'m': 'elements.activities.subprocesses.activity_subprocess_adhoc',                     'c': 'ActivityAdhocSubprocess'},
+    'transaction':              {'m': 'elements.activities.subprocesses.activity_subprocess_transaction',               'c': 'ActivityTransactionSubprocess'},
+
+    # event subprocesses
+    'event':                    {'m': 'elements.activities.subprocesses.activity_subprocess_event',                     'c': 'ActivityEventSubprocess'},
+    'eventCompensation':        {'m': 'elements.activities.subprocesses.events.activity_event_compensation',            'c': 'ActivityEventCompensation'},
+    'eventConditional':         {'m': 'elements.activities.subprocesses.events.activity_event_conditional',             'c': 'ActivityEventConditional'},
+    'eventConditionalNon':      {'m': 'elements.activities.subprocesses.events.activity_event_conditional_non',         'c': 'ActivityEventConditionalNon'},
+    'eventError':               {'m': 'elements.activities.subprocesses.events.activity_event_error',                   'c': 'ActivityEventError'},
+    'eventEscalation':          {'m': 'elements.activities.subprocesses.events.activity_event_escalation',              'c': 'ActivityEventEscalation'},
+    'eventEscalationNon':       {'m': 'elements.activities.subprocesses.events.activity_event_escalation_non',          'c': 'ActivityEventEscalationNon'},
+    'eventMessage':             {'m': 'elements.activities.subprocesses.events.activity_event_message',                 'c': 'ActivityEventMessage'},
+    'eventMessageNon':          {'m': 'elements.activities.subprocesses.events.activity_event_message_non',             'c': 'ActivityEventMessageNon'},
+    'eventMultiple':            {'m': 'elements.activities.subprocesses.events.activity_event_multiple',                'c': 'ActivityEventMultiple'},
+    'eventMultipleNon':         {'m': 'elements.activities.subprocesses.events.activity_event_multiple_non',            'c': 'ActivityEventMultipleNon'},
+    'eventParallelMultiple':    {'m': 'elements.activities.subprocesses.events.activity_event_parallel_multiple',       'c': 'ActivityEventParallelMultiple'},
+    'eventParallelMultipleNon': {'m': 'elements.activities.subprocesses.events.activity_event_parallel_multiple_non',   'c': 'ActivityEventParallelMultipleNon'},
+    'eventSignal':              {'m': 'elements.activities.subprocesses.events.activity_event_signal',                  'c': 'ActivityEventSignal'},
+    'eventSignalNon':           {'m': 'elements.activities.subprocesses.events.activity_event_signal_non',              'c': 'ActivityEventSignalNon'},
+    'eventTimer':               {'m': 'elements.activities.subprocesses.events.activity_event_timer',                   'c': 'ActivityEventTimer'},
+    'eventTimerNon':            {'m': 'elements.activities.subprocesses.events.activity_event_timer_non',               'c': 'ActivityEventTimerNon'},
 
     ### artifact    ------------------------------------------------------------------------------------------------------------------------------
     # artifacts
-    'group':        {'m': 'elements.artifacts.artifact_group',              'c': 'ArtifactGroup'},
-    'annotation':   {'m': 'elements.artifacts.artifact_text_annotation',    'c': 'ArtifactTextAnnotation'},
+    'group':                    {'m': 'elements.artifacts.artifact_group',                                              'c': 'ArtifactGroup'},
+    'annotation':               {'m': 'elements.artifacts.artifact_text_annotation',                                    'c': 'ArtifactTextAnnotation'},
 
     ### data        ------------------------------------------------------------------------------------------------------------------------------
-    'data':         {'m': 'elements.activities.data_object',                'c': 'DataObject'},
+    'data':                     {'m': 'elements.datas.data_object',                                                     'c': 'DataObject'},
+    'dataCollection':           {'m': 'elements.datas.data_collection',                                                 'c': 'DataCollection'},
+    'dataInput':                {'m': 'elements.datas.data_input',                                                      'c': 'DataInput'},
+    'dataInputCollection':      {'m': 'elements.datas.data_input_collection',                                           'c': 'DataInputCollection'},
+    'dataOutput':               {'m': 'elements.datas.data_output',                                                     'c': 'DataOutput'},
+    'dataOutputCollection':     {'m': 'elements.datas.data_output_collection',                                          'c': 'DataOutputCollection'},
+    'dataStore':                {'m': 'elements.datas.data_store',                                                      'c': 'DataStore'},
 
     ### event      ------------------------------------------------------------------------------------------------------------------------------
     #   start events

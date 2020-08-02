@@ -24,38 +24,20 @@ class ActivityAdhocSubprocess(ActivitySubprocess):
         self.theme = {**self.theme, **self.current_theme['activities']['subprocesses']['ActivityAdhocSubprocess']}
 
     def get_bottom_center_element(self):
-        pass
+        rect_svg_group, rect_svg_width, rect_svg_height = a_cross_in_a_rectangle(
+                                                    width=self.theme['bottom-center-rectangle']['width'],
+                                                    height=self.theme['bottom-center-rectangle']['height'],
+                                                    rect_spec=self.theme['bottom-center-rectangle'],
+                                                    cross_spec=self.theme['bottom-center-inner-shape'])
+        rect_svg_element = SvgElement({'width': rect_svg_width, 'height': rect_svg_height}, rect_svg_group)
 
-    def assemble_elements(self):
-        info('......assembling node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
+        tilde_svg_group, tilde_svg_width, tilde_svg_height = a_tilde_in_a_rectangular_shape(
+                                                    width=self.theme['bottom-center-rectangle']['width'],
+                                                    height=self.theme['bottom-center-rectangle']['height'],
+                                                    rect_spec=self.theme['bottom-center-rectangle'],
+                                                    tilde_spec=self.theme['bottom-center-inner-shape'])
+        tilde_svg_element = SvgElement({'width': tilde_svg_width, 'height': tilde_svg_height}, tilde_svg_group)
 
-        # wrap it in a svg group
-        svg_group = G(id=self.group_id)
+        combined_svg_group, combined_svg_width, combined_svg_height = align_and_combine_horizontally([rect_svg_element, tilde_svg_element])
 
-        # get the elements
-        label_svg_element = self.node_elements[0]
-        label_svg = label_svg_element.group
-
-        rect_svg_element = self.node_elements[1]
-        wave_svg_element = self.node_elements[2]
-
-        combined_svg, combined_svg_width, combined_svg_height = align_and_combine_horizontally([rect_svg_element, wave_svg_element])
-
-        # the rect is inside the label, we keep a gap betwwen the bottom edge of the label and the botto edge of the rect
-        gap_between_label_and_rect_bootom_edges = 5
-        combined_svg_xy = '{0},{1}'.format((label_svg_element.specs['width'] - combined_svg_width)/2, label_svg_element.specs['height'] - combined_svg_height - gap_between_label_and_rect_bootom_edges)
-        transformer = TransformBuilder()
-        transformer.setTranslation(combined_svg_xy)
-        combined_svg.set_transform(transformer.getTransform())
-
-        # the wave is inside teh label, we keep a gap betwwen the bottom edge of the label and the bottom edge of the rect
-
-        # place the elements
-        svg_group.addElement(label_svg)
-        svg_group.addElement(combined_svg)
-
-        group_width = label_svg_element.specs['width']
-        group_height = label_svg_element.specs['height']
-
-        info('......assembling node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement({'width': group_width, 'height': group_height}, svg_group)
+        return SvgElement({'width': combined_svg_width, 'height': combined_svg_height}, combined_svg_group)

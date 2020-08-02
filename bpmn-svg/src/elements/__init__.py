@@ -140,6 +140,11 @@ default_theme = {
             'EventEndEscalation':{
             },
             'EventEndMessage':{
+                'inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 2, 'stroke': '#FFFFFF'
+                    }
+                }
             },
             'EventEndMultiple':{
             },
@@ -438,8 +443,11 @@ default_theme = {
             'rectangle': {
                 'min-width': 80, 'max-width': 160,
                 'rx': 5, 'ry': 5,
+                'inner-shape-margin-spec': {
+                    'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                },
                 'pad-spec': {
-                    'left': 10, 'top': 15, 'right': 10, 'bottom': 10
+                    'left': 10, 'top': 10, 'right': 10, 'bottom': 10
                 },
                 'style': {
                     'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
@@ -450,10 +458,86 @@ default_theme = {
                 'style': {
                     'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
                 }
+            },
+            'bottom-center-inner-shape': {
+                'style': {
+                    'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                }
+            },
+            'bottom-center-inner-shape': {
+                'style': {
+                    'fill': '#808080', 'stroke-width': 1, 'stroke': '#808080'
+                }
             }
         },
         'tasks': {
             'ActivityTask': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    },
+                },
+                'top-left-inner-shape': {
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#404040'
+                    }
+                }
+            },
+            'ActivityTaskBusinessRule': {
+                'top-left-inner-shape': {
+                    'width': 20, 'height': 15,
+                    'svg-path': '../conf/business-rule.svg'
+                }
+            },
+            'ActivityTaskManual': {
+                'top-left-inner-shape': {
+                    'width': 16, 'height': 16,
+                    'svg-path': '../conf/manual.svg'
+                }
+            },
+            'ActivityTaskReceive': {
+                'top-left-inner-shape': {
+                    'width': 18, 'height': 13,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#404040'
+                    }
+                }
+            },
+            'ActivityTaskScript': {
+                'top-left-inner-shape': {
+                    'width': 16, 'height': 16,
+                    'svg-path': '../conf/script.svg'
+                }
+            },
+            'ActivityTaskSend': {
+                'top-left-inner-shape': {
+                    'width': 20, 'height': 15,
+                    'style': {
+                        'fill': '#000000', 'stroke-width': 1.25, 'stroke': '#FFFFFF'
+                    }
+                }
+            },
+            'ActivityTaskService': {
+                'top-left-inner-shape': {
+                    'width': 20, 'height': 15,
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 1.5, 'stroke': '#404040'
+                    }
+                }
+            },
+            'ActivityTaskUser': {
+                'top-left-inner-shape': {
+                    'width': 16, 'height': 16,
+                    'svg-path': '../conf/user.svg'
+                }
             }
         },
         'subprocesses': {
@@ -461,18 +545,21 @@ default_theme = {
                 'rectangle': {
                     'min-width': 80, 'max-width': 160,
                     'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
                     'pad-spec': {
-                        'left': 10, 'top': 10, 'right': 10, 'bottom': 15
+                        'left': 10, 'top': 10, 'right': 10, 'bottom': 20
                     },
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
                     },
                 },
                 'bottom-center-rectangle': {
-                    'width': 10, 'height': 10,
+                    'width': 14, 'height': 14,
                     'rx': 0, 'ry': 0,
                     'margin-spec': {
-                        'left': 2, 'top': 2, 'right': 2, 'bottom': 5
+                        'left': 2, 'top': 2, 'right': 2, 'bottom': 4
                     },
                     'pad-spec': {
                         'left': 2, 'top': 2, 'right': 2, 'bottom': 2
@@ -480,7 +567,14 @@ default_theme = {
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#808080'
                     }
+                },
+                'bottom-center-inner-shape': {
+                    'style': {
+                        'fill': '#808080', 'stroke-width': 0.25, 'stroke': '#808080'
+                    }
                 }
+            },
+            'ActivityAdhocSubprocess': {
             },
             'ActivityTransactionSubprocess': {
                 'outer-rectangle': {
@@ -497,15 +591,127 @@ default_theme = {
                 'rectangle': {
                     'min-width': 80, 'max-width': 160,
                     'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
                     'pad-spec': {
-                        'left': 10, 'top': 15, 'right': 10, 'bottom': 15
+                        'left': 15, 'top': 22, 'right': 10, 'bottom': 20
                     },
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080', 'stroke-dasharray': '5,5'
                     },
+                },
+                'top-left-circle': {
+                    'radius': 10,
+                    'margin-spec': {
+                        'left': 4, 'top': 4, 'right': 2, 'bottom': 2
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    }
+                },
+                'top-left-inner-shape': {
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#404040'
+                    }
                 }
             },
-            'ActivityAdhocSubprocess': {
+            'event-subprocesses': {
+                'ActivityEventCompensation': {
+                },
+                'ActivityEventConditional': {
+                },
+                'ActivityEventConditionalNon': {
+                    'top-left-circle': {
+                        'radius': 10,
+                        'margin-spec': {
+                            'left': 4, 'top': 4, 'right': 2, 'bottom': 2
+                        },
+                        'style': {
+                            'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#404040', 'stroke-dasharray': '4,4'
+                        }
+                    }
+                },
+                'ActivityEventError': {
+                },
+                'ActivityEventEscalation': {
+                },
+                'ActivityEventEscalationNon': {
+                    'top-left-circle': {
+                        'radius': 10,
+                        'margin-spec': {
+                            'left': 4, 'top': 4, 'right': 2, 'bottom': 2
+                        },
+                        'style': {
+                            'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#404040', 'stroke-dasharray': '4,4'
+                        }
+                    }
+                },
+                'ActivityEventMessage': {
+                },
+                'ActivityEventMessageNon': {
+                    'top-left-circle': {
+                        'radius': 10,
+                        'margin-spec': {
+                            'left': 4, 'top': 4, 'right': 2, 'bottom': 2
+                        },
+                        'style': {
+                            'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#404040', 'stroke-dasharray': '4,4'
+                        }
+                    }
+                },
+                'ActivityEventMultiple': {
+                },
+                'ActivityEventMultipleNon': {
+                    'top-left-circle': {
+                        'radius': 10,
+                        'margin-spec': {
+                            'left': 4, 'top': 4, 'right': 2, 'bottom': 2
+                        },
+                        'style': {
+                            'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#404040', 'stroke-dasharray': '4,4'
+                        }
+                    }
+                },
+                'ActivityEventParallelMultiple': {
+                },
+                'ActivityEventParallelMultipleNon': {
+                    'top-left-circle': {
+                        'radius': 10,
+                        'margin-spec': {
+                            'left': 4, 'top': 4, 'right': 2, 'bottom': 2
+                        },
+                        'style': {
+                            'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#404040', 'stroke-dasharray': '4,4'
+                        }
+                    }
+                },
+                'ActivityEventSignal': {
+                },
+                'ActivityEventSignalNon': {
+                    'top-left-circle': {
+                        'radius': 10,
+                        'margin-spec': {
+                            'left': 4, 'top': 4, 'right': 2, 'bottom': 2
+                        },
+                        'style': {
+                            'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#404040', 'stroke-dasharray': '4,4'
+                        }
+                    }
+                },
+                'ActivityEventTimer': {
+                },
+                'ActivityEventTimerNon': {
+                    'top-left-circle': {
+                        'radius': 10,
+                        'margin-spec': {
+                            'left': 4, 'top': 4, 'right': 2, 'bottom': 2
+                        },
+                        'style': {
+                            'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#404040', 'stroke-dasharray': '4,4'
+                        }
+                    }
+                },
             }
         },
         'calls': {
@@ -513,12 +719,53 @@ default_theme = {
                 'rectangle': {
                     'min-width': 80, 'max-width': 160,
                     'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
                     'pad-spec': {
-                        'left': 10, 'top': 10, 'right': 10, 'bottom': 10
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
                     },
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
                     },
+                },
+                'top-left-circle': {
+                    'radius': 10,
+                    'margin-spec': {
+                        'left': 5, 'top': 5, 'right': 2, 'bottom': 2
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#808080'
+                    }
+                },
+                'top-left-inner-shape': {
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#808080'
+                    }
+                }
+            },
+            'ActivityCallBusinessRule': {
+                'top-left-inner-shape': {
+                    'width': 20, 'height': 15,
+                    'svg-path': '../conf/business-rule.svg'
+                }
+            },
+            'ActivityCallManual': {
+                'top-left-inner-shape': {
+                    'width': 16, 'height': 16,
+                    'svg-path': '../conf/manual.svg'
+                }
+            },
+            'ActivityCallScript': {
+                'top-left-inner-shape': {
+                    'width': 16, 'height': 16,
+                    'svg-path': '../conf/script.svg'
+                }
+            },
+            'ActivityCallUser': {
+                'top-left-inner-shape': {
+                    'width': 16, 'height': 16,
+                    'svg-path': '../conf/user.svg'
                 }
             }
         }
@@ -608,6 +855,72 @@ default_theme = {
     'flows': {
     },
     'datas': {
+        'DataObject': {
+            'rectangle': {
+                'min-width': 60, 'max-width': 120, 'rx': 0, 'ry': 0,
+                'pad-spec': {
+                    'left': 2, 'top': 5, 'right': 2, 'bottom': 5
+                },
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+                }
+            },
+            'text': {
+                'vertical-text': False, 'max-lines': 4,
+                'style': {
+                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 11, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                }
+            },
+            'folded-rectangle': {
+                'width': 40, 'height': 60, 'fold-length': 15,
+                'pad-spec': {
+                    'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                },
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                }
+            },
+            'top-left-inner-shape': {
+                'width': 16, 'height': 12,
+                'style': {
+                    'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#808080'
+                }
+            },
+            'bottom-center-inner-shape': {
+                'width': 20, 'height': 12,
+                'style': {
+                    'fill': '#000000', 'stroke-width': 1, 'stroke': '#FFFFFF'
+                }
+            }
+        },
+        'DataCollection': {
+        },
+        'DataInput': {
+        },
+        'DataInputCollection': {
+        },
+        'DataOutput': {
+            'top-left-inner-shape': {
+                'width': 16, 'height': 12,
+                'style': {
+                    'fill': '#404040', 'stroke-width': 1, 'stroke': '#808080'
+                }
+            },
+        },
+        'DataOutputCollection': {
+            'top-left-inner-shape': {
+                'width': 16, 'height': 12,
+                'style': {
+                    'fill': '#404040', 'stroke-width': 1, 'stroke': '#808080'
+                }
+            },
+        },
+        'DataStore': {
+            'shape-spec': {
+                'width': 50, 'height': 70,
+                'svg-path': '../conf/data-store.svg'
+            }
+        }
     },
     'artifacts': {
     }

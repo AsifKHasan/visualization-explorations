@@ -28,6 +28,88 @@ Note:   For valid edge syntax see *EdgeOp* definitions in *tokenize* method *spe
 graph bpmn_sample {
     label = "BPMN Sample"
 
+    lane datas {
+        label = "All Data"
+        pool data {
+            label = "Data"
+
+            data                        data01 [label="Data ";]
+            dataCollection              data02 [label="Data Collection";]
+            dataInput                   data03 [label="Data Input";]
+            dataInputCollection         data04 [label="Data Input Collection";]
+            dataOutput                  data05 [label="Data Output";]
+            dataOutputCollection        data06 [label="Data Output Collection";]
+            dataStore                   data07 [label="Data Store";]
+        }
+    }
+    lane activities {
+        label = "All Activities"
+        pool tasks_1 {
+            label = "Tasks 1"
+
+            task                        task01 [label="Task";]
+            businessRuleTask            task02 [label="Business Rule Task";]
+            manualTask                  task03 [label="Manual Task";]
+            receiveTask                 task04 [label="Receive Task";]
+        }
+        pool tasks_2 {
+            label = "Tasks 1"
+
+            scriptTask                  task05 [label="Script Task";]
+            sendTask                    task06 [label="Send Task";]
+            serviceTask                 task07 [label="Service Task";]
+            userTask                    task08 [label="User Task";]
+        }
+        pool calls {
+            label = "Calls"
+
+            call                        call01 [label="Call";]
+            businessRuleCall            call02 [label="Business Rule Call";]
+            manualCall                  call03 [label="Manual Call";]
+            scriptCall                  call04 [label="Script Call";]
+            userCall                    call05 [label="User Call";]
+        }
+        pool subprocesses {
+            label = "Subprocesses"
+
+            process                     subprocess01 [label="Subprocess";]
+            adhoc                       subprocess02 [label="Adhoc Subprocess";]
+            transaction                 subprocess03 [label="Transaction Subprocess";]
+        }
+        pool event_subprocceses_1 {
+            label = "Event Subprocesses 1"
+
+            event                       event_subprocess01 [label="Event Subprocess";]
+            eventCompensation           event_subprocess02 [label="Event Subprocess Compensation";]
+            eventConditional            event_subprocess03 [label="Event Subprocess Conditional";]
+            eventConditionalNon         event_subprocess04 [label="Event Subprocess Conditional Non";]
+        }
+        pool event_subprocceses_2 {
+            label = "Event Subprocesses 2"
+
+            eventError                  event_subprocess05 [label="Event Subprocess Error";]
+            eventEscalation             event_subprocess06 [label="Event Subprocess Escalation";]
+            eventEscalationNon          event_subprocess07 [label="Event Subprocess Escalation Non";]
+            eventMessage                event_subprocess08 [label="Event Subprocess Message";]
+            eventMessageNon             event_subprocess09 [label="Event Subprocess Message Non";]
+            }
+        pool event_subprocceses_3 {
+            label = "Event Subprocesses 3"
+
+            eventMultiple               event_subprocess10 [label="Event Subprocess Multiple";]
+            eventMultipleNon            event_subprocess11 [label="Event Subprocess Multiple Non";]
+            eventParallelMultiple       event_subprocess12 [label="Event Subprocess Parallel Multiple";]
+            eventParallelMultipleNon    event_subprocess13 [label="Event Subprocess Parallel MultipleNon";]
+            }
+        pool event_subprocceses_4 {
+            label = "Event Subprocesses 4"
+
+            eventSignal                 event_subprocess14 [label="Event Subprocess Signal";]
+            eventSignalNon              event_subprocess15 [label="Event Subprocess Signal Non";]
+            eventTimer                  event_subprocess16 [label="Event Subprocess Timer";]
+            eventTimerNon               event_subprocess17 [label="Event Subprocess Timer Non";]
+        }
+    }
     lane events {
         label = "All Events"
         pool starts_1 {
@@ -62,19 +144,19 @@ graph bpmn_sample {
         pool ends_1 {
             label = "End Events 1"
 
-            end              end1 [label="End";]
-            endCancel        end2 [label="End Cancel";]
-            endCompensation  end3 [label="End Compensation";]
-            endError         end4 [label="End Error";]
-            endEscalation    end5 [label="End Escalation";]
+            end                         end1 [label="End";]
+            endCancel                   end2 [label="End Cancel";]
+            endCompensation             end3 [label="End Compensation";]
+            endError                    end4 [label="End Error";]
+            endEscalation               end5 [label="End Escalation";]
         }
         pool ends_2 {
             label = "End Events 2"
 
-            endMessage       end6 [label="End Message";]
-            endMultiple      end7 [label="End Multiple";]
-            endSignal        end8 [label="End Signal";]
-            endTerminate     end9 [label="End Terminate";]
+            endMessage                  end6 [label="End Message";]
+            endMultiple                 end7 [label="End Multiple";]
+            endSignal                   end8 [label="End Signal";]
+            endTerminate                end9 [label="End Terminate";]
         }
         pool intermediates_1 {
             label = "Intermediate Events 1"

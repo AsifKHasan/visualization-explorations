@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 '''
+from pysvg.parser import *
 from pysvg.builders import *
 from pysvg.shape import *
 from pysvg.structure import *
@@ -266,12 +267,12 @@ def a_lightning(width, height, spec):
     angle_mt_tl = math.pi/2
 
     bottom_left = Point(0, height)
-    mid_top = bottom_left.to_point(-math.degrees(angle_bl_tr), diagonal/2 + len_mb_mt/2)
-    mid_bottom = bottom_left.to_point(-math.degrees(angle_bl_tr), diagonal/2 - len_mb_mt/2)
-    top_left = mid_top.to_point(-math.degrees(angle_mt_tl + angle_bl_tr), len_mt_tl)
+    mid_top = bottom_left.to_point(math.degrees(angle_bl_tr), diagonal/2 + len_mb_mt/2)
+    mid_bottom = bottom_left.to_point(math.degrees(angle_bl_tr), diagonal/2 - len_mb_mt/2)
+    top_left = mid_top.to_point(math.degrees(angle_mt_tl + angle_bl_tr), len_mt_tl)
 
     top_right = Point(width, 0)
-    bottom_right = mid_bottom.to_point(math.degrees(angle_mt_tl - angle_bl_tr), len_mt_tl)
+    bottom_right = mid_bottom.to_point(-math.degrees(angle_mt_tl - angle_bl_tr), len_mt_tl)
 
     lightning_points = [bottom_left, top_left, mid_top, top_right, bottom_right, mid_bottom]
     # lightning_points = [bottom_left, top_left, mid_top]
@@ -280,6 +281,149 @@ def a_lightning(width, height, spec):
     lightning_svg.set_style(StyleBuilder(spec['style']).getStyle())
 
     return lightning_svg, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_tilde(width, height, spec):
+
+    mid_x = width/2
+    mid_y = height/2
+    tilde_pathspec = ''
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, 'M', mid_x - width * 0.5, mid_y - height * 0.1)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, 'C', mid_x - width * 0.3, mid_y - height * 0.4)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, ' ', mid_x - width * 0.2, mid_y - height * 0.4)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, ' ', mid_x - width * 0.0, mid_y - height * 0.1)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, 'S', mid_x + width * 0.3, mid_y + height * 0.3)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, ' ', mid_x + width * 0.5, mid_y - height * 0.1)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, 'L', mid_x + width * 0.5, mid_y + height * 0.1)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, 'C', mid_x + width * 0.3, mid_y + height * 0.4)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, ' ', mid_x + width * 0.2, mid_y + height * 0.4)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, ' ', mid_x + width * 0.0, mid_y + height * 0.1)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, 'S', mid_x - width * 0.3, mid_y - height * 0.3)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, ' ', mid_x - width * 0.5, mid_y + height * 0.1)
+    tilde_pathspec = '{0}{1}{2},{3} '.format(tilde_pathspec, 'L', mid_x - width * 0.5, mid_y - height * 0.1)
+    tilde_pathspec = '{0}{1}'.format(tilde_pathspec, 'Z')
+
+    tilde_svg = Path(pathData=tilde_pathspec)
+    tilde_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    return tilde_svg, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_folded_rectangle(width, height, spec):
+    svg_group = G()
+
+    top_left = Point(0, 0)
+    mid_top = Point(width - spec['fold-length'], 0)
+    mid_right = Point(width, spec['fold-length'])
+    bottom_right = Point(width, height)
+    bottom_left = Point(0, height)
+    shape1_points = [top_left, mid_top, mid_right, bottom_right, bottom_left, top_left]
+
+    shape1_svg = Polygon(points=points_to_str(shape1_points))
+    shape1_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    mid = Point(width - spec['fold-length'], spec['fold-length'])
+    shape2_points = [mid_top, mid, mid_right]
+    shape2_svg = Polygon(points=points_to_str(shape2_points))
+    shape2_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    # add to group
+    svg_group.addElement(shape1_svg)
+    svg_group.addElement(shape2_svg)
+    return svg_group, width, height
+
+def an_envelop(width, height, spec):
+    envelop_group, envelop_width, envelop_height = a_rectangle(width, height, spec=spec)
+
+    # two lines from center to top left and top right to give it an envelop look
+    center_point = Point(width/2, height/2)
+    top_left_point = Point(0, 0)
+    top_right_point = Point(width, 0)
+    points = [top_left_point, center_point, top_right_point, top_left_point]
+
+    # the lines' color is shapes stroke
+    line_style = StyleBuilder(spec['style']).getStyle()
+    line1_svg = Line(x1=0, y1=0, x2=width/2, y2=height/2, style=spec['style'])
+    line2_svg = Line(x1=width/2, y1=height/2, x2=width, y2=0, style=spec['style'])
+    line1_svg.set_style(line_style)
+    line2_svg.set_style(line_style)
+    envelop_group.addElement(line1_svg)
+    envelop_group.addElement(line2_svg)
+
+    return envelop_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def three_bars(width, height, spec):
+    svg_group = G()
+
+    bar_width = width/3
+    bar_height = height
+    for i in range(0, 3):
+        x = i * bar_width
+        rect_svg = Rect(x=x, y=0, width=bar_width, height=bar_height)
+        rect_svg.set_style(StyleBuilder(spec['style']).getStyle())
+        svg_group.addElement(rect_svg)
+
+    return svg_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def a_gear(radius, spec):
+    mark_length = radius * 0.3
+    circle_radius = radius - mark_length
+    gear_group_svg, _, _ = a_circle(radius=circle_radius, spec=spec)
+
+    # the inner circle
+    inner_circle_radius = radius * 0.1
+    inner_circle_svg = Circle(cx=circle_radius, cy=circle_radius, r=inner_circle_radius)
+    inner_circle_svg.set_style(StyleBuilder(spec['style']).getStyle())
+    gear_group_svg.addElement(inner_circle_svg)
+
+    # the hour marks
+    center_point = Point(circle_radius, circle_radius)
+    for mark in range(0, 9):
+        point_on_circle = center_point.to_point(40 * mark, circle_radius)
+        point_outside = center_point.to_point(40 * mark, circle_radius + mark_length)
+        mark_svg = Line(x1=point_on_circle.x, y1=point_on_circle.y, x2=point_outside.x, y2=point_outside.y)
+        mark_svg.set_style(StyleBuilder(spec['style']).getStyle())
+        gear_group_svg.addElement(mark_svg)
+
+    # add to group
+    return gear_group_svg, radius * 2, radius * 2
+
+
+# --------------------------------------------------------------------------------------
+# shapes inside a rectangular shape ---------------------------------------------------------------
+# --------------------------------------------------------------------------------------
+
+# returns a tuple (svg group, group_width, group_height)
+def a_tilde_in_a_rectangular_shape(width, height, rect_spec, tilde_spec):
+    svg_group = G()
+    if 'pad-spec' not in rect_spec:
+        pad_left, pad_top, pad_right, pad_bottom = 2, 2, 2, 2
+    else:
+        pad_left, pad_top, pad_right, pad_bottom = rect_spec['pad-spec']['left'], rect_spec['pad-spec']['top'], rect_spec['pad-spec']['right'], rect_spec['pad-spec']['bottom']
+
+    tilde_width = width - pad_left - pad_right
+    tilde_height = height - pad_top - pad_bottom
+    tilde_group, _, _ = a_tilde(width=tilde_width, height=tilde_height, spec=tilde_spec)
+
+    tilde_group_xy = '{0},{1}'.format(pad_left, pad_top)
+    transformer = TransformBuilder()
+    transformer.setTranslation(tilde_group_xy)
+    tilde_group.set_transform(transformer.getTransform())
+
+    svg_group.addElement(tilde_group)
+
+    return svg_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def something_missing_inside_a_rectangular_shape(width, height, inner_shape_spec):
+    x = width * 0.2
+    inner_shape_spec = {'style': {'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#FF8080'}}
+    missing_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
+
+    return missing_group, width, height
+
 
 # --------------------------------------------------------------------------------------
 # shapes inside a circular shape ---------------------------------------------------------------
@@ -300,43 +444,24 @@ def a_circle_inside_a_circular_shape(outer_radius, inner_radius, inner_shape_spe
 
 # returns a tuple (svg group, group_width, group_height)
 def an_envelop_inside_a_circular_shape(radius, inner_shape_spec):
-    pad_x = radius * 0.5
-    pad_y = radius * 0.6
-
-    width = (radius - pad_x) * 2
-    height = (radius - pad_y) * 2
-
-    envelop_group, envelop_width, envelop_height = a_rectangle(width, height, spec=inner_shape_spec)
-
-    # two lines from center to top left and top right to give it an envelop look
-    center_point = Point(width/2, height/2)
-    top_left_point = Point(0, 0)
-    top_right_point = Point(width, 0)
-    points = [top_left_point, center_point, top_right_point, top_left_point]
-
-    # the lines' color is shapes stroke
-    line_style = StyleBuilder(inner_shape_spec['style']).getStyle()
-    line1_svg = Line(x1=0, y1=0, x2=width/2, y2=height/2, style=inner_shape_spec['style'])
-    line2_svg = Line(x1=width/2, y1=height/2, x2=width, y2=0, style=inner_shape_spec['style'])
-    line1_svg.set_style(line_style)
-    line2_svg.set_style(line_style)
-    envelop_group.addElement(line1_svg)
-    envelop_group.addElement(line2_svg)
-
-    return envelop_group, width, height
+    pad = radius * 0.1
+    width_by_height = 4/3
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
+    svg_group, _, _ = an_envelop(width=width, height=height, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def an_equilateral_pentagon_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group = G()
 
-    pad = radius * 0.5
+    pad = radius * 0.4
     center_to_vertex = radius - pad
     center_point = Point(radius, radius)
-    point_a = center_point.to_point(-90 - (72 * 0), center_to_vertex)
-    point_b = center_point.to_point(-90 - (72 * 1), center_to_vertex)
-    point_c = center_point.to_point(-90 - (72 * 2), center_to_vertex)
-    point_d = center_point.to_point(-90 - (72 * 3), center_to_vertex)
-    point_e = center_point.to_point(-90 - (72 * 4), center_to_vertex)
+    point_a = center_point.to_point(90 - (72 * 0), center_to_vertex)
+    point_b = center_point.to_point(90 - (72 * 1), center_to_vertex)
+    point_c = center_point.to_point(90 - (72 * 2), center_to_vertex)
+    point_d = center_point.to_point(90 - (72 * 3), center_to_vertex)
+    point_e = center_point.to_point(90 - (72 * 4), center_to_vertex)
     points = [point_a, point_b, point_c, point_d, point_e, point_a]
     pentagon_svg = Polygon(points=points_to_str(points))
     pentagon_svg.set_style(StyleBuilder(inner_shape_spec['style']).getStyle())
@@ -353,9 +478,9 @@ def an_equilateral_triangle_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.4
     center_to_vertex = radius - pad
     center_point = Point(radius, radius)
-    point_a = center_point.to_point(-90, center_to_vertex)
-    point_b = center_point.to_point(-210, center_to_vertex)
-    point_c = center_point.to_point(-330, center_to_vertex)
+    point_a = center_point.to_point(90, center_to_vertex)
+    point_b = center_point.to_point(210, center_to_vertex)
+    point_c = center_point.to_point(330, center_to_vertex)
     points = [point_a, point_b, point_c, point_a]
     triangle_svg = Polygon(points=points_to_str(points))
     triangle_svg.set_style(StyleBuilder(inner_shape_spec['style']).getStyle())
@@ -366,105 +491,139 @@ def an_equilateral_triangle_inside_a_circular_shape(radius, inner_shape_spec):
 
 # returns a tuple (svg group, group_width, group_height)
 def a_cross_inside_a_circular_shape(radius, inner_shape_spec):
-    pad = radius * 0.5
-    width = radius * 2 - pad * 2
-    height = radius * 2 - pad * 2
-    x_bar_height = radius * 0.2
-    y_bar_width = radius * 0.2
-    cross_group, _, _ = a_cross(width=width, height=height, x_bar_height=x_bar_height, y_bar_width=y_bar_width, spec=inner_shape_spec)
-
-    return cross_group, width, height
+    pad = radius * 0.2
+    width_by_height = 1.0
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
+    x_bar_height = height * 0.2
+    y_bar_width = width * 0.2
+    svg_group, _, _ = a_cross(width=width, height=height, x_bar_height=x_bar_height, y_bar_width=y_bar_width, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def an_x_inside_a_circular_shape(radius, inner_shape_spec):
-    pad = radius * 0.5
-    width = radius * 2 - pad * 2
-    height = radius * 2 - pad * 2
+    pad = radius * 0.2
+    width_by_height = 1.0
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
     x = width * 0.3
-    x_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
-
-    return x_group, width, height
+    svg_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def something_missing_inside_a_circular_shape(radius, inner_shape_spec):
-    pad = radius * 0.5
-    width = radius * 2 - pad * 2
-    height = radius * 2 - pad * 2
-    x = width * 0.2
+    pad = radius * 0.2
+    width_by_height = 1.0
     inner_shape_spec = {'style': {'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#FF8080'}}
-    missing_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
-
-    return missing_group, width, height
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
+    x = width * 0.2
+    svg_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def a_clock_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
-
-    clock_group, width, height = a_clock(radius - pad, spec=inner_shape_spec)
-
-    return clock_group, width, height
+    svg_group, width, height = a_clock(radius=radius - pad, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def a_page_inside_a_circular_shape(radius, inner_shape_spec):
-    pad_x = radius * 0.5
-    pad_y = radius * 0.4
-    width = (radius - pad_x) * 2
-    height = (radius - pad_y) * 2
-
-    page_group, _, _ = a_page(width=width, height=height, spec=inner_shape_spec)
-
-    return page_group, width, height
+    pad = radius * 0.2
+    width_by_height = 4/5
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
+    svg_group, _, _ = a_page(width=width, height=height, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def a_triangular_rewind_inside_a_circular_shape(radius, inner_shape_spec):
-    width = radius * 1.1
-    height = radius * 1.0
-
-    triangular_rewind_group, _, _ = a_triangular_rewind(width=width, height=height, spec=inner_shape_spec)
-
-    return triangular_rewind_group, width, height
+    pad = radius * 0.2
+    width_by_height = 1.0
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
+    svg_group, _, _ = a_triangular_rewind(width=width, height=height, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def an_upword_arrowhead_inside_a_circular_shape(radius, inner_shape_spec):
-    width = radius * 1.3
-    height = radius * 1.3
-
-    arrowhead_group, _, _ = an_upword_arrowhead(width=width, height=height, spec=inner_shape_spec)
-
-    return arrowhead_group, width, height
+    pad = radius * 0.2
+    width_by_height = 1.0
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
+    svg_group, _, _ = an_upword_arrowhead(width=width, height=height, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def a_right_arrow_inside_a_circular_shape(radius, inner_shape_spec):
-    width = radius * 1.2
-    height = radius * 1.0
-
-    arrow_group, _, _ = a_right_arrow(width=width, height=height, spec=inner_shape_spec)
-
-    return arrow_group, width, height
+    pad = radius * 0.2
+    width_by_height = 1.0
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
+    svg_group, _, _ = a_right_arrow(width=width, height=height, spec=inner_shape_spec)
+    return svg_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def a_lightning_inside_a_circular_shape(radius, inner_shape_spec):
-    width = radius * 1.0
-    height = radius * 1.2
+    pad = radius * 0.2
+    width_by_height = 1.0
+    width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
+    svg_group, _, _ = a_lightning(width=width, height=height, spec=inner_shape_spec)
+    return svg_group, width, height
 
-    lightning_group, _, _ = a_lightning(width=width, height=height, spec=inner_shape_spec)
+# returns a tuple (svg group, group_width, group_height)
+def two_gears_inside_a_circular_shape(radius, inner_shape_spec):
+    svg_group = G()
 
-    return lightning_group, width, height
+    gear_radius = radius * 0.7
+    gear1_svg_group, _, _ = a_gear(radius=gear_radius, spec=inner_shape_spec)
+    gear2_svg_group, _, _ = a_gear(radius=gear_radius, spec=inner_shape_spec)
+
+    # gear1 is towards top left
+    north_west_point_on_circle = Point(radius, radius).to_point(135, radius)
+    print(north_west_point_on_circle)
+    gear1_center_point = north_west_point_on_circle.to_point(-45, gear_radius)
+    gear1_svg_group_xy = '{0},{1}'.format(gear1_center_point.x - gear_radius, gear1_center_point.y - gear_radius)
+    print(gear1_svg_group_xy)
+    transformer = TransformBuilder()
+    transformer.setTranslation(gear1_svg_group_xy)
+    gear1_svg_group.set_transform(transformer.getTransform())
+    svg_group.addElement(gear1_svg_group)
+
+    # gear2 is towards bottom right
+    south_east_point_on_circle = Point(radius, radius).to_point(-45, radius)
+    gear2_center_point = south_east_point_on_circle.to_point(135, gear_radius)
+    gear2_svg_group_xy = '{0},{1}'.format(gear2_center_point.x - gear_radius, gear2_center_point.y - gear_radius)
+    print(gear2_svg_group_xy)
+    transformer = TransformBuilder()
+    transformer.setTranslation(gear2_svg_group_xy)
+    gear2_svg_group.set_transform(transformer.getTransform())
+    svg_group.addElement(gear2_svg_group)
+
+    return svg_group, radius * 2, radius * 2
+
 
 # --------------------------------------------------------------------------------------
 # shapes inside a rectangle ---------------------------------------------------------------
 # --------------------------------------------------------------------------------------
 
 # returns a tuple (svg group, group_width, group_height)
-def a_cross_in_a_rectangle(width, height, rx, ry, rect_spec, cross_spec):
+def a_cross_in_a_rectangle(width, height, rect_spec, cross_spec):
     rect_group, rect_group_width, rect_group_height = a_rectangle(width, height, rect_spec)
+
+    if 'pad-spec' not in rect_spec:
+        pad_left, pad_top, pad_right, pad_bottom = 2, 2, 2, 2
+    else:
+        pad_left, pad_top, pad_right, pad_bottom = rect_spec['pad-spec']['left'], rect_spec['pad-spec']['top'], rect_spec['pad-spec']['right'], rect_spec['pad-spec']['bottom']
+
+    cross_width = width - pad_left - pad_right
+    cross_height = height - pad_top - pad_bottom
     x_bar_height = height * 0.2
     y_bar_width = width * 0.2
-    cross_group, cross_group_width, cross_group_height = a_cross(width=width, height=height, x_bar_height=x_bar_height, y_bar_width=y_bar_width, spec=cross_spec)
+    cross_group, cross_group_width, cross_group_height = a_cross(width=cross_width, height=cross_height, x_bar_height=x_bar_height, y_bar_width=y_bar_width, spec=cross_spec)
+
+
+    cross_group_xy = '{0},{1}'.format(pad_left, pad_top)
+    transformer = TransformBuilder()
+    transformer.setTranslation(cross_group_xy)
+    cross_group.set_transform(transformer.getTransform())
 
     rect_group.addElement(cross_group)
 
-    return rect_group, rect_group_width, rect_group_height
+    return rect_group, width, height
 
 # returns a tuple (svg group, group_width, group_height)
 def text_inside_a_rectangle(text, min_width, max_width, rect_spec, text_spec, debug_enabled=False):
@@ -558,6 +717,49 @@ def an_equilateral_pentagon_in_two_concentric_circles(outer_radius, inner_radius
 # --------------------------------------------------------------------------------------
 
 # returns a tuple (svg group, group_width, group_height)
+def include_and_scale_svg(spec):
+    if 'width' not in spec or 'height' not in spec or 'svg-path' not in spec:
+        return None, None, None
+
+    width = spec['width']
+    height = spec['height']
+    svg_path = spec['svg-path']
+
+    svg_group = G()
+    svg_inner_group = G()
+
+    # get the svg
+    svg_root_obj = parse(svg_path)
+    scale_x = width / int(svg_root_obj.get_width())
+    scale_y = height / int(svg_root_obj.get_height())
+    transformer = TransformBuilder()
+    transformer.setScaling(x=scale_x, y=scale_y)
+    svg_inner_group.set_transform(transformer.getTransform())
+
+    svg_inner_group.addElement(svg_root_obj)
+    svg_group.addElement(svg_inner_group)
+
+    return svg_group, width, height
+
+# returns a tuple (svg group, group_width, group_height)
+def envelop_and_center_in_a_circle(circle_spec, svg, svg_width, svg_height):
+    radius = circle_spec['radius']
+    if radius < max(svg_width, svg_height)/2:
+        radius = max(svg_width, svg_height)/2
+
+    circle_group, circle_width, circle_height = a_circle(radius=radius, spec=circle_spec)
+
+    svg_xy = '{0},{1}'.format(radius - svg_width/2, radius - svg_height/2)
+    transformer = TransformBuilder()
+    transformer.setTranslation(svg_xy)
+    svg.set_transform(transformer.getTransform())
+
+    # add the svg into group
+    circle_group.addElement(svg)
+
+    return circle_group, radius * 2, radius * 2
+
+# returns a tuple (svg group, group_width, group_height)
 def envelop_and_center_in_a_rectangle(svg, svg_width, svg_height, rect_spec):
     rectangle_width = svg_width + rect_spec['pad-spec']['left'] + rect_spec['pad-spec']['right']
     rectangle_height = svg_height + rect_spec['pad-spec']['top'] + rect_spec['pad-spec']['bottom']
@@ -646,3 +848,8 @@ def center_text_inside_rect(text, width, height, style, vertical_text=False, pad
 def radius_of_the_circle_inside_the_diamond(width, height):
     theta = math.atan(max((width, height))/min(width, height))
     return math.sin(theta) * min(width, height)/2
+
+def rectangle_dimension_inside_a_circle(radius, width_by_height):
+    width = radius * math.sin(math.atan(width_by_height)) * 2
+    height = radius * math.cos(math.atan(width_by_height)) * 2
+    return width, height
