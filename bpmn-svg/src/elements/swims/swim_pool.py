@@ -46,7 +46,7 @@ class SwimPool(BpmnElement):
 
         # get the block group
         block_group = BlockGroup(self.bpmn_id, self.lane_id, self.pool_id, self.pool_data['nodes'], self.pool_data['edges'])
-        block_group_svg_element = block_group.to_svg(self.theme['pool-rect']['default-width'])
+        block_group_svg_element = block_group.to_svg()
         self.node_elements.append(block_group_svg_element)
 
         # get the lane label, its min_width and max_width is the block group's height
@@ -125,7 +125,8 @@ class SwimPool(BpmnElement):
         if width_to_increase > 0:
             # we know that the rect is the first child
             rect = group.getElementAt(0)
-            rect.set_width(rect.get_width() + width_to_increase)
+            # TODO
+            # rect.set_width(rect.get_width() + width_to_increase)
             block_group_svg_element.specs['width'] = block_group_target_width
 
     def get_height(self):

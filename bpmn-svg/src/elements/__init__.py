@@ -86,12 +86,16 @@ default_theme = {
         },
         'BlockGroup': {
             'pad-spec': {
-                'left': 10, 'top': 40, 'right': 10, 'bottom': 40
+                'left': 10, 'top': 20, 'right': 10, 'bottom': 20
             },
             'style': {
-                'fill': 'none', 'stroke-width': 0, 'stroke': '#048243'
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#048243'
             },
-            'dx-between-elements': 40
+            'channel-style': {
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#048243'
+            },
+            'dx-between-elements': 40,
+            'dy-between-channels': 20
         }
     },
     'events': {

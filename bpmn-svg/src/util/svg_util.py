@@ -21,6 +21,19 @@ from util.helpers import *
 # basic shapes ---------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------
 
+def a_labeled_line(point_from, point_to, label, spec=None):
+    svg_group = G()
+
+    if spec is None:
+        spec = {'style': {'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#FF8080'}}
+
+    line_svg = Line(x1=point_from.x, y1=point_from.y, x2=point_to.x, y2=point_to.y)
+    line_svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    # add to group
+    svg_group.addElement(line_svg)
+    return svg_group, abs(point_to.x - point_from.x), abs(point_to.y - point_from.y)
+
 # returns a tuple (svg group, group_width, group_height)
 def a_circle(radius, spec):
     svg_group = G()

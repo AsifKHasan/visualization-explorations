@@ -4,7 +4,20 @@
 from pprint import pprint
 from copy import deepcopy
 
+from pysvg.builders import *
+from pysvg.filter import *
+from pysvg.gradient import *
+from pysvg.linking import *
+from pysvg.script import *
+from pysvg.shape import *
+from pysvg.structure import *
+from pysvg.style import *
+from pysvg.text import *
+
 from util.logger import *
+from util.svg_util import *
+
+from elements.svg_element import SvgElement
 
 # a channel is a node and another channel which is the next node and so on. Basically this represents node -> node -> .......
 # a channel may have more than one next nodes if it has two or more branches
@@ -61,7 +74,7 @@ class Channel:
             for child_list in child.as_full_list():
                 if self.node_id:
                     child_list = [self.node_id] + child_list
-                    
+
                 the_list_of_list.append(child_list)
 
         return the_list_of_list
@@ -71,9 +84,7 @@ class Channel:
             self.children.append(child)
 
     def group_and_order(self):
-        # pprint(self.orphans)
         while True:
-            # pprint(self.orphans)
             if len(self.orphans) == 0:
                 return
 
@@ -87,7 +98,6 @@ class Channel:
                 if parent:
                     # parent.add_children(Channel(node_id, self.orphans.pop(node_id, None)))
                     parent.add_children(self.orphans.pop(key))
-                    # pprint(parent)
                     debug('  orphans [{0}] under [{1}] moved as child'.format(newdict[key], parent.node_id))
 
     def add_orphans(self, parent_node_id, child_node_id):
@@ -190,19 +200,8 @@ def group_nodes_inside_a_pool(bpmn_id, lane_id, pool_id, pool_nodes, pool_edges)
                 parents.append(edge['head'])
 
         root_channel.add(node_id, parents, children)
-        # pprint(root_channel)
-        # print('Orphans.....')
-        # pprint(root_channel.orphans)
 
-    # print('---------------------------')
-    # print('the channel before grouping')
-    # print('---------------------------')
-    # pprint(root_channel)
     root_channel.group_and_order()
-    # print('---------------------------')
-    # print('the channel after grouping')
-    # print('---------------------------')
-    # pprint(root_channel)
 
     return root_channel
 
@@ -211,3 +210,50 @@ def group_nodes_across_pools(bpmn_id, lane_id, lane_nodes, lane_edges):
 
 def group_nodes_across_lanes(bpmn_id, bpmn_nodes, bpmn_edges):
     pass
+
+def assemble_channel(channel_name, channel_nodes, spec):
+    # wrap it in a svg group
+    svg_group = G()
+
+    # get the max height and cumulative width of all elements and adjust height and width accordingly
+    max_element_height = get_max_height(channel_nodes)
+
+    # we have found the bpmn elements, now render them within the group
+    # start with the height width hints
+    group_height = max_element_height
+
+    # now we have height and width adjusted, we place the elements with proper displacement
+    transformer = TransformBuilder()
+    current_x = 0
+    for node_id, node_object in channel_nodes.items():
+        element_svg = node_object['svg']
+        current_y = group_height/2 - node_object['height']/2
+
+        # keep the x, y position and dimension for the node within the group for future reference
+        node_object['x'] = current_x
+        node_object['y'] = current_y
+
+        transformation_xy = '{0},{1}'.format(current_x, current_y)
+        transformer.setTranslation(transformation_xy)
+        # debug('........tranforming to {0}'.format(transformation_xy))
+        element_svg.set_transform(transformer.getTransform())
+        svg_group.addElement(element_svg)
+        current_x = current_x + node_object['width'] + spec['dx-between-elements']
+
+    group_width = current_x - spec['dx-between-elements']
+
+    # the group rect
+    channel_rect_svg = Rect(width=group_width, height=group_height)
+    channel_rect_svg.set_style(StyleBuilder(spec['channel-style']).getStyle())
+    svg_group.addElement(channel_rect_svg)
+
+    # wrap it in a svg element
+    group_spec = {'width': group_width, 'height': group_height}
+    return SvgElement(group_spec, svg_group)
+
+def get_max_height(channel_nodes):
+    max_element_height = 0
+    for node_id, node_object in channel_nodes.items():
+        max_element_height = max(node_object['height'], max_element_height)
+
+    return max_element_height

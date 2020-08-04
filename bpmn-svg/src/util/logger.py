@@ -11,7 +11,8 @@ colorama.init()
 enabled_levels = [
     '[ERROR]',
     '[WARN]',
-    '[DEBUG]'
+    '[DEBUG]',
+    # '[INFO]'
     ]
 
 log_color = {
