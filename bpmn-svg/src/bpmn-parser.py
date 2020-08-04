@@ -358,6 +358,7 @@ def process_pool(o, parent):
             print('pools can not be under a pool, must be inside a lane. exiting ...')
             sys.exit(1)
         elif isinstance(stmt, Edge):
+            # handle edges within this pool
             process_edges(stmt, parent[o.id]['edges'] )
         elif isinstance(stmt, Attr):
             print('attrs can not be directly under a pool, must be inside a pool. exiting ...')
@@ -369,7 +370,7 @@ def process_pool(o, parent):
             sys.exit(1)
 
 def process_lane(o, parent):
-    parent[o.id] = {'styles': {}, 'label': {}, 'pools': {}}
+    parent[o.id] = {'styles': {}, 'label': {}, 'pools': {}, 'edges': []}
 
     # statements are children
     for stmt in o.stmts:
@@ -381,8 +382,8 @@ def process_lane(o, parent):
         elif isinstance(stmt, Pool):
             process_pool(stmt, parent[o.id]['pools'])
         elif isinstance(stmt, Edge):
-            print(type(stmt), dir(stmt))
-            print()
+            # handle edges (across the pools) inside lane
+            process_edges(stmt, parent[o.id]['edges'] )
         elif isinstance(stmt, Attr):
             print('attrs can not be directly under a lane, must be inside a pool. exiting ...')
             sys.exit(1)
@@ -399,7 +400,7 @@ def to_json(x):
         sys.exit(1)
 
     # root of the graph
-    json_data = {x.id: {'styles': {}, 'label': {}, 'lanes': {}}}
+    json_data = {x.id: {'styles': {}, 'label': {}, 'lanes': {}, 'edges': []}}
 
     # statements are children
     for stmt in x.stmts:
@@ -411,8 +412,8 @@ def to_json(x):
             print('pools can not be directly under a graph, must be inside a lane. exiting ...')
             sys.exit(1)
         elif isinstance(stmt, Edge):
-            print(type(stmt), dir(stmt))
-            print()
+            # TODO: handle edges (across lanes) in the graph
+            process_edges(stmt, json_data[x.id]['edges'] )
         elif isinstance(stmt, Attr):
             print('attrs can not be directly under a graph, must be inside a pool. exiting ...')
             sys.exit(1)

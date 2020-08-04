@@ -22,7 +22,7 @@ default_theme = {
                 'left': 3, 'top': 3, 'right': 3, 'bottom': 3
             },
             'style': {
-                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#A0A0A0'
+                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0'
             }
         },
     },
@@ -80,7 +80,7 @@ default_theme = {
                     'left': 1, 'top': 1, 'right': 1, 'bottom': 1
                 },
                 'style': {
-                    'fill': '#FFFFFF', 'stroke-width': 1, 'stroke': '#475F94'
+                    'fill': 'none', 'stroke-width': 1, 'stroke': '#475F94'
                 }
             },
         },
@@ -89,7 +89,7 @@ default_theme = {
                 'left': 10, 'top': 40, 'right': 10, 'bottom': 40
             },
             'style': {
-                'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#048243'
+                'fill': 'none', 'stroke-width': 0, 'stroke': '#048243'
             },
             'dx-between-elements': 40
         }
@@ -479,7 +479,7 @@ default_theme = {
                         'left': 4, 'top': 4, 'right': 4, 'bottom': 4
                     },
                     'pad-spec': {
-                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                        'left': 10, 'top': 10, 'right': 10, 'bottom': 10
                     },
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
@@ -492,18 +492,57 @@ default_theme = {
                 }
             },
             'ActivityTaskBusinessRule': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 20, 'height': 15,
                     'svg-path': '../conf/business-rule.svg'
                 }
             },
             'ActivityTaskManual': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 16, 'height': 16,
                     'svg-path': '../conf/manual.svg'
                 }
             },
             'ActivityTaskReceive': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 18, 'height': 13,
                     'style': {
@@ -512,12 +551,38 @@ default_theme = {
                 }
             },
             'ActivityTaskScript': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 16, 'height': 16,
                     'svg-path': '../conf/script.svg'
                 }
             },
             'ActivityTaskSend': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 20, 'height': 15,
                     'style': {
@@ -526,6 +591,19 @@ default_theme = {
                 }
             },
             'ActivityTaskService': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 20, 'height': 15,
                     'style': {
@@ -534,6 +612,19 @@ default_theme = {
                 }
             },
             'ActivityTaskUser': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 16, 'height': 16,
                     'svg-path': '../conf/user.svg'
@@ -723,7 +814,7 @@ default_theme = {
                         'left': 4, 'top': 4, 'right': 4, 'bottom': 4
                     },
                     'pad-spec': {
-                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                        'left': 10, 'top': 10, 'right': 10, 'bottom': 10
                     },
                     'style': {
                         'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
@@ -745,18 +836,57 @@ default_theme = {
                 }
             },
             'ActivityCallBusinessRule': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 20, 'height': 15,
                     'svg-path': '../conf/business-rule.svg'
                 }
             },
             'ActivityCallManual': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 16, 'height': 16,
                     'svg-path': '../conf/manual.svg'
                 }
             },
             'ActivityCallScript': {
+                'rectangle': {
+                    'min-width': 80, 'max-width': 160,
+                    'rx': 5, 'ry': 5,
+                    'inner-shape-margin-spec': {
+                        'left': 4, 'top': 4, 'right': 4, 'bottom': 4
+                    },
+                    'pad-spec': {
+                        'left': 10, 'top': 24, 'right': 10, 'bottom': 10
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 4, 'stroke': '#808080'
+                    },
+                },
                 'top-left-inner-shape': {
                     'width': 16, 'height': 16,
                     'svg-path': '../conf/script.svg'

@@ -8,6 +8,12 @@ import colorama
 
 colorama.init()
 
+enabled_levels = [
+    '[ERROR]',
+    '[WARN]',
+    '[DEBUG]'
+    ]
+
 log_color = {
     '[ERROR]': {'color': 'red',    'highlight': None, 'attrs': ['bold']},
     '[WARN]':  {'color': 'yellow', 'highlight': None, 'attrs': ['bold']},
@@ -31,7 +37,7 @@ def log(level, msg, console=True):
     now = time.time()
     data = {'type': level, 'time': datetime.now().isoformat(), 'msg': msg}
 
-    if console:
+    if console and level in enabled_levels:
         text = '{0} {1:<6} {2}'.format(data['time'], data['type'], data['msg'])
         # print(text)
         print(colored(text, log_color[data['type']]['color'], log_color[data['type']]['highlight'], attrs=log_color[data['type']]['attrs']))

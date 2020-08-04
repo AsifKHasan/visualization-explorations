@@ -19,55 +19,27 @@ graph pizza_order {
         pool pizza_customer {
             label = "Pizza Customer"
 
-            start hungry [label="Hungry";]
-            task A1b_id [label="Select Pizza";]
-            task A1c_id [label="Order Pizza";]
-            task A1c_id [label="A1c_label";]
-            task A1c_id [label="A1c_label";]
-            task A1c_id [label="A1c_label";]
-            task A1c_id [label="A1c_label";]
-            task A1c_id [label="A1c_label";]
-            task A1c_id [label="A1c_label";]
-            end hunger_satisfied [label="Hunger Satisfied";]
+            start               hungry                  [label="Hungry";]
+            task                select_pizza            [label="Select Pizza";]
+            task                order_pizza             [label="Order Pizza";]
+            eventBased          on_order                [label="";]
+            throwMessage        pizza_received          [label="Pizza Received";]
+            task                check_pizza             [label="Check Pizza";]
 
-            A1a_id ..> A1b_id
-            A1b_id ..> A1c_id
-            A1c_id ..> A1d_id
+            timer               timer_4m_mins           [label="45 Minutes";]
+            task                ask_for_pizza           [label="Ask for Pizza";]
+
+            task                eat_pizza               [label="Eat Pizza";]
+            task                pay_for_pizza           [label="Pay for Pizza";]
+            end                 hunger_satisfied        [label="Hunger Satisfied";]
+
+            hungry              --> select_pizza        --> order_pizza         --> on_order
+            pizza_received      --> check_pizza
+            on_order            --> pizza_received      --> pay_for_pizza       --> eat_pizza           --> hunger_satisfied
+            on_order            --> timer_4m_mins       --> ask_for_pizza       --> event_based
         }
-    }
-    lane pizza_store {
-        label = "Pizza Store"
-        pool receptionist {
-            label = "Receptionist"
 
-            B1a_type B1a_id [label="B1a_label";]
-            B1b_type B1b_id [label="B1b_label";]
-            B1c_type B1c_id [label="B1c_label";]
-            B1d_type B1d_id [label="B1d_label";]
-
-            B1a_id ..> B1b_id
-            B1b_id ..> B1c_id
-            B1c_id ..> B1d_id
-        }
-        pool cook {
-            label = "Pizza Cook"
-
-            B2a_type B2a_id [label="B2a_label";]
-            B2b_type B2b_id [label="B2b_label";]
-            B2c_type B2c_id [label="B2c_label";]
-
-            B2a_id ..> B2b_id
-            B2b_id ..> B2c_id
-        }
-        pool delivery_person {
-            label = "Delivery Person"
-
-            A2a_type A2a_id [label="A2a_label";]
-            A2b_type A2b_id [label="A2b_label";]
-            A2c_type A2c_id [label="A2c_label";]
-
-            A2a_id ..> A2b_id
-            A2b_id ..> A2c_id
-        }
+        # edges within pools of customer
+        # edges from customer:pizza_customer
     }
 }
