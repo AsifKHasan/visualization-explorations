@@ -1,0 +1,5 @@
+pysvg==0.2.2
+funcparserlib==0.3.6
+colorama==0.4.3
+termcolor==1.1.0
+Pillow==7.2.0
