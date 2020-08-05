@@ -993,36 +993,41 @@ default_theme = {
         'Sequence': {
             'head-arrow': False,
             'tail-arrow': True,
+            'arrow-side-length': 10,
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0'
+                'fill': '#404040', 'stroke-width': 1, 'stroke': '#404040'
             }
         },
         'Message': {
             'head-arrow': False,
             'tail-arrow': True,
+            'arrow-side-length': 10,
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
+                'fill': '#404040', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
             }
         },
         'Association': {
             'head-arrow': False,
             'tail-arrow': False,
+            'arrow-side-length': 12,
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
             }
         },
         'DirectedAssociation': {
             'head-arrow': False,
             'tail-arrow': True,
+            'arrow-side-length': 12,
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
             }
         },
         'BidirectionalAssociation': {
             'head-arrow': True,
             'tail-arrow': True,
+            'arrow-side-length': 12,
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
             }
         },
     },

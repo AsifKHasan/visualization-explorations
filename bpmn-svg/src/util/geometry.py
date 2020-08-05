@@ -92,5 +92,22 @@ class Point:
     def east_of(self, other):
         return self.x > other.x
 
-    def south_of(self, other):
+    def west_of(self, other):
         return self.x < other.x
+
+    def direction_from(self, other):
+        if self.on_same_y(other):
+            if self.east_of(other):
+                return 'west'
+
+            if self.west_of(other):
+                return 'east'
+
+        if self.on_same_x(other):
+            if self.north_of(other):
+                return 'south'
+
+            if self.west_of(other):
+                return 'north'
+
+        return None

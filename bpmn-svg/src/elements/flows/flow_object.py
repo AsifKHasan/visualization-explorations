@@ -24,13 +24,17 @@ class FlowObject(BpmnElement):
         self.theme = self.current_theme['flows'][flow_type]
 
     def connect_within_channel(self, head_node, tail_node, label):
+
         # TODO: it is a quick hack connecting head's right snap-point with tail's left snap-point
-        east_of_head = head_node['xy'] + head_node['snaps']['east']
-        west_of_tail = tail_node['xy'] + tail_node['snaps']['west']
+        snap_head_at = 'east'
+        snap_tail_at = 'west'
+        east_of_head = head_node['xy'] + head_node['snaps'][snap_head_at]
+        west_of_tail = tail_node['xy'] + tail_node['snaps'][snap_tail_at]
 
         points = [east_of_head, west_of_tail]
 
-        edge_svg, edge_width, edge_height = a_path_with_label(points=points, label=label, spec=self.theme)
+        # we have the points, now create and return the flow
+        flow_svg, flow_width, flow_height = a_flow(points, label, self.theme)
 
-        edge_spec = {'width': edge_width, 'height': edge_height}
-        return SvgElement(edge_spec, edge_svg)
+        group_spec = {'width': flow_width, 'height': flow_height}
+        return SvgElement(group_spec, flow_svg)

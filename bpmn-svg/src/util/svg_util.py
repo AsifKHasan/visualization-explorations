@@ -21,6 +21,40 @@ from util.helpers import *
 # basic shapes ---------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------
 
+def an_arrow_head(arrow_point, snap_direction, spec):
+    svg_group = G()
+
+    arrow_side_length = spec['arrow-side-length']
+
+    if snap_direction == 'west':
+        point_a = arrow_point.to_point(150, arrow_side_length)
+        point_c = arrow_point.to_point(-150, arrow_side_length)
+    elif snap_direction == 'east':
+        point_a = arrow_point.to_point(30, arrow_side_length)
+        point_c = arrow_point.to_point(-30, arrow_side_length)
+    elif snap_direction == 'north':
+        point_a = arrow_pointarrow_point.to_point(60, arrow_side_length)
+        point_c = arrow_point.to_point(120, arrow_side_length)
+    elif snap_direction == 'south':
+        point_a = arrow_point.to_point(-60, arrow_side_length)
+        point_c = arrow_point.to_point(-120, arrow_side_length)
+    else:
+        point_a = arrow_point
+        point_c = arrow_point
+
+    points = [point_a, arrow_point, point_c]
+
+    if spec['style']['fill']:
+        svg = Polyline(points=points_to_str(points))
+    else:
+        svg = Polyline(points=points_to_str(points))
+
+    svg.set_style(StyleBuilder(spec['style']).getStyle())
+
+    # add to group
+    svg_group.addElement(svg)
+    return svg_group, 0, 0
+
 def a_snap_point(snap_point):
     svg_group = G()
 
@@ -733,6 +767,40 @@ def an_equilateral_pentagon_in_two_concentric_circles(outer_radius, inner_radius
 
     return svg_group, circle_group_width, circle_group_height
 
+
+# --------------------------------------------------------------------------------------
+# mesecllaneous utilities
+# --------------------------------------------------------------------------------------
+
+# returns a tuple (svg group, group_width, group_height)
+def a_flow(points, label, spec):
+    svg_group = G()
+
+    edge_svg, edge_width, edge_height = a_path_with_label(points=points, label=label, spec=spec)
+    svg_group.addElement(edge_svg)
+
+    # the first point is always the head snap point
+    snap_point_at_head = points[0]
+
+    # the last point is always the tail snap point
+    snap_point_at_tail = points[-1]
+
+    # the direction from 2nd point to first point is the snap_direction_at_head
+    snap_direction_at_head = snap_point_at_head.direction_from(points[1])
+
+    # the direction from penultimate point to the last point is the snap_direction_at_tail
+    snap_direction_at_tail = snap_point_at_tail.direction_from(points[-2])
+
+    # arrow heads
+    if spec['head-arrow'] and snap_direction_at_head:
+        head_arrow_svg, head_arrow_width, head_arrow_height = an_arrow_head(arrow_point=snap_point_at_head, snap_direction=snap_direction_at_head, spec=spec)
+        svg_group.addElement(head_arrow_svg)
+
+    if spec['tail-arrow'] and snap_direction_at_tail:
+        tail_arrow_svg, tail_arrow_width, tail_arrow_height = an_arrow_head(arrow_point=snap_point_at_tail, snap_direction=snap_direction_at_tail, spec=spec)
+        svg_group.addElement(tail_arrow_svg)
+
+    return svg_group, edge_width, edge_height
 
 # --------------------------------------------------------------------------------------
 # mesecllaneous utilities
