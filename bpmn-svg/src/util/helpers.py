@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 '''
+import sys
 import math
 from PIL import ImageFont
 
@@ -8,6 +9,16 @@ import textwrap
 
 from util.logger import *
 from util.geometry import Point
+
+
+font_spec = {
+    'arial' : {
+        'win32' : 'arial',
+        'linux' : 'Arial.ttf',
+        'darwin' : '/Library/Fonts/Arial.ttf'
+    }
+}
+
 #   -----------------------------------------------------------------------------------------------------------------------------------------------------
 #   internal utility functions
 #   -----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -96,7 +107,13 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
     return (text_lines, width, height)
 
 def text_size_in_pixels(text, font_family, font_size):
-    font = ImageFont.truetype(font_family, font_size)
+    try:
+        font_path = font_spec[font_family][sys.platform]
+        font = ImageFont.truetype(font_path, font_size)
+    except:
+        font_path = font_spec['arial'][sys.platform]
+        font = ImageFont.truetype(font_path, font_size)
+
     size = font.getsize(text)
     return size
 
