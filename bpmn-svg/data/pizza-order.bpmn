@@ -83,16 +83,16 @@ graph pizza_order {
 
     # edges across lanes
     # edges from customer:pizza_customer
-    order_pizza             ..> order_received          [label="pizza order"]
-    ask_for_pizza           ..> where_is_pizza
-    pay_for_pizza           ..> collect_payment         [label="money"]
+    order_pizza             ~~> order_received          [label="pizza order"]
+    ask_for_pizza           ~~> where_is_pizza
+    pay_for_pizza           ~~> collect_payment         [label="money"]
 
     # edges from pizza_store:receptionist
-    deal_with_customer      ..> ask_for_pizza
+    deal_with_customer      ~~> ask_for_pizza
 
     # edges from pizza_store:cook
 
     # edges from pizza_store:delivery_person
-    deliver_pizza           ..> pizza_received          [label="pizza"]
-    collect_payment         ..> pay_for_pizza           [label="receipt"]
+    deliver_pizza           ~~> pizza_received          [label="pizza"]
+    collect_payment         ~~> pay_for_pizza           [label="receipt"]
 }

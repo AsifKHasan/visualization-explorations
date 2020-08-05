@@ -70,8 +70,22 @@ class Event(BpmnElement):
         group_width = label_group_width
         group_height = label_group_height + circle_group_height + label_group_height
 
+        # snap points
+        snap_points = self.snap_points(group_width, group_height, (label_group_width - circle_group_width)/2, label_group_height)
+        self.draw_snaps(snap_points, svg_group)
+
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement({'width': group_width, 'height': group_height}, svg_group)
+        return SvgElement({'width': group_width, 'height': group_height}, svg_group, snap_points)
+
+    def snap_points(self, width, height, x_offset, y_offset):
+        snaps = {}
+
+        snaps['north'] = Point(width * 0.5, y_offset)
+        snaps['south'] = Point(width * 0.5, height - y_offset)
+        snaps['east'] = Point(width - x_offset, height * 0.5)
+        snaps['west'] = Point(x_offset, height * 0.5)
+
+        return snaps
 
     def get_inside_element(self):
         return None

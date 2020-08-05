@@ -17,7 +17,7 @@ from util.svg_util import *
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
 
-from elements.swims.pool_group import PoolGroup
+from elements.swims.pool_collection import PoolCollection
 
 class SwimLane(BpmnElement):
     # a horizontal lane is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing Pool elements stacked vertically
@@ -40,21 +40,21 @@ class SwimLane(BpmnElement):
     def collect_elements(self):
         info('..processing lane [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
 
-        # get the pool group
-        self.child_element_class = PoolGroup(self.bpmn_id, self.lane_id, self.lane_data['pools'])
+        # get the pool collection
+        self.child_element_class = PoolCollection(self.bpmn_id, self.lane_id, self.lane_data['pools'])
         self.child_element_class.collect_elements()
 
         # get the inner svg elements in a list
         self.node_elements = []
 
-        # we need the height of the pool group
-        pool_group_height = self.child_element_class.get_height()
+        # we need the height of the pool collection
+        pool_collection_height = self.child_element_class.get_height()
 
-        # get the lane label, its min_width and max_width is the pool group's height + all
+        # get the lane label, its min_width and max_width is the pool collection's height + all
         label_group, group_width, group_height = text_inside_a_rectangle(
                                                     text=self.lane_data['label'],
-                                                    min_width=pool_group_height,
-                                                    max_width=pool_group_height,
+                                                    min_width=pool_collection_height,
+                                                    max_width=pool_collection_height,
                                                     rect_spec=self.theme['rectangle'],
                                                     text_spec=self.theme['text'],
                                                     debug_enabled=False)
@@ -69,15 +69,15 @@ class SwimLane(BpmnElement):
         group_id = '{0}:{1}'.format(self.bpmn_id, self.lane_id)
         svg_group = G(id=group_id)
 
-        pool_group_svg_element = self.child_element_class.assemble_elements()
-        pool_group_svg = pool_group_svg_element.group
+        pool_collection_svg_element = self.child_element_class.assemble_elements()
+        pool_collection_svg = pool_collection_svg_element.group
 
         label_svg_element = self.node_elements[0]
         label_svg = label_svg_element.group
 
-        # a lane's width is lane text width + pool group width + some padding
-        group_height = self.theme['lane-rect']['pad-spec']['top'] + pool_group_svg_element.specs['height'] + self.theme['lane-rect']['pad-spec']['bottom']
-        group_width = self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.specs['width'] + self.theme['gap-between-text-and-pool-group'] + pool_group_svg_element.specs['width'] + self.theme['lane-rect']['pad-spec']['right']
+        # a lane's width is lane text width + pool collection width + some padding
+        group_height = self.theme['lane-rect']['pad-spec']['top'] + pool_collection_svg_element.specs['height'] + self.theme['lane-rect']['pad-spec']['bottom']
+        group_width = self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.specs['width'] + self.theme['gap-between-text-and-pool-group'] + pool_collection_svg_element.specs['width'] + self.theme['lane-rect']['pad-spec']['right']
 
         # add the lane outline
         outline_svg, group_width, group_height = a_rectangle(width=group_width, height=group_height, spec=self.theme['lane-rect'])
@@ -88,15 +88,15 @@ class SwimLane(BpmnElement):
         transformer.setTranslation(label_svg_xy)
         label_svg.set_transform(transformer.getTransform())
 
-        # the pool group svg
-        pool_group_svg_xy = '{0},{1}'.format(self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.specs['width'] + self.theme['gap-between-text-and-pool-group'], self.theme['lane-rect']['pad-spec']['top'])
+        # the pool collection svg
+        pool_collection_svg_xy = '{0},{1}'.format(self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.specs['width'] + self.theme['gap-between-text-and-pool-group'], self.theme['lane-rect']['pad-spec']['top'])
         transformer = TransformBuilder()
-        transformer.setTranslation(pool_group_svg_xy)
-        pool_group_svg.set_transform(transformer.getTransform())
+        transformer.setTranslation(pool_collection_svg_xy)
+        pool_collection_svg.set_transform(transformer.getTransform())
 
         svg_group.addElement(outline_svg)
         svg_group.addElement(label_svg)
-        svg_group.addElement(pool_group_svg)
+        svg_group.addElement(pool_collection_svg)
 
         info('..assembling lane [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
         return SvgElement({'width': group_width, 'height': group_height}, svg_group)
@@ -118,5 +118,5 @@ class SwimLane(BpmnElement):
 
     def get_max_width_of_elements_of_children(self):
         label_svg_element = self.node_elements[0]
-        pool_label_element_max_width, pool_block_group_max_width = self.child_element_class.get_max_width_of_elements_of_children()
-        return label_svg_element.specs['width'], pool_label_element_max_width, pool_block_group_max_width
+        pool_label_element_max_width, pool_channel_collection_max_width = self.child_element_class.get_max_width_of_elements_of_children()
+        return label_svg_element.specs['width'], pool_label_element_max_width, pool_channel_collection_max_width

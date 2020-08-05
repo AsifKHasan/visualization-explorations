@@ -155,13 +155,15 @@ def tokenize(str):
         ('NodeType', (r'dataStore',)),
 
         # edges
-        ('EdgeOp', (r'---',)),
+        # sequence flow
         ('EdgeOp', (r'-->',)),
-        ('EdgeOp', (r'<--',)),
-        ('EdgeOp', (r'<->',)),
+
+        # message flow
+        ('EdgeOp', (r'~~>',)),
+
+        # association
         ('EdgeOp', (r'(...)',)),
         ('EdgeOp', (r'(..>)',)),
-        ('EdgeOp', (r'(<..)',)),
         ('EdgeOp', (r'(<.>)',)),
     ]
     useless = ['Comment', 'NL', 'Space']

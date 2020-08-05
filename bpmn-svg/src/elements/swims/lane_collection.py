@@ -18,24 +18,24 @@ from elements.svg_element import SvgElement
 
 from elements.swims.swim_lane import SwimLane
 
-class LaneGroup(BpmnElement):
-    # a lane group is a vertical stack of lanes
+class LaneCollection(BpmnElement):
+    # a lane collection is a vertical stack of lanes
     def __init__(self, bpmn_id, lanes):
-        self.theme = self.current_theme['swims']['LaneGroup']
+        self.theme = self.current_theme['swims']['LaneCollection']
         self.bpmn_id, self.lanes = bpmn_id, lanes
 
     def get_max_width_of_elements_of_children(self):
         lane_text_element_max_width = 0
         pool_text_element_max_width = 0
-        pool_block_group_max_width = 0
+        pool_channel_collection_max_width = 0
         for child_element_class in self.child_element_classes:
-            child_lane_width, child_pool_text_element_max_width, child_pool_block_group_max_width = child_element_class.get_max_width_of_elements_of_children()
+            child_lane_width, child_pool_text_element_max_width, child_pool_channel_collection_max_width = child_element_class.get_max_width_of_elements_of_children()
 
             lane_text_element_max_width = max(lane_text_element_max_width, child_lane_width)
             pool_text_element_max_width = max(pool_text_element_max_width, child_pool_text_element_max_width)
-            pool_block_group_max_width = max(pool_block_group_max_width, child_pool_block_group_max_width)
+            pool_channel_collection_max_width = max(pool_channel_collection_max_width, child_pool_channel_collection_max_width)
 
-        tune_spec = {'lane-text-element-target-width': lane_text_element_max_width, 'pool-text-element-target-width': pool_text_element_max_width, 'pool-block-group-target-width': pool_block_group_max_width}
+        tune_spec = {'lane-text-element-target-width': lane_text_element_max_width, 'pool-text-element-target-width': pool_text_element_max_width, 'pool-block-group-target-width': pool_channel_collection_max_width}
 
         return tune_spec
 
@@ -71,7 +71,7 @@ class LaneGroup(BpmnElement):
         group_id = '{0}-lanes'.format(self.bpmn_id)
         svg_group = G(id=group_id)
 
-        # height of the lane group is sum of height of all lanes with gaps between lanes
+        # height of the lane collection is sum of height of all lanes with gaps between lanes
         group_height = 0
         group_width = 0
         counter = 0

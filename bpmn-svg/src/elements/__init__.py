@@ -27,11 +27,8 @@ default_theme = {
         },
     },
     'swims': {
-        'LaneGroup': {
+        'LaneCollection': {
             'gap-between-lanes': 0,
-        },
-        'PoolGroup': {
-            'gap-between-pools': 0,
         },
         'SwimLane': {
             'gap-between-text-and-pool-group': 1,
@@ -57,6 +54,9 @@ default_theme = {
                     'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#475F94'
                 }
             },
+        },
+        'PoolCollection': {
+            'gap-between-pools': 0,
         },
         'SwimPool': {
             'gap-between-text-and-block-group': 0,
@@ -84,18 +84,21 @@ default_theme = {
                 }
             },
         },
-        'BlockGroup': {
+        'ChannelCollection': {
+            'dx-between-elements': 40,
+            'dy-between-channels': 20,
             'pad-spec': {
                 'left': 10, 'top': 20, 'right': 10, 'bottom': 20
             },
             'style': {
                 'fill': 'none', 'stroke-width': 1, 'stroke': '#048243'
             },
-            'channel-style': {
+        },
+        'SwimChannel': {
+            'dx-between-elements': 40,
+            'style': {
                 'fill': 'none', 'stroke-width': 1, 'stroke': '#048243'
             },
-            'dx-between-elements': 40,
-            'dy-between-channels': 20
         }
     },
     'events': {
@@ -987,6 +990,41 @@ default_theme = {
         }
     },
     'flows': {
+        'Sequence': {
+            'head-arrow': False,
+            'tail-arrow': True,
+            'style': {
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0'
+            }
+        },
+        'Message': {
+            'head-arrow': False,
+            'tail-arrow': True,
+            'style': {
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
+            }
+        },
+        'Association': {
+            'head-arrow': False,
+            'tail-arrow': False,
+            'style': {
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+            }
+        },
+        'DirectedAssociation': {
+            'head-arrow': False,
+            'tail-arrow': True,
+            'style': {
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+            }
+        },
+        'BidirectionalAssociation': {
+            'head-arrow': True,
+            'tail-arrow': True,
+            'style': {
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+            }
+        },
     },
     'datas': {
         'DataObject': {

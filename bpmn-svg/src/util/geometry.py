@@ -50,6 +50,9 @@ class Point:
     def __neg__(self):
         return Vector2(-self.x, -self.y)
 
+    def __add__(self, other):
+        return Point(other.x + self.x, other.y + self.y)
+
     __pos__ = __copy__
 
     def __abs__(self):
@@ -73,3 +76,21 @@ class Point:
             return Point(self.x + distance * math.cos(math.radians(angle)), self.y + distance * math.sin(math.radians(angle)))
         else:
             return Point(self.x + distance * math.cos(math.radians(angle)), self.y - distance * math.sin(math.radians(angle)))
+
+    def on_same_x(self, other):
+        return self.x == other.x
+
+    def on_same_y(self, other):
+        return self.y == other.y
+
+    def north_of(self, other):
+        return self.y < other.y
+
+    def south_of(self, other):
+        return self.y > other.y
+
+    def east_of(self, other):
+        return self.x > other.x
+
+    def south_of(self, other):
+        return self.x < other.x

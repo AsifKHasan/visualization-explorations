@@ -18,22 +18,22 @@ from elements.svg_element import SvgElement
 
 from elements.swims.swim_pool import SwimPool
 
-class PoolGroup(BpmnElement):
-    # a pool group is a vertical stack of pools
+class PoolCollection(BpmnElement):
+    # a pool collection is a vertical stack of pools
     def __init__(self, bpmn_id, lane_id, pools):
-        self.theme = self.current_theme['swims']['PoolGroup']
+        self.theme = self.current_theme['swims']['PoolCollection']
         self.bpmn_id, self.lane_id, self.pools = bpmn_id, lane_id, pools
 
     def get_max_width_of_elements_of_children(self):
         pool_text_element_max_width = 0
-        pool_block_group_max_width = 0
+        pool_channel_collection_max_width = 0
         for child_element_class in self.child_element_classes:
-            child_pool_text_element_max_width, child_block_group_max_width = child_element_class.get_max_width_of_elements_of_children()
+            child_pool_text_element_max_width, child_channel_collection_max_width = child_element_class.get_max_width_of_elements_of_children()
 
             pool_text_element_max_width = max(pool_text_element_max_width, child_pool_text_element_max_width)
-            pool_block_group_max_width = max(pool_block_group_max_width, child_block_group_max_width)
+            pool_channel_collection_max_width = max(pool_channel_collection_max_width, child_channel_collection_max_width)
 
-        return pool_text_element_max_width, pool_block_group_max_width
+        return pool_text_element_max_width, pool_channel_collection_max_width
 
     def tune_elements(self, tune_spec):
         info('..tuning pools for [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
@@ -63,7 +63,7 @@ class PoolGroup(BpmnElement):
         group_id = '{0}:{1}-pools'.format(self.bpmn_id, self.lane_id)
         svg_group = G(id=group_id)
 
-        # height of the pool group is sum of height of all pools with gaps between pools
+        # height of the pool collection is sum of height of all pools with gaps between pools
         group_height = 0
         group_width = 0
         counter = 0

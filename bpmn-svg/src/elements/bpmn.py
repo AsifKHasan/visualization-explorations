@@ -11,10 +11,10 @@ from util.svg_util import *
 
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
-from elements.swims.lane_group import LaneGroup
+from elements.swims.lane_collection import LaneCollection
 
 class Bpmn(BpmnElement):
-    # Bpmn is a text rectangle on top of another rectangle containing the lane groups
+    # Bpmn is a text rectangle on top of another rectangle containing the lane collections
     def __init__(self, bpmn_id, bpmn_data):
         self.theme = self.current_theme['bpmn']
         self.bpmn_id, self.bpmn_data = bpmn_id, bpmn_data
@@ -43,8 +43,8 @@ class Bpmn(BpmnElement):
     def collect_elements(self):
         info('processing BPMN [{0}]'.format(self.bpmn_id))
 
-        # process the pool group
-        self.child_element_class = LaneGroup(self.bpmn_id, self.bpmn_data['lanes'])
+        # process the lane collection
+        self.child_element_class = LaneCollection(self.bpmn_id, self.bpmn_data['lanes'])
         self.child_element_class.collect_elements()
 
         info('processing BPMN [{0}] DONE'.format(self.bpmn_id))
@@ -98,28 +98,28 @@ class Bpmn(BpmnElement):
         group_id = '{0}-body'.format(self.bpmn_id)
         svg_group = G(id=group_id)
 
-        # bpmn's body is the lane group
-        lane_group_svg_element = self.child_element_class.assemble_elements()
-        lane_group_svg = lane_group_svg_element.group
+        # bpmn's body is the lane collection
+        lane_collection_svg_element = self.child_element_class.assemble_elements()
+        lane_collection_svg = lane_collection_svg_element.group
 
-        # a bpmn body's width is the width of inner lane group + padding
-        bpmn_body_width = lane_group_svg_element.specs['width'] + self.theme['bpmn-rect']['pad-spec']['left'] + self.theme['bpmn-rect']['pad-spec']['right']
+        # a bpmn body's width is the width of inner lane collection + padding
+        bpmn_body_width = lane_collection_svg_element.specs['width'] + self.theme['bpmn-rect']['pad-spec']['left'] + self.theme['bpmn-rect']['pad-spec']['right']
 
-        # a bpmn body's height is the sum of the heights of its inner lane group + some padding
-        bpmn_body_height = lane_group_svg_element.specs['height'] + self.theme['bpmn-rect']['pad-spec']['top'] + self.theme['bpmn-rect']['pad-spec']['bottom']
+        # a bpmn body's height is the sum of the heights of its inner lane collection + some padding
+        bpmn_body_height = lane_collection_svg_element.specs['height'] + self.theme['bpmn-rect']['pad-spec']['top'] + self.theme['bpmn-rect']['pad-spec']['bottom']
 
         body_rect_svg = Rect(width=bpmn_body_width, height=bpmn_body_height)
         body_rect_svg.set_style(StyleBuilder(self.theme['bpmn-rect']['style']).getStyle())
         svg_group.addElement(body_rect_svg)
 
-        # add lane_group inside bpmn rect with a tranformation by margin
+        # add lane_collection inside bpmn rect with a tranformation by margin
         # bpmn body has padding, so the group needs a transformation
-        lane_group_svg_xy = '{0},{1}'.format(self.theme['bpmn-rect']['pad-spec']['left'], self.theme['bpmn-rect']['pad-spec']['top'])
+        lane_collection_svg_xy = '{0},{1}'.format(self.theme['bpmn-rect']['pad-spec']['left'], self.theme['bpmn-rect']['pad-spec']['top'])
 
         transformer = TransformBuilder()
-        transformer.setTranslation(lane_group_svg_xy)
-        lane_group_svg.set_transform(transformer.getTransform())
-        svg_group.addElement(lane_group_svg)
+        transformer.setTranslation(lane_collection_svg_xy)
+        lane_collection_svg.set_transform(transformer.getTransform())
+        svg_group.addElement(lane_collection_svg)
 
         # wrap it in a svg element
         return SvgElement({'width': bpmn_body_width, 'height': bpmn_body_height}, svg_group)

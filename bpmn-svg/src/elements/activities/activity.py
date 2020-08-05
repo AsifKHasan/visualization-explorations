@@ -67,8 +67,26 @@ class Activity(BpmnElement):
                                                                                 svg_height=rectangle_group_height,
                                                                                 rect_spec=self.theme['outer-rectangle'])
 
+        # snap points
+        snap_points = self.snap_points(rectangle_group_width, rectangle_group_height)
+        self.draw_snaps(snap_points, rectangle_group)
+
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement({'width': rectangle_group_width, 'height': rectangle_group_height}, rectangle_group)
+        return SvgElement({'width': rectangle_group_width, 'height': rectangle_group_height}, rectangle_group, snap_points)
+
+    def snap_points(self, width, height):
+        snaps = super().snap_points(width, height)
+
+        snaps['north-left'] = Point(width * 0.25, 0)
+        snaps['north-right'] = Point(width * 0.75, 0)
+        snaps['south-left'] = Point(width * 0.25, height)
+        snaps['south-right'] = Point(width * 0.75, height)
+        snaps['east-top'] = Point(width, height * 0.25)
+        snaps['east-bottom'] = Point(width, height * 0.75)
+        snaps['west-top'] = Point(0, height * 0.25)
+        snaps['west-bottom'] = Point(0, height * 0.75)
+
+        return snaps
 
     def get_top_left_element(self):
         return None
