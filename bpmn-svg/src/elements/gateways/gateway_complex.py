@@ -24,8 +24,8 @@ class GatewayComplex(Gateway):
         self.theme = {**self.theme, **self.current_theme['gateways']['GatewayComplex']}
 
     def get_inside_element(self):
-        svg_group, width, height = a_star(
+        svg_group, group_width, group_height = a_star(
                                     width=self.theme['diamond']['diagonal-x'],
                                     height=self.theme['diamond']['diagonal-y'],
                                     spec=self.theme['inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

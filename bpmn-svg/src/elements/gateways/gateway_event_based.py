@@ -27,11 +27,11 @@ class GatewayEventBased(Gateway):
         pad = 3
         outer_radius = min(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y']) * 0.27
         inner_radius = outer_radius - pad
-        svg_group, width, height = an_equilateral_pentagon_in_two_concentric_circles(
+        svg_group, group_width, group_height = an_equilateral_pentagon_in_two_concentric_circles(
                                     outer_radius=outer_radius,
                                     inner_radius=inner_radius,
                                     outer_circle_spec=self.theme['inner-circle'],
                                     inner_circle_spec=self.theme['inner-circle'],
                                     pad=pad,
                                     pentagon_spec=self.theme['inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

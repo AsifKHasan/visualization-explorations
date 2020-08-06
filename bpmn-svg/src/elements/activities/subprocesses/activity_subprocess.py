@@ -24,10 +24,10 @@ class ActivitySubprocess(Activity):
         self.theme = {**self.theme, **self.current_theme['activities']['subprocesses']['ActivitySubprocess']}
 
     def get_bottom_center_element(self):
-        svg_group, width, height = a_cross_in_a_rectangle(
+        svg_group, group_width, group_height = a_cross_in_a_rectangle(
                                                     width=self.theme['bottom-center-rectangle']['width'],
                                                     height=self.theme['bottom-center-rectangle']['height'],
                                                     rect_spec=self.theme['bottom-center-rectangle'],
                                                     cross_spec=self.theme['bottom-center-inner-shape'])
 
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

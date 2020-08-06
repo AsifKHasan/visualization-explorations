@@ -26,11 +26,11 @@ class DataOutputCollection(DataObject):
     def get_top_left_element(self):
         width = self.theme['top-left-inner-shape']['width']
         height = self.theme['top-left-inner-shape']['height']
-        svg_group, width, height = a_right_arrow(width=width, height=height, spec=self.theme['top-left-inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        svg_group, group_width, group_height = a_right_arrow(width=width, height=height, spec=self.theme['top-left-inner-shape'])
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)
 
     def get_bottom_center_element(self):
         width = self.theme['bottom-center-inner-shape']['width']
         height = self.theme['bottom-center-inner-shape']['height']
-        svg_group, width, height = three_bars(width=width, height=height, spec=self.theme['bottom-center-inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        svg_group, group_width, group_height = three_bars(width=width, height=height, spec=self.theme['bottom-center-inner-shape'])
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

@@ -33,8 +33,8 @@ class ChannelCollection(BpmnElement):
     def assemble_elements(self):
         # channels are vertically stacked
         # root channels start at x=0
-        # channels that are branch of some parent channel start horizontally after the node to which the first node is the tail
-        # TODO: how to horizontally shift channels based on tail relation ship with heads from other lane/pool
+        # channels that are branch of some parent channel start horizontally after the node to which the first node is the to-node
+        # TODO: how to horizontally shift channels based on to-node's relationship with from-node from other lane/pool
         # TODO: how and where to place the island channel?
 
         # wrap it in a svg group
@@ -86,8 +86,7 @@ class ChannelCollection(BpmnElement):
         svg_group.addElement(channel_collection_rect_svg)
 
         # wrap it in a svg element
-        group_spec = {'width': group_width, 'height': group_height}
-        return SvgElement(group_spec, svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)
 
     def collect_elements(self):
         # order and group nodes

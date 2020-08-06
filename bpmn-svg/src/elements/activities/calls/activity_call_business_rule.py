@@ -24,5 +24,5 @@ class ActivityCallBusinessRule(ActivityCall):
         self.theme = {**self.theme, **self.current_theme['activities']['calls']['ActivityCallBusinessRule']}
 
     def get_top_left_element(self):
-        svg_group, width, height = include_and_scale_svg(spec=self.theme['top-left-inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        svg_group, group_width, group_height = include_and_scale_svg(spec=self.theme['top-left-inner-shape'])
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

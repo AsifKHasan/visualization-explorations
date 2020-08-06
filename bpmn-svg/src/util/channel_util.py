@@ -17,7 +17,7 @@ from pysvg.text import *
 from util.logger import *
 from util.svg_util import *
 
-from elements.svg_element import SvgElement
+# from elements.svg_element import SvgElement
 
 # a channel is a node and another channel which is the next node and so on. Basically this represents node -> node -> .......
 # a channel may have more than one next nodes if it has two or more branches
@@ -171,17 +171,17 @@ class Channel:
 
 '''
     in a pool, nodes need to be processed (ordered and grouped)
-    1. nodes that are connected with other nodes (in the same pool) should be ordered in a group so that they are in the same channel (a channel is vertical lines for node flow, a lane may have multiple channels if the edges are branched like a tree) and flow from left to right based or edge order (head node at left, tail node at right)
+    1. nodes that are connected with other nodes (in the same pool) should be ordered in a group so that they are in the same channel (a channel is vertical lines for node flow, a lane may have multiple channels if the edges are branched like a tree) and flow from left to right based or edge order (from node at left, to node at right)
     2. isolated nodes (nodes that do not connect to any other nodes) should be put in a separate group (in which channel they should go is a TODO)
     3. If any node connects to two or more nodes (in the same pool) a new group starts for each branch so that they can be placed into different channels
 '''
 def group_nodes_inside_a_pool(bpmn_id, lane_id, pool_id, pool_nodes, pool_edges):
-    # iterate the edges and discard edges where either head or tail node is not inside the pool, in the same go remove duplicates also
+    # iterate the edges and discard edges where either from or to node is not inside the pool, in the same go remove duplicates also
     filtered_pool_edges = []
     edge_keys = []
     for edge in pool_edges:
-        if edge['head'] in pool_nodes and edge['tail'] in pool_nodes:
-            edge_key = '{0}__#__{1}'.format(edge['head'], edge['tail'])
+        if edge['from'] in pool_nodes and edge['to'] in pool_nodes:
+            edge_key = '{0}__#__{1}'.format(edge['from'], edge['to'])
             if edge_key not in edge_keys:
                 filtered_pool_edges.append(edge)
                 edge_keys.append(edge_key)
@@ -193,11 +193,11 @@ def group_nodes_inside_a_pool(bpmn_id, lane_id, pool_id, pool_nodes, pool_edges)
         children = []
         parents = []
         for edge in filtered_pool_edges:
-            if node_id == edge['head']:
-                children.append(edge['tail'])
+            if node_id == edge['from']:
+                children.append(edge['to'])
 
-            if node_id == edge['tail']:
-                parents.append(edge['head'])
+            if node_id == edge['to']:
+                parents.append(edge['from'])
 
         root_channel.add(node_id, parents, children)
 

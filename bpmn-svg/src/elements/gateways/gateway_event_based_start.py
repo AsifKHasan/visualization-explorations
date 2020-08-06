@@ -25,8 +25,8 @@ class GatewayEventBasedStart(Gateway):
 
     def get_inside_element(self):
         radius = min(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y']) * 0.27
-        svg_group, width, height = an_equilateral_pentagon_in_a_circle(
+        svg_group, group_width, group_height = an_equilateral_pentagon_in_a_circle(
                                     radius=radius,
                                     circle_spec=self.theme['inner-circle'],
                                     pentagon_spec=self.theme['inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

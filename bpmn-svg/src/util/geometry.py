@@ -107,7 +107,7 @@ class Point:
             if self.north_of(other):
                 return 'south'
 
-            if self.west_of(other):
+            if self.south_of(other):
                 return 'north'
 
         return None

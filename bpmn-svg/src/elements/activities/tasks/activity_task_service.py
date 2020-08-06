@@ -25,5 +25,5 @@ class ActivityTaskService(ActivityTask):
 
     def get_top_left_element(self):
         radius = self.theme['top-left-inner-shape']['height']/2
-        svg_group, width, height = two_gears_inside_a_circular_shape(radius=radius, inner_shape_spec=self.theme['top-left-inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        svg_group, group_width, group_height = two_gears_inside_a_circular_shape(radius=radius, inner_shape_spec=self.theme['top-left-inner-shape'])
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

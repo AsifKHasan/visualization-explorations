@@ -67,5 +67,10 @@ class DataStore(DataObject):
         group_width = label_group_width
         group_height = label_group_height + data_store_group_height + label_group_height
 
+        # snap points
+        snap_points = self.snap_points(group_width, group_height, (label_group_width - data_store_group_height)/2, label_group_height)
+        self.draw_snaps(snap_points, svg_group)
+
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement({'width': group_width, 'height': group_height}, svg_group)
+        self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos='bottom')
+        return self.svg_element

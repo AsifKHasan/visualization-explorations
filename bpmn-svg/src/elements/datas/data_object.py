@@ -41,7 +41,7 @@ class DataObject(BpmnElement):
         top_left_element = self.get_top_left_element()
         # position properly inside the folder rectangle at top left
         if top_left_element is not None:
-            top_left_group, top_left_group_width, top_left_group_height = top_left_element.group, top_left_element.specs['width'], top_left_element.specs['height']
+            top_left_group, top_left_group_width, top_left_group_height = top_left_element.svg, top_left_element.width, top_left_element.height
             top_left_group_xy = '{0},{1}'.format(self.theme['folded-rectangle']['pad-spec']['left'], self.theme['folded-rectangle']['pad-spec']['top'])
             transformer = TransformBuilder()
             transformer.setTranslation(top_left_group_xy)
@@ -52,7 +52,7 @@ class DataObject(BpmnElement):
         bottom_center_element = self.get_bottom_center_element()
         # position properly inside the folder rectangle at bottom center
         if bottom_center_element is not None:
-            bottom_center_group, bottom_center_group_width, bottom_center_group_height = bottom_center_element.group, bottom_center_element.specs['width'], bottom_center_element.specs['height']
+            bottom_center_group, bottom_center_group_width, bottom_center_group_height = bottom_center_element.svg, bottom_center_element.width, bottom_center_element.height
             bottom_center_group_xy = '{0},{1}'.format((folded_rectangle_group_width - bottom_center_group_width)/2, folded_rectangle_group_height - bottom_center_group_height - self.theme['folded-rectangle']['pad-spec']['bottom'])
             transformer = TransformBuilder()
             transformer.setTranslation(bottom_center_group_xy)
@@ -87,15 +87,36 @@ class DataObject(BpmnElement):
         self.draw_snaps(snap_points, svg_group)
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement({'width': group_width, 'height': group_height}, svg_group, snap_points)
+        self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos='bottom')
+        return self.svg_element
 
     def snap_points(self, width, height, x_offset, y_offset):
-        snaps = {}
-
-        snaps['north'] = Point(width * 0.5, y_offset)
-        snaps['south'] = Point(width * 0.5, height - y_offset)
-        snaps['east'] = Point(width - x_offset, height * 0.5)
-        snaps['west'] = Point(x_offset, height * 0.5)
+        snaps = {
+            'north': {
+                'middle': {
+                    'point': Point(width * 0.5, y_offset),
+                    'edge-roles': []
+                },
+            },
+            'south': {
+                'middle': {
+                    'point': Point(width * 0.5, height - y_offset),
+                    'edge-roles': []
+                },
+            },
+            'east': {
+                'middle': {
+                    'point': Point(width - x_offset, height * 0.5),
+                    'edge-roles': []
+                },
+            },
+            'west': {
+                'middle': {
+                    'point': Point(x_offset, height * 0.5),
+                    'edge-roles': []
+                },
+            }
+        }
 
         return snaps
 

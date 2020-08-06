@@ -25,5 +25,5 @@ class EventEndTerminate(EventEnd):
 
     def get_inside_element(self):
         inner_radius = self.theme['circle']['radius'] * 0.5
-        svg_group, width, height = a_circle_inside_a_circular_shape(outer_radius=self.theme['circle']['radius'], inner_radius=inner_radius, inner_shape_spec=self.theme['inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        svg_group, group_width, group_height = a_circle_inside_a_circular_shape(outer_radius=self.theme['circle']['radius'], inner_radius=inner_radius, inner_shape_spec=self.theme['inner-shape'])
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

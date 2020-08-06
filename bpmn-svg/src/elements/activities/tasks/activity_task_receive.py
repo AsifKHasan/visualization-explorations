@@ -24,5 +24,5 @@ class ActivityTaskReceive(ActivityTask):
         self.theme = {**self.theme, **self.current_theme['activities']['tasks']['ActivityTaskReceive']}
 
     def get_top_left_element(self):
-        svg_group, width, height = an_envelop(width=self.theme['top-left-inner-shape']['width'], height=self.theme['top-left-inner-shape']['height'], spec=self.theme['top-left-inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        svg_group, group_width, group_height = an_envelop(width=self.theme['top-left-inner-shape']['width'], height=self.theme['top-left-inner-shape']['height'], spec=self.theme['top-left-inner-shape'])
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

@@ -85,19 +85,37 @@ default_theme = {
             },
         },
         'ChannelCollection': {
+            # min x gap between two adjacent nodes so that straight edges can be drawn there
             'dx-between-elements': 40,
+            # min y gap between two adjacent channels so that inter-channel edges between two adjacent channels can be routed along this gap
             'dy-between-channels': 20,
+            # gaps to keep on sides for routing edges within channels in this ChannelCollection (which is actually the pool)
             'pad-spec': {
                 'left': 10, 'top': 20, 'right': 10, 'bottom': 20
             },
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#048243'
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#0482FF'
             },
         },
         'SwimChannel': {
-            'dx-between-elements': 40,
-            'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#048243'
+            # full channel area including the space for internal edge routing
+            'channel-outer-rect': {
+                # gaps to keep on sides for routing edges totally within this channel
+                # normally we try to route internl edges over the top and left if required
+                'pad-spec':{
+                    'left': 10, 'top': 20, 'right': 10, 'bottom': 20
+                },
+                'style': {
+                    'fill': 'none', 'stroke-width': 1, 'stroke': '#FF8243'
+                },
+            },
+            # actual channel content area where the nodes are to be placed
+            'channel-inner-rect': {
+                # min x gap between two adjacent nodes so that straight edges can be drawn there
+                'dx-between-elements': 40,
+                'style': {
+                    'fill': 'none', 'stroke-width': 1, 'stroke': '#048243'
+                },
             },
         }
     },
@@ -991,44 +1009,69 @@ default_theme = {
     },
     'flows': {
         'Sequence': {
-            'head-arrow': False,
-            'tail-arrow': True,
-            'arrow-side-length': 10,
+            'from-arrow': False,
+            'to-arrow': True,
             'style': {
-                'fill': '#404040', 'stroke-width': 1, 'stroke': '#404040'
-            }
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#404040'
+            },
+            'arrow-head': {
+                'arrow-side-length': 10,
+                'style': {
+                    'fill': '#404040', 'stroke-width': 1, 'stroke': '#404040'
+                },
+            },
         },
         'Message': {
-            'head-arrow': False,
-            'tail-arrow': True,
-            'arrow-side-length': 10,
+            'from-arrow': False,
+            'to-arrow': True,
             'style': {
-                'fill': '#404040', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
-            }
+                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
+            },
+            'arrow-head': {
+                'arrow-side-length': 10,
+                'style': {
+                    'fill': '#404040', 'stroke-width': 2, 'stroke': '#A0A0A0'
+                },
+            },
         },
         'Association': {
-            'head-arrow': False,
-            'tail-arrow': False,
-            'arrow-side-length': 12,
+            'from-arrow': False,
+            'to-arrow': False,
             'style': {
                 'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
-            }
+            },
+            'arrow-head': {
+                'arrow-side-length': 12,
+                'style': {
+                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0'
+                },
+            },
         },
         'DirectedAssociation': {
-            'head-arrow': False,
-            'tail-arrow': True,
-            'arrow-side-length': 12,
+            'from-arrow': False,
+            'to-arrow': True,
             'style': {
                 'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
-            }
+            },
+            'arrow-head': {
+                'arrow-side-length': 12,
+                'style': {
+                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0'
+                },
+            },
         },
         'BidirectionalAssociation': {
-            'head-arrow': True,
-            'tail-arrow': True,
-            'arrow-side-length': 12,
+            'from-arrow': True,
+            'to-arrow': True,
             'style': {
                 'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
-            }
+            },
+            'arrow-head': {
+                'arrow-side-length': 12,
+                'style': {
+                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0'
+                },
+            },
         },
     },
     'datas': {

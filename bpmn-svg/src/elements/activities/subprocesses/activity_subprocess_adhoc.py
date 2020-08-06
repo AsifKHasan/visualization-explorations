@@ -29,15 +29,15 @@ class ActivityAdhocSubprocess(ActivitySubprocess):
                                                     height=self.theme['bottom-center-rectangle']['height'],
                                                     rect_spec=self.theme['bottom-center-rectangle'],
                                                     cross_spec=self.theme['bottom-center-inner-shape'])
-        rect_svg_element = SvgElement({'width': rect_svg_width, 'height': rect_svg_height}, rect_svg_group)
+        rect_svg_element = SvgElement(svg=rect_svg_group, width=rect_svg_width, height=rect_svg_height)
 
         tilde_svg_group, tilde_svg_width, tilde_svg_height = a_tilde_in_a_rectangular_shape(
                                                     width=self.theme['bottom-center-rectangle']['width'],
                                                     height=self.theme['bottom-center-rectangle']['height'],
                                                     rect_spec=self.theme['bottom-center-rectangle'],
                                                     tilde_spec=self.theme['bottom-center-inner-shape'])
-        tilde_svg_element = SvgElement({'width': tilde_svg_width, 'height': tilde_svg_height}, tilde_svg_group)
+        tilde_svg_element = SvgElement(svg=tilde_svg_group, width=tilde_svg_width, height=tilde_svg_height)
 
-        combined_svg_group, combined_svg_width, combined_svg_height = align_and_combine_horizontally([rect_svg_element, tilde_svg_element])
+        svg_group, group_width, group_height = align_and_combine_horizontally([rect_svg_element, tilde_svg_element])
 
-        return SvgElement({'width': combined_svg_width, 'height': combined_svg_height}, combined_svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

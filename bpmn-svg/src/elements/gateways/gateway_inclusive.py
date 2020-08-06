@@ -25,7 +25,7 @@ class GatewayInclusive(Gateway):
 
     def get_inside_element(self):
         radius = min(self.theme['diamond']['diagonal-x'], self.theme['diamond']['diagonal-y']) * 0.25
-        svg_group, width, height = a_circle(
+        svg_group, group_width, group_height = a_circle(
                                     radius=radius,
                                     spec=self.theme['inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

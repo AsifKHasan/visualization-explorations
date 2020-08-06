@@ -58,7 +58,8 @@ class SwimLane(BpmnElement):
                                                     rect_spec=self.theme['rectangle'],
                                                     text_spec=self.theme['text'],
                                                     debug_enabled=False)
-        self.node_elements.append(SvgElement({'width': group_width, 'height': group_height}, label_group))
+                                                    
+        self.node_elements.append(SvgElement(svg=label_group, width=group_width, height=group_height))
 
         info('..processing lane [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
 
@@ -70,14 +71,14 @@ class SwimLane(BpmnElement):
         svg_group = G(id=group_id)
 
         pool_collection_svg_element = self.child_element_class.assemble_elements()
-        pool_collection_svg = pool_collection_svg_element.group
+        pool_collection_svg = pool_collection_svg_element.svg
 
         label_svg_element = self.node_elements[0]
-        label_svg = label_svg_element.group
+        label_svg = label_svg_element.svg
 
         # a lane's width is lane text width + pool collection width + some padding
-        group_height = self.theme['lane-rect']['pad-spec']['top'] + pool_collection_svg_element.specs['height'] + self.theme['lane-rect']['pad-spec']['bottom']
-        group_width = self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.specs['width'] + self.theme['gap-between-text-and-pool-group'] + pool_collection_svg_element.specs['width'] + self.theme['lane-rect']['pad-spec']['right']
+        group_height = self.theme['lane-rect']['pad-spec']['top'] + pool_collection_svg_element.height + self.theme['lane-rect']['pad-spec']['bottom']
+        group_width = self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.width + self.theme['gap-between-text-and-pool-group'] + pool_collection_svg_element.width + self.theme['lane-rect']['pad-spec']['right']
 
         # add the lane outline
         outline_svg, group_width, group_height = a_rectangle(width=group_width, height=group_height, spec=self.theme['lane-rect'])
@@ -89,7 +90,7 @@ class SwimLane(BpmnElement):
         label_svg.set_transform(transformer.getTransform())
 
         # the pool collection svg
-        pool_collection_svg_xy = '{0},{1}'.format(self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.specs['width'] + self.theme['gap-between-text-and-pool-group'], self.theme['lane-rect']['pad-spec']['top'])
+        pool_collection_svg_xy = '{0},{1}'.format(self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.width + self.theme['gap-between-text-and-pool-group'], self.theme['lane-rect']['pad-spec']['top'])
         transformer = TransformBuilder()
         transformer.setTranslation(pool_collection_svg_xy)
         pool_collection_svg.set_transform(transformer.getTransform())
@@ -99,13 +100,13 @@ class SwimLane(BpmnElement):
         svg_group.addElement(pool_collection_svg)
 
         info('..assembling lane [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
-        return SvgElement({'width': group_width, 'height': group_height}, svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)
 
     def tune_label_element(self, label_element_target_width):
         label_svg_element = self.node_elements[0]
 
         # this is a group with a rect and an svg, we just add the differential in width to both elements
-        group = label_svg_element.group
+        group = label_svg_element.svg
         # we know that the rect is the first child and svg is the second child
         rect = group.getElementAt(0)
         svg = group.getElementAt(1)
@@ -114,9 +115,9 @@ class SwimLane(BpmnElement):
             width_to_increase = label_element_target_width - rect.get_width()
             rect.set_width(rect.get_width() + width_to_increase)
             svg.set_width(svg.get_width() + width_to_increase)
-            label_svg_element.specs['width'] = label_svg_element.specs['width'] + width_to_increase
+            label_svg_element.width = label_svg_element.width + width_to_increase
 
     def get_max_width_of_elements_of_children(self):
         label_svg_element = self.node_elements[0]
         pool_label_element_max_width, pool_channel_collection_max_width = self.child_element_class.get_max_width_of_elements_of_children()
-        return label_svg_element.specs['width'], pool_label_element_max_width, pool_channel_collection_max_width
+        return label_svg_element.width, pool_label_element_max_width, pool_channel_collection_max_width

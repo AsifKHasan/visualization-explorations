@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 '''
-    spec_def is a dictionary with Element specific inputs
     returns a SvgElement
 '''
 from pysvg.builders import *
@@ -21,20 +20,17 @@ from elements import *
 class BpmnElement():
     current_theme = default_theme
 
-    def to_svg(self, spec_def):
+    def to_svg(self):
         return None
 
-    def snap_points(self, width, height):
-        snaps = {}
+    def label_position(self):
+        pass
 
-        snaps['north'] = Point(width * 0.5, 0)
-        snaps['south'] = Point(width * 0.5, height)
-        snaps['east'] = Point(width, height * 0.5)
-        snaps['west'] = Point(0, height * 0.5)
-
-        return snaps
+    def switch_label_position(self):
+        pass
 
     def draw_snaps(self, snaps, svg_group):
-        for snap in snaps:
-            snap_point_group, snap_point_width, snap_point_height = a_snap_point(snaps[snap])
-            svg_group.addElement(snap_point_group)
+        for side in snaps:
+            for position in snaps[side]:
+                snap_point_group, snap_point_width, snap_point_height = a_snap_point(snaps[side][position]['point'])
+                svg_group.addElement(snap_point_group)

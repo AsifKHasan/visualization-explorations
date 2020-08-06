@@ -25,5 +25,5 @@ class ActivityEventSignalNon(ActivityEventSubprocess):
 
     def get_top_left_element(self):
         inner_svg, inner_width, inner_height = an_equilateral_triangle_inside_a_circular_shape(radius=self.theme['top-left-circle']['radius'], inner_shape_spec=self.theme['top-left-inner-shape'])
-        svg_group, svg_width, svg_height = envelop_and_center_in_a_circle(circle_spec=self.theme['top-left-circle'], svg=inner_svg, svg_width=inner_width, svg_height=inner_height)
-        return SvgElement({'width': svg_width, 'height': svg_height}, svg_group)
+        svg_group, group_width, group_height = envelop_and_center_in_a_circle(circle_spec=self.theme['top-left-circle'], svg=inner_svg, svg_width=inner_width, svg_height=inner_height)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

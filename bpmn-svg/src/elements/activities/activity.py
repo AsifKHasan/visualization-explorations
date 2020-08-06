@@ -40,7 +40,7 @@ class Activity(BpmnElement):
 
         # if an inside bottom center element is to be placed, the element should have a gap from the rectangle bottom
         if bottom_center_element is not None:
-            bottom_center_group, bottom_center_group_width, bottom_center_group_height = bottom_center_element.group, bottom_center_element.specs['width'], bottom_center_element.specs['height']
+            bottom_center_group, bottom_center_group_width, bottom_center_group_height = bottom_center_element.svg, bottom_center_element.width, bottom_center_element.height
             bottom_center_group_xy = '{0},{1}'.format((rectangle_group_width - bottom_center_group_width)/2, rectangle_group_height - bottom_center_group_height - self.theme['rectangle']['inner-shape-margin-spec']['bottom'])
             transformer = TransformBuilder()
             transformer.setTranslation(bottom_center_group_xy)
@@ -52,7 +52,7 @@ class Activity(BpmnElement):
 
         # if an inside bottom center element is to be placed, the element should have a gap from the rectangle bottom
         if top_left_element is not None:
-            top_left_group, top_left_group_width, top_left_group_height = top_left_element.group, top_left_element.specs['width'], top_left_element.specs['height']
+            top_left_group, top_left_group_width, top_left_group_height = top_left_element.svg, top_left_element.width, top_left_element.height
             top_left_group_xy = '{0},{1}'.format(self.theme['rectangle']['inner-shape-margin-spec']['left'], self.theme['rectangle']['inner-shape-margin-spec']['top'])
             transformer = TransformBuilder()
             transformer.setTranslation(top_left_group_xy)
@@ -72,21 +72,78 @@ class Activity(BpmnElement):
         self.draw_snaps(snap_points, rectangle_group)
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement({'width': rectangle_group_width, 'height': rectangle_group_height}, rectangle_group, snap_points)
+        self.svg_element = SvgElement(svg=rectangle_group, width=rectangle_group_width, height=rectangle_group_height, snap_points=snap_points, label_pos='middle')
+        return self.svg_element
 
     def snap_points(self, width, height):
-        snaps = super().snap_points(width, height)
-
-        snaps['north-left'] = Point(width * 0.25, 0)
-        snaps['north-right'] = Point(width * 0.75, 0)
-        snaps['south-left'] = Point(width * 0.25, height)
-        snaps['south-right'] = Point(width * 0.75, height)
-        snaps['east-top'] = Point(width, height * 0.25)
-        snaps['east-bottom'] = Point(width, height * 0.75)
-        snaps['west-top'] = Point(0, height * 0.25)
-        snaps['west-bottom'] = Point(0, height * 0.75)
+        # a snap point may have zero or more edge roles meaning how many edge connections are there to this snap point
+        # an edge-role is a dictionary that looks like {'role': 'head|tail', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
+        snaps = {
+            'north': {
+                'middle': {
+                    'point': Point(width * 0.5, 0),
+                    'edge-roles': []
+                },
+                'left': {
+                    'point': Point(width * 0.25, 0),
+                    'edge-roles': []
+                },
+                'right': {
+                    'point': Point(width * 0.75, 0),
+                    'edge-roles': []
+                },
+            },
+            'south': {
+                'middle': {
+                    'point': Point(width * 0.5, height),
+                    'edge-roles': []
+                },
+                'left': {
+                    'point': Point(width * 0.25, height),
+                    'edge-roles': []
+                },
+                'right': {
+                    'point': Point(width * 0.75, height),
+                    'edge-roles': []
+                },
+            },
+            'east': {
+                'middle': {
+                    'point': Point(width, height * 0.5),
+                    'edge-roles': []
+                },
+                'top': {
+                    'point': Point(width, height * 0.25),
+                    'edge-roles': []
+                },
+                'bottom': {
+                    'point': Point(width, height * 0.75),
+                    'edge-roles': []
+                },
+            },
+            'west': {
+                'middle': {
+                    'point': Point(0, height * 0.5),
+                    'edge-roles': []
+                },
+                'top': {
+                    'point': Point(0, height * 0.25),
+                    'edge-roles': []
+                },
+                'bottom': {
+                    'point': Point(0, height * 0.75),
+                    'edge-roles': []
+                },
+            }
+        }
 
         return snaps
+
+    def label_position(self):
+        return 'middle'
+
+    def switch_label_position(self):
+        pass
 
     def get_top_left_element(self):
         return None

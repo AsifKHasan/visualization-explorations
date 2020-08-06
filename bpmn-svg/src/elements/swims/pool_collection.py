@@ -78,20 +78,18 @@ class PoolCollection(BpmnElement):
             # this specific pool should be vertically moved to the current height
             transformer = TransformBuilder()
             transformer.setTranslation("{0},{1}".format(0, group_height))
-            swim_pool_svg = swim_pool_svg_element.group
+            swim_pool_svg = swim_pool_svg_element.svg
             swim_pool_svg.set_transform(transformer.getTransform())
 
             # adjust height
-            group_height = group_height + swim_pool_svg_element.specs['height']
-            group_width = max(group_width, swim_pool_svg_element.specs['width'])
+            group_height = group_height + swim_pool_svg_element.height
+            group_width = max(group_width, swim_pool_svg_element.width)
 
             svg_group.addElement(swim_pool_svg)
 
         # wrap it in a svg element
-        group_spec = {'width': group_width, 'height': group_height}
-
         info('..assembling pools for [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
-        return SvgElement(group_spec, svg_group)
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)
 
     def get_height(self):
         height = 0

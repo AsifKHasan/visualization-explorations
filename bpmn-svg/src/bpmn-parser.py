@@ -331,10 +331,10 @@ def process_edges(o, parent):
     for attr in o.attrs:
         styles[attr.name] = attr.value.strip("'").strip('"')
 
-    current_head = o.node
+    current_from = o.node
     for t in o.edges:
-        parent.append({'head': current_head, 'tail': t[1], 'type': t[0], 'styles': styles})
-        current_head = t[1]
+        parent.append({'from': current_from, 'to': t[1], 'type': t[0], 'styles': styles})
+        current_from = t[1]
 
 def process_node(o, parent):
     node = {'type': o.type, 'label': {}, 'styles': {}}

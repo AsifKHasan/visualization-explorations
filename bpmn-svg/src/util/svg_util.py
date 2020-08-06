@@ -33,7 +33,7 @@ def an_arrow_head(arrow_point, snap_direction, spec):
         point_a = arrow_point.to_point(30, arrow_side_length)
         point_c = arrow_point.to_point(-30, arrow_side_length)
     elif snap_direction == 'north':
-        point_a = arrow_pointarrow_point.to_point(60, arrow_side_length)
+        point_a = arrow_point.to_point(60, arrow_side_length)
         point_c = arrow_point.to_point(120, arrow_side_length)
     elif snap_direction == 'south':
         point_a = arrow_point.to_point(-60, arrow_side_length)
@@ -630,10 +630,8 @@ def two_gears_inside_a_circular_shape(radius, inner_shape_spec):
 
     # gear1 is towards top left
     north_west_point_on_circle = Point(radius, radius).to_point(135, radius)
-    print(north_west_point_on_circle)
     gear1_center_point = north_west_point_on_circle.to_point(-45, gear_radius)
     gear1_svg_group_xy = '{0},{1}'.format(gear1_center_point.x - gear_radius, gear1_center_point.y - gear_radius)
-    print(gear1_svg_group_xy)
     transformer = TransformBuilder()
     transformer.setTranslation(gear1_svg_group_xy)
     gear1_svg_group.set_transform(transformer.getTransform())
@@ -643,7 +641,6 @@ def two_gears_inside_a_circular_shape(radius, inner_shape_spec):
     south_east_point_on_circle = Point(radius, radius).to_point(-45, radius)
     gear2_center_point = south_east_point_on_circle.to_point(135, gear_radius)
     gear2_svg_group_xy = '{0},{1}'.format(gear2_center_point.x - gear_radius, gear2_center_point.y - gear_radius)
-    print(gear2_svg_group_xy)
     transformer = TransformBuilder()
     transformer.setTranslation(gear2_svg_group_xy)
     gear2_svg_group.set_transform(transformer.getTransform())
@@ -774,31 +771,35 @@ def an_equilateral_pentagon_in_two_concentric_circles(outer_radius, inner_radius
 
 # returns a tuple (svg group, group_width, group_height)
 def a_flow(points, label, spec):
+
+    if points is None:
+        return None, 0, 0
+
     svg_group = G()
 
     edge_svg, edge_width, edge_height = a_path_with_label(points=points, label=label, spec=spec)
     svg_group.addElement(edge_svg)
 
-    # the first point is always the head snap point
-    snap_point_at_head = points[0]
+    # the first point is always the from snap point
+    snap_point_at_from = points[0]
 
-    # the last point is always the tail snap point
-    snap_point_at_tail = points[-1]
+    # the last point is always the to snap point
+    snap_point_at_to = points[-1]
 
-    # the direction from 2nd point to first point is the snap_direction_at_head
-    snap_direction_at_head = snap_point_at_head.direction_from(points[1])
+    # the direction from 2nd point to first point is the snap_direction_at_from
+    snap_direction_at_from = snap_point_at_from.direction_from(points[1])
 
-    # the direction from penultimate point to the last point is the snap_direction_at_tail
-    snap_direction_at_tail = snap_point_at_tail.direction_from(points[-2])
+    # the direction from penultimate point to the last point is the snap_direction_at_to
+    snap_direction_at_to = snap_point_at_to.direction_from(points[-2])
 
     # arrow heads
-    if spec['head-arrow'] and snap_direction_at_head:
-        head_arrow_svg, head_arrow_width, head_arrow_height = an_arrow_head(arrow_point=snap_point_at_head, snap_direction=snap_direction_at_head, spec=spec)
-        svg_group.addElement(head_arrow_svg)
+    if spec['from-arrow'] and snap_direction_at_from:
+        from_arrow_svg, from_arrow_width, from_arrow_height = an_arrow_head(arrow_point=snap_point_at_from, snap_direction=snap_direction_at_from, spec=spec['arrow-head'])
+        svg_group.addElement(from_arrow_svg)
 
-    if spec['tail-arrow'] and snap_direction_at_tail:
-        tail_arrow_svg, tail_arrow_width, tail_arrow_height = an_arrow_head(arrow_point=snap_point_at_tail, snap_direction=snap_direction_at_tail, spec=spec)
-        svg_group.addElement(tail_arrow_svg)
+    if spec['to-arrow'] and snap_direction_at_to:
+        to_arrow_svg, to_arrow_width, to_arrow_height = an_arrow_head(arrow_point=snap_point_at_to, snap_direction=snap_direction_at_to, spec=spec['arrow-head'])
+        svg_group.addElement(to_arrow_svg)
 
     return svg_group, edge_width, edge_height
 
@@ -872,13 +873,13 @@ def align_and_combine_horizontally(svg_elements):
     # we are aligning horizontally, so we need the height of the element which is maximum
     group_height = 0
     for svg_element in svg_elements:
-        group_height = max(group_height, svg_element.specs['height'])
+        group_height = max(group_height, svg_element.height)
 
     # now we place the elements in the group side by side with height adjustment
     group_width = 0
     for svg_element in svg_elements:
-        element_svg = svg_element.group
-        height_to_adjust = (group_height - svg_element.specs['height']) / 2
+        element_svg = svg_element.svg
+        height_to_adjust = (group_height - svg_element.height) / 2
         # now do the transformation
         element_svg_xy = '{0},{1}'.format(group_width, height_to_adjust)
         transformer = TransformBuilder()
@@ -886,7 +887,7 @@ def align_and_combine_horizontally(svg_elements):
         element_svg.set_transform(transformer.getTransform())
         svg_group.addElement(element_svg)
 
-        group_width = group_width + svg_element.specs['width']
+        group_width = group_width + svg_element.width
 
     return svg_group, group_width, group_height
 

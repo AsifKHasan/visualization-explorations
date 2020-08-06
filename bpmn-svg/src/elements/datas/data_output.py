@@ -26,5 +26,5 @@ class DataOutput(DataObject):
     def get_top_left_element(self):
         width = self.theme['top-left-inner-shape']['width']
         height = self.theme['top-left-inner-shape']['height']
-        svg_group, width, height = a_right_arrow(width=width, height=height, spec=self.theme['top-left-inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        svg_group, group_width, group_height = a_right_arrow(width=width, height=height, spec=self.theme['top-left-inner-shape'])
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

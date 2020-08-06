@@ -24,5 +24,5 @@ class EventIntermediateCatchParallelMultipleNon(EventIntermediate):
         self.theme.update(self.current_theme['events']['intermediates']['EventIntermediateCatchParallelMultipleNon'])
 
     def get_inside_element(self):
-        svg_group, width, height = a_cross_inside_a_circular_shape(radius=self.theme['inner-circle']['radius'], inner_shape_spec=self.theme['inner-shape'])
-        return SvgElement({'width': width, 'height': height}, svg_group)
+        svg_group, group_width, group_height = a_cross_inside_a_circular_shape(radius=self.theme['inner-circle']['radius'], inner_shape_spec=self.theme['inner-shape'])
+        return SvgElement(svg=svg_group, width=group_width, height=group_height)

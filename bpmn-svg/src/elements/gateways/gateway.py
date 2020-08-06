@@ -46,7 +46,7 @@ class Gateway(BpmnElement):
 
         # if an element is to be placed inside the diamond group, place it so that the inside object's center and the diamond's center is same
         if inside_element is not None:
-            inside_group, inside_group_width, inside_group_height = inside_element.group, inside_element.specs['width'], inside_element.specs['height']
+            inside_group, inside_group_width, inside_group_height = inside_element.svg, inside_element.width, inside_element.height
             inside_group_xy = '{0},{1}'.format((diamond_group_width - inside_group_width)/2, (diamond_group_height - inside_group_height)/2)
             transformer = TransformBuilder()
             transformer.setTranslation(inside_group_xy)
@@ -75,15 +75,36 @@ class Gateway(BpmnElement):
         self.draw_snaps(snap_points, svg_group)
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        return SvgElement({'width': group_width, 'height': group_height}, svg_group, snap_points)
+        self.svg_element =  SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos='top')
+        return self.svg_element
 
     def snap_points(self, width, height, x_offset, y_offset):
-        snaps = {}
-
-        snaps['north'] = Point(width * 0.5, y_offset)
-        snaps['south'] = Point(width * 0.5, height - y_offset)
-        snaps['east'] = Point(width - x_offset, height * 0.5)
-        snaps['west'] = Point(x_offset, height * 0.5)
+        snaps = {
+            'north': {
+                'middle': {
+                    'point': Point(width * 0.5, y_offset),
+                    'edge-roles': []
+                },
+            },
+            'south': {
+                'middle': {
+                    'point': Point(width * 0.5, height - y_offset),
+                    'edge-roles': []
+                },
+            },
+            'east': {
+                'middle': {
+                    'point': Point(width - x_offset, height * 0.5),
+                    'edge-roles': []
+                },
+            },
+            'west': {
+                'middle': {
+                    'point': Point(x_offset, height * 0.5),
+                    'edge-roles': []
+                },
+            }
+        }
 
         return snaps
 
