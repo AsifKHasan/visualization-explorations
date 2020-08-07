@@ -69,78 +69,31 @@ class Activity(BpmnElement):
 
         # snap points
         snap_points = self.snap_points(rectangle_group_width, rectangle_group_height)
-        self.draw_snaps(snap_points, rectangle_group)
+        self.snap_offset_x = self.snap_point_offset
+        self.snap_offset_y = self.snap_point_offset
+        self.draw_snaps(snap_points, rectangle_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
+        label_pos = 'middle'
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        self.svg_element = SvgElement(svg=rectangle_group, width=rectangle_group_width, height=rectangle_group_height, snap_points=snap_points, label_pos='middle')
+        self.svg_element = SvgElement(svg=rectangle_group, width=rectangle_group_width, height=rectangle_group_height, snap_points=snap_points, label_pos=label_pos)
         return self.svg_element
 
     def snap_points(self, width, height):
-        # a snap point may have zero or more edge roles meaning how many edge connections are there to this snap point
-        # an edge-role is a dictionary that looks like {'role': 'head|tail', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
-        snaps = {
-            'north': {
-                'middle': {
-                    'point': Point(width * 0.5, 0),
-                    'edge-roles': []
-                },
-                'left': {
-                    'point': Point(width * 0.25, 0),
-                    'edge-roles': []
-                },
-                'right': {
-                    'point': Point(width * 0.75, 0),
-                    'edge-roles': []
-                },
-            },
-            'south': {
-                'middle': {
-                    'point': Point(width * 0.5, height),
-                    'edge-roles': []
-                },
-                'left': {
-                    'point': Point(width * 0.25, height),
-                    'edge-roles': []
-                },
-                'right': {
-                    'point': Point(width * 0.75, height),
-                    'edge-roles': []
-                },
-            },
-            'east': {
-                'middle': {
-                    'point': Point(width, height * 0.5),
-                    'edge-roles': []
-                },
-                'top': {
-                    'point': Point(width, height * 0.25),
-                    'edge-roles': []
-                },
-                'bottom': {
-                    'point': Point(width, height * 0.75),
-                    'edge-roles': []
-                },
-            },
-            'west': {
-                'middle': {
-                    'point': Point(0, height * 0.5),
-                    'edge-roles': []
-                },
-                'top': {
-                    'point': Point(0, height * 0.25),
-                    'edge-roles': []
-                },
-                'bottom': {
-                    'point': Point(0, height * 0.75),
-                    'edge-roles': []
-                },
-            }
-        }
+        # activities have more snap points
+        snaps = super().snap_points(width, height)
+        snaps['north']['left']   = {'point': Point(width * 0.25, self.snap_point_offset * -1), 'edge-roles': []}
+        snaps['north']['right']  = {'point': Point(width * 0.75, self.snap_point_offset * -1), 'edge-roles': []}
+
+        snaps['south']['left']   = {'point': Point(width * 0.25, height + self.snap_point_offset * 1), 'edge-roles': []}
+        snaps['south']['right']  = {'point': Point(width * 0.75, height + self.snap_point_offset * 1), 'edge-roles': []}
+
+        snaps['east']['top']     = {'point': Point(width + self.snap_point_offset * 1, height * 0.25), 'edge-roles': []}
+        snaps['east']['bottom']  = {'point': Point(width + self.snap_point_offset * 1, height * 0.75), 'edge-roles': []}
+
+        snaps['west']['top']     = {'point': Point(self.snap_point_offset * -1, height * 0.25), 'edge-roles': []}
+        snaps['west']['bottom']  = {'point': Point(self.snap_point_offset * -1, height * 0.75), 'edge-roles': []}
 
         return snaps
-
-    def label_position(self):
-        return 'middle'
 
     def switch_label_position(self):
         pass

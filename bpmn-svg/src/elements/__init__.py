@@ -88,13 +88,13 @@ default_theme = {
             # min x gap between two adjacent nodes so that straight edges can be drawn there
             'dx-between-elements': 40,
             # min y gap between two adjacent channels so that inter-channel edges between two adjacent channels can be routed along this gap
-            'dy-between-channels': 20,
+            'dy-between-channels': 10,
             # gaps to keep on sides for routing edges within channels in this ChannelCollection (which is actually the pool)
             'pad-spec': {
                 'left': 10, 'top': 20, 'right': 10, 'bottom': 20
             },
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#0482FF'
+                'fill': 'none', 'stroke-width': 0, 'stroke': '#0482FF'
             },
         },
         'SwimChannel': {
@@ -103,10 +103,10 @@ default_theme = {
                 # gaps to keep on sides for routing edges totally within this channel
                 # normally we try to route internl edges over the top and left if required
                 'pad-spec':{
-                    'left': 10, 'top': 20, 'right': 10, 'bottom': 20
+                    'left': 24, 'top': 24, 'right': 24, 'bottom': 0
                 },
                 'style': {
-                    'fill': 'none', 'stroke-width': 1, 'stroke': '#FF8243'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#FF8243'
                 },
             },
             # actual channel content area where the nodes are to be placed
@@ -114,7 +114,7 @@ default_theme = {
                 # min x gap between two adjacent nodes so that straight edges can be drawn there
                 'dx-between-elements': 40,
                 'style': {
-                    'fill': 'none', 'stroke-width': 1, 'stroke': '#048243'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#048243'
                 },
             },
         }
@@ -124,7 +124,7 @@ default_theme = {
             'rectangle': {
                 'min-width': 40, 'max-width': 120, 'rx': 0, 'ry': 0,
                 'pad-spec': {
-                    'left': 2, 'top': 5, 'right': 2, 'bottom': 5
+                    'left': 2, 'top': 2, 'right': 2, 'bottom': 2
                 },
                 'style': {
                     'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
@@ -133,7 +133,7 @@ default_theme = {
             'text': {
                 'vertical-text': False, 'max-lines': 4,
                 'style': {
-                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
                 }
             },
         },
@@ -930,7 +930,7 @@ default_theme = {
             'rectangle': {
                 'min-width': 80, 'max-width': 120, 'rx': 5, 'ry': 5,
                 'pad-spec': {
-                    'left': 5, 'top': 5, 'right': 5, 'bottom': 5
+                    'left': 2, 'top': 2, 'right': 2, 'bottom': 2
                 },
                 'style': {
                     'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
@@ -939,7 +939,7 @@ default_theme = {
             'text': {
                 'vertical-text': False, 'max-lines': 4,
                 'style': {
-                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 12, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
                 }
             },
             'diamond': {
@@ -1012,7 +1012,7 @@ default_theme = {
             'from-arrow': False,
             'to-arrow': True,
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#404040'
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#404040', 'stroke-linejoin': 'round', 'stroke-linecap': 'square'
             },
             'arrow-head': {
                 'arrow-side-length': 10,
@@ -1079,7 +1079,7 @@ default_theme = {
             'rectangle': {
                 'min-width': 60, 'max-width': 120, 'rx': 0, 'ry': 0,
                 'pad-spec': {
-                    'left': 2, 'top': 5, 'right': 2, 'bottom': 5
+                    'left': 2, 'top': 2, 'right': 2, 'bottom': 2
                 },
                 'style': {
                     'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
@@ -1088,7 +1088,7 @@ default_theme = {
             'text': {
                 'vertical-text': False, 'max-lines': 4,
                 'style': {
-                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 11, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                    'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 10, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
                 }
             },
             'folded-rectangle': {

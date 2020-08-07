@@ -35,6 +35,11 @@ class Event(BpmnElement):
                                     rect_spec=self.theme['rectangle'],
                                     text_spec=self.theme['text'])
 
+        if self.node_data['label'] is None or self.node_data['label'] == '':
+            label_pos = 'none'
+        else:
+            label_pos = 'top'
+
         # the circle element
         if 'inner-circle' in self.theme:
             circle_group, circle_group_width, circle_group_height = two_concentric_circles(outer_radius=self.theme['circle']['radius'], inner_radius=self.theme['inner-circle']['radius'], outer_circle_spec=self.theme['circle'], inner_circle_spec=self.theme['inner-circle'])
@@ -56,8 +61,8 @@ class Event(BpmnElement):
         # wrap it in a svg group
         svg_group = G(id=self.group_id)
 
-        # the circle is vertically below the label
-        circle_group_xy = '{0},{1}'.format((label_group_width - circle_group_width)/2, label_group_height)
+        # the circle is vertically below the label, keep a gap of *snap_point_offset*
+        circle_group_xy = '{0},{1}'.format((label_group_width - circle_group_width)/2, label_group_height + self.snap_point_offset)
         transformer = TransformBuilder()
         transformer.setTranslation(circle_group_xy)
         circle_group.set_transform(transformer.getTransform())
@@ -68,45 +73,17 @@ class Event(BpmnElement):
 
         # extend the height so that a blank space of the same height as text is at the bottom so that the circle's left edge is at dead vertical center
         group_width = label_group_width
-        group_height = label_group_height + circle_group_height + label_group_height
-
+        group_height = label_group_height + self.snap_point_offset + circle_group_height + self.snap_point_offset + label_group_height
+        
         # snap points
-        snap_points = self.snap_points(group_width, group_height, (label_group_width - circle_group_width)/2, label_group_height)
-        self.draw_snaps(snap_points, svg_group)
+        snap_points = self.snap_points(group_width, group_height)
+        self.snap_offset_x = (label_group_width - circle_group_width)/2 + self.snap_point_offset
+        self.snap_offset_y = label_group_height + self.snap_point_offset * 2
+        self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
-        self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos='top')
+        self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos=label_pos)
         return self.svg_element
-
-    def snap_points(self, width, height, x_offset, y_offset):
-        snaps = {
-            'north': {
-                'middle': {
-                    'point': Point(width * 0.5, y_offset),
-                    'edge-roles': []
-                },
-            },
-            'south': {
-                'middle': {
-                    'point': Point(width * 0.5, height - y_offset),
-                    'edge-roles': []
-                },
-            },
-            'east': {
-                'middle': {
-                    'point': Point(width - x_offset, height * 0.5),
-                    'edge-roles': []
-                },
-            },
-            'west': {
-                'middle': {
-                    'point': Point(x_offset, height * 0.5),
-                    'edge-roles': []
-                },
-            }
-        }
-
-        return snaps
 
     def get_inside_element(self):
         return None

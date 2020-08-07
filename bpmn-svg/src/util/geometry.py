@@ -64,6 +64,10 @@ class Point:
         assert isinstance(other, Point)
         return self.x * other.x + self.y * other.y
 
+    def scale(self, other):
+        assert isinstance(other, Point)
+        return Point(self.x * other.x, self.y * other.y)
+
     def cross(self):
         return Point(self.y, -self.x)
 

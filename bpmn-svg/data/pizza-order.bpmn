@@ -37,6 +37,7 @@ graph pizza_order {
             pizza_received      --> check_pizza
             on_order            --> pizza_received      --> pay_for_pizza       --> eat_pizza           --> hunger_satisfied
             on_order            --> timer_4m_mins       --> ask_for_pizza       --> event_based
+            pay_for_pizza       ~~> on_order
         }
 
         # edges within pools of customer

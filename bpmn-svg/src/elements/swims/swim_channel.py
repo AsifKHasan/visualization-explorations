@@ -20,6 +20,7 @@ from util.logger import *
 from util.svg_util import *
 
 from elements.flows.flow_object import FlowObject
+from elements.flows.channel_flow import ChannelFlow
 
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
@@ -184,13 +185,13 @@ class SwimChannel(BpmnElement):
                 edge_type = EDGE_TYPE[edge['type']]
                 edge_label = edge.get('label', None)
 
-                # create an appropriate flow object
-                flow_object = FlowObject(edge_type)
-                flow_svg_element = flow_object.connect_within_channel(from_node, to_node, edge_label)
+                # create an appropriate flow object, use ChannelFlow which manages flows inside a SwimChannel
+                flow_object = ChannelFlow(edge_type, self.channel_dict['svg-element'].width, self.channel_dict['svg-element'].height,  self.theme['channel-outer-rect']['pad-spec'])
+                flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label)
 
                 # add to channel svg group
                 if flow_svg_element is not None and flow_svg_element.svg is not None:
-                    self.channel_dict['channel-element']['svg'].addElement(flow_svg_element.svg)
+                    self.channel_dict['svg-element'].svg.addElement(flow_svg_element.svg)
 
                     # store object for future reference
                     edge_object = {'edge': edge, 'type': edge_type, 'svg': flow_svg_element.svg, 'width': flow_svg_element.width, 'height': flow_svg_element.height}
@@ -208,14 +209,12 @@ class SwimChannel(BpmnElement):
                 # print('----------------------------------------------------------------------------------------------------------------')
                 # print(self.channel_dict['channel-nodes'][node_id])
                 # print('----------------------------------------------------------------------------------------------------------------')
-                self.channel_dict['channel-nodes'][node_id]
+                self.channel_dict['channel-nodes'][node_id] = {}
+                self.channel_dict['channel-nodes'][node_id]['node-id'] = node_id
                 self.channel_dict['channel-nodes'][node_id]['category'] = CLASSES[node_data['type']]['g']
                 self.channel_dict['channel-nodes'][node_id]['type'] = node_data['type']
-                self.channel_dict['channel-nodes'][node_id]['svg'] = svg_element.svg
-                self.channel_dict['channel-nodes'][node_id]['width'] = svg_element.width
-                self.channel_dict['channel-nodes'][node_id]['height'] = svg_element.height
-                self.channel_dict['channel-nodes'][node_id]['snap-points'] = svg_element.snap_points
-                self.channel_dict['channel-nodes'][node_id]['label-pos'] = svg_element.label_pos
+                self.channel_dict['channel-nodes'][node_id]['svg-element'] = svg_element
+                self.channel_dict['channel-nodes'][node_id]['instance'] = element_instance
                 # print('----------------------------------------------------------------------------------------------------------------')
                 # print(self.channel_dict['channel-nodes'][node_id])
                 # print('----------------------------------------------------------------------------------------------------------------')
@@ -237,15 +236,15 @@ class SwimChannel(BpmnElement):
         transformer = TransformBuilder()
         current_x = self.theme['channel-outer-rect']['pad-spec']['left']
         for node_id, node_object in self.channel_dict['channel-nodes'].items():
-            element_svg = node_object['svg']
-            current_y = inner_rect_height/2 - node_object['height']/2 + self.theme['channel-outer-rect']['pad-spec']['top']
+            node_svg_element = node_object['svg-element']
+            current_y = inner_rect_height/2 - node_svg_element.height/2 + self.theme['channel-outer-rect']['pad-spec']['top']
 
             # keep the x, y position and dimension for the node within the group for future reference
-            node_object['xy'] = Point(current_x, current_y)
-            transformer.setTranslation(node_object['xy'])
-            element_svg.set_transform(transformer.getTransform())
-            svg_group.addElement(element_svg)
-            current_x = current_x + node_object['width'] + self.theme['channel-inner-rect']['dx-between-elements']
+            node_svg_element.xy = Point(current_x, current_y)
+            transformer.setTranslation(node_svg_element.xy)
+            node_svg_element.svg.set_transform(transformer.getTransform())
+            svg_group.addElement(node_svg_element.svg)
+            current_x = current_x + node_svg_element.width + self.theme['channel-inner-rect']['dx-between-elements']
 
         outer_rect_width = current_x - self.theme['channel-inner-rect']['dx-between-elements'] + self.theme['channel-outer-rect']['pad-spec']['right']
 
@@ -262,11 +261,11 @@ class SwimChannel(BpmnElement):
         channel_inner_rect_svg.set_style(StyleBuilder(self.theme['channel-inner-rect']['style']).getStyle())
         svg_group.addElement(channel_inner_rect_svg)
 
+        # wrap it in a svg element
+        self.svg_element = SvgElement(svg=svg_group, width=outer_rect_width, height=outer_rect_height)
+
         # store the svg and dimensions for future reference
-        self.channel_dict['channel-element'] = {}
-        self.channel_dict['channel-element']['svg'] = svg_group
-        self.channel_dict['channel-element']['width'] = outer_rect_width
-        self.channel_dict['channel-element']['height'] = outer_rect_height
+        self.channel_dict['svg-element'] = self.svg_element
 
     def to_svg(self):
         # We go through a collect -> tune -> assemble flow
@@ -283,14 +282,15 @@ class SwimChannel(BpmnElement):
     def get_max_node_height(self):
         max_element_height = 0
         for node_id, node_object in self.channel_dict['channel-nodes'].items():
-            max_element_height = max(node_object['height'], max_element_height)
+            max_element_height = max(node_object['svg-element'].height, max_element_height)
 
         return max_element_height
 
     def x_of_node(self, node_id):
         if node_id in self.channel_dict['channel-nodes']:
             # we actually return the x position after the node
-            return self.channel_dict['channel-nodes'][node_id]['xy'].x + self.channel_dict['channel-nodes'][node_id]['width']
+            node_svg_element = self.channel_dict['channel-nodes'][node_id]['svg-element']
+            return node_svg_element.xy.x + node_svg_element.width
 
         # we could not locate the node in the named channel
         return 0
