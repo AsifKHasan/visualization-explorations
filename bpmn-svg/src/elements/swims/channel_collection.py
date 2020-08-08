@@ -18,30 +18,23 @@ from util.geometry import Point
 
 from util.logger import *
 from util.svg_util import *
-from util.channel_util import *
+from util.helper_objects import ChannelCollectionObject
 
-from elements.bpmn_element import BpmnElement
+from elements.bpmn_element import BpmnElement, EDGE_TYPE
 from elements.svg_element import SvgElement
 
 from elements.swims.swim_channel import SwimChannel
+from elements.flows.pool_flow import PoolFlow
 
 class ChannelCollection(BpmnElement):
     def __init__(self, bpmn_id, lane_id, pool_id, nodes, edges):
         self.theme = self.current_theme['swims']['ChannelCollection']
         self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges = bpmn_id, lane_id, pool_id, nodes, edges
 
-    def get_if_from_different_channels(self, from_node_id, to_node_id):
-        from_node, to_node = None, None
-        for channel_list in self.channel_collection['channels']:
-            for channel in channel_list:
-                pass
-
-        return from_node, to_node
-
     def lay_edges(self):
         # get a filtered list of edges containing only those where from-node and to-node both are in this channel-collection but are in different channels
         for edge in self.edges:
-            from_node, to_node = self.get_if_from_different_channels(edge['from'], edge['to'])
+            from_node, to_node = self.channel_collection.get_if_from_different_channels(edge['from'], edge['to'])
             if from_node is not None and to_node is not None:
                 edge_type = EDGE_TYPE[edge['type']]
                 edge_label = edge.get('label', None)
@@ -52,7 +45,7 @@ class ChannelCollection(BpmnElement):
 
                 # add to channel svg group
                 if flow_svg_element is not None and flow_svg_element.svg is not None:
-                    self.channel_collection['svg-element'].svg.addElement(flow_svg_element.svg)
+                    self.channel_collection.element.svg.addElement(flow_svg_element.svg)
 
                     # store object for future reference
                     edge_object = {'edge': edge, 'type': edge_type, 'svg': flow_svg_element.svg, 'width': flow_svg_element.width, 'height': flow_svg_element.height}
@@ -75,16 +68,16 @@ class ChannelCollection(BpmnElement):
 
         current_y = self.theme['pad-spec']['top']
         transformer = TransformBuilder()
-        for channel_list in self.channel_collection['channels']:
+        for channel_list in self.channel_collection.channel_lists:
             for channel in channel_list:
                 # if it is a root channel it, starts at left (0) x position
-                if channel['root-channel'] == True:
+                if channel.is_root == True:
                     current_x = self.theme['pad-spec']['left']
                 else:
                     # we find the parent node from which this channel is branched and position accordingly
-                    if 'parent-channel' in channel and channel['parent-channel'] is not None:
-                        parent_swim_channel = self.get_swim_channel_instance_by_name(channel['parent-channel'])
-                        x_pos = parent_swim_channel.x_of_node(node_id=channel['channel-name'])
+                    if channel.parent_channel is not None:
+                        parent_swim_channel = self.channel_collection.get_swim_channel_instance_by_name(channel.parent_channel)
+                        x_pos = parent_swim_channel.x_of_node(node_id=channel.name)
                     else:
                         x_pos = 0
 
@@ -93,7 +86,7 @@ class ChannelCollection(BpmnElement):
                     else:
                         current_x = self.theme['pad-spec']['left']
 
-                channel_element = channel['svg-element']
+                channel_element = channel.element
                 channel_element_svg = channel_element.svg
                 channel_element.xy = Point(current_x, current_y)
 
@@ -115,48 +108,19 @@ class ChannelCollection(BpmnElement):
         self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height)
 
         # store the svg and dimensions for future reference
-        self.channel_collection['svg-element'] = self.svg_element
+        self.channel_collection.element = self.svg_element
 
     def collect_elements(self):
         # order and group nodes
-        root_channel = group_nodes_inside_a_pool(
-                                            bpmn_id=self.bpmn_id,
-                                            lane_id=self.lane_id,
-                                            pool_id=self.pool_id,
-                                            pool_nodes=self.nodes,
-                                            pool_edges=self.edges)
-
-        # change the data structure a little bit - make it an array of root channels, where root channels are array of objects ()
-        self.channel_collection = {'channels': [], 'edges': []}
-        channel_list = None
-        for node_id_list in root_channel.as_list():
-            if len(node_id_list) > 0:
-                parent_channel_name = self.find_channel_in_list_with_node(node_id_list[0], channel_list)
-                if not parent_channel_name:
-                    # if the first node of the list is not in any channel created so far, this is a root channel
-                    # create a new channel and append the {first_node: node_id_list} object
-                    if channel_list: self.channel_collection['channels'].append(channel_list)
-                    channel_list = []
-                    channel_list.append({'channel-name': node_id_list[0], 'root-channel': True, 'channel-nodes': {node_id: {} for node_id in node_id_list}})
-                else:
-                    # this must be a sub channel of a previous channel, append in the current channel (the first node becomes the name and will not be in the channel_nodes)
-                    channel_list.append({'channel-name': node_id_list[0], 'root-channel': False, 'parent-channel': parent_channel_name, 'channel-nodes': {node_id: {} for node_id in node_id_list[1:]}})
-
-        # append the last open channel
-        if channel_list: self.channel_collection['channels'].append(channel_list)
-
-        # we need a special channel for islands
-        if len(root_channel.islands):
-            channel_list = []
-            channel_list.append({'channel-name': '-', 'root-channel': False, 'parent-channel': None, 'channel-nodes': {node_id: {} for node_id in root_channel.islands}})
-            self.channel_collection['channels'].append(channel_list)
+        self.channel_collection = ChannelCollectionObject(self.pool_id)
+        self.channel_collection.build(pool_nodes=self.nodes, pool_edges=self.edges)
 
         # create the swim channels
-        for channel_list in self.channel_collection['channels']:
+        for channel_list in self.channel_collection.channel_lists:
             for channel in channel_list:
                 swim_channel = SwimChannel(self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, channel)
-                swim_channel.to_svg()
-                channel['instance'] = swim_channel
+                channel.element = swim_channel.to_svg()
+                channel.instance = swim_channel
 
     def to_svg(self):
         # We go through a collect -> tune -> assemble flow
@@ -168,25 +132,6 @@ class ChannelCollection(BpmnElement):
         self.assemble_elements()
 
         # lay the edges connecting the nodes
-        # self.lay_edges()
+        self.lay_edges()
 
         return self.svg_element
-
-
-    def get_swim_channel_instance_by_name(self, channel_name):
-        for channel_list in self.channel_collection['channels']:
-            for channel in channel_list:
-                if channel_name == channel['channel-name']:
-                    return channel['instance']
-
-        return None
-
-    def find_channel_in_list_with_node(self, node_id, channel_list):
-        if not channel_list:
-            return None
-
-        for channel in channel_list:
-            if node_id in channel['channel-nodes']:
-                return channel['channel-name']
-
-        return None

@@ -13,13 +13,9 @@ from pysvg.structure import *
 from pysvg.style import *
 from pysvg.text import *
 
-from util.geometry import Point
+from elements.bpmn_element import BpmnElement
 
 from util.logger import *
-from util.svg_util import *
-
-from elements.bpmn_element import BpmnElement
-from elements.svg_element import SvgElement
 
 class FlowObject(BpmnElement):
     def __init__(self, edge_type):

@@ -1,4 +1,4 @@
-default_theme = {
+DEFAULT_THEME = {
     'bpmn': {
         'margin-spec': {
             'left': 2, 'top': 2, 'right': 2, 'bottom': 2

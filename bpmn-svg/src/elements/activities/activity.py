@@ -13,6 +13,7 @@ from pysvg.text import *
 
 from util.logger import *
 from util.svg_util import *
+from util.helper_objects import SnapPoint
 
 from elements.bpmn_element import BpmnElement
 from elements.svg_element import SvgElement
@@ -81,17 +82,14 @@ class Activity(BpmnElement):
     def snap_points(self, width, height):
         # activities have more snap points
         snaps = super().snap_points(width, height)
-        snaps['north']['left']   = {'point': Point(width * 0.25, self.snap_point_offset * -1), 'edge-roles': []}
-        snaps['north']['right']  = {'point': Point(width * 0.75, self.snap_point_offset * -1), 'edge-roles': []}
-
-        snaps['south']['left']   = {'point': Point(width * 0.25, height + self.snap_point_offset * 1), 'edge-roles': []}
-        snaps['south']['right']  = {'point': Point(width * 0.75, height + self.snap_point_offset * 1), 'edge-roles': []}
-
-        snaps['east']['top']     = {'point': Point(width + self.snap_point_offset * 1, height * 0.25), 'edge-roles': []}
-        snaps['east']['bottom']  = {'point': Point(width + self.snap_point_offset * 1, height * 0.75), 'edge-roles': []}
-
-        snaps['west']['top']     = {'point': Point(self.snap_point_offset * -1, height * 0.25), 'edge-roles': []}
-        snaps['west']['bottom']  = {'point': Point(self.snap_point_offset * -1, height * 0.75), 'edge-roles': []}
+        snaps['north']['left']   = SnapPoint(point=Point(width * 0.25, self.snap_point_offset * -1))
+        snaps['north']['right']  = SnapPoint(point=Point(width * 0.75, self.snap_point_offset * -1))
+        snaps['south']['left']   = SnapPoint(point=Point(width * 0.25, height + self.snap_point_offset * 1))
+        snaps['south']['right']  = SnapPoint(point=Point(width * 0.75, height + self.snap_point_offset * 1))
+        snaps['east']['top']     = SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.25))
+        snaps['east']['bottom']  = SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.75))
+        snaps['west']['top']     = SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.25))
+        snaps['west']['bottom']  = SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.75))
 
         return snaps
 

@@ -14,11 +14,20 @@ from pysvg.text import *
 
 from util.logger import *
 from util.svg_util import *
+from util.helper_objects import SnapPoint
 
 from elements import *
 
+EDGE_TYPE = {
+    '-->' : 'Sequence',
+    '~~>' : 'Message',
+    '...' : 'Association',
+    '..>' : 'DirectedAssociation',
+    '<.>' : 'BidirectionalAssociation',
+}
+
 class BpmnElement():
-    current_theme = default_theme
+    current_theme = DEFAULT_THEME
     # the logical snap points are drawn out away from the actual shape for nice edge visuals
     snap_point_offset = 12
 
@@ -39,7 +48,7 @@ class BpmnElement():
         points = []
 
         # east and west are easier, we just get the point inside
-        snap_point = self.svg_element.snap_points[side][position]['point']
+        snap_point = self.svg_element.snap_points[side][position].point
         if side == 'east':
             # the actual point is to the left
             points = [snap_point, snap_point + Point(self.snap_offset_x * -1, 0)]
@@ -108,30 +117,10 @@ class BpmnElement():
         # a snap point may have zero or more edge roles meaning how many edge connections are there to this snap point
         # an edge-role is a dictionary that looks like {'role': 'from|to', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
         snaps = {
-            'north': {
-                'middle': {
-                    'point': Point(width * 0.5, self.snap_point_offset * -1),
-                    'edge-roles': []
-                },
-            },
-            'south': {
-                'middle': {
-                    'point': Point(width * 0.5, height + self.snap_point_offset * 1),
-                    'edge-roles': []
-                },
-            },
-            'east': {
-                'middle': {
-                    'point': Point(width + self.snap_point_offset * 1, height * 0.5),
-                    'edge-roles': []
-                },
-            },
-            'west': {
-                'middle': {
-                    'point': Point(self.snap_point_offset * -1, height * 0.5),
-                    'edge-roles': []
-                },
-            }
+            'north': {'middle': SnapPoint(point=Point(width * 0.5, self.snap_point_offset * -1))},
+            'south': { 'middle': SnapPoint(point=Point(width * 0.5, height + self.snap_point_offset * 1)) },
+            'east': {'middle': SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.5)) },
+            'west': {'middle': SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.5)) },
         }
 
         return snaps
@@ -140,5 +129,5 @@ class BpmnElement():
         offset_multiplier = {'north': Point(0, 1), 'south': Point(0, -1), 'east': Point(-1, 0), 'west': Point(1, 0)}
         for side in snaps:
             for position in snaps[side]:
-                snap_point_group, snap_point_width, snap_point_height = a_snap_point(snaps[side][position]['point'] + Point(x_offset, y_offset).scale(offset_multiplier[side]))
+                snap_point_group, snap_point_width, snap_point_height = a_snap_point(snaps[side][position].point + Point(x_offset, y_offset).scale(offset_multiplier[side]))
                 svg_group.addElement(snap_point_group)

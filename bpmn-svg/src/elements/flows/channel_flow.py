@@ -13,13 +13,13 @@ from pysvg.structure import *
 from pysvg.style import *
 from pysvg.text import *
 
-from util.geometry import Point
-
-from util.logger import *
-from util.svg_util import *
-
 from elements.svg_element import SvgElement
 from elements.flows.flow_object import FlowObject
+
+from util.logger import *
+from util.geometry import Point
+from util.svg_util import *
+from util.helper_objects import EdgeRole
 
 '''
     Class to handle a flows/edges inside the channel which means between nodes inside a specific channel. The rules are
@@ -49,10 +49,10 @@ class ChannelFlow(FlowObject):
 
     def create_flow(self, from_node, to_node, label):
         # decide which edge rule we should apply
-        if from_node['svg-element'].xy.west_of(to_node['svg-element'].xy):
+        if from_node.element.xy.west_of(to_node.element.xy):
             # rule #1
             points = self.calculate_straight_path(from_node=from_node, to_node=to_node, from_snap_side='east', to_snap_side='west')
-        elif from_node['svg-element'].xy.east_of(to_node['svg-element'].xy):
+        elif from_node.element.xy.east_of(to_node.element.xy):
             # rule #2
             points = self.calculate_complex_path(from_node=from_node, to_node=to_node)
         else:
@@ -68,35 +68,35 @@ class ChannelFlow(FlowObject):
     def calculate_straight_path(self, from_node, to_node, from_snap_side, to_snap_side):
         # select from-node's snap-point, Rule 1.a
         from_snap_position = 'middle'
-        snap_position_from = from_node['svg-element'].snap_points[from_snap_side][from_snap_position]
+        snap_position_from = from_node.element.snap_points[from_snap_side][from_snap_position]
 
         # see if the snap point is occupied or not
-        if len(snap_position_from['edge-roles']) > 0:
+        if len(snap_position_from.edge_roles) > 0:
             # TODO: occupied, do something
             pass
 
-        # this snap point is getting a new edge-role - {'role': 'from|to', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
-        snap_position_from['edge-roles'].append({'role': 'from', 'peer-node': to_node['node-id'], 'edge-type': self.edge_type})
+        # this snap point is getting a new edge-role
+        snap_position_from.edge_roles.append(EdgeRole(role='from', peer=to_node.id, type=self.edge_type))
 
 
         # select to-node's snap-point, rule 1.b
         to_snap_position = 'middle'
-        snap_position_to = to_node['svg-element'].snap_points[to_snap_side][to_snap_position]
+        snap_position_to = to_node.element.snap_points[to_snap_side][to_snap_position]
 
         # see if the snap point is occupied or not
-        if len(snap_position_to['edge-roles']) > 0:
+        if len(snap_position_to.edge_roles) > 0:
             # TODO: occupied, do something
             pass
 
-        # this snap point is getting a new edge-role - {'role': 'from|to', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
-        snap_position_to['edge-roles'].append({'role': 'to', 'peer-node': from_node['node-id'], 'edge-type': self.edge_type})
+        # this snap point is getting a new edge-role
+        snap_position_to.edge_roles.append(EdgeRole(role='to', peer=from_node.id, type=self.edge_type))
 
 
         # get the flow points
-        points_from = from_node['instance'].inner_points_for_snapping(side=from_snap_side, position=from_snap_position, role='from', direction_hint=None)
-        points_from = [from_node['svg-element'].xy + p for p in points_from]
-        points_to = to_node['instance'].inner_points_for_snapping(side=to_snap_side, position=to_snap_position, role='to', direction_hint=None)
-        points_to = [to_node['svg-element'].xy + p for p in points_to]
+        points_from = from_node.instance.inner_points_for_snapping(side=from_snap_side, position=from_snap_position, role='from', direction_hint=None)
+        points_from = [from_node.element.xy + p for p in points_from]
+        points_to = to_node.instance.inner_points_for_snapping(side=to_snap_side, position=to_snap_position, role='to', direction_hint=None)
+        points_to = [to_node.element.xy + p for p in points_to]
 
         return points_from + points_to
 
@@ -104,41 +104,41 @@ class ChannelFlow(FlowObject):
     def calculate_complex_path(self, from_node, to_node):
         # TODO: this can cross label for ['Event', 'Gateway', 'Data'], so a label position swiching from top to bottom may be required
         # rule 2.a
-        if from_node['category'] in ['Activity']:
+        if from_node.category in ['Activity']:
             # rule 2.a.1
             from_snap_side = 'east'
             from_snap_position = 'top'
-        elif from_node['category'] in ['Event', 'Gateway', 'Data']:
+        elif from_node.category in ['Event', 'Gateway', 'Data']:
             # rule 2.a.2
             from_snap_side = 'east'
             from_snap_position = 'middle'
 
-        snap_position_from = from_node['svg-element'].snap_points[from_snap_side][from_snap_position]
-        # this snap point is getting a new edge-role - {'role': 'from|to', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
-        snap_position_from['edge-roles'].append({'role': 'from', 'peer-node': to_node['node-id'], 'edge-type': self.edge_type})
+        snap_position_from = from_node.element.snap_points[from_snap_side][from_snap_position]
+        # this snap point is getting a new edge-role
+        snap_position_from.edge_roles.append(EdgeRole(role='from', peer=to_node.id, type=self.edge_type))
 
 
         # rule 2.b
-        if to_node['category'] in ['Activity']:
+        if to_node.category in ['Activity']:
             # rule 2.b.1
             to_snap_side = 'west'
             to_snap_position = 'top'
 
-        elif to_node['category'] in ['Event', 'Gateway', 'Data']:
+        elif to_node.category in ['Event', 'Gateway', 'Data']:
             # rule 2.b.2
             to_snap_side = 'north'
             to_snap_position = 'middle'
 
-        snap_position_to = from_node['svg-element'].snap_points[to_snap_side][to_snap_position]
-        # this snap point is getting a new edge-role - {'role': 'from|to', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
-        snap_position_to['edge-roles'].append({'role': 'to', 'peer-node': from_node['node-id'], 'edge-type': self.edge_type})
+        snap_position_to = from_node.element.snap_points[to_snap_side][to_snap_position]
+        # this snap point is getting a new edge-role
+        snap_position_to.edge_roles.append(EdgeRole(role='to', peer=from_node.id, type=self.edge_type))
 
 
         # get the points of internal segment
-        points_from = from_node['instance'].inner_points_for_snapping(side=from_snap_side, position=from_snap_position, role='from', direction_hint=None)
-        points_from = [from_node['svg-element'].xy + p for p in points_from]
-        points_to = to_node['instance'].inner_points_for_snapping(side=to_snap_side, position=to_snap_position, role='to', direction_hint=None)
-        points_to = [to_node['svg-element'].xy + p for p in points_to]
+        points_from = from_node.instance.inner_points_for_snapping(side=from_snap_side, position=from_snap_position, role='from', direction_hint=None)
+        points_from = [from_node.element.xy + p for p in points_from]
+        points_to = to_node.instance.inner_points_for_snapping(side=to_snap_side, position=to_snap_position, role='to', direction_hint=None)
+        points_to = [to_node.element.xy + p for p in points_to]
 
 
         # we now have two segments we connect the last point of *from-segment* to the first point of *to-segment*
