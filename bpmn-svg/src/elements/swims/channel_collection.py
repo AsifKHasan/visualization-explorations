@@ -18,7 +18,7 @@ from util.geometry import Point
 
 from util.logger import *
 from util.svg_util import *
-from util.helper_objects import ChannelCollectionObject
+from util.helper_objects import ChannelCollectionObject, EdgeObject
 
 from elements.bpmn_element import BpmnElement, EDGE_TYPE
 from elements.svg_element import SvgElement
@@ -48,8 +48,7 @@ class ChannelCollection(BpmnElement):
                     self.channel_collection.element.svg.addElement(flow_svg_element.svg)
 
                     # store object for future reference
-                    edge_object = {'edge': edge, 'type': edge_type, 'svg': flow_svg_element.svg, 'width': flow_svg_element.width, 'height': flow_svg_element.height}
-                    self.channel_collection['edges'].append(edge_object)
+                    self.channel_collection.edges.append(EdgeObject(edge=edge, type=edge_type, element=flow_svg_element))
 
     def assemble_elements(self):
         # channels are vertically stacked

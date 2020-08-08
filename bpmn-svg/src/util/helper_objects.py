@@ -29,6 +29,16 @@ class SnapPoint:
 
 
 '''
+    Edge Object
+'''
+class EdgeObject:
+    def __init__(self, edge, type, element):
+        self.edge = edge
+        self.type = type
+        self.element = element
+
+
+'''
     Node Object
 '''
 class NodeObject:
@@ -54,6 +64,16 @@ class ChannelObject:
         self.intance = None
         self.element = None
 
+    def node_ordinal(self, node):
+        ordinal = 0
+        for node_id in [*self.nodes]:
+            if node_id == node.id:
+                return ordinal
+            else:
+                ordinal = ordinal + 1
+
+        return -1
+
     def __repr__(self):
         s = 'number: {0}, name: {1}, nodes: {2}'.format(self.number, self.name, [*self.nodes])
         return s
@@ -66,6 +86,23 @@ class ChannelCollectionObject:
 
     def __init__(self, pool_id):
         self.pool_id = pool_id
+
+    def channel_of_node(self, node):
+        for channel_list in self.channel_lists:
+            for channel in channel_list:
+                if node.id in [*channel.nodes]:
+                    return channel
+
+        return None
+
+    def channel_number_and_ordinal(self, node):
+        for channel_list in self.channel_lists:
+            for channel in channel_list:
+                ordinal = channel.node_ordinal(node)
+                if ordinal != -1:
+                    return channel.number, ordinal
+
+        return -1, -1
 
     def get_swim_channel_instance_by_name(self, channel_name):
         for channel_list in self.channel_lists:

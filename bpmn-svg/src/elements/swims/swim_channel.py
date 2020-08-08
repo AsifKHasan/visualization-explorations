@@ -18,7 +18,7 @@ from util.geometry import Point
 
 from util.logger import *
 from util.svg_util import *
-from util.helper_objects import NodeObject
+from util.helper_objects import NodeObject, EdgeObject
 
 from elements.flows.channel_flow import ChannelFlow
 
@@ -186,8 +186,7 @@ class SwimChannel(BpmnElement):
                     self.channel_object.element.svg.addElement(flow_svg_element.svg)
 
                     # store object for future reference
-                    edge_object = {'edge': edge, 'type': edge_type, 'svg': flow_svg_element.svg, 'width': flow_svg_element.width, 'height': flow_svg_element.height}
-                    self.channel_object.edges.append(edge_object)
+                    self.channel_object.edges.append(EdgeObject(edge=edge, type=edge_type, element=flow_svg_element))
 
     def collect_elements(self):
         for node_id in self.channel_object.nodes:
