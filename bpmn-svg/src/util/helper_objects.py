@@ -4,12 +4,10 @@
 from pprint import pprint
 from copy import deepcopy
 
+from util.geometry import Point
 from util.logger import *
 
-# ---------------------------------------------------------------------------------------------------------
-# object classes
-# ---------------------------------------------------------------------------------------------------------
-'''
+''' ----------------------------------------------------------------------------------------------------------------------------------
     EdgeRole object for node snap-points
 '''
 class EdgeRole:
@@ -19,7 +17,7 @@ class EdgeRole:
         self.type = type
 
 
-'''
+''' ----------------------------------------------------------------------------------------------------------------------------------
     snap point for a node
 '''
 class SnapPoint:
@@ -28,7 +26,7 @@ class SnapPoint:
         self.edge_roles = []
 
 
-'''
+''' ----------------------------------------------------------------------------------------------------------------------------------
     Edge Object
 '''
 class EdgeObject:
@@ -38,7 +36,7 @@ class EdgeObject:
         self.element = element
 
 
-'''
+''' ----------------------------------------------------------------------------------------------------------------------------------
     Node Object
 '''
 class NodeObject:
@@ -50,7 +48,7 @@ class NodeObject:
         self.instance = instance
 
 
-'''
+''' ----------------------------------------------------------------------------------------------------------------------------------
     collection of nodes
 '''
 class ChannelObject:
@@ -61,9 +59,42 @@ class ChannelObject:
         self.parent_channel = parent_channel
         self.nodes = nodes
 
-        self.intance = None
+        self.instance = None
         self.element = None
 
+
+    '''
+        the string representation of the Channel
+    '''
+    def __repr__(self):
+        s = 'number: {0}, name: {1}, nodes: {2}'.format(self.number, self.name, [*self.nodes])
+        return s
+
+
+    '''
+        height of the node with the maximum height in the channel
+    '''
+    def max_node_height(self):
+        max_height = 0
+        for _, node_object in self.nodes.items():
+            max_height = max(node_object.element.height, max_height)
+
+        return max_height
+
+    '''
+        x position of the node in the channel
+    '''
+    def x_of_node(self, node_id):
+        if node_id in self.nodes:
+            return self.nodes[node_id].element.xy.x
+
+        # we could not locate the node in the named channel
+        return 0
+
+
+    '''
+        the ordinal position of the node in the channel
+    '''
     def node_ordinal(self, node):
         ordinal = 0
         for node_id in [*self.nodes]:
@@ -74,18 +105,99 @@ class ChannelObject:
 
         return -1
 
-    def __repr__(self):
-        s = 'number: {0}, name: {1}, nodes: {2}'.format(self.number, self.name, [*self.nodes])
-        return s
+
+    '''
+        path from snap point to the exact point of the node in channel coordinates
+    '''
+    def to_snap_point(self, node, side, position, role, direction_hint, peer, edge_type):
+        points_in_node_coordinate = node.instance.to_snap_point(side, position, role, direction_hint, peer, edge_type)
+        points_in_channel_coordinate = [node.element.xy + p for p in points_in_node_coordinate]
+        return points_in_channel_coordinate
 
 
-'''
+    '''
+        the path connects node to southern boundary of the channel in channel coordinate
+        the path does not touch boundary but stops inside the channel's edge routing area
+        do not allow a path from north of a node
+        boundary - [north|south|east|west]
+        edgeover - [inside|outside]
+    '''
+    def to_boundary(self, boundary, edgeover, node, side, position, role, direction_hint, peer, edge_type):
+        forbidden_combinations = [('north', 'south'), ('south', 'north'), ('east', 'west'), ('west', 'east')]
+        edgeover_dict = {'inside': 1, 'outside': -1}
+
+        points_in_node_coordinate = node.instance.to_snap_point(side, position, role, direction_hint, peer, edge_type)
+        points_in_channel_coordinate = [node.element.xy + p for p in points_in_node_coordinate]
+        if (boundary, side) in forbidden_combinations:
+            warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed'.format(side, node.id, edgeover, boundary))
+            return points_in_channel_coordinate
+
+        # debug('[{0}:{1}:{2}] -> [{3}] {4} {5}'.format(node.id, side, position, boundary, role, points_in_node_coordinate))
+        if role == 'to':
+            point_to_extend = points_in_channel_coordinate[0]
+        else:
+            point_to_extend = points_in_channel_coordinate[-1]
+
+        if boundary == 'south':
+            the_point = Point(point_to_extend.x, self.element.height - self.theme['channel-outer-rect']['pad-spec']['bottom']/2 * edgeover_dict[edgeover])
+            # debug('[{0}] {1}-{2} to {3}: {4}'.format(node.id, side, position, boundary, the_point))
+
+        elif boundary == 'north':
+            the_point = Point(point_to_extend.x, self.theme['channel-outer-rect']['pad-spec']['bottom']/2 * edgeover_dict[edgeover])
+            # debug('[{0}] {1}-{2} to {3}: {4}'.format(node.id, side, position, boundary, the_point))
+
+        elif boundary == 'east':
+            # allow only for east-most node
+            if self.node_ordinal(node) == len(self.nodes) - 1:
+                the_point = Point(self.element.width - self.theme['channel-outer-rect']['pad-spec']['right']/2 * edgeover_dict[edgeover], point_to_extend.y)
+                # debug('[{0}] {1}-{2} to {3}: {4}'.format(node.id, side, position, boundary, the_point))
+            else:
+                warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
+                return points_in_channel_coordinate
+
+        elif boundary == 'west':
+            # allow only for west-most node
+            if self.node_ordinal(node) == 0:
+                the_point = Point(self.theme['channel-outer-rect']['pad-spec']['left']/2 * edgeover_dict[edgeover], point_to_extend.y)
+                # debug('[{0}] {1}-{2} to {3}: {4}'.format(node.id, side, position, boundary, the_point))
+            else:
+                warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
+                return points_in_channel_coordinate
+
+        if role == 'to':
+            return [the_point] + points_in_channel_coordinate
+        else:
+            return points_in_channel_coordinate + [the_point]
+
+
+''' ----------------------------------------------------------------------------------------------------------------------------------
     collection of edges and channel Lists
 '''
 class ChannelCollectionObject:
 
     def __init__(self, pool_id):
         self.pool_id = pool_id
+
+
+    def path_to_snap_point(self, channel, node, side, position, role, direction_hint, peer, edge_type):
+        points_in_channel_coordinate = channel.path_to_snap_point(node, side, position, role, direction_hint, peer, edge_type)
+        points_in_pool_coordinate = [channel.element.xy + p for p in points_in_channel_coordinate]
+        return points_in_pool_coordinate
+
+
+    def to_boundary(self, boundary, edgeover, channel, node, side, position, role, direction_hint, peer, edge_type):
+        points_in_channel_coordinate = channel.to_boundary(boundary, edgeover, node, side, position, role, direction_hint, peer, edge_type)
+        points_in_pool_coordinate = [channel.element.xy + p for p in points_in_channel_coordinate]
+        return points_in_pool_coordinate
+
+
+    def node_xy(self, node):
+        for channel_list in self.channel_lists:
+            for channel in channel_list:
+                if node.id in [*channel.nodes]:
+                    return channel.element.xy + node.element.xy
+
+        return None
 
     def channel_of_node(self, node):
         for channel_list in self.channel_lists:
@@ -94,6 +206,7 @@ class ChannelCollectionObject:
                     return channel
 
         return None
+
 
     def channel_number_and_ordinal(self, node):
         for channel_list in self.channel_lists:
@@ -104,46 +217,46 @@ class ChannelCollectionObject:
 
         return -1, -1
 
-    def get_swim_channel_instance_by_name(self, channel_name):
+
+    def channel_number_and_node(self, node_id):
+        for channel_list in self.channel_lists:
+            for channel in channel_list:
+                if node_id in [*channel.nodes]:
+                    return channel.number, channel.nodes[node_id]
+
+        return -1, None
+
+
+    def channel_by_name(self, channel_name):
         for channel_list in self.channel_lists:
             for channel in channel_list:
                 if channel_name == channel.name:
-                    return channel.instance
+                    return channel
 
         return None
 
+
     def get_if_from_different_channels(self, from_node_id, to_node_id):
-        from_node, to_node = None, None
-        for channel_list in self.channel_lists:
-            from_node_channel, from_node = self.find_channel_in_list_with_node(channel_list, from_node_id)
-            if from_node_channel is not None:
-                break
+        from_channel_number, from_node = self.channel_number_and_node(from_node_id)
+        to_channel_number, to_node = self.channel_number_and_node(to_node_id)
 
-        if from_node_channel is None:
-            return None, None
+        if from_channel_number != -1 and to_channel_number != -1 and from_channel_number != to_channel_number:
+            if from_node is not None and to_node is not None:
+                return from_node, to_node
 
-        for channel_list in self.channel_lists:
-            to_node_channel, to_node = self.find_channel_in_list_with_node(channel_list, to_node_id)
-            if to_node_channel is not None:
-                break
+        return None, None
 
-        if to_node_channel is None:
-            return None, None
-
-        if from_node_channel == to_node_channel:
-            return None, None
-
-        return from_node, to_node
 
     def find_channel_in_list_with_node(self, channel_list, node_id):
         if not channel_list:
             return None, None
 
         for channel in channel_list:
-            if node_id in channel.nodes:
+            if node_id in [*channel.nodes]:
                 return channel.name, channel.nodes[node_id]
 
         return None, None
+
 
     def __repr__(self):
         for channel_list in self.channel_lists:

@@ -1,37 +1,48 @@
 DEFAULT_THEME = {
     'bpmn': {
+        # margin within the svg for the whole bpmn graph so that there are some blank area outside the graph
         'margin-spec': {
             'left': 2, 'top': 2, 'right': 2, 'bottom': 2
         },
+        # the title rectangle on top
         'rectangle': {
             'pad-spec': {
-                'left': 10, 'top': 10, 'right': 10, 'bottom': 10
+                'left': 8, 'top': 8, 'right': 8, 'bottom': 8
             },
             'style': {
                 'fill': '#F0F0F0', 'stroke-width': 2, 'stroke': '#A0A0A0'
             }
         },
+        # the title text specs
         'text': {
             'vertical-text': False, 'max-lines': 2,
             'style': {
                 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 24, 'font-weight': 'bold', 'fill': '#02066F', 'stroke': '#000000', 'stroke-width': 0
             }
         },
+        # the BPMN content rectangle below the title rectangle
         'bpmn-rect': {
             'pad-spec': {
-                'left': 3, 'top': 3, 'right': 3, 'bottom': 3
+                'left': 4, 'top': 4, 'right': 4, 'bottom': 4
             },
             'style': {
-                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0'
+                'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#A0A0A0'
             }
         },
     },
     'swims': {
         'LaneCollection': {
-            'gap-between-lanes': 0,
+            # min y gap between two adjacent lanes so that inter-lane edges between two adjacent lanes can be routed along this gap
+            'dy-between-lanes': 24,
+            # gaps to keep on sides for routing edges within lanes in this LaneCollection (which is actually the BPMN itself)
+            'pad-spec': {
+                'left': 24, 'top': 24, 'right': 24, 'bottom': 24
+            },
+            'style': {
+                'fill': 'none', 'stroke-width': 0, 'stroke': '#FF0000'
+            },
         },
         'SwimLane': {
-            'gap-between-text-and-pool-group': 1,
             'rectangle': {
                 'pad-spec': {
                     'left': 5, 'top': 5, 'right': 5, 'bottom': 5
@@ -46,20 +57,19 @@ DEFAULT_THEME = {
                     'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 20, 'font-weight': 'bold', 'fill': '#02066F', 'stroke': '#000000', 'stroke-width': 0
                 }
             },
-            'lane-rect': {
-                'pad-spec': {
-                    'left': 1, 'top': 1, 'right': 1, 'bottom': 1
-                },
-                'style': {
-                    'fill': '#FFFFFF', 'stroke-width': 2, 'stroke': '#475F94'
-                }
-            },
         },
         'PoolCollection': {
-            'gap-between-pools': 0,
+            # min y gap between two adjacent pools so that inter-pool edges between two adjacent pools can be routed along this gap
+            'dy-between-pools': 24,
+            # gaps to keep on sides for routing edges within pools in this PoolCollection (which is actually a Lane)
+            'pad-spec': {
+                'left': 24, 'top': 24, 'right': 24, 'bottom': 24
+            },
+            'style': {
+                'fill': 'none', 'stroke-width': 0, 'stroke': '#FF0000'
+            },
         },
         'SwimPool': {
-            'gap-between-text-and-block-group': 0,
             'rectangle': {
                 'pad-spec': {
                     'left': 2, 'top': 2, 'right': 2, 'bottom': 2
@@ -74,24 +84,15 @@ DEFAULT_THEME = {
                     'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 14, 'font-weight': 'bold', 'fill': '#1F3B4D', 'stroke': '#000000', 'stroke-width': 0
                 }
             },
-            'pool-rect': {
-                'default-width': 600,
-                'pad-spec': {
-                    'left': 1, 'top': 1, 'right': 1, 'bottom': 1
-                },
-                'style': {
-                    'fill': 'none', 'stroke-width': 1, 'stroke': '#475F94'
-                }
-            },
         },
         'ChannelCollection': {
             # min x gap between two adjacent nodes so that straight edges can be drawn there
             'dx-between-elements': 40,
             # min y gap between two adjacent channels so that inter-channel edges between two adjacent channels can be routed along this gap
-            'dy-between-channels': 10,
+            'dy-between-channels': 24,
             # gaps to keep on sides for routing edges within channels in this ChannelCollection (which is actually the pool)
             'pad-spec': {
-                'left': 10, 'top': 20, 'right': 10, 'bottom': 20
+                'left': 24, 'top': 24, 'right': 24, 'bottom': 24
             },
             'style': {
                 'fill': 'none', 'stroke-width': 0, 'stroke': '#0482FF'
@@ -103,7 +104,7 @@ DEFAULT_THEME = {
                 # gaps to keep on sides for routing edges totally within this channel
                 # normally we try to route internl edges over the top and left if required
                 'pad-spec':{
-                    'left': 24, 'top': 24, 'right': 24, 'bottom': 0
+                    'left': 24, 'top': 24, 'right': 24, 'bottom': 24
                 },
                 'style': {
                     'fill': 'none', 'stroke-width': 0, 'stroke': '#FF8243'
@@ -114,7 +115,7 @@ DEFAULT_THEME = {
                 # min x gap between two adjacent nodes so that straight edges can be drawn there
                 'dx-between-elements': 40,
                 'style': {
-                    'fill': 'none', 'stroke-width': 0, 'stroke': '#048243'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#008080'
                 },
             },
         }

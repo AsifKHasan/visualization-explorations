@@ -72,7 +72,7 @@ class Activity(BpmnElement):
         snap_points = self.snap_points(rectangle_group_width, rectangle_group_height)
         self.snap_offset_x = self.snap_point_offset
         self.snap_offset_y = self.snap_point_offset
-        self.draw_snaps(snap_points, rectangle_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
+        # self.draw_snaps(snap_points, rectangle_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
         label_pos = 'middle'
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))

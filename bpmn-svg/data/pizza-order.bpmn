@@ -26,7 +26,7 @@ graph pizza_order {
             throwMessage        pizza_received          [label="Pizza Received";]
             #task                check_pizza             [label="Check Pizza";]
 
-            timer               timer_4m_mins           [label="45 Minutes";]
+            timer               timer_45_mins           [label="45 Minutes";]
             task                ask_for_pizza           [label="Ask for Pizza";]
 
             task                eat_pizza               [label="Eat Pizza";]
@@ -36,8 +36,7 @@ graph pizza_order {
             hungry              --> select_pizza        --> order_pizza         --> on_order
             pizza_received      --> check_pizza
             on_order            --> pizza_received      --> pay_for_pizza       --> eat_pizza           --> hunger_satisfied
-            on_order            --> timer_4m_mins       --> ask_for_pizza       --> event_based
-            pay_for_pizza       ~~> on_order
+            on_order            --> timer_45_mins       --> ask_for_pizza       --> on_order
         }
 
         # edges within pools of customer
@@ -56,6 +55,7 @@ graph pizza_order {
             order_received      --> on_order_received
             on_order_received   --> where_is_pizza      --> deal_with_customer
             deal_with_customer  --> where_is_pizza
+            on_order_received   --> deal_with_customer
         }
         pool cook {
             label = "Pizza Cook"

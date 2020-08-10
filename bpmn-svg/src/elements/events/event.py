@@ -74,12 +74,12 @@ class Event(BpmnElement):
         # extend the height so that a blank space of the same height as text is at the bottom so that the circle's left edge is at dead vertical center
         group_width = label_group_width
         group_height = label_group_height + self.snap_point_offset + circle_group_height + self.snap_point_offset + label_group_height
-        
+
         # snap points
         snap_points = self.snap_points(group_width, group_height)
         self.snap_offset_x = (label_group_width - circle_group_width)/2 + self.snap_point_offset
         self.snap_offset_y = label_group_height + self.snap_point_offset * 2
-        self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
+        # self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
         self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos=label_pos)

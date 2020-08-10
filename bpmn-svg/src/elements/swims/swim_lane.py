@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 '''
 '''
+from pprint import pprint
+
 from pysvg.builders import *
 from pysvg.filter import *
 from pysvg.gradient import *
@@ -25,99 +27,52 @@ class SwimLane(BpmnElement):
         self.theme = self.current_theme['swims']['SwimLane']
         self.bpmn_id, self.lane_id, self.lane_data = bpmn_id, lane_id, lane_data
 
-    def tune_elements(self, tune_spec):
-        info('..tuning lane [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
+    def lay_edges(self):
+        self.pool_collection_instance.lay_edges()
 
-        # tune the children
-        self.child_element_class.tune_elements(tune_spec)
+    def assemble_labels(self):
+        group_id = '{0}:{1}-label'.format(self.bpmn_id, self.lane_id)
 
-        # label_svg_element width may need some tuning
-        label_element_target_width = tune_spec['lane-text-element-target-width']
-        self.tune_label_element(label_element_target_width)
+        # get the lane label, its min_width and max_width is the pool collection's height + all
+        label_group, group_width, group_height = text_inside_a_rectangle(
+                                                    text=self.lane_data['label'],
+                                                    min_width=self.svg_element.height,
+                                                    max_width=self.svg_element.height,
+                                                    rect_spec=self.theme['rectangle'],
+                                                    text_spec=self.theme['text'],
+                                                    debug_enabled=False)
 
-        info('..tuning lane [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
+        label_group.set_id(id=group_id)
+
+        # now we need to add the pool-collection's label just right to it
+        child_label_element = self.pool_collection_instance.assemble_labels()
+
+        transformer = TransformBuilder()
+        child_label_xy = Point(group_width, 0)
+        transformer.setTranslation(child_label_xy)
+        child_label_element.svg.set_transform(transformer.getTransform())
+        label_group.addElement(child_label_element.svg)
+
+        group_width = group_width + child_label_element.width
+
+        # wrap it in a svg element
+        self.label_element = SvgElement(svg=label_group, width=group_width, height=group_height)
+        # pprint(self.label_element.svg.getXML())
+        return self.label_element
 
     def collect_elements(self):
         info('..processing lane [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
 
         # get the pool collection
-        self.child_element_class = PoolCollection(self.bpmn_id, self.lane_id, self.lane_data['pools'])
-        self.child_element_class.collect_elements()
-
-        # get the inner svg elements in a list
-        self.node_elements = []
-
-        # we need the height of the pool collection
-        pool_collection_height = self.child_element_class.get_height()
-
-        # get the lane label, its min_width and max_width is the pool collection's height + all
-        label_group, group_width, group_height = text_inside_a_rectangle(
-                                                    text=self.lane_data['label'],
-                                                    min_width=pool_collection_height,
-                                                    max_width=pool_collection_height,
-                                                    rect_spec=self.theme['rectangle'],
-                                                    text_spec=self.theme['text'],
-                                                    debug_enabled=False)
-                                                    
-        self.node_elements.append(SvgElement(svg=label_group, width=group_width, height=group_height))
+        self.pool_collection_instance = PoolCollection(self.bpmn_id, self.lane_id, self.lane_data['pools'])
+        self.pool_collection_instance.collect_elements()
 
         info('..processing lane [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
 
     def assemble_elements(self):
         info('..assembling lane [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
 
-        # wrap it in a svg group
-        group_id = '{0}:{1}'.format(self.bpmn_id, self.lane_id)
-        svg_group = G(id=group_id)
-
-        pool_collection_svg_element = self.child_element_class.assemble_elements()
-        pool_collection_svg = pool_collection_svg_element.svg
-
-        label_svg_element = self.node_elements[0]
-        label_svg = label_svg_element.svg
-
-        # a lane's width is lane text width + pool collection width + some padding
-        group_height = self.theme['lane-rect']['pad-spec']['top'] + pool_collection_svg_element.height + self.theme['lane-rect']['pad-spec']['bottom']
-        group_width = self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.width + self.theme['gap-between-text-and-pool-group'] + pool_collection_svg_element.width + self.theme['lane-rect']['pad-spec']['right']
-
-        # add the lane outline
-        outline_svg, group_width, group_height = a_rectangle(width=group_width, height=group_height, spec=self.theme['lane-rect'])
-
-        # the lane label
-        label_svg_xy = '{0},{1}'.format(self.theme['lane-rect']['pad-spec']['left'], self.theme['lane-rect']['pad-spec']['top'])
-        transformer = TransformBuilder()
-        transformer.setTranslation(label_svg_xy)
-        label_svg.set_transform(transformer.getTransform())
-
-        # the pool collection svg
-        pool_collection_svg_xy = '{0},{1}'.format(self.theme['lane-rect']['pad-spec']['left'] + label_svg_element.width + self.theme['gap-between-text-and-pool-group'], self.theme['lane-rect']['pad-spec']['top'])
-        transformer = TransformBuilder()
-        transformer.setTranslation(pool_collection_svg_xy)
-        pool_collection_svg.set_transform(transformer.getTransform())
-
-        svg_group.addElement(outline_svg)
-        svg_group.addElement(label_svg)
-        svg_group.addElement(pool_collection_svg)
+        self.svg_element = self.pool_collection_instance.assemble_elements()
 
         info('..assembling lane [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
-        return SvgElement(svg=svg_group, width=group_width, height=group_height)
-
-    def tune_label_element(self, label_element_target_width):
-        label_svg_element = self.node_elements[0]
-
-        # this is a group with a rect and an svg, we just add the differential in width to both elements
-        group = label_svg_element.svg
-        # we know that the rect is the first child and svg is the second child
-        rect = group.getElementAt(0)
-        svg = group.getElementAt(1)
-
-        if label_element_target_width > rect.get_width():
-            width_to_increase = label_element_target_width - rect.get_width()
-            rect.set_width(rect.get_width() + width_to_increase)
-            svg.set_width(svg.get_width() + width_to_increase)
-            label_svg_element.width = label_svg_element.width + width_to_increase
-
-    def get_max_width_of_elements_of_children(self):
-        label_svg_element = self.node_elements[0]
-        pool_label_element_max_width, pool_channel_collection_max_width = self.child_element_class.get_max_width_of_elements_of_children()
-        return label_svg_element.width, pool_label_element_max_width, pool_channel_collection_max_width
+        return self.svg_element

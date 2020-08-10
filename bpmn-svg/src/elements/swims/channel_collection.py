@@ -28,11 +28,18 @@ from elements.flows.pool_flow import PoolFlow
 
 class ChannelCollection(BpmnElement):
     def __init__(self, bpmn_id, lane_id, pool_id, nodes, edges):
-        self.theme = self.current_theme['swims']['ChannelCollection']
         self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges = bpmn_id, lane_id, pool_id, nodes, edges
+        self.theme = self.current_theme['swims']['ChannelCollection']
 
     def lay_edges(self):
+        # first lay the intra-channel edges
+        for channel_list in self.channel_collection.channel_lists:
+            for channel in channel_list:
+                channel.instance.lay_edges()
+
+        # then we lay inter-channel edges
         # get a filtered list of edges containing only those where from-node and to-node both are in this channel-collection but are in different channels
+        # pprint(self.edges)
         for edge in self.edges:
             from_node, to_node = self.channel_collection.get_if_from_different_channels(edge['from'], edge['to'])
             if from_node is not None and to_node is not None:
@@ -64,7 +71,6 @@ class ChannelCollection(BpmnElement):
 
         # lay the channels, channels are vertically stacked, but only the root channels start at left, branches ar horizontally positioned so that they fall to the right of their parent node's position
         group_width = 0
-
         current_y = self.theme['pad-spec']['top']
         transformer = TransformBuilder()
         for channel_list in self.channel_collection.channel_lists:
@@ -75,8 +81,8 @@ class ChannelCollection(BpmnElement):
                 else:
                     # we find the parent node from which this channel is branched and position accordingly
                     if channel.parent_channel is not None:
-                        parent_swim_channel = self.channel_collection.get_swim_channel_instance_by_name(channel.parent_channel)
-                        x_pos = parent_swim_channel.x_of_node(node_id=channel.name)
+                        parent_channel_object = self.channel_collection.channel_by_name(channel.parent_channel)
+                        x_pos = parent_channel_object.x_of_node(node_id=channel.name) + self.theme['dx-between-elements']
                     else:
                         x_pos = 0
 
@@ -109,28 +115,16 @@ class ChannelCollection(BpmnElement):
         # store the svg and dimensions for future reference
         self.channel_collection.element = self.svg_element
 
+        return self.svg_element
+
     def collect_elements(self):
         # order and group nodes
         self.channel_collection = ChannelCollectionObject(self.pool_id)
         self.channel_collection.build(pool_nodes=self.nodes, pool_edges=self.edges)
+        self.channel_collection.theme = self.theme
 
         # create the swim channels
         for channel_list in self.channel_collection.channel_lists:
             for channel in channel_list:
-                swim_channel = SwimChannel(self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, channel)
-                channel.element = swim_channel.to_svg()
-                channel.instance = swim_channel
-
-    def to_svg(self):
-        # We go through a collect -> tune -> assemble flow
-
-        # collect the svg elements, but do not assemble now. we need tuning before assembly
-        self.collect_elements()
-
-        # finally assemble the svg elements into a final one
-        self.assemble_elements()
-
-        # lay the edges connecting the nodes
-        self.lay_edges()
-
-        return self.svg_element
+                channel.instance = SwimChannel(self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, channel)
+                channel.instance.to_svg()

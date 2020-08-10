@@ -150,23 +150,13 @@ CLASSES = {
     'eventBasedParallelStart':  {'m': 'elements.gateways.gateway_event_based_parallel_start',                           'c': 'GatewayEventBasedParallelStart',              'g': 'Gateway'},
 }
 
-def is_in_channel(node_id, channel_list):
-    if not channel_list:
-        return None
-
-    for channel in channel_list:
-        if node_id in channel.nodes:
-            return channel.name
-
-    return None
-
 class SwimChannel(BpmnElement):
     def __init__(self, bpmn_id, lane_id, pool_id, nodes, edges, channel_object):
-        self.theme = self.current_theme['swims']['SwimChannel']
         self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, self.channel_object = bpmn_id, lane_id, pool_id, nodes, edges, channel_object
+        self.theme = self.current_theme['swims']['SwimChannel']
+        self.channel_object.theme = self.theme
 
     def lay_edges(self):
-        # the easyest ones are the edges connecting nodes inside a channel, a channel is by definition straight horizontal stack of nodes, so edges are mostly straight lines except when there is a loop back from a child to a parent or grand-parent
         # get a filtered list of edges containing only those where from-node and to-node both are in this channel
         self.channel_object.edges = []
         local_nodes = self.channel_object.nodes.keys()
@@ -178,7 +168,7 @@ class SwimChannel(BpmnElement):
                 edge_label = edge.get('label', None)
 
                 # create an appropriate flow object, use ChannelFlow which manages flows inside a SwimChannel
-                flow_object = ChannelFlow(edge_type, self.channel_object.element.width, self.channel_object.element.height,  self.theme['channel-outer-rect']['pad-spec'])
+                flow_object = ChannelFlow(edge_type, self.channel_object)
                 flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label)
 
                 # add to channel svg group
@@ -209,7 +199,7 @@ class SwimChannel(BpmnElement):
         svg_group = G()
 
         # get the max height and cumulative width of all elements and adjust height and width accordingly
-        outer_rect_height = self.get_max_node_height() + self.theme['channel-outer-rect']['pad-spec']['top'] + self.theme['channel-outer-rect']['pad-spec']['bottom']
+        outer_rect_height = self.theme['channel-outer-rect']['pad-spec']['top'] + self.channel_object.max_node_height() + self.theme['channel-outer-rect']['pad-spec']['bottom']
         inner_rect_height = outer_rect_height - self.theme['channel-outer-rect']['pad-spec']['top'] - self.theme['channel-outer-rect']['pad-spec']['bottom']
 
         # now we have height and width adjusted, we place the elements with proper displacement
@@ -248,31 +238,7 @@ class SwimChannel(BpmnElement):
         self.channel_object.element = self.svg_element
 
     def to_svg(self):
-        # We go through a collect -> tune -> assemble flow
-
-        # collect the svg elements, but do not assemble now. we need tuning before assembly
         self.collect_elements()
-
-        # collect the svg elements, but do not assemble now. we need tuning before assembly
         self.assemble_elements()
 
-        # lay the edges connecting the nodes
-        self.lay_edges()
-
         return self.svg_element
-
-    def get_max_node_height(self):
-        max_element_height = 0
-        for node_id, node_object in self.channel_object.nodes.items():
-            max_element_height = max(node_object.element.height, max_element_height)
-
-        return max_element_height
-
-    def x_of_node(self, node_id):
-        if node_id in self.channel_object.nodes:
-            # we actually return the x position after the node
-            node_svg_element = self.channel_object.nodes[node_id].element
-            return node_svg_element.xy.x + node_svg_element.width
-
-        # we could not locate the node in the named channel
-        return 0

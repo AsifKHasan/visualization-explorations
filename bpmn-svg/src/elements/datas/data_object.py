@@ -91,7 +91,7 @@ class DataObject(BpmnElement):
         snap_points = self.snap_points(group_width, group_height)
         self.snap_offset_x = (label_group_width - folded_rectangle_group_width)/2 + self.snap_point_offset
         self.snap_offset_y = label_group_height + self.snap_point_offset * 2
-        self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
+        # self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
         label_pos = 'bottom'
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
