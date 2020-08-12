@@ -1,0 +1,66 @@
+/*
+python bpmn-parser.py < ../data/airline-check-in.bpmn | tee ../out/airline-check-in.json | python bpmn-to-svg.py
+*/
+graph airline_check_in {
+    label = "Airline Check-in"
+    _ [hide_labels="true"]
+
+    lane lane_1 {
+        label = "Lane"
+
+        pool pool_1 {
+            label = "Pool"
+
+            start                   start                   [label="";]
+            task                    validate                [label="Validate Passenger Ticket and Identification";]
+            exclusive               check_validity          [label="Validity?";]
+            process                 confirm_itinerary       [label="Confirm Itinerary";]
+            task                    ask_for_objects         [label="Ask Passenger for Prohibited Objects";]
+            exclusive               prohibited_objects      [label="Prohibited Objects?";]
+            task                    ask_for_baggage         [label="Ask Passenger for Baggages";]
+            task                    weigh_baggage           [label="Weigh Baggages";]
+
+            task                    remove_objects          [label="Remove Prohibited Objects";]
+
+            task                    reject_passenger        [label="Reject Passenger";]
+            end                     rejection               [label="";]
+
+            task                    calculate_fee           [label="Calculate Additional Fees"; wrap_here="true";]
+            task                    inform_fee              [label="Inform Passenger of Additional Fees";]
+            task                    collect_fee             [label="Collect Pyment of Fees";]
+            task                    boarding_pass           [label="Generate and Print Boarding Pass";]
+            task                    baggage_tag             [label="Generate and Print Baggage Tags";]
+            task                    move_baggage            [label="Identify and Move Baggages";]
+            parallel                pass_and_bagagge        [label="";]
+            task                    hand_out                [label="Hand Out Boarding Pass, Ticket and Identification";]
+            end                     completion              [label="";]
+
+            start                   --> validate
+            validate                --> check_validity
+
+            check_validity          --> reject_passenger    [label="No";]
+            reject_passenger        --> rejection
+
+            check_validity          --> confirm_itinerary   [label="Yes";]
+            confirm_itinerary       --> ask_for_objects
+            ask_for_objects         --> prohibited_objects
+
+            prohibited_objects      --> remove_objects      [label="Yes";]
+            remove_objects          --> ask_for_baggage
+            prohibited_objects      --> ask_for_baggage     [label="No";]
+
+
+            ask_for_baggage         --> weigh_baggage
+            weigh_baggage           --> calculate_fee
+            calculate_fee           --> inform_fee
+            inform_fee              --> collect_fee
+            collect_fee             --> boarding_pass
+            collect_fee             --> baggage_tag
+            baggage_tag             --> move_baggage
+            boarding_pass           --> pass_and_bagagge
+            move_baggage            --> pass_and_bagagge
+            pass_and_bagagge        --> hand_out
+            hand_out                --> completion
+        }
+    }
+}

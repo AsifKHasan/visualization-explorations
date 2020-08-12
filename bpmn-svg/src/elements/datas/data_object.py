@@ -74,7 +74,7 @@ class DataObject(BpmnElement):
         folded_rectangle_group.set_transform(transformer.getTransform())
 
         # the label is vertically below the folded rectangle
-        label_group_xy = '{0},{1}'.format(0, label_group_height + folded_rectangle_group_height)
+        label_group_xy = '{0},{1}'.format(0, label_group_height + self.snap_point_offset + folded_rectangle_group_height)
         transformer = TransformBuilder()
         transformer.setTranslation(label_group_xy)
         label_group.set_transform(transformer.getTransform())
@@ -91,7 +91,7 @@ class DataObject(BpmnElement):
         snap_points = self.snap_points(group_width, group_height)
         self.snap_offset_x = (label_group_width - folded_rectangle_group_width)/2 + self.snap_point_offset
         self.snap_offset_y = label_group_height + self.snap_point_offset * 2
-        # self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
+        self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
         label_pos = 'bottom'
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))

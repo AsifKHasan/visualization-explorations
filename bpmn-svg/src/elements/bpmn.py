@@ -86,22 +86,33 @@ class Bpmn(BpmnElement):
         transformer.setTranslation(svg_group_xy)
         svg_group.set_transform(transformer.getTransform())
 
-        # place the lane-pool label just below the text to the laft
-        label_element_xy = Point(self.theme['bpmn-rect']['pad-spec']['left'], label_height + self.theme['bpmn-rect']['pad-spec']['top'])
-        transformer = TransformBuilder()
-        transformer.setTranslation(label_element_xy)
-        self.label_element.svg.set_transform(transformer.getTransform())
+        if 'hide_labels' in self.bpmn_data['styles'] and self.bpmn_data['styles']['hide_labels'] == 'true':
+            # place the bpmn body group just below the text group right to label
+            body_element_xy = Point(self.theme['bpmn-rect']['pad-spec']['left'], label_height + self.theme['bpmn-rect']['pad-spec']['top'])
+            transformer = TransformBuilder()
+            transformer.setTranslation(body_element_xy)
+            self.body_element.svg.set_transform(transformer.getTransform())
 
-        # place the bpmn body group just below the text group right to label
-        body_element_xy = Point(self.theme['bpmn-rect']['pad-spec']['left'] + self.label_element.width, label_height + self.theme['bpmn-rect']['pad-spec']['top'])
-        transformer = TransformBuilder()
-        transformer.setTranslation(body_element_xy)
-        self.body_element.svg.set_transform(transformer.getTransform())
+            # place the bpmn label
+            svg_group.addElement(bpmn_label_svg)
+            svg_group.addElement(self.body_element.svg)
+        else:
+            # place the lane-pool label just below the text to the laft
+            label_element_xy = Point(self.theme['bpmn-rect']['pad-spec']['left'], label_height + self.theme['bpmn-rect']['pad-spec']['top'])
+            transformer = TransformBuilder()
+            transformer.setTranslation(label_element_xy)
+            self.label_element.svg.set_transform(transformer.getTransform())
 
-        # place the bpmn label
-        svg_group.addElement(bpmn_label_svg)
-        svg_group.addElement(self.label_element.svg)
-        svg_group.addElement(self.body_element.svg)
+            # place the bpmn body group just below the text group right to label
+            body_element_xy = Point(self.theme['bpmn-rect']['pad-spec']['left'] + self.label_element.width, label_height + self.theme['bpmn-rect']['pad-spec']['top'])
+            transformer = TransformBuilder()
+            transformer.setTranslation(body_element_xy)
+            self.body_element.svg.set_transform(transformer.getTransform())
+
+            # place the bpmn label
+            svg_group.addElement(bpmn_label_svg)
+            svg_group.addElement(self.label_element.svg)
+            svg_group.addElement(self.body_element.svg)
 
         # wrap in canvas
         canvas_width = self.theme['margin-spec']['left'] + bpmn_width + self.theme['margin-spec']['right']

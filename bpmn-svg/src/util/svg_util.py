@@ -500,7 +500,7 @@ def a_circle_inside_a_circular_shape(outer_radius, inner_radius, inner_shape_spe
 
 # returns a tuple (svg group, group_width, group_height)
 def an_envelop_inside_a_circular_shape(radius, inner_shape_spec):
-    pad = radius * 0.1
+    pad = radius * 0.2
     width_by_height = 4/3
     width, height = rectangle_dimension_inside_a_circle(radius=radius - pad, width_by_height=width_by_height)
     svg_group, _, _ = an_envelop(width=width, height=height, spec=inner_shape_spec)

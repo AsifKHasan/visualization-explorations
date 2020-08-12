@@ -82,7 +82,7 @@ class ChannelCollection(BpmnElement):
                     # we find the parent node from which this channel is branched and position accordingly
                     if channel.parent_channel is not None:
                         parent_channel_object = self.channel_collection.channel_by_name(channel.parent_channel)
-                        x_pos = parent_channel_object.x_of_node(node_id=channel.name) + self.theme['dx-between-elements']
+                        x_pos = parent_channel_object.element.xy.x + parent_channel_object.x_of_node(node_id=channel.name) + self.theme['dx-between-elements']
                     else:
                         x_pos = 0
 
@@ -90,6 +90,8 @@ class ChannelCollection(BpmnElement):
                         current_x = self.theme['pad-spec']['left'] + x_pos + self.theme['dx-between-elements']
                     else:
                         current_x = self.theme['pad-spec']['left']
+
+                # TODO: the channel may be moved up to just below of a previous channel if there is no part of any in between channels in the middle
 
                 channel_element = channel.element
                 channel_element_svg = channel_element.svg
@@ -119,9 +121,9 @@ class ChannelCollection(BpmnElement):
 
     def collect_elements(self):
         # order and group nodes
-        self.channel_collection = ChannelCollectionObject(self.pool_id)
+        self.channel_collection = ChannelCollectionObject(pool_id=self.pool_id, theme=self.theme)
         self.channel_collection.build(pool_nodes=self.nodes, pool_edges=self.edges)
-        self.channel_collection.theme = self.theme
+        pprint(self.channel_collection)
 
         # create the swim channels
         for channel_list in self.channel_collection.channel_lists:

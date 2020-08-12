@@ -1,0 +1,47 @@
+/*
+python bpmn-parser.py < ../data/order-fulfillment-and-procurement.bpmn | tee ../out/order-fulfillment-and-procurement.json | python bpmn-to-svg.py
+*/
+graph order_fulfillment_and_procurement {
+    label = "Order Fulfillment and Procurement"
+    _ [hide_labels="true"]
+
+    lane lane_1 {
+        label = "Lane"
+
+        pool pool_1 {
+            label = "Pool"
+
+            startMessage        order_received                  [label="Order Received";]
+            task                check_availability              [label="Check Availability";]
+            exclusive           article_available               [label="Article Available";]
+
+            task                ship_article                    [label="Ship Article"]
+            process             financial_settlement            [label="Financial Settlement"]
+            end                 payment_received                [label="Payment Received"]
+
+            process             procurement                     [label="Procurement"]
+
+            catchEscalationNon  late_delivery                   [label="Late Delivery"]
+            task                inform_customer1                [label="Inform Customer"]
+            end                 customer_informed               [label="Customer Informed"]
+
+            catchError          undeliverable                   [label="Undeliverable"]
+            task                inform_customer2                [label="Inform Customer"]
+            task                remove_article                  [label="Remove Article from Catalog"]
+            end                 article_removed                 [label="Article Removed"]
+
+
+
+            order_received      --> check_availability          --> article_available
+            article_available   --> ship_article [label="Yes"]
+            ship_article        --> financial_settlement        --> payment_received
+
+            article_available   --> procurement                 [label="No"]
+
+            procurement         --> ship_article
+            procurement         --> late_delivery               --> inform_customer1             --> customer_informed
+            procurement         --> undeliverable               --> inform_customer2             --> remove_article
+            remove_article      --> article_removed
+        }
+    }
+}

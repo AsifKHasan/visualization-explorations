@@ -55,7 +55,7 @@ class ChannelObject:
     def __init__(self, name, number, is_root, parent_channel, nodes):
         self.name = name
         self.number = number
-        self.is_root = False
+        self.is_root = is_root
         self.parent_channel = parent_channel
         self.nodes = nodes
 
@@ -67,7 +67,7 @@ class ChannelObject:
         the string representation of the Channel
     '''
     def __repr__(self):
-        s = 'number: {0}, name: {1}, nodes: {2}'.format(self.number, self.name, [*self.nodes])
+        s = 'number: {0}, root: {1}, name: {2}, parent: [{3}], nodes: {4}'.format(self.number, self.is_root, self.name, self.parent_channel, [*self.nodes])
         return s
 
 
@@ -169,14 +169,102 @@ class ChannelObject:
         else:
             return points_in_channel_coordinate + [the_point]
 
+    '''
+        whether the channel is between the two points, the points must be on same vertical line
+    '''
+    def is_between(self, point_from, point_to, padding):
+        # we make sure we consider that the channel area includes 1/2 of the edge routing area outside the outer-rect of the channel
+        channel_north_west_x = self.element.xy.x - padding
+        channel_north_east_x = self.element.xy.x + self.element.width + padding
+
+        if point_from.x > channel_north_west_x and point_from.x < channel_north_east_x:
+            # the vertical line between point_from and point_to will fall inside the channel, unless it is vertically not between point_from and point_to
+            channel_north_y = self.element.xy.y - padding
+            channel_south_y = self.element.xy.y + padding
+            if channel_north_y > min(point_from.y, point_to.y) and channel_north_y < min(point_from.y, point_to.y):
+                # channel falls in the path, testing with either north_y or south_y will do
+                return True
+            else:
+                return False
+        else:
+            # the vertical line between point_from and point_to will fall outside the channel
+            return False
+
 
 ''' ----------------------------------------------------------------------------------------------------------------------------------
     collection of edges and channel Lists
 '''
 class ChannelCollectionObject:
 
-    def __init__(self, pool_id):
+    def __init__(self, pool_id, theme):
         self.pool_id = pool_id
+        self.theme = theme
+
+
+    '''
+        the points must be on same vertical line
+    '''
+    def channel_between(self, point_from, point_to):
+        for channel_list in self.channel_lists:
+            for channel in channel_list:
+                if channel.is_between(point_from, point_to, padding=self.theme['dx-between-channels']):
+                    return channel
+
+        return None
+
+    '''
+        connects two points in a pool only through straight lines. The points are asumed to be outside a Channel's outer rectangle inside the routing area between channels
+        1. We start by trying to go straight to the same y position of *point_to* (let us call it *target_point*) so that we can draw a straight horizontal line from there to *point_to*
+        2. but going straight to the *target_point* from *point_from* may not be possible as there may be a whole channel in between
+        3. so, if there is a channel in between, we bypass the channel (by moving either to left or right) to the routing area east or west of the channel in the middle and now try to reach the *target_point* in a recursive manner
+    '''
+    def connecting_points(self, point_from, point_to):
+        target_point = Point(point_from.x, point_to.y)
+        # see if there is any channel between point_from and target_point
+        channel_between = self.channel_between(point_from, point_to)
+        if channel_between is None:
+            # there is no channel in between, we can just return the target_point
+            return [target_point]
+        else:
+            # there is a channel in between, we have to bypass the channel and set a new target point
+            if point_from.north_of(point_to):
+                # we are going southward
+                if point_from.west_of(point_to):
+                    # we need to go eastward to bypass the channel
+                    # to north-east
+                    new_point1 = Point(channel_between.element.xy.x + channel_between.element.width + self.theme['dx-between-channels']/2, point_from.y)
+                    # to south-east
+                    new_point2 = Point(new_point1.x, new_point1.y + channel_between.element.height + self.theme['dy-between-channels'])
+                    new_target_point = (new_point2.x, target_point.y)
+                    return [new_point1, new_point2] + self.connecting_points(new_point2, new_target_point)
+                else:
+                    # we need to go westward to bypass the channel
+                    # to north-west
+                    new_point1 = Point(channel_between.element.xy.x - self.theme['dx-between-channels']/2, point_from.y)
+                    # to south-west
+                    new_point2 = Point(new_point1.x, new_point1.y + channel_between.element.height + self.theme['dy-between-channels'])
+                    new_target_point = (new_point2.x, target_point.y)
+                    return [new_point1, new_point2] + self.connecting_points(new_point2, new_target_point)
+
+            else:
+                # we are going northhward
+                if point_from.west_of(point_to):
+                    # we need to go eastward to bypass the channel
+                    # to south-east
+                    new_point1 = Point(channel_between.element.xy.x + channel_between.element.width + self.theme['dx-between-channels']/2, point_from.y)
+                    # to north-east
+                    new_point2 = Point(new_point1.x, channel_between.element.xy.y - self.theme['dy-between-channels']/2)
+                    new_target_point = (new_point2.x, target_point.y)
+                    return [new_point1, new_point2] + self.connecting_points(new_point2, new_target_point)
+                else:
+                    # we need to go westward to bypass the channel
+                    # to south-west
+                    new_point1 = Point(channel_between.element.xy.x - self.theme['dx-between-channels']/2, point_from.y)
+                    # to north-west
+                    new_point2 = Point(new_point1.x, channel_between.element.xy.y - self.theme['dy-between-channels']/2)
+                    new_target_point = (new_point2.x, target_point.y)
+
+        return []
 
 
     def path_to_snap_point(self, channel, node, side, position, role, direction_hint, peer, edge_type):
@@ -198,6 +286,7 @@ class ChannelCollectionObject:
                     return channel.element.xy + node.element.xy
 
         return None
+
 
     def channel_of_node(self, node):
         for channel_list in self.channel_lists:
@@ -266,6 +355,7 @@ class ChannelCollectionObject:
 
         return s
 
+
     '''
         in a pool, nodes need to be processed (ordered and grouped)
         1. nodes that are connected with other nodes (in the same pool) should be ordered in a group so that they are in the same channel (a channel is vertical lines for node flow, a lane may have multiple channels if the edges are branched like a tree) and flow from left to right based or edge order (from node at left, to node at right)
@@ -296,9 +386,13 @@ class ChannelCollectionObject:
                 if node_id == edge['to']:
                     parents.append(edge['from'])
 
-            root_channel.add(node_id, parents, children)
+            root_channel.add(node_id, node_data, parents, children, )
 
         root_channel.group_and_order()
+
+        # pprint(root_channel.as_list())
+
+        channels_as_list = root_channel.as_list()
 
         self.channel_lists = []
         self.edges = []
@@ -306,7 +400,7 @@ class ChannelCollectionObject:
         # build the inner data structure
         channel_list = None
         channel_number = 0
-        for node_id_list in root_channel.as_list():
+        for node_id_list in channels_as_list:
             if len(node_id_list) > 0:
                 parent_channel_name, _ = self.find_channel_in_list_with_node(channel_list, node_id_list[0])
                 if not parent_channel_name:
@@ -455,12 +549,17 @@ class ChannelCollectionObject:
             # it was not found
             return None
 
-        def add(self, node_id, parents, children):
+        def add(self, node_id, node_data, parents, children):
             # no parent, no children, it is an island
             # debug('[{0}]'.format(node_id))
             if len(parents) == 0 and len(children) == 0:
                 # debug('  [{0}] is an island'.format(node_id))
                 self.islands.append(node_id)
+                return
+
+            # marked as wrap_here, it is a new child
+            if 'wrap_here' in node_data['styles']:
+                self.add_children(ChannelCollectionObject.Channel(node_id, self.orphans.pop(node_id, None)))
                 return
 
             # no parent, but one or more children, it is a new child

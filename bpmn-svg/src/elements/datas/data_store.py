@@ -33,8 +33,6 @@ class DataStore(DataObject):
                                     rect_spec=self.theme['rectangle'],
                                     text_spec=self.theme['text'])
 
-
-
         # the data store svg
         data_store_group, data_store_group_width, data_store_group_height = include_and_scale_svg(spec=self.theme['shape-spec'])
 
@@ -43,18 +41,18 @@ class DataStore(DataObject):
 
         # the folded rectangle is below an empty space of the same height of the label
         d_x = max((label_group_width - data_store_group_width)/2, 0)
-        debug(label_group_width)
-        debug(label_group_height)
-        debug(data_store_group_width)
-        debug(data_store_group_height)
-        debug(d_x)
-        data_store_group_xy = '{0},{1}'.format(d_x, label_group_height)
+        # debug(label_group_width)
+        # debug(label_group_height)
+        # debug(data_store_group_width)
+        # debug(data_store_group_height)
+        # debug(d_x)
+        data_store_group_xy = '{0},{1}'.format((label_group_width - data_store_group_width)/2, label_group_height + self.snap_point_offset)
         transformer = TransformBuilder()
         transformer.setTranslation(data_store_group_xy)
         data_store_group.set_transform(transformer.getTransform())
 
         # the label is vertically below the folded rectangle
-        label_group_xy = '{0},{1}'.format(0, label_group_height + data_store_group_height)
+        label_group_xy = '{0},{1}'.format(0, label_group_height + self.snap_point_offset + data_store_group_height)
         transformer = TransformBuilder()
         transformer.setTranslation(label_group_xy)
         label_group.set_transform(transformer.getTransform())
@@ -65,11 +63,13 @@ class DataStore(DataObject):
 
         # extend the height so that a blank space of the same height as text is at the bottom so that the circle's left edge is at dead vertical center
         group_width = label_group_width
-        group_height = label_group_height + data_store_group_height + label_group_height
+        group_height = label_group_height + self.snap_point_offset + data_store_group_height + self.snap_point_offset + label_group_height
 
         # snap points
-        snap_points = self.snap_points(group_width, group_height, (label_group_width - data_store_group_height)/2, label_group_height)
-        self.draw_snaps(snap_points, svg_group)
+        snap_points = self.snap_points(group_width, group_height)
+        self.snap_offset_x = (label_group_width - data_store_group_width)/2 + self.snap_point_offset
+        self.snap_offset_y = label_group_height + self.snap_point_offset * 2
+        self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
         self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos='bottom')
