@@ -328,16 +328,20 @@ def process_defattrs(o, parent):
 
 def process_edges(o, parent):
     styles = {}
+    label = ''
     for attr in o.attrs:
-        styles[attr.name] = attr.value.strip("'").strip('"')
+        if attr.name == 'label':
+            label = attr.value.strip("'").strip('"')
+        else:
+            styles[attr.name] = attr.value.strip("'").strip('"')
 
     current_from = o.node
     for t in o.edges:
-        parent.append({'from': current_from, 'to': t[1], 'type': t[0], 'styles': styles})
+        parent.append({'from': current_from, 'to': t[1], 'type': t[0], 'label': label, 'styles': styles})
         current_from = t[1]
 
 def process_node(o, parent):
-    node = {'type': o.type, 'label': {}, 'styles': {}}
+    node = {'type': o.type, 'label': '', 'styles': {}}
     for attr in o.attrs:
         if attr.name == 'label':
             node[attr.name] = attr.value.strip("'").strip('"')
@@ -347,7 +351,7 @@ def process_node(o, parent):
     parent[o.id] = node
 
 def process_pool(o, parent):
-    parent[o.id] = {'styles': {}, 'label': {}, 'nodes': {}, 'edges': []}
+    parent[o.id] = {'styles': {}, 'label': '', 'nodes': {}, 'edges': []}
 
     # statements are children
     for stmt in o.stmts:
@@ -372,7 +376,7 @@ def process_pool(o, parent):
             sys.exit(1)
 
 def process_lane(o, parent):
-    parent[o.id] = {'styles': {}, 'label': {}, 'pools': {}, 'edges': []}
+    parent[o.id] = {'styles': {}, 'label': '', 'pools': {}, 'edges': []}
 
     # statements are children
     for stmt in o.stmts:
@@ -402,7 +406,7 @@ def to_json(x):
         sys.exit(1)
 
     # root of the graph
-    json_data = {x.id: {'styles': {}, 'label': {}, 'lanes': {}, 'edges': []}}
+    json_data = {x.id: {'styles': {}, 'label': '', 'lanes': {}, 'edges': []}}
 
     # statements are children
     for stmt in x.stmts:

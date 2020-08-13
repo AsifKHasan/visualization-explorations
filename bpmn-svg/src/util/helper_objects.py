@@ -40,10 +40,11 @@ class EdgeObject:
     Node Object
 '''
 class NodeObject:
-    def __init__(self, id, category, type, element, instance):
+    def __init__(self, id, category, type, styles, element, instance):
         self.id = id
         self.category = category
         self.type = type
+        self.styles = styles
         self.element = element
         self.instance = instance
 
@@ -140,17 +141,17 @@ class ChannelObject:
 
         if boundary == 'south':
             the_point = Point(point_to_extend.x, self.element.height - self.theme['channel-outer-rect']['pad-spec']['bottom']/2 * edgeover_dict[edgeover])
-            # debug('[{0}] {1}-{2} to {3}: {4}'.format(node.id, side, position, boundary, the_point))
+            # debug('[{0}] {1}-{2} to {3}-{4}: {5}'.format(node.id, side, position, edgeover, boundary, the_point))
 
         elif boundary == 'north':
-            the_point = Point(point_to_extend.x, self.theme['channel-outer-rect']['pad-spec']['bottom']/2 * edgeover_dict[edgeover])
-            # debug('[{0}] {1}-{2} to {3}: {4}'.format(node.id, side, position, boundary, the_point))
+            the_point = Point(point_to_extend.x, self.theme['channel-outer-rect']['pad-spec']['top']/2 * edgeover_dict[edgeover])
+            # debug('[{0}] {1}-{2} to {3}-{4}: {5}'.format(node.id, side, position, edgeover, boundary, the_point))
 
         elif boundary == 'east':
             # allow only for east-most node
             if self.node_ordinal(node) == len(self.nodes) - 1:
                 the_point = Point(self.element.width - self.theme['channel-outer-rect']['pad-spec']['right']/2 * edgeover_dict[edgeover], point_to_extend.y)
-                # debug('[{0}] {1}-{2} to {3}: {4}'.format(node.id, side, position, boundary, the_point))
+                # debug('[{0}] {1}-{2} to {3}-{4}: {5}'.format(node.id, side, position, edgeover, boundary, the_point))
             else:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
@@ -159,7 +160,7 @@ class ChannelObject:
             # allow only for west-most node
             if self.node_ordinal(node) == 0:
                 the_point = Point(self.theme['channel-outer-rect']['pad-spec']['left']/2 * edgeover_dict[edgeover], point_to_extend.y)
-                # debug('[{0}] {1}-{2} to {3}: {4}'.format(node.id, side, position, boundary, the_point))
+                # debug('[{0}] {1}-{2} to {3}-{4}: {5}'.format(node.id, side, position, edgeover, boundary, the_point))
             else:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
@@ -179,17 +180,35 @@ class ChannelObject:
 
         if point_from.x > channel_north_west_x and point_from.x < channel_north_east_x:
             # the vertical line between point_from and point_to will fall inside the channel, unless it is vertically not between point_from and point_to
-            channel_north_y = self.element.xy.y - padding
-            channel_south_y = self.element.xy.y + padding
-            if channel_north_y > min(point_from.y, point_to.y) and channel_north_y < min(point_from.y, point_to.y):
-                # channel falls in the path, testing with either north_y or south_y will do
-                return True
+            # debug('channel {0}:{1}] (xy={2} w={3} h={4}) is horizontally between {5} and {6}'.format(self.number, self.name, self.element.xy, self.element.width, self.element.height, point_from, point_to))
+            channel_north_y = self.element.xy.y
+            channel_south_y = self.element.xy.y + self.element.height
+            min_y = min(point_from.y, point_to.y)
+            max_y = max(point_from.y, point_to.y)
+            if channel_north_y > min_y and channel_north_y < max_y:
+                # debug('channel {0}:{1}] north_y={2} is vertically between {3} and {4}'.format(self.number, self.name, channel_north_y, point_from, point_to))
+                if channel_south_y > min_y and channel_south_y < max_y:
+                    # channel falls in the path, testing with both north_y or south_y is required to eliminate the originating channel
+                    return True
+                else:
+                    return False
             else:
                 return False
         else:
             # the vertical line between point_from and point_to will fall outside the channel
             return False
 
+    def east_of(self, channel):
+        if self.element.xy.x + self.element.width >= channel.element.xy.x + channel.element.width:
+            return True
+        else:
+            return False
+
+    def west_of(self, channel):
+        if self.element.xy.x <= channel.element.xy.x:
+            return True
+        else:
+            return False
 
 ''' ----------------------------------------------------------------------------------------------------------------------------------
     collection of edges and channel Lists
@@ -204,13 +223,14 @@ class ChannelCollectionObject:
     '''
         the points must be on same vertical line
     '''
-    def channel_between(self, point_from, point_to):
+    def channels_between(self, point_from, point_to):
+        channels = []
         for channel_list in self.channel_lists:
             for channel in channel_list:
                 if channel.is_between(point_from, point_to, padding=self.theme['dx-between-channels']):
-                    return channel
+                    channels.append(channel)
 
-        return None
+        return channels
 
     '''
         connects two points in a pool only through straight lines. The points are asumed to be outside a Channel's outer rectangle inside the routing area between channels
@@ -221,50 +241,60 @@ class ChannelCollectionObject:
     def connecting_points(self, point_from, point_to):
         target_point = Point(point_from.x, point_to.y)
         # see if there is any channel between point_from and target_point
-        channel_between = self.channel_between(point_from, point_to)
-        if channel_between is None:
+        channels_between = self.channels_between(point_from, target_point)
+        if len(channels_between) == 0:
             # there is no channel in between, we can just return the target_point
             return [target_point]
         else:
-            # there is a channel in between, we have to bypass the channel and set a new target point
+
+            # there may be one or more channels between, we have to bypass the channels
+            eastmost_channel = channels_between[0]
+            westmost_channel = channels_between[0]
+            for channel in channels_between:
+                if channel.east_of(eastmost_channel):
+                    eastmost_channel = channel
+
+                if channel.west_of(westmost_channel):
+                    westmost_channel = channel
+
+
             if point_from.north_of(point_to):
                 # we are going southward
                 if point_from.west_of(point_to):
                     # we need to go eastward to bypass the channel
                     # to north-east
-                    new_point1 = Point(channel_between.element.xy.x + channel_between.element.width + self.theme['dx-between-channels']/2, point_from.y)
+                    new_point1 = Point(eastmost_channel.element.xy.x + eastmost_channel.element.width + self.theme['dx-between-channels']/2, point_from.y)
                     # to south-east
-                    new_point2 = Point(new_point1.x, new_point1.y + channel_between.element.height + self.theme['dy-between-channels'])
-                    new_target_point = (new_point2.x, target_point.y)
-                    return [new_point1, new_point2] + self.connecting_points(new_point2, new_target_point)
+                    new_point2 = Point(new_point1.x, new_point1.y + eastmost_channel.element.height + self.theme['dy-between-channels'])
+                    new_target_point = Point(new_point2.x, target_point.y)
+                    return [new_point1, new_point2] + self.connecting_points(new_point2, point_to)
                 else:
                     # we need to go westward to bypass the channel
                     # to north-west
-                    new_point1 = Point(channel_between.element.xy.x - self.theme['dx-between-channels']/2, point_from.y)
+                    new_point1 = Point(westmost_channel.element.xy.x - self.theme['dx-between-channels']/2, point_from.y)
                     # to south-west
-                    new_point2 = Point(new_point1.x, new_point1.y + channel_between.element.height + self.theme['dy-between-channels'])
-                    new_target_point = (new_point2.x, target_point.y)
-                    return [new_point1, new_point2] + self.connecting_points(new_point2, new_target_point)
+                    new_point2 = Point(new_point1.x, new_point1.y + westmost_channel.element.height + self.theme['dy-between-channels'])
+                    new_target_point = Point(new_point2.x, target_point.y)
+                    return [new_point1, new_point2] + self.connecting_points(new_point2, point_to)
 
             else:
                 # we are going northhward
                 if point_from.west_of(point_to):
                     # we need to go eastward to bypass the channel
                     # to south-east
-                    new_point1 = Point(channel_between.element.xy.x + channel_between.element.width + self.theme['dx-between-channels']/2, point_from.y)
+                    new_point1 = Point(eastmost_channel.element.xy.x + eastmost_channel.element.width + self.theme['dx-between-channels']/2, point_from.y)
                     # to north-east
-                    new_point2 = Point(new_point1.x, channel_between.element.xy.y - self.theme['dy-between-channels']/2)
-                    new_target_point = (new_point2.x, target_point.y)
-                    return [new_point1, new_point2] + self.connecting_points(new_point2, new_target_point)
+                    new_point2 = Point(new_point1.x, eastmost_channel.element.xy.y - self.theme['dy-between-channels']/2)
+                    new_target_point = Point(new_point2.x, target_point.y)
+                    return [new_point1, new_point2] + self.connecting_points(new_point2, point_to)
                 else:
                     # we need to go westward to bypass the channel
                     # to south-west
-                    new_point1 = Point(channel_between.element.xy.x - self.theme['dx-between-channels']/2, point_from.y)
+                    new_point1 = Point(westmost_channel.element.xy.x - self.theme['dx-between-channels']/2, point_from.y)
                     # to north-west
-                    new_point2 = Point(new_point1.x, channel_between.element.xy.y - self.theme['dy-between-channels']/2)
-                    new_target_point = (new_point2.x, target_point.y)
-
-        return []
+                    new_point2 = Point(new_point1.x, westmost_channel.element.xy.y - self.theme['dy-between-channels']/2)
+                    new_target_point = Point(new_point2.x, target_point.y)
+                    return [new_point1, new_point2] + self.connecting_points(new_point2, point_to)
 
 
     def path_to_snap_point(self, channel, node, side, position, role, direction_hint, peer, edge_type):
@@ -534,7 +564,6 @@ class ChannelCollectionObject:
                 # debug('[{0}] added as a direct orphan under key [{1}]'.format(child_node_id, parent_node_id))
 
         def find(self, node_id):
-            # warn('finding [{0}] in [{1}]'.format(node_id, self.node_id))
             if self.node_id == node_id:
                 return self
 

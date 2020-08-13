@@ -1,27 +1,19 @@
 /*
-python bpmn-parser.py < ../data/airline-check-in.bpmn | tee ../out/airline-check-in.json | python bpmn-to-svg.py
+python bpmn-parser.py < ../data/bank-account-opening.bpmn | tee ../out/bank-account-opening.json | python bpmn-to-svg.py
 */
-graph airline_check_in {
-    label = "Airline Check-in"
-    # _ means the style is applicable to the container (in this case the Graph itself)
-    # hide_swim_labels - for BPMN's for which we do not want the name of lanes and pools to be shown as vertical labels to the left, this option will hide it when value is true, any other value will make it visible. This is useful for BPMN's without any lane/pool that is one single BPMN
+graph bank_account_opening {
+    label = "Bank Account Opening"
     _ [hide_swim_labels=true]
 
     lane lane_1 {
-        label = "Lane"
-
         pool pool_1 {
-            label = "Pool"
-
             start                   start
             task                    validate                [label="Validate Passenger Ticket and Identification";]
             exclusive               check_validity          [label="Validity?";]
             process                 confirm_itinerary       [label="Confirm Itinerary";]
             task                    ask_for_objects         [label="Ask Passenger for Prohibited Objects";]
             exclusive               prohibited_objects      [label="Prohibited Objects?";]
-
-            # move_x - a positive value means the node should move further to east (right) the specified point, negative value means movement to west (left). This is useful for visualization when we would like our edges to look straight without unnecessary corners when possible
-            task                    ask_for_baggage         [label="Ask Passenger for Baggages"; move_x=83]
+            task                    ask_for_baggage         [label="Ask Passenger for Baggages"; move_x=27]
             task                    weigh_baggage           [label="Weigh Baggages";]
 
             task                    remove_objects          [label="Remove Prohibited Objects";]
@@ -29,14 +21,13 @@ graph airline_check_in {
             task                    reject_passenger        [label="Reject Passenger";]
             end                     rejection
 
-            # wrap_here - the BPMN should wrap at this node. This means that this node will start in a new channel and will be placed in the leftmost position of the channel
             task                    calculate_fee           [label="Calculate Additional Fees"; wrap_here="true";]
             task                    inform_fee              [label="Inform Passenger of Additional Fees";]
             task                    collect_fee             [label="Collect Pyment of Fees";]
             task                    boarding_pass           [label="Generate and Print Boarding Pass";]
             task                    baggage_tag             [label="Generate and Print Baggage Tags";]
             task                    move_baggage            [label="Identify and Move Baggages";]
-            parallel                pass_and_bagagge        [move_x=113]
+            parallel                pass_and_bagagge        [move_x=50]
             task                    hand_out                [label="Hand Out Boarding Pass, Ticket and Identification";]
             end                     completion
 

@@ -86,7 +86,7 @@ class Bpmn(BpmnElement):
         transformer.setTranslation(svg_group_xy)
         svg_group.set_transform(transformer.getTransform())
 
-        if 'hide_labels' in self.bpmn_data['styles'] and self.bpmn_data['styles']['hide_labels'] == 'true':
+        if 'hide_swim_labels' in self.bpmn_data['styles'] and self.bpmn_data['styles']['hide_swim_labels'] == 'true':
             # place the bpmn body group just below the text group right to label
             body_element_xy = Point(self.theme['bpmn-rect']['pad-spec']['left'], label_height + self.theme['bpmn-rect']['pad-spec']['top'])
             transformer = TransformBuilder()

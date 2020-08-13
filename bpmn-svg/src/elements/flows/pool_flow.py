@@ -43,15 +43,15 @@ from util.helper_objects import EdgeRole
     #2  *from-node* channel is below the *to-node* channel
         a)  *to-node* is to the left (west) of *from-node* in pool coordinate
             1)  from-node's snap-position is on
-                a   NORTH-RIGHT for Activity
-                b   NORTH-MIDDLE for Gateway/Event/Data
+                a   EAST-TOP for Activity
+                b   EAST-MIDDLE for Gateway/Event/Data
             2)   to-node's snap-position is on
                 a   SOUTH-RIGHT for Activity
                 b   SOUTH-MIDDLE for Gateway/Event/Data
         b)  *to-node* is to the right (east) of *from-node* in pool coordinate
             1)  from-node's snap-position is on
-                a   NORTH-RIGHT for Activity
-                b   NORTH-MIDDLE for Gateway/Event/Data
+                a   EAST-TOP for Activity
+                b   EAST-MIDDLE for Gateway/Event/Data
             2)   to-node's snap-position is on
                 a   SOUTH-LEFT for Activity
                 b   SOUTH-MIDDLE for Gateway/Event/Data
@@ -72,10 +72,10 @@ class PoolFlow(FlowObject):
         from_node_channel = self.channel_collection.channel_of_node(from_node)
         if from_node.category in ['Event', 'Gateway', 'Data']:
             # rule 2.a.1.b - NORTH-MIDDLE for Gateway/Event/Data
-            from_node_points_in_pool_coordinate = self.channel_collection.to_boundary(boundary='north', edgeover='outside', channel=from_node_channel, node=from_node, side='north', position='middle', role='from', direction_hint='east', peer=to_node, edge_type=self.edge_type)
+            from_node_points_in_pool_coordinate = self.channel_collection.to_boundary(boundary='east', edgeover='outside', channel=from_node_channel, node=from_node, side='east', position='middle', role='from', direction_hint='east', peer=to_node, edge_type=self.edge_type)
         else:
             # rule 2.a.1.a - is on NORTH-RIGHT for Activity
-            from_node_points_in_pool_coordinate = self.channel_collection.to_boundary(boundary='north', edgeover='outside', channel=from_node_channel, node=from_node, side='north', position='right', role='from', direction_hint=None, peer=to_node, edge_type=self.edge_type)
+            from_node_points_in_pool_coordinate = self.channel_collection.to_boundary(boundary='east', edgeover='outside', channel=from_node_channel, node=from_node, side='east', position='top', role='from', direction_hint=None, peer=to_node, edge_type=self.edge_type)
 
         # rule 2.a.2 - to-node's snap-position is on
         to_node_channel = self.channel_collection.channel_of_node(to_node)
@@ -104,11 +104,11 @@ class PoolFlow(FlowObject):
         # rule 2.b.1 - from-node's snap-position
         from_node_channel = self.channel_collection.channel_of_node(from_node)
         if from_node.category in ['Event', 'Gateway', 'Data']:
-            # rule 2.b.1.b - NORTH-MIDDLE for Gateway/Event/Data
-            from_node_points_in_pool_coordinate = self.channel_collection.to_boundary(boundary='north', edgeover='outside', channel=from_node_channel, node=from_node, side='north', position='middle', role='from', direction_hint='east', peer=to_node, edge_type=self.edge_type)
+            # rule 2.b.1.b - EAST-MIDDLE for Gateway/Event/Data
+            from_node_points_in_pool_coordinate = self.channel_collection.to_boundary(boundary='east', edgeover='outside', channel=from_node_channel, node=from_node, side='east', position='middle', role='from', direction_hint='east', peer=to_node, edge_type=self.edge_type)
         else:
-            # rule 2.b.1.a -is on NORTH-RIGHT for Activity
-            from_node_points_in_pool_coordinate = self.channel_collection.to_boundary(boundary='north', edgeover='outside', channel=from_node_channel, node=from_node, side='north', position='right', role='from', direction_hint='east', peer=to_node, edge_type=self.edge_type)
+            # rule 2.b.1.a -is on EAST-RIGHT for Activity
+            from_node_points_in_pool_coordinate = self.channel_collection.to_boundary(boundary='east', edgeover='outside', channel=from_node_channel, node=from_node, side='east', position='top', role='from', direction_hint='east', peer=to_node, edge_type=self.edge_type)
 
         # rule 2.b.2 - to-node's snap-position is on
         to_node_channel = self.channel_collection.channel_of_node(to_node)

@@ -187,7 +187,7 @@ class SwimChannel(BpmnElement):
                 element_class = getattr(importlib.import_module(CLASSES[node_data['type']]['m']), CLASSES[node_data['type']]['c'])
                 element_instance = element_class(self.bpmn_id, self.lane_id, self.pool_id, node_id, node_data)
                 svg_element = element_instance.to_svg()
-                self.channel_object.nodes[node_id] = NodeObject(id=node_id, category=CLASSES[node_data['type']]['g'], type=node_data['type'], element=svg_element, instance=element_instance)
+                self.channel_object.nodes[node_id] = NodeObject(id=node_id, category=CLASSES[node_data['type']]['g'], type=node_data['type'], styles=node_data['styles'], element=svg_element, instance=element_instance)
             else:
                 warn('node type [{0}] is not supported. skipping ..'.format(node_data['type']))
 
@@ -209,11 +209,21 @@ class SwimChannel(BpmnElement):
             node_svg_element = node_object.element
             current_y = inner_rect_height/2 - node_svg_element.height/2 + self.theme['channel-outer-rect']['pad-spec']['top']
 
+            # the node may have a *move_x* style to indicate whether and how much it should move to east (+ve) or west (-ve)
+            if 'move_x' in node_object.styles:
+                move_x = float(node_object.styles['move_x'])
+            else:
+                move_x = 0
+
+            current_x = current_x + move_x
+
             # keep the x, y position and dimension for the node within the group for future reference
             node_svg_element.xy = Point(current_x, current_y)
             transformer.setTranslation(node_svg_element.xy)
             node_svg_element.svg.set_transform(transformer.getTransform())
             svg_group.addElement(node_svg_element.svg)
+
+            # curent_x to be repositioned for next node
             current_x = current_x + node_svg_element.width + self.theme['channel-inner-rect']['dx-between-elements']
 
         outer_rect_width = current_x - self.theme['channel-inner-rect']['dx-between-elements'] + self.theme['channel-outer-rect']['pad-spec']['right']

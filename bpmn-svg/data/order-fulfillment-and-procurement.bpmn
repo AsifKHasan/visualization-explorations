@@ -3,19 +3,15 @@ python bpmn-parser.py < ../data/order-fulfillment-and-procurement.bpmn | tee ../
 */
 graph order_fulfillment_and_procurement {
     label = "Order Fulfillment and Procurement"
-    _ [hide_labels="true"]
+    _ [hide_swim_labels="true"]
 
     lane lane_1 {
-        label = "Lane"
-
         pool pool_1 {
-            label = "Pool"
-
             startMessage        order_received                  [label="Order Received";]
             task                check_availability              [label="Check Availability";]
             exclusive           article_available               [label="Article Available";]
 
-            task                ship_article                    [label="Ship Article"]
+            task                ship_article                    [label="Ship Article"; move_x=90.5]
             process             financial_settlement            [label="Financial Settlement"]
             end                 payment_received                [label="Payment Received"]
 
