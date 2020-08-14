@@ -232,6 +232,7 @@ class ChannelCollectionObject:
 
         return channels
 
+
     '''
         connects two points in a pool only through straight lines. The points are asumed to be outside a Channel's outer rectangle inside the routing area between channels
         1. We start by trying to go straight to the same y position of *point_to* (let us call it *target_point*) so that we can draw a straight horizontal line from there to *point_to*

@@ -70,7 +70,9 @@ def a_snap_point(snap_point):
 def a_path_with_label(points, label, spec):
     svg_group = G()
 
-    svg = Polyline(points=points_to_str(points))
+    path_data = points_to_curved_path(points)
+    print(path_data)
+    svg = Path(pathData=path_data)
     svg.set_style(StyleBuilder(spec['style']).getStyle())
 
     # add to group

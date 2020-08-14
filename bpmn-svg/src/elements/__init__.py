@@ -117,7 +117,7 @@ DEFAULT_THEME = {
                 # min x gap between two adjacent nodes so that straight edges can be drawn there
                 'dx-between-elements': 40,
                 'style': {
-                    'fill': 'none', 'stroke-width': 1, 'stroke': '#008080'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#008080'
                 },
             },
         }
@@ -1015,7 +1015,7 @@ DEFAULT_THEME = {
             'from-arrow': False,
             'to-arrow': True,
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#404040', 'stroke-linejoin': 'round', 'stroke-linecap': 'square'
+                'fill': 'transparent', 'stroke-width': 1, 'stroke': '#404040'
             },
             'arrow-head': {
                 'arrow-side-length': 10,

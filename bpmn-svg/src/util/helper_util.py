@@ -129,3 +129,83 @@ def em_range(n):
 
 def points_to_str(points):
     return ' '.join([str(point) for point in points])
+
+def points_to_path(points):
+    return 'M' + ' L'.join([str(point) for point in points])
+
+def points_to_curved_path(points):
+    # first we generate a new set of points for every three points so that if the three points make a turn we have actually 5 points
+    q_offset = 10
+    path = 'M {0}'.format(points[0])
+    i = 0
+    while i < (len(points) - 2):
+        p1, p2, p3 = points[i], points[i+1], points[i+2]
+        # see if they make an angle (we assume that any two consecutive points either make a vertical or a horizontal line)
+        if p1.x == p2.x == p3.x or p1.y == p2.y == p3.y:
+            # the three points do not make any corner
+            path = '{0} L {1}'.format(path, p2)
+            # i = i + 1
+        else:
+            # now we know that p1-p2 line is perpendicular to p2-p3 line
+            if p1.x == p2.x:
+                # line p1-p2 is vertical, so p2-p3 must be horizontal
+                if p1.y < p2.y:
+                    # p1 is above p2
+                    # we just add a new point p2a just vertically (q_offset) above p2
+                    p2a = Point(p2.x, p2.y - q_offset)
+                    if p2.x < p3.x:
+                        # p2 is left to p3
+                        # and another new point p2b just horizontally (q_offset) after p2
+                        p2b = Point(p2.x + q_offset, p2.y)
+                    else:
+                        # p2 is right to p3
+                        # and another new point p2b just horizontally (q_offset) before p2
+                        p2b = Point(p2.x - q_offset, p2.y)
+                else:
+                    # p1 is below p2
+                    # we just add a new point p2a just vertically (q_offset) below p2
+                    p2a = Point(p2.x, p2.y + q_offset)
+                    if p2.x < p3.x:
+                        # p2 is left to p3
+                        # and another new point p2b just horizontally (q_offset) after p2
+                        p2b = Point(p2.x + q_offset, p2.y)
+                    else:
+                        # p2 is right to p3
+                        # and another new point p2b just horizontally (q_offset) before p2
+                        p2b = Point(p2.x - q_offset, p2.y)
+            if p1.y == p2.y:
+                # line p1-p2 is horizontal, so p2-p3 must be vertical
+                if p1.x < p2.x:
+                    # p1 is left to p2
+                    # we just add a new point p2a just horizontally (q_offset) before p2
+                    p2a = Point(p2.x - q_offset, p2.y)
+                    if p2.y < p3.y:
+                        # p2 is above to p3
+                        # and another new point p2b just vertically (q_offset) after p2
+                        p2b = Point(p2.x, p2.y + q_offset)
+                    else:
+                        # p2 is below p3
+                        # and another new point p2b just vertically (q_offset) before p2
+                        p2b = Point(p2.x, p2.y - q_offset)
+                else:
+                    # p1 is right to p2
+                    # we just add a new point p2a just horizontally (q_offset) after p2
+                    p2a = Point(p2.x + q_offset, p2.y)
+                    if p2.y < p3.y:
+                        # p2 is above p3
+                        # and another new point p2b just vertically (q_offset) after p2
+                        p2b = Point(p2.x, p2.y + q_offset)
+                    else:
+                        # p2 is below p3
+                        # and another new point p2b just vertically (q_offset) before p2
+                        p2b = Point(p2.x, p2.y - q_offset)
+
+            # the path is 5 point path with p2 now as the Q point
+            # path = '{0} L {1} L {2} Q {3} {4} L {5}'.format(path, p1, p2a, p2, p2b, p3)
+            path = '{0} L {1} Q {2} {3}'.format(path, p2a, p2, p2b)
+
+        i = i + 1
+
+    path = '{0} L {1} L {2}'.format(path, points[-2], points[-1])
+
+    return path
