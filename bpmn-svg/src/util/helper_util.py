@@ -130,82 +130,142 @@ def em_range(n):
 def points_to_str(points):
     return ' '.join([str(point) for point in points])
 
+def optimize_points(points):
+    new_points = [points[0]]
+    i = 0
+    while True:
+        # we may have come past the end
+        if i >= len(points):
+            return new_points
+
+        # we may have reached the end
+        if i == len(points) - 1:
+            return new_points
+
+        # we may have only one more point left
+        if i == len(points) - 2:
+            return new_points + [points[i+1]]
+
+        # now we know that we have at least three points to look ahead to
+        p1, p2 = points[i], points[i+1]
+
+        # now we start from the 3rd point to see if it is on the same line formed by p1-p2, if so, we move to next point (if available). We stop only when we have found a point which is not on the same line and that is our next i point to start from
+        j = i + 2
+        while True:
+            end_point = points[j]
+            if end_point.on_same_line(p1, p2):
+                # j point could be the last point
+                if j == len(points) - 1:
+                    return new_points + [end_point]
+                else:
+                    j = j + 1
+            else:
+                # we have reached the end of line segment
+                new_points = new_points + [points[j-1]]
+                i = j - 1
+                break
+
+    return new_points
+
 def points_to_path(points):
     return 'M' + ' L'.join([str(point) for point in points])
 
 def points_to_curved_path(points):
+    # debug('points:    {0}'.format(points_to_str(points)))
+    new_points = optimize_points(points)
+    # debug('optimized: {0}'.format(points_to_str(new_points)))
     # first we generate a new set of points for every three points so that if the three points make a turn we have actually 5 points
-    q_offset = 10
-    path = 'M {0}'.format(points[0])
-    i = 0
-    while i < (len(points) - 2):
-        p1, p2, p3 = points[i], points[i+1], points[i+2]
-        # see if they make an angle (we assume that any two consecutive points either make a vertical or a horizontal line)
-        if p1.x == p2.x == p3.x or p1.y == p2.y == p3.y:
-            # the three points do not make any corner
-            path = '{0} L {1}'.format(path, p2)
-            # i = i + 1
-        else:
-            # now we know that p1-p2 line is perpendicular to p2-p3 line
-            if p1.x == p2.x:
-                # line p1-p2 is vertical, so p2-p3 must be horizontal
-                if p1.y < p2.y:
-                    # p1 is above p2
-                    # we just add a new point p2a just vertically (q_offset) above p2
-                    p2a = Point(p2.x, p2.y - q_offset)
-                    if p2.x < p3.x:
-                        # p2 is left to p3
-                        # and another new point p2b just horizontally (q_offset) after p2
-                        p2b = Point(p2.x + q_offset, p2.y)
-                    else:
-                        # p2 is right to p3
-                        # and another new point p2b just horizontally (q_offset) before p2
-                        p2b = Point(p2.x - q_offset, p2.y)
-                else:
-                    # p1 is below p2
-                    # we just add a new point p2a just vertically (q_offset) below p2
-                    p2a = Point(p2.x, p2.y + q_offset)
-                    if p2.x < p3.x:
-                        # p2 is left to p3
-                        # and another new point p2b just horizontally (q_offset) after p2
-                        p2b = Point(p2.x + q_offset, p2.y)
-                    else:
-                        # p2 is right to p3
-                        # and another new point p2b just horizontally (q_offset) before p2
-                        p2b = Point(p2.x - q_offset, p2.y)
-            if p1.y == p2.y:
-                # line p1-p2 is horizontal, so p2-p3 must be vertical
-                if p1.x < p2.x:
-                    # p1 is left to p2
-                    # we just add a new point p2a just horizontally (q_offset) before p2
-                    p2a = Point(p2.x - q_offset, p2.y)
-                    if p2.y < p3.y:
-                        # p2 is above to p3
-                        # and another new point p2b just vertically (q_offset) after p2
-                        p2b = Point(p2.x, p2.y + q_offset)
-                    else:
-                        # p2 is below p3
-                        # and another new point p2b just vertically (q_offset) before p2
-                        p2b = Point(p2.x, p2.y - q_offset)
-                else:
-                    # p1 is right to p2
-                    # we just add a new point p2a just horizontally (q_offset) after p2
-                    p2a = Point(p2.x + q_offset, p2.y)
-                    if p2.y < p3.y:
-                        # p2 is above p3
-                        # and another new point p2b just vertically (q_offset) after p2
-                        p2b = Point(p2.x, p2.y + q_offset)
-                    else:
-                        # p2 is below p3
-                        # and another new point p2b just vertically (q_offset) before p2
-                        p2b = Point(p2.x, p2.y - q_offset)
+    path = 'M {0}'.format(new_points[0])
+    # if we have only two points
+    if len(points) == 2:
+        path = '{0} L {1}'.format(path, points[1])
+        return path
 
-            # the path is 5 point path with p2 now as the Q point
-            # path = '{0} L {1} L {2} Q {3} {4} L {5}'.format(path, p1, p2a, p2, p2b, p3)
-            path = '{0} L {1} Q {2} {3}'.format(path, p2a, p2, p2b)
+    default_offset = 10
+    i = 0
+    while i < (len(new_points) - 2):
+        p1, p2, p3 = new_points[i], new_points[i+1], new_points[i+2]
+        # we know that p1-p2 line is perpendicular to p2-p3 line
+        if p1.x == p2.x:
+            # line p1-p2 is vertical, so p2-p3 must be horizontal
+            if p1.y < p2.y:
+                # p1 is above p2
+                # we just add a new point p2a just vertically (q_offset) above p2.
+                # The default_offset may be greater than the vertical diff betwwen the points p1 and p2, we adjust it
+                q_offset = min(abs(p2.y - p1.y)/2, default_offset)
+                p2a = Point(p2.x, p2.y - q_offset)
+
+                # The default_offset may be greater than the horizontal diff betwwen the points p2 and p3, we adjust it
+                q_offset = min(abs(p3.x - p2.x)/2, default_offset)
+                if p2.x < p3.x:
+                    # p2 is left to p3
+                    # and another new point p2b just horizontally (q_offset) after p2
+                    p2b = Point(p2.x + q_offset, p2.y)
+                else:
+                    # p2 is right to p3
+                    # and another new point p2b just horizontally (q_offset) before p2
+                    p2b = Point(p2.x - q_offset, p2.y)
+            else:
+                # p1 is below p2
+                # we just add a new point p2a just vertically (q_offset) below p2
+                # The default_offset may be greater than the vertical diff betwwen the points p1 and p2, we adjust it
+                q_offset = min((p1.y - p2.y)/2, default_offset)
+                p2a = Point(p2.x, p2.y + q_offset)
+
+                # The default_offset may be greater than the horizontal diff betwwen the points p2 and p3, we adjust it
+                q_offset = min(abs(p3.x - p2.x)/2, default_offset)
+                if p2.x < p3.x:
+                    # p2 is left to p3
+                    # and another new point p2b just horizontally (q_offset) after p2
+                    p2b = Point(p2.x + q_offset, p2.y)
+                else:
+                    # p2 is right to p3
+                    # and another new point p2b just horizontally (q_offset) before p2
+                    p2b = Point(p2.x - q_offset, p2.y)
+
+        if p1.y == p2.y:
+            # line p1-p2 is horizontal, so p2-p3 must be vertical
+            if p1.x < p2.x:
+                # p1 is left to p2
+                # we just add a new point p2a just horizontally (q_offset) before p2
+                # The default_offset may be greater than the horizontal diff betwwen the points p1 and p2, we adjust it
+                q_offset = min(abs(p2.x - p1.x)/2, default_offset)
+                p2a = Point(p2.x - q_offset, p2.y)
+
+                # The default_offset may be greater than the vertical diff betwwen the points p2 and p3, we adjust it
+                q_offset = min(abs(p3.y - p2.y)/2, default_offset)
+                if p2.y < p3.y:
+                    # p2 is above to p3
+                    # and another new point p2b just vertically (q_offset) after p2
+                    p2b = Point(p2.x, p2.y + q_offset)
+                else:
+                    # p2 is below p3
+                    # and another new point p2b just vertically (q_offset) before p2
+                    p2b = Point(p2.x, p2.y - q_offset)
+            else:
+                # p1 is right to p2
+                # we just add a new point p2a just horizontally (q_offset) after p2
+                # The default_offset may be greater than the horizontal diff betwwen the points p1 and p2, we adjust it
+                q_offset = min(abs(p2.x - p1.x)/2, default_offset)
+                p2a = Point(p2.x + q_offset, p2.y)
+
+                # The default_offset may be greater than the vertical diff betwwen the points p2 and p3, we adjust it
+                q_offset = min(abs(p3.y - p2.y)/2, default_offset)
+                if p2.y < p3.y:
+                    # p2 is above p3
+                    # and another new point p2b just vertically (q_offset) after p2
+                    p2b = Point(p2.x, p2.y + q_offset)
+                else:
+                    # p2 is below p3
+                    # and another new point p2b just vertically (q_offset) before p2
+                    p2b = Point(p2.x, p2.y - q_offset)
+
+        # the path is 5 point path with p2 now as the Q point
+        # path = '{0} L {1} L {2} Q {3} {4} L {5}'.format(path, p1, p2a, p2, p2b, p3)
+        path = '{0} L {1} Q {2} {3}'.format(path, p2a, p2, p2b)
 
         i = i + 1
 
-    path = '{0} L {1} L {2}'.format(path, points[-2], points[-1])
+    path = '{0} L {1}'.format(path, new_points[-1])
 
     return path

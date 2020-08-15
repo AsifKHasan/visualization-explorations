@@ -21,22 +21,24 @@ graph property_and_casualty_insurance_claim_processing {
             task                deliver_auto_to_estimator                       [label='Customer Delivers Auto to Estimator']
             task                review_damage                                   [label='Estimator Reviews Damage']
             task                estimate_approval                               [label='Estimate Reviewed/Approved by Adjuster']
-            parallel            merge                                           [move_x=570]
+            parallel            merge                                           [move_x=0]
             end                 end
 
             process             estimate_exceeding_deductible                   [label='If Estimate Exceeds Deductible']
-            #throwSignal         claim_closed                                    [label='Incident/Originating Claim Closed']
+            throwSignal         claim_closed                                    [label='Incident/Originating Claim Closed']
             process             subrogation_analysis                            [label='Subrogation Analysis']
             process             claim_involves_injury                           [label='If Claim Involves Injury']
             process             multi_claimant_incidence                        [label='For Each Claimant (If Multi-Claimant Incident)']
 
             start                                   --> branch
-            branch                                  --> estimate_not_exceeding_deductible
-            branch                                  --> read_the_note
-            branch                                  --> customer_claim_into_system
             branch                                  --> adjuster_assigned
             adjuster_assigned                       --> check_history                           --> deliver_auto_to_estimator
             deliver_auto_to_estimator               --> review_damage                           --> estimate_approval
+            estimate_approval                       --> merge                                   --> end
+
+            branch                                  --> estimate_not_exceeding_deductible
+            branch                                  --> read_the_note
+            branch                                  --> customer_claim_into_system
 
             branch                                  --> estimate_exceeding_deductible
             branch                                  --> claim_closed
@@ -47,7 +49,6 @@ graph property_and_casualty_insurance_claim_processing {
             estimate_not_exceeding_deductible       --> merge
             read_the_note                           --> merge
             customer_claim_into_system              --> merge
-            estimate_approval                       --> merge
             estimate_exceeding_deductible           --> merge
             claim_closed                            --> merge
             subrogation_analysis                    --> merge
@@ -57,7 +58,6 @@ graph property_and_casualty_insurance_claim_processing {
 
 
 
-            merge               --> end
         }
     }
 }

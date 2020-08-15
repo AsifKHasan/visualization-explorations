@@ -71,7 +71,7 @@ def a_path_with_label(points, label, spec):
     svg_group = G()
 
     path_data = points_to_curved_path(points)
-    print(path_data)
+    # print(path_data)
     svg = Path(pathData=path_data)
     svg.set_style(StyleBuilder(spec['style']).getStyle())
 

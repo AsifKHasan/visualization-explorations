@@ -115,3 +115,9 @@ class Point:
                 return 'north'
 
         return None
+
+    def on_same_line(self, p1, p2):
+        if p1.x == p2.x == self.x or p1.y == p2.y == self.y:
+            return True
+        else:
+            return False
