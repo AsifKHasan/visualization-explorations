@@ -139,7 +139,7 @@ class BpmnElement():
         # see if the snap points are occupied or not
         if len(snap_position.edge_roles) > 0:
             # TODO: occupied, do something
-            warn('snap-point [{0}-{1}] for node [{2}] is occupied ... we may want to do something about it'.format(side, position, self.node_id))
+            warn('snap-point {0:>30}:{1}-{2} is occupied ... we may want to do something about it'.format(self.node_id, side.upper(), position.upper()))
 
         # this snap point is getting a new edge-role
         snap_position.edge_roles.append(EdgeRole(role=role, peer=peer, type=edge_type))

@@ -10,7 +10,7 @@ graph property_and_casualty_insurance_claim_processing {
             start               start
             parallel            branch
 
-            process             estimate_not_exceeding_deductible               [label='If Estimate Does Not Exceed Deductible']
+            process             estimate_not_exceeding_deductible               [label='If Estimate Does Not Exceed Deductibles']
 
             throwSignal         read_the_note                                   [label='Read the Note for an Explanation of the Purpose of This Template']
 

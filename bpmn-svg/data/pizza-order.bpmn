@@ -11,6 +11,7 @@
     python bpmn-to-svg.py < ../out/pizza-order.json
     it will generate svg output at ../out/pizza-order.svg
 */
+
 graph pizza_order {
     label = "Pizza Order Process Model"
 

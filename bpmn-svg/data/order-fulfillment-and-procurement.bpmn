@@ -11,7 +11,7 @@ graph order_fulfillment_and_procurement {
             task                check_availability              [label="Check Availability";]
             exclusive           article_available               [label="Article Available";]
 
-            task                ship_article                    [label="Ship Article"; move_x=90.5]
+            task                ship_article                    [label="Ship Article"; move_x=56]
             process             financial_settlement            [label="Financial Settlement"]
             end                 payment_received                [label="Payment Received"]
 

@@ -1,6 +1,9 @@
 /*
 python bpmn-parser.py < ../data/airline-check-in.bpmn | tee ../out/airline-check-in.json | python bpmn-to-svg.py
+
+    move_x - a positive value means the node should move further to east (right) the specified point, negative value means movement to west (left). This is useful for visualization when we would like our edges to look straight without unnecessary corners when possible
 */
+
 graph airline_check_in {
     label = "Airline Check-in"
     # _ means the style is applicable to the container (in this case the Graph itself)
@@ -20,7 +23,6 @@ graph airline_check_in {
             task                    ask_for_objects         [label="Ask Passenger for Prohibited Objects";]
             exclusive               prohibited_objects      [label="Prohibited Objects?";]
 
-            # move_x - a positive value means the node should move further to east (right) the specified point, negative value means movement to west (left). This is useful for visualization when we would like our edges to look straight without unnecessary corners when possible
             task                    ask_for_baggage         [label="Ask Passenger for Baggages"; move_x=83]
             task                    weigh_baggage           [label="Weigh Baggages";]
 

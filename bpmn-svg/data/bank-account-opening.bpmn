@@ -8,18 +8,18 @@ graph bank_account_opening {
     lane lane_1 {
         pool pool_1 {
             start                           start
-            task                            get_customer_coordinates            	[label="Get Customer Coordinates";]
+            task                            get_customer_coordinates            	[label="Get Customer Coordinate";]
             exclusive                       actual_customer                     	[label="Actual Customer?";]
             task                            retrieve_customer_information          	[label="Retrieve Customer Information";]
             task                            analyze_customer_relation              	[label="Analyze Customer Relation";]
             task                            build_customer_profile                 	[label="Build Customer Profile";]
-            task                            identify_customer_account           	[label="Identify Customer Account Selection";move_x=10]
+            task                            identify_customer_account           	[label="Identify Customer Account Selection";]
             task                            select_account_type                    	[label="Select Account Type";]
             exclusive                       deposit_when_opening                   	[label="Deposit When Opening?";]
             task                            register_deposit                       	[label="Register Deposit";]
             task                            prepare_document                       	[label="Prepare Account Opening Document"; wrap_here=true;]
             parallel                        branch_prepare_document                 [label="";]
-            task                            record_customer_information         	[label="Record Customer Information";]
+            task                            record_customer_information         	[label="Record Customer Information";move_x=100;]
             task	                        propose_account_opening                	[label="Propose Account Opening";]
             task	                        schedule_status_review                 	[label="Schedule Status Review";]
             parallel                        branch_schedule_status_review           [label="";]

@@ -37,9 +37,7 @@ class ChannelCollection(BpmnElement):
             for channel in channel_list:
                 channel.instance.lay_edges()
 
-        # then we lay inter-channel edges
-        # get a filtered list of edges containing only those where from-node and to-node both are in this channel-collection but are in different channels
-        # pprint(self.edges)
+        # lay inter-channel edges - get a filtered list of edges containing only those where from-node and to-node both are in this channel-collection but are in different channels
         for edge in self.edges:
             from_node, to_node = self.channel_collection.get_if_from_different_channels(edge['from'], edge['to'])
             if from_node is not None and to_node is not None:
@@ -123,7 +121,7 @@ class ChannelCollection(BpmnElement):
         # order and group nodes
         self.channel_collection = ChannelCollectionObject(pool_id=self.pool_id, theme=self.theme)
         self.channel_collection.build(pool_nodes=self.nodes, pool_edges=self.edges)
-        pprint(self.channel_collection)
+        # pprint(self.channel_collection)
 
         # create the swim channels
         for channel_list in self.channel_collection.channel_lists:
