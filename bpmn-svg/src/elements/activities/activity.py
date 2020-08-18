@@ -11,8 +11,10 @@ from pysvg.structure import *
 from pysvg.style import *
 from pysvg.text import *
 
+from util.geometry import Point
 from util.logger import *
 from util.svg_util import *
+from util.helper_util import *
 from util.helper_objects import SnapPoint
 
 from elements.bpmn_element import BpmnElement
@@ -29,8 +31,13 @@ class Activity(BpmnElement):
         info('......processing node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
         # the rectangle element
+        if self.node_data['label'] == '':
+            label = id_to_label(self.node_id)
+        else:
+            label = self.node_data['label']
+
         rectangle_group, rectangle_group_width, rectangle_group_height = text_inside_a_rectangle(
-                                    text=self.node_data['label'],
+                                    text=label,
                                     min_width=self.theme['rectangle']['min-width'],
                                     max_width=self.theme['rectangle']['max-width'],
                                     rect_spec=self.theme['rectangle'],

@@ -32,6 +32,9 @@ class SwimPool(BpmnElement):
         self.channel_collection_instance.lay_edges()
 
     def assemble_labels(self):
+        if 'hide_label' in self.pool_data['styles'] and self.pool_data['styles']['hide_label'] == 'true':
+            return None
+
         group_id = '{0}:{1}:{2}-label'.format(self.bpmn_id, self.lane_id, self.pool_id)
 
         # get the lane label, its min_width and max_width is the channel collection's height

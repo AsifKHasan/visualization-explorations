@@ -20,24 +20,23 @@ graph pizza_order {
         pool pizza_customer {
             label = "Pizza Customer"
 
-            start               hungry                  [label="Hungry";]
-            task                select_pizza            [label="Select Pizza";]
-            task                order_pizza             [label="Order Pizza";]
-            eventBased          on_order                [label="";]
-            throwMessage        pizza_received          [label="Pizza Received";]
-            #task                check_pizza             [label="Check Pizza";]
+            start                   hungry                      [label="Hungry";]
+            task                    select_pizza
+            task                    order_pizza
+            eventBased              on_order                    [label="Ordered"; label_pos=bottom]
+            throwMessage            pizza_received
 
-            timer               timer_45_mins           [label="45 Minutes";]
-            task                ask_for_pizza           [label="Ask for Pizza";]
+            timer                   timer_45_mins               [label="45 Minutes";]
+            task                    ask_for_pizza
 
-            task                eat_pizza               [label="Eat Pizza";]
-            task                pay_for_pizza           [label="Pay for Pizza";]
-            end                 hunger_satisfied        [label="Hunger Satisfied";]
+            task                    eat_pizza
+            task                    pay_for_pizza
+            end                     hunger_satisfied            [label="Hunger Satisfied";]
 
-            hungry              --> select_pizza        --> order_pizza         --> on_order
-            pizza_received      --> check_pizza
-            on_order            --> pizza_received      --> pay_for_pizza       --> eat_pizza           --> hunger_satisfied
-            on_order            --> timer_45_mins       --> ask_for_pizza       --> on_order
+            hungry                  --> select_pizza            --> order_pizza             --> on_order
+            pizza_received          --> check_pizza
+            on_order                --> pizza_received          --> pay_for_pizza           --> eat_pizza           --> hunger_satisfied
+            on_order                --> timer_45_mins           --> ask_for_pizza           --> on_order
         }
 
         # edges within pools of customer
@@ -48,53 +47,53 @@ graph pizza_order {
         pool receptionist {
             label = "Receptionist"
 
-            startMessage        order_received          [label="Order Received";]
-            parallel            on_order_received       [label="";]
-            throwMessage        where_is_pizza          [label="Where is Pizza?";]
-            task                deal_with_customer      [label="Deal with Customer";]
+            startMessage            order_received              [label="Order Received";]
+            parallel                on_order_received
+            throwMessage            where_is_pizza              [label="Where is Pizza?"; label_pos=top;]
+            task                    deal_with_customer
 
-            order_received      --> on_order_received
-            on_order_received   --> where_is_pizza      --> deal_with_customer
-            deal_with_customer  --> where_is_pizza
-            on_order_received   --> deal_with_customer
+            order_received          --> on_order_received
+            on_order_received       --> where_is_pizza          --> deal_with_customer
+            deal_with_customer      --> where_is_pizza
+            on_order_received       --> deal_with_customer
         }
         pool cook {
             label = "Pizza Cook"
 
-            task                bake_pizza              [label="Bake Pizza";]
+            task                    bake_pizza
         }
         pool delivery_person {
             label = "Delivery Person"
 
-            task                deliver_pizza           [label="Deliver Pizza";]
-            task                collect_payment         [label="Collect Payment";]
-            endTerminate        end_terminate           [label="";]
+            task                    deliver_pizza
+            task                    collect_payment
+            endTerminate            end_terminate
 
-            deliver_pizza       --> collect_payment     --> end_terminate
+            deliver_pizza           --> collect_payment         --> end_terminate
         }
 
         # edges within pools of pizza_store
         # edges from pizza_store:receptionist
-        on_order_received       --> bake_pizza
+        on_order_received           --> bake_pizza
 
         # edges from pizza_store:cook
-        bake_pizza              --> deliver_pizza
+        bake_pizza                  --> deliver_pizza
 
         # edges from pizza_store:delivery_person
     }
 
     # edges across lanes
     # edges from customer:pizza_customer
-    order_pizza             ~~> order_received          [label="pizza order"]
-    ask_for_pizza           ~~> where_is_pizza
-    pay_for_pizza           ~~> collect_payment         [label="money"]
+    order_pizza                     ~~> order_received          [label="pizza order"]
+    ask_for_pizza                   ~~> where_is_pizza
+    pay_for_pizza                   ~~> collect_payment         [label="money"]
 
     # edges from pizza_store:receptionist
-    deal_with_customer      ~~> ask_for_pizza
+    deal_with_customer              ~~> ask_for_pizza
 
     # edges from pizza_store:cook
 
     # edges from pizza_store:delivery_person
-    deliver_pizza           ~~> pizza_received          [label="pizza"]
-    collect_payment         ~~> pay_for_pizza           [label="receipt"]
+    deliver_pizza                   ~~> pizza_received          [label="pizza"]
+    collect_payment                 ~~> pay_for_pizza           [label="receipt"]
 }

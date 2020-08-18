@@ -31,6 +31,9 @@ class SwimLane(BpmnElement):
         self.pool_collection_instance.lay_edges()
 
     def assemble_labels(self):
+        if 'hide_label' in self.lane_data['styles'] and self.lane_data['styles']['hide_label'] == 'true':
+            return None
+            
         group_id = '{0}:{1}-label'.format(self.bpmn_id, self.lane_id)
 
         # get the lane label, its min_width and max_width is the pool collection's height + all

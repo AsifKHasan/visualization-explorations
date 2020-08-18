@@ -33,12 +33,12 @@ font_spec = {
 
     returns     (text_lines, width, height)
 '''
-def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, max_width, pad_spec=None, debug_enabled=False):
+def break_text_inside_rect(text, font_family, font_size, font_weight, stroke_width, max_lines, min_width, max_width, pad_spec=None, debug_enabled=False):
     if pad_spec is None:
         pad_spec = {'left': 10, 'top': 10, 'right': 10, 'bottom': 10}
 
     # first see the text size in pixel
-    text_size = text_size_in_pixels(text, font_family, font_size)
+    text_size = text_size_in_pixels(text, font_family, font_size, font_weight=font_weight, stroke_width=stroke_width)
     # debug('{0} : ({1}, {2})'.format(text, text_size[0], text_size[1]))
 
     min_width = min_width - pad_spec['left'] - pad_spec['right']
@@ -71,7 +71,7 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
         width = 0
         height = pad_spec['top'] + pad_spec['bottom']
         for line in text_lines[:max_lines]:
-            line_size = text_size_in_pixels(line, font_family, font_size)
+            line_size = text_size_in_pixels(line, font_family, font_size, font_weight=font_weight, stroke_width=stroke_width)
             width = max(min_width, width, line_size[0])
             height = height + line_size[1] * 1.5
 
@@ -89,7 +89,7 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
         width = 0
         height = pad_spec['top'] + pad_spec['bottom']
         for line in text_lines:
-            line_size = text_size_in_pixels(line, font_family, font_size)
+            line_size = text_size_in_pixels(line, font_family, font_size, font_weight=font_weight, stroke_width=stroke_width)
             width = max(min_width, width, line_size[0])
             height = height + line_size[1] * 1.5
 
@@ -106,15 +106,20 @@ def break_text_inside_rect(text, font_family, font_size, max_lines, min_width, m
     width = width + pad_spec['left'] + pad_spec['right']
     return (text_lines, width, height)
 
-def text_size_in_pixels(text, font_family, font_size):
+def text_size_in_pixels(text, font_family, font_size, font_weight='', stroke_width=0):
+    adjusted_text = ' ' + text + ' '
     try:
-        font_path = font_spec[font_family][sys.platform]
-        font = ImageFont.truetype(font_path, font_size)
-    except:
-        font_path = font_spec['arial'][sys.platform]
-        font = ImageFont.truetype(font_path, font_size)
+        # font_path = font_spec[font_family][sys.platform]
+        font_name = font_family
+        if font_weight == 'bold':
+            font_name = font_family + 'bd'
 
-    size = font.getsize(text)
+        font = ImageFont.truetype(font_name, font_size)
+    except:
+        # font_path = font_spec['arial'][sys.platform]
+        font = ImageFont.truetype('arialbd', font_size)
+
+    size = font.getsize(adjusted_text, stroke_width=stroke_width)
     return size
 
 def em_range(n):
@@ -131,49 +136,20 @@ def points_to_str(points):
     return ' '.join([str(point) for point in points])
 
 def optimize_points(points):
-    new_points = [points[0]]
-    i = 0
-    while True:
-        # we may have come past the end
-        if i >= len(points):
-            return new_points
+    if len(points) <= 2:
+        return points
 
-        # we may have reached the end
-        if i == len(points) - 1:
-            return new_points
-
-        # we may have only one more point left
-        if i == len(points) - 2:
-            return new_points + [points[i+1]]
-
-        # now we know that we have at least three points to look ahead to
-        p1, p2 = points[i], points[i+1]
-
-        # now we start from the 3rd point to see if it is on the same line formed by p1-p2, if so, we move to next point (if available). We stop only when we have found a point which is not on the same line and that is our next i point to start from
-        j = i + 2
-        while True:
-            end_point = points[j]
-            if end_point.on_same_line(p1, p2):
-                # j point could be the last point
-                if j == len(points) - 1:
-                    return new_points + [end_point]
-                else:
-                    j = j + 1
-            else:
-                # we have reached the end of line segment
-                new_points = new_points + [points[j-1]]
-                i = j - 1
-                break
-
-    return new_points
+    if not points[2].on_same_line(points[0], points[1]):
+        return [points[0]] + optimize_points(points[1:])
+    else:
+        return optimize_points([points[0], points[2]] + points[3:])
 
 def points_to_path(points):
     return 'M' + ' L'.join([str(point) for point in points])
 
 def points_to_curved_path(points):
-    # debug('points:    {0}'.format(points_to_str(points)))
     new_points = optimize_points(points)
-    # debug('optimized: {0}'.format(points_to_str(new_points)))
+
     # first we generate a new set of points for every three points so that if the three points make a turn we have actually 5 points
     path = 'M {0}'.format(new_points[0])
     # if we have only two points
@@ -240,6 +216,7 @@ def points_to_curved_path(points):
                     p2b = Point(p2.x, p2.y + q_offset)
                 else:
                     # p2 is below p3
+
                     # and another new point p2b just vertically (q_offset) before p2
                     p2b = Point(p2.x, p2.y - q_offset)
             else:
@@ -269,3 +246,6 @@ def points_to_curved_path(points):
     path = '{0} L {1}'.format(path, new_points[-1])
 
     return path
+
+def id_to_label(id):
+    return id.replace('_', ' ').capitalize()

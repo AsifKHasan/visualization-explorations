@@ -18,8 +18,8 @@ graph airline_check_in {
 
             start                   start
             task                    validate                [label="Validate Passenger Ticket and Identification";]
-            exclusive               check_validity          [label="Validity?";]
-            process                 confirm_itinerary       [label="Confirm Itinerary";]
+            exclusive               check_validity          [label="Valid?";]
+            process                 confirm_itinerary
             task                    ask_for_objects         [label="Ask Passenger for Prohibited Objects";]
             exclusive               prohibited_objects      [label="Prohibited Objects?";]
 
@@ -28,7 +28,7 @@ graph airline_check_in {
 
             task                    remove_objects          [label="Remove Prohibited Objects";]
 
-            task                    reject_passenger        [label="Reject Passenger";]
+            task                    reject_passenger
             end                     rejection
 
             # wrap_here - the BPMN should wrap at this node. This means that this node will start in a new channel and will be placed in the leftmost position of the channel

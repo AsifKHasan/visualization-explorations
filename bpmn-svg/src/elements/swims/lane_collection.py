@@ -39,6 +39,8 @@ class LaneCollection(BpmnElement):
         transformer = TransformBuilder()
         for child_lane_class in self.child_lane_classes:
             child_label_element = child_lane_class.assemble_labels()
+            if child_label_element is None:
+                continue
 
             # the y position of this lane label in the group will be its corresponding swim-lane's y position
             child_label_xy = Point(0, child_lane_class.svg_element.xy.y)

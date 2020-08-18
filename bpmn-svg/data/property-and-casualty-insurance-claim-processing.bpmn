@@ -27,7 +27,7 @@ graph property_and_casualty_insurance_claim_processing {
             process             estimate_exceeding_deductible                   [label='If Estimate Exceeds Deductible']
             throwSignal         claim_closed                                    [label='Incident/Originating Claim Closed']
             process             subrogation_analysis                            [label='Subrogation Analysis']
-            process             claim_involves_injury                           [label='If Claim Involves Injury']
+            process             claim_involves_injury                           [label='If Claim Involves Injuries']
             process             multi_claimant_incidence                        [label='For Each Claimant (If Multi-Claimant Incident)']
 
             start                                   --> branch

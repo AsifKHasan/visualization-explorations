@@ -39,6 +39,8 @@ class PoolCollection(BpmnElement):
         transformer = TransformBuilder()
         for child_pool_class in self.child_pool_classes:
             child_label_element = child_pool_class.assemble_labels()
+            if child_label_element is None:
+                continue
 
             # the y position of this pool label in the group will be its corresponding swim-pool's y position
             child_label_xy = Point(0, child_pool_class.svg_element.xy.y)

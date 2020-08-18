@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 '''
 '''
+import re
+
 from pprint import pprint
 
 from pysvg.builders import *
@@ -51,10 +53,70 @@ class Bpmn(BpmnElement):
 
         info('processing BPMN [{0}] DONE'.format(self.bpmn_id))
 
+    '''
+        we are manipulating the svg directly
+    '''
+    def tune_labels(self):
+        # get the width of the lane label having the maximum width
+        max_lane_label_width = 0
+        max_pool_label_width = 0
+        for lane_group in self.label_element.svg.getAllElements():
+            # the first child is a rect and the rect element's width is the width of lane-label
+            lane_label_width = lane_group.getElementAt(0).getAttribute('width')
+            # print('lane {0} width: {1}'.format(lane_group.getAttribute('id'), lane_label_width))
+            max_lane_label_width = max(max_lane_label_width, lane_label_width)
+
+            # the pool labels are in a group which is the third child
+            for pool_group in lane_group.getElementAt(2).getAllElements():
+                # the first child is a rect and the rect element's width is the width of pool-label
+                pool_label_width = pool_group.getElementAt(0).getAttribute('width')
+                # print('....pool {0} width: {1}'.format(pool_group.getAttribute('id'), pool_label_width))
+                max_pool_label_width = max(max_pool_label_width, pool_label_width)
+
+        # now we know the max width for lane and pool labels, we adjust them accordingly
+        for lane_group in self.label_element.svg.getAllElements():
+            # the first child is a rect and the rect element's width is the width of lane-label
+            lane_label_width_diff = max_lane_label_width - lane_group.getElementAt(0).getAttribute('width')
+            if lane_label_width_diff == 0:
+                # we do nothing, this is already at the max width
+                pass
+
+            # change the rect's (first child) width
+            lane_group.getElementAt(0).setAttribute('width', max_lane_label_width)
+
+            # second child is an svg whose width needs to be adjusted by diff
+            lane_label_svg_width = lane_group.getElementAt(1).getAttribute('width')
+            lane_group.getElementAt(1).setAttribute('width', lane_label_svg_width + lane_label_width_diff)
+
+            # third child is the pool label group, whose transform's translation's x position needs to be adjusted by diff
+            transform = lane_group.getElementAt(2).getAttribute('transform')
+            m = re.match('translate\((?P<x>.+),(?P<y>.+)\)', transform, re.IGNORECASE)
+            if m and m.group('x') is not None and m.group('y') is not None:
+                point = Point(float(m.group('x')) + lane_label_width_diff, float(m.group('y')))
+                lane_group.getElementAt(2).setAttribute('transform', 'translate({0})'.format(point))
+
+            # the pool labels are in a group which is the third child
+            for pool_group in lane_group.getElementAt(2).getAllElements():
+                # the first child is a rect and the rect element's width is the width of pool-label
+                pool_label_width_diff = max_pool_label_width - pool_group.getElementAt(0).getAttribute('width')
+                if pool_label_width_diff == 0:
+                    # we do nothing, this is already at the max width
+                    pass
+
+                # change the rect's (first child) width
+                pool_group.getElementAt(0).setAttribute('width', max_pool_label_width)
+
+                # second child is an svg whose width needs to be adjusted by diff
+                pool_label_svg_width = pool_group.getElementAt(1).getAttribute('width')
+                pool_group.getElementAt(1).setAttribute('width', pool_label_svg_width + pool_label_width_diff)
+
+
+
     def assemble_elements(self):
         # bpmn's body is the lane collection
         self.body_element = self.lane_collection_instance.assemble_elements()
         self.label_element = self.lane_collection_instance.assemble_labels()
+        self.tune_labels()
 
     def create_svg(self):
         info('assembling BPMN [{0}]'.format(self.bpmn_id))
@@ -86,7 +148,7 @@ class Bpmn(BpmnElement):
         transformer.setTranslation(svg_group_xy)
         svg_group.set_transform(transformer.getTransform())
 
-        if 'hide_swim_labels' in self.bpmn_data['styles'] and self.bpmn_data['styles']['hide_swim_labels'] == 'true':
+        if 'hide_labels' in self.bpmn_data['styles'] and self.bpmn_data['styles']['hide_labels'] == 'true':
             # place the bpmn body group just below the text group right to label
             body_element_xy = Point(self.theme['bpmn-rect']['pad-spec']['left'], label_height + self.theme['bpmn-rect']['pad-spec']['top'])
             transformer = TransformBuilder()

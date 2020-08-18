@@ -689,6 +689,8 @@ def text_inside_a_rectangle(text, min_width, max_width, rect_spec, text_spec, de
                                 text=text,
                                 font_family=text_spec['style']['font-family'],
                                 font_size=text_spec['style']['font-size'],
+                                font_weight=text_spec['style'].get('font-weight', ''),
+                                stroke_width=text_spec['style']['stroke-width'],
                                 max_lines=text_spec['max-lines'],
                                 min_width=min_width,
                                 max_width=max_width,
