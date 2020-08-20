@@ -7,7 +7,6 @@ from elements.flows.flow_object import FlowObject
 from util.logger import *
 from util.geometry import Point
 from util.svg_util import *
-from util.helper_objects import EdgeRole
 
 '''
     Class to handle a flows/edges inside the channel which means between nodes inside a specific channel.
@@ -23,46 +22,46 @@ SNAP_RULES = {
     'east': {
         'adjacent' : {
             'from-node': {
-                'activity': {'side': 'east',    'position': 'middle',   'route-boundary': None,    'direction-hint': None},
-                'gateway':  {'side': 'east',    'position': 'middle',   'route-boundary': None,    'direction-hint': None},
-                'event':    {'side': 'east',    'position': 'middle',   'route-boundary': None,    'direction-hint': None},
-                'data':     {'side': 'east',    'position': 'middle',   'route-boundary': None,    'direction-hint': None},
+                'activity': {'side': 'east',    'position': 'middle',   'cross-through-boundary': None,    'approach-snap-point-from': None},
+                'gateway':  {'side': 'east',    'position': 'middle',   'cross-through-boundary': None,    'approach-snap-point-from': None},
+                'event':    {'side': 'east',    'position': 'middle',   'cross-through-boundary': None,    'approach-snap-point-from': None},
+                'data':     {'side': 'east',    'position': 'middle',   'cross-through-boundary': None,    'approach-snap-point-from': None},
             },
             'to-node': {
-                'activity': {'side': 'west',    'position': 'middle',   'route-boundary': None,    'direction-hint': None},
-                'gateway':  {'side': 'west',    'position': 'middle',   'route-boundary': None,    'direction-hint': None},
-                'event':    {'side': 'west',    'position': 'middle',   'route-boundary': None,    'direction-hint': None},
-                'data':     {'side': 'west',    'position': 'middle',   'route-boundary': None,    'direction-hint': None},
+                'activity': {'side': 'west',    'position': 'middle',   'cross-through-boundary': None,    'approach-snap-point-from': None},
+                'gateway':  {'side': 'west',    'position': 'middle',   'cross-through-boundary': None,    'approach-snap-point-from': None},
+                'event':    {'side': 'west',    'position': 'middle',   'cross-through-boundary': None,    'approach-snap-point-from': None},
+                'data':     {'side': 'west',    'position': 'middle',   'cross-through-boundary': None,    'approach-snap-point-from': None},
             }
         },
         'apart' : {
             'from-node': {
-                'activity': {'side': 'east',    'position': 'bottom',   'route-boundary': 'south', 'direction-hint': None},
-                'gateway':  {'side': 'east',    'position': 'middle',   'route-boundary': 'south', 'direction-hint': None},
-                'event':    {'side': 'east',    'position': 'middle',   'route-boundary': 'south', 'direction-hint': None},
-                'data':     {'side': 'east',    'position': 'middle',   'route-boundary': 'south', 'direction-hint': None},
+                'activity': {'side': 'east',    'position': 'bottom',   'cross-through-boundary': 'south', 'approach-snap-point-from': None},
+                'gateway':  {'side': 'east',    'position': 'middle',   'cross-through-boundary': 'south', 'approach-snap-point-from': None},
+                'event':    {'side': 'east',    'position': 'middle',   'cross-through-boundary': 'south', 'approach-snap-point-from': None},
+                'data':     {'side': 'east',    'position': 'middle',   'cross-through-boundary': 'south', 'approach-snap-point-from': None},
             },
             'to-node': {
-                'activity': {'side': 'west',    'position': 'bottom',   'route-boundary': 'south', 'direction-hint': None},
-                'gateway':  {'side': 'west',    'position': 'middle',   'route-boundary': 'south', 'direction-hint': None},
-                'event':    {'side': 'west',    'position': 'middle',   'route-boundary': 'south', 'direction-hint': None},
-                'data':     {'side': 'west',    'position': 'middle',   'route-boundary': 'south', 'direction-hint': None},
+                'activity': {'side': 'west',    'position': 'bottom',   'cross-through-boundary': 'south', 'approach-snap-point-from': None},
+                'gateway':  {'side': 'west',    'position': 'middle',   'cross-through-boundary': 'south', 'approach-snap-point-from': None},
+                'event':    {'side': 'west',    'position': 'middle',   'cross-through-boundary': 'south', 'approach-snap-point-from': None},
+                'data':     {'side': 'west',    'position': 'middle',   'cross-through-boundary': 'south', 'approach-snap-point-from': None},
             },
         },
     },
     'west': {
         '*' : {
             'from-node': {
-                'activity': {'side': 'east',    'position': 'top',      'route-boundary': 'north', 'direction-hint': None},
-                'gateway':  {'side': 'east',    'position': 'middle',   'route-boundary': 'north', 'direction-hint': None},
-                'event':    {'side': 'east',    'position': 'middle',   'route-boundary': 'north', 'direction-hint': None},
-                'data':     {'side': 'east',    'position': 'middle',   'route-boundary': 'north', 'direction-hint': None},
+                'activity': {'side': 'east',    'position': 'top',      'cross-through-boundary': 'north', 'approach-snap-point-from': None},
+                'gateway':  {'side': 'east',    'position': 'middle',   'cross-through-boundary': 'north', 'approach-snap-point-from': None},
+                'event':    {'side': 'east',    'position': 'middle',   'cross-through-boundary': 'north', 'approach-snap-point-from': None},
+                'data':     {'side': 'east',    'position': 'middle',   'cross-through-boundary': 'north', 'approach-snap-point-from': None},
             },
             'to-node': {
-                'activity': {'side': 'west',    'position': 'top',      'route-boundary': 'north', 'direction-hint': None},
-                'gateway':  {'side': 'north',   'position': 'middle',   'route-boundary': 'north', 'direction-hint': 'west'},
-                'event':    {'side': 'north',   'position': 'middle',   'route-boundary': 'north', 'direction-hint': 'west'},
-                'data':     {'side': 'north',   'position': 'middle',   'route-boundary': 'north', 'direction-hint': 'west'},
+                'activity': {'side': 'west',    'position': 'top',      'cross-through-boundary': 'north', 'approach-snap-point-from': None},
+                'gateway':  {'side': 'north',   'position': 'middle',   'cross-through-boundary': 'north', 'approach-snap-point-from': 'west'},
+                'event':    {'side': 'north',   'position': 'middle',   'cross-through-boundary': 'north', 'approach-snap-point-from': 'west'},
+                'data':     {'side': 'north',   'position': 'middle',   'cross-through-boundary': 'north', 'approach-snap-point-from': 'west'},
             }
         },
     },
@@ -100,12 +99,12 @@ class ChannelFlow(FlowObject):
         to_node_spec = self.snap_rules[direction][distance]['to-node'][to_node.category]
 
         from_node_points_in_channel = self.channel.inside_the_channel(
-                                        boundary=from_node_spec['route-boundary'],
+                                        boundary=from_node_spec['cross-through-boundary'],
                                         node=from_node,
                                         side=from_node_spec['side'],
                                         position=from_node_spec['position'],
                                         role='from',
-                                        direction_hint=from_node_spec['direction-hint'],
+                                        approach_snap_point_from=from_node_spec['approach-snap-point-from'],
                                         peer=to_node,
                                         edge_type=self.edge_type)
 
@@ -114,12 +113,12 @@ class ChannelFlow(FlowObject):
             return None
 
         to_node_points_in_channel = self.channel.inside_the_channel(
-                                        boundary=to_node_spec['route-boundary'],
+                                        boundary=to_node_spec['cross-through-boundary'],
                                         node=to_node,
                                         side=to_node_spec['side'],
                                         position=to_node_spec['position'],
                                         role='to',
-                                        direction_hint=to_node_spec['direction-hint'],
+                                        approach_snap_point_from=to_node_spec['approach-snap-point-from'],
                                         peer=to_node,
                                         edge_type=self.edge_type)
 

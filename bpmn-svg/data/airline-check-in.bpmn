@@ -8,7 +8,7 @@ graph airline_check_in {
     label = "Airline Check-in"
     # _ means the style is applicable to the container (in this case the Graph itself)
     # hide_swim_labels - for BPMN's for which we do not want the name of lanes and pools to be shown as vertical labels to the left, this option will hide it when value is true, any other value will make it visible. This is useful for BPMN's without any lane/pool that is one single BPMN
-    _ [hide_swim_labels=true]
+    _ [hide_labels=true]
 
     lane lane_1 {
         label = "Lane"

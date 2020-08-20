@@ -45,11 +45,12 @@ graph award_publication {
         pool authority {
             label = "Authority"
 
-            task receice_request [label="Receive request";]
+            task receive_request [label="Receive request";]
             task verify_request [label="Verify employee request";]
+            exclusive request_approval
             task send_back_for_modification [label="Send back form for modification";]
 
-            receice_request ..> verify_request ..> request_approval
+            receive_request ..> verify_request ..> request_approval
             request_approval ..> send_back_for_modification [label="No";]
         }
         pool system {

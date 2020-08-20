@@ -58,7 +58,7 @@ def an_arrow_head(arrow_point, snap_direction, spec):
 def a_snap_point(snap_point):
     svg_group = G()
 
-    radius = 1.5
+    radius = 4
     spec = {'style': {'fill': '#FF0000', 'stroke-width': 0, 'stroke': '#FF8080'}}
     circle_svg = Circle(cx=snap_point.x, cy=snap_point.y, r=radius)
     circle_svg.set_style(StyleBuilder(spec['style']).getStyle())
@@ -71,6 +71,7 @@ def a_path_with_label(points, label, spec):
     svg_group = G()
 
     path_data = points_to_curved_path(points)
+    # path_data = points_to_path(points)
     # print(path_data)
     svg = Path(pathData=path_data)
     svg.set_style(StyleBuilder(spec['style']).getStyle())

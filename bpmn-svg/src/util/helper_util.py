@@ -16,7 +16,22 @@ font_spec = {
         'win32' : 'arial',
         'linux' : 'Arial.ttf',
         'darwin' : '/Library/Fonts/Arial.ttf'
-    }
+    },
+    'arial-bold' : {
+        'win32' : 'arialbd',
+        'linux' : 'Arial Bold.ttf',
+        'darwin' : '/Library/Fonts/Arial Bold.ttf'
+    },
+    'calibri' : {
+        'win32' : 'calibri',
+        'linux' : 'Calibri.ttf',
+        'darwin' : '/Library/Fonts/Calibri.ttf'
+    },
+    'calibri-bold' : {
+        'win32' : 'calibrib',
+        'linux' : 'Calibri Bold.ttf',
+        'darwin' : '/Library/Fonts/Calibri Bold.ttf'
+    },
 }
 
 #   -----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -26,6 +41,8 @@ font_spec = {
     text        : text that needs to be fitted
     font_family : the font to render the text in
     font_size   : font size of the text
+    font_weight : the font weight to render the text in
+    stroke_width: the stroke width to render the text in
     max_lines   : maximum lines the text can be broken into
     min_width   : returned width can not be less than this
     max_width   : returned width can not be more than this
@@ -108,16 +125,17 @@ def break_text_inside_rect(text, font_family, font_size, font_weight, stroke_wid
 
 def text_size_in_pixels(text, font_family, font_size, font_weight='', stroke_width=0):
     adjusted_text = ' ' + text + ' '
-    try:
-        # font_path = font_spec[font_family][sys.platform]
-        font_name = font_family
-        if font_weight == 'bold':
-            font_name = font_family + 'bd'
+    if font_weight != '':
+        font_key = font_family + '-' + font_weight
+    else:
+        font_key = font_family
 
-        font = ImageFont.truetype(font_name, font_size)
+    try:
+        font_path = font_spec[font_key][sys.platform]
+        font = ImageFont.truetype(font_path, font_size)
     except:
-        # font_path = font_spec['arial'][sys.platform]
-        font = ImageFont.truetype('arialbd', font_size)
+        font_path = font_spec['arial-bold'][sys.platform]
+        font = ImageFont.truetype(font_path, font_size)
 
     size = font.getsize(adjusted_text, stroke_width=stroke_width)
     return size

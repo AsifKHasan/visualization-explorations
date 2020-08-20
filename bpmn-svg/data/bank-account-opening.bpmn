@@ -8,7 +8,7 @@ graph bank_account_opening {
     lane lane_1 {
         pool pool_1 {
             start                           start
-            task                            get_customer_coordinates            	[label="Get Customer Coordinates";]
+            task                            get_customer_coordinates            	[label="Get Customer Coordinate";]
             exclusive                       actual_customer                     	[label="Actual Customer?";]
             task                            retrieve_customer_information          	[label="Retrieve Customer Information";]
             task                            analyze_customer_relation              	[label="Analyze Customer Relation";]

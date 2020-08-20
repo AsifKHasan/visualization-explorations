@@ -14,7 +14,6 @@ from pysvg.text import *
 
 from util.logger import *
 from util.svg_util import *
-from util.helper_objects import SnapPoint, EdgeRole
 
 from elements import *
 
@@ -139,7 +138,8 @@ class BpmnElement():
         # see if the snap points are occupied or not
         if len(snap_position.edge_roles) > 0:
             # TODO: occupied, do something
-            warn('snap-point {0:>30}:{1}-{2} is occupied ... we may want to do something about it'.format(self.node_id, side.upper(), position.upper()))
+            # warn('snap-point {0:>30}:{1}-{2} is occupied ... we may want to do something about it'.format(self.node_id, side.upper(), position.upper()))
+            pass
 
         # this snap point is getting a new edge-role
         snap_position.edge_roles.append(EdgeRole(role=role, peer=peer, type=edge_type))
@@ -164,3 +164,35 @@ class BpmnElement():
             for position in snaps[side]:
                 snap_point_group, snap_point_width, snap_point_height = a_snap_point(snaps[side][position].point + Point(x_offset, y_offset).scale(offset_multiplier[side]))
                 svg_group.addElement(snap_point_group)
+
+
+''' ----------------------------------------------------------------------------------------------------------------------------------
+    Node Object
+'''
+class NodeObject:
+    def __init__(self, id, category, type, styles, element, instance):
+        self.id = id
+        self.category = category
+        self.type = type
+        self.styles = styles
+        self.element = element
+        self.instance = instance
+
+
+''' ----------------------------------------------------------------------------------------------------------------------------------
+    snap point for a node
+'''
+class SnapPoint:
+    def __init__(self, point):
+        self.point = point
+        self.edge_roles = []
+
+
+''' ----------------------------------------------------------------------------------------------------------------------------------
+    EdgeRole object for node snap-points
+'''
+class EdgeRole:
+    def __init__(self, role, peer, type):
+        self.role = role
+        self.peer = peer
+        self.type = type

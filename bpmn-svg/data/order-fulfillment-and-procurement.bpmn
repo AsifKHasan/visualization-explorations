@@ -38,6 +38,7 @@ graph order_fulfillment_and_procurement {
             procurement         --> late_delivery               --> inform_customer1             --> customer_informed
             procurement         --> undeliverable               --> inform_customer2             --> remove_article
             remove_article      --> article_removed
+
         }
     }
 }

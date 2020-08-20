@@ -41,11 +41,6 @@ class DataStore(DataObject):
 
         # the folded rectangle is below an empty space of the same height of the label
         d_x = max((label_group_width - data_store_group_width)/2, 0)
-        # debug(label_group_width)
-        # debug(label_group_height)
-        # debug(data_store_group_width)
-        # debug(data_store_group_height)
-        # debug(d_x)
         data_store_group_xy = '{0},{1}'.format((label_group_width - data_store_group_width)/2, label_group_height + self.snap_point_offset)
         transformer = TransformBuilder()
         transformer.setTranslation(data_store_group_xy)
@@ -69,7 +64,7 @@ class DataStore(DataObject):
         snap_points = self.snap_points(group_width, group_height)
         self.snap_offset_x = (label_group_width - data_store_group_width)/2 + self.snap_point_offset
         self.snap_offset_y = label_group_height + self.snap_point_offset * 2
-        self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
+        # self.draw_snaps(snap_points, svg_group, x_offset=self.snap_offset_x, y_offset=self.snap_offset_y)
 
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
         self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos='bottom')

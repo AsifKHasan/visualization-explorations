@@ -15,9 +15,8 @@ from util.geometry import Point
 from util.logger import *
 from util.svg_util import *
 from util.helper_util import *
-from util.helper_objects import SnapPoint
 
-from elements.bpmn_element import BpmnElement
+from elements.bpmn_element import BpmnElement, SnapPoint
 from elements.svg_element import SvgElement
 
 class Activity(BpmnElement):

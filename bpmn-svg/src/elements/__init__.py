@@ -39,7 +39,7 @@ DEFAULT_THEME = {
                 'left': 24, 'top': 24, 'right': 24, 'bottom': 24
             },
             'style': {
-                'fill': 'none', 'stroke-width': 0, 'stroke': '#FF0000'
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#FFB000'
             },
         },
         'SwimLane': {
@@ -66,7 +66,7 @@ DEFAULT_THEME = {
                 'left': 24, 'top': 24, 'right': 24, 'bottom': 24
             },
             'style': {
-                'fill': 'none', 'stroke-width': 0, 'stroke': '#FF0000'
+                'fill': 'none', 'stroke-width': 1, 'stroke': '#FF0000'
             },
         },
         'SwimPool': {
