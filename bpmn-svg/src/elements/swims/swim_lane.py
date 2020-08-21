@@ -21,8 +21,10 @@ from elements.svg_element import SvgElement
 
 from elements.swims.pool_collection import PoolCollection
 
+'''
+    a horizontal lane is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing Pool elements stacked vertically
+'''
 class SwimLane(BpmnElement):
-    # a horizontal lane is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing Pool elements stacked vertically
     def __init__(self, bpmn_id, lane_id, lane_data):
         self.theme = self.current_theme['swims']['SwimLane']
         self.bpmn_id, self.lane_id, self.lane_data = bpmn_id, lane_id, lane_data

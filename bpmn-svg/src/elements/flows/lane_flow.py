@@ -9,98 +9,67 @@ from util.geometry import Point
 from util.svg_util import *
 
 '''
-    Class to handle a flows/edges between channels of a pool where from-node is in one channel and to-node is in another channel within the same ChabnnelCollection  (pool).
-
-    Criteria - from-node and to-node must be in same ChannelCollection, but not in same Channel. The possible scenarios are
-
-    #1  *from-node* channel is above the *to-node* channel
-        a.  *to-node* is the first node of its Channel
-            1) from-node's snap-position is on
-                a   SOUTH-MIDDLE
-            2) to-node's snap-position is on
-                a   WEST-MIDDLE if to_node is further east to *from-node*
-                b   NORTH-MIDDLE if to_node is further west to *from-node*
-        b.  *to-node* is NOT the first node of its Channel
-            1) from-node's snap-position is on
-                a   SOUTH-MIDDLE
-            2) to-node's snap-position is on
-                a   NORTH-LEFT for Activity
-                b   NORTH-MIDDLE for Gateway/Event/Data
-
-    #2  *from-node* channel is below the *to-node* channel
-        a)  *to-node* is to the left (west) of *from-node* in pool coordinate
-            1)  from-node's snap-position is on
-                a   EAST-TOP for Activity
-                b   EAST-MIDDLE for Gateway/Event/Data
-            2)   to-node's snap-position is on
-                a   SOUTH-RIGHT for Activity
-                b   SOUTH-MIDDLE for Gateway/Event/Data
-        b)  *to-node* is to the right (east) of *from-node* in pool coordinate
-            1)  from-node's snap-position is on
-                a   EAST-TOP for Activity
-                b   EAST-MIDDLE for Gateway/Event/Data
-            2)   to-node's snap-position is on
-                a   SOUTH-LEFT for Activity
-                b   SOUTH-MIDDLE for Gateway/Event/Data
+    Class to handle a flows/edges between pools of a lane
+    Criteria - from-node and to-node must be in in two different pools under the same lane
 '''
 SNAP_RULES = {
     'south': {
         'from-node': {
             'east-most': {
-                'activity': {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': None},
-                'gateway':  {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': None},
-                'event':    {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': None},
-                'data':     {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': None},
+                'activity': {'side': 'east',  'position': 'middle', 'channel-boundary': 'east',  'approach-snap-point-from': None},
+                'gateway':  {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': None},
+                'event':    {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': None},
+                'data':     {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': None},
             },
             '*': {
-                'activity': {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': None},
-                'gateway':  {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': 'east'},
-                'event':    {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': 'east'},
-                'data':     {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': 'east'},
+                'activity': {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': None},
+                'gateway':  {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': 'east'},
+                'event':    {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': 'east'},
+                'data':     {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': 'east'},
             },
         },
         'to-node': {
             'west-most': {
-                'activity': {'side': 'west',  'position': 'middle', 'channel_boundary': 'west',  'approach-snap-point-from': None},
-                'gateway':  {'side': 'west',  'position': 'middle', 'channel_boundary': 'west',  'approach-snap-point-from': None},
-                'event':    {'side': 'west',  'position': 'middle', 'channel_boundary': 'west',  'approach-snap-point-from': None},
-                'data':     {'side': 'north', 'position': 'middle', 'channel_boundary': 'north', 'approach-snap-point-from': None},
+                'activity': {'side': 'west',  'position': 'middle', 'channel-boundary': 'west',  'approach-snap-point-from': None},
+                'gateway':  {'side': 'west',  'position': 'middle', 'channel-boundary': 'west',  'approach-snap-point-from': None},
+                'event':    {'side': 'west',  'position': 'middle', 'channel-boundary': 'west',  'approach-snap-point-from': None},
+                'data':     {'side': 'north', 'position': 'middle', 'channel-boundary': 'north', 'approach-snap-point-from': None},
             },
             '*': {
-                'activity': {'side': 'north', 'position': 'left',   'channel_boundary': 'north', 'approach-snap-point-from': None},
-                'gateway':  {'side': 'west',  'position': 'middle', 'channel_boundary': 'north', 'approach-snap-point-from': 'west'},
-                'event':    {'side': 'west',  'position': 'middle', 'channel_boundary': 'north', 'approach-snap-point-from': 'west'},
-                'data':     {'side': 'north', 'position': 'middle', 'channel_boundary': 'north', 'approach-snap-point-from': 'west'},
+                'activity': {'side': 'north', 'position': 'left',   'channel-boundary': 'north', 'approach-snap-point-from': None},
+                'gateway':  {'side': 'west',  'position': 'middle', 'channel-boundary': 'north', 'approach-snap-point-from': 'west'},
+                'event':    {'side': 'west',  'position': 'middle', 'channel-boundary': 'north', 'approach-snap-point-from': 'west'},
+                'data':     {'side': 'north', 'position': 'middle', 'channel-boundary': 'north', 'approach-snap-point-from': 'west'},
             },
         },
     },
     'north': {
         'from-node': {
             'east-most': {
-                'activity': {'side': 'east',  'position': 'top',    'channel_boundary': 'east',  'approach-snap-point-from': None},
-                'gateway':  {'side': 'east',  'position': 'middle', 'channel_boundary': 'east',  'approach-snap-point-from': None},
-                'event':    {'side': 'east',  'position': 'middle', 'channel_boundary': 'east',  'approach-snap-point-from': None},
-                'data':     {'side': 'east',  'position': 'middle', 'channel_boundary': 'east',  'approach-snap-point-from': None},
+                'activity': {'side': 'east',  'position': 'top',    'channel-boundary': 'east',  'approach-snap-point-from': None},
+                'gateway':  {'side': 'east',  'position': 'middle', 'channel-boundary': 'east',  'approach-snap-point-from': None},
+                'event':    {'side': 'east',  'position': 'middle', 'channel-boundary': 'east',  'approach-snap-point-from': None},
+                'data':     {'side': 'east',  'position': 'middle', 'channel-boundary': 'east',  'approach-snap-point-from': None},
             },
             '*': {
-                'activity': {'side': 'north', 'position': 'right',  'channel_boundary': 'north', 'approach-snap-point-from': None},
-                'gateway':  {'side': 'north', 'position': 'middle', 'channel_boundary': 'north', 'approach-snap-point-from': 'east'},
-                'event':    {'side': 'north', 'position': 'middle', 'channel_boundary': 'north', 'approach-snap-point-from': 'east'},
-                'data':     {'side': 'north', 'position': 'middle', 'channel_boundary': 'north', 'approach-snap-point-from': 'east'},
+                'activity': {'side': 'north', 'position': 'right',  'channel-boundary': 'north', 'approach-snap-point-from': None},
+                'gateway':  {'side': 'north', 'position': 'middle', 'channel-boundary': 'north', 'approach-snap-point-from': 'east'},
+                'event':    {'side': 'north', 'position': 'middle', 'channel-boundary': 'north', 'approach-snap-point-from': 'east'},
+                'data':     {'side': 'north', 'position': 'middle', 'channel-boundary': 'north', 'approach-snap-point-from': 'east'},
             },
         },
         'to-node': {
             'west-most': {
-                'activity': {'side': 'west',  'position': 'middle', 'channel_boundary': 'west',  'approach-snap-point-from': None},
-                'gateway':  {'side': 'west',  'position': 'middle', 'channel_boundary': 'west',  'approach-snap-point-from': None},
-                'event':    {'side': 'west',  'position': 'middle', 'channel_boundary': 'west',  'approach-snap-point-from': None},
-                'data':     {'side': 'west',  'position': 'middle', 'channel_boundary': 'west',  'approach-snap-point-from': None},
+                'activity': {'side': 'west',  'position': 'middle', 'channel-boundary': 'west',  'approach-snap-point-from': None},
+                'gateway':  {'side': 'west',  'position': 'middle', 'channel-boundary': 'west',  'approach-snap-point-from': None},
+                'event':    {'side': 'west',  'position': 'middle', 'channel-boundary': 'west',  'approach-snap-point-from': None},
+                'data':     {'side': 'west',  'position': 'middle', 'channel-boundary': 'west',  'approach-snap-point-from': None},
             },
             '*': {
-                'activity': {'side': 'south', 'position': 'left',   'channel_boundary': 'south', 'approach-snap-point-from': None},
-                'gateway':  {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': 'east'},
-                'event':    {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': 'east'},
-                'data':     {'side': 'south', 'position': 'middle', 'channel_boundary': 'south', 'approach-snap-point-from': 'east'},
+                'activity': {'side': 'south', 'position': 'left',   'channel-boundary': 'south', 'approach-snap-point-from': None},
+                'gateway':  {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': 'east'},
+                'event':    {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': 'east'},
+                'data':     {'side': 'south', 'position': 'middle', 'channel-boundary': 'south', 'approach-snap-point-from': 'east'},
             },
         },
     },
@@ -167,13 +136,13 @@ class LaneFlow(FlowObject):
         from_node_spec = self.snap_rules[direction]['from-node'][from_node_position][from_node.category]
         to_node_spec = self.snap_rules[direction]['to-node'][to_node_position][to_node.category]
 
-        from_node_pool_boundary = from_node_spec['channel_boundary']
-        to_node_pool_boundary = to_node_spec['channel_boundary']
+        from_node_pool_boundary = from_node_spec['channel-boundary']
+        to_node_pool_boundary = to_node_spec['channel-boundary']
 
         from_node_points_in_lane_coordinate = self.pool_collection.outside_the_pool(
                                                 pool_boundary=from_node_pool_boundary,
                                                 pool_number=from_node_pool_number,
-                                                channel_boundary=from_node_spec['channel_boundary'],
+                                                channel_boundary=from_node_spec['channel-boundary'],
                                                 channel=from_node_channel,
                                                 node=from_node,
                                                 side=from_node_spec['side'],
@@ -187,10 +156,13 @@ class LaneFlow(FlowObject):
             warn('could not calculate snap points for from-node [{0}]'.format(from_node.id))
             return None
 
+        # warn('from_node points: [{0}]'.format(optimize_points(from_node_points_in_lane_coordinate)))
+
+
         to_node_points_in_lane_coordinate = self.pool_collection.outside_the_pool(
                                                 pool_boundary=to_node_pool_boundary,
                                                 pool_number=to_node_pool_number,
-                                                channel_boundary=to_node_spec['channel_boundary'],
+                                                channel_boundary=to_node_spec['channel-boundary'],
                                                 channel=to_node_channel,
                                                 node=to_node,
                                                 side=to_node_spec['side'],
@@ -215,8 +187,13 @@ class LaneFlow(FlowObject):
             joining_points = self.pool_collection.connect_southward(from_pool_number=to_node_pool_number, point_from=north_point, to_pool_number=from_node_pool_number, point_to=south_point)
             joining_points.reverse()
 
+        # warn('joining points: [{0}]'.format(joining_points))
+        # self.mark_points(from_node_points_in_lane_coordinate, self.pool_collection.element.svg, 'red')
+        # self.mark_points(to_node_points_in_lane_coordinate, self.pool_collection.element.svg, 'green')
+
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_lane_coordinate + joining_points + to_node_points_in_lane_coordinate
+        # warn('flow points: [{0}]'.format(optimize_points(flow_points)))
         flow_svg, flow_width, flow_height = a_flow(flow_points, label, self.theme)
 
         return SvgElement(svg=flow_svg, width=flow_width, height=flow_height)

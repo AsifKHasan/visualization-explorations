@@ -76,7 +76,7 @@ graph pizza_order {
         bake_pizza                  --> deliver_pizza
 
         # edges from pizza_store:delivery_person
-
+        where_is_pizza                  --> deliver_pizza
     }
 
     # edges across lanes

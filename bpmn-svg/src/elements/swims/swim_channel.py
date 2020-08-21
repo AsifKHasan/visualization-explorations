@@ -150,6 +150,9 @@ CLASSES = {
     'eventBasedParallelStart':  {'m': 'elements.gateways.gateway_event_based_parallel_start',                           'c': 'GatewayEventBasedParallelStart',              'g': 'gateway'},
 }
 
+'''
+    a channel is a horizontally laid group of nodes (bpmn elements)
+'''
 class SwimChannel(BpmnElement):
     def __init__(self, bpmn_id, lane_id, pool_id, nodes, edges, channel_object):
         self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, self.channel_object = bpmn_id, lane_id, pool_id, nodes, edges, channel_object
@@ -252,8 +255,6 @@ class SwimChannel(BpmnElement):
         self.assemble_elements()
 
         return self.svg_element
-
-
 
 
 ''' ----------------------------------------------------------------------------------------------------------------------------------
@@ -473,15 +474,17 @@ class ChannelObject:
         we want a path to bypass the channel through the routing area
     '''
     def bypass_vertically(self, coming_from, going_to, margin_spec):
-
         # the coming_from point is north of going_to, so we have to reach a point south of the channel either through east or west or directly dpending on which direction we are going_to
         if coming_from.north_of(going_to):
             # if the coming_from point is already below the channel, we have no point
+            # warn('I {0} am going to south to {1} bypassing channel {2}'.format(coming_from, going_to, self.name))
             if coming_from.y >= self.element.xy.y + self.element.height + margin_spec['bottom']:
+                # warn('I {0} am going to {1} and I am already below the channel {2}'.format(coming_from, going_to, self.name))
                 return []
 
             # if the coming_from point's x position is outside the channel, we can directly go south
             elif (self.element.xy.x - margin_spec['left']) >= coming_from.x or coming_from.x >= (self.element.xy.x + self.element.width + margin_spec['right']):
+                # warn('I {0} am going to south to {1} going straight through {2}'.format(coming_from, going_to, self.name))
                 return [Point(coming_from.x, self.element.xy.y + self.element.height + margin_spec['bottom'])]
 
             # if the coming_from point is properly above the channel, we make a path
@@ -489,20 +492,23 @@ class ChannelObject:
                 # to the channel north vertically below coming_from
                 p1 = Point(coming_from.x, self.element.xy.y - margin_spec['top'])
                 if going_to.east_of(coming_from):
+                    # warn('I {0} am going to south to {1} bypassing channel {2} from east'.format(coming_from, going_to, self.name))
                     # to the channel north-east
                     p2 = Point(self.element.xy.x + self.element.width + margin_spec['right'], p1.y)
                     # debug('southward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
                 else:
+                    # warn('I {0} am going to south to {1} bypassing channel {2} from west'.format(coming_from, going_to, self.name))
                     # to the channel north-west
-                    p2 = Point(self.element.xy.x - margin_spec['left'] , p1.y)
+                    p2 = Point(self.element.xy.x - margin_spec['left'], p1.y)
                     # debug('northward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
 
                 # to the channel south vertically below p2
                 p3 = Point(p2.x, self.element.xy.y + self.element.height + margin_spec['bottom'])
 
-        # the coming_from point is south of channel, so we have to reach a point north of the channel either through east or west dpending on which direction we are going_to
+        # the coming_from point is south of going_to, so we have to reach a point north of the channel either through east or west dpending on which direction we are going_to
         else:
             # if the coming_from point is already above the channel, we have no point
+            # warn('I {0} am going to north to {1} bypassing channel {2}'.format(coming_from, going_to, self.name))
             if coming_from.y <= self.element.xy.y - margin_spec['top']:
                 return []
 

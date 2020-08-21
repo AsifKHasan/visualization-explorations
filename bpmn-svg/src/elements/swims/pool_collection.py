@@ -3,15 +3,8 @@
 '''
 from pprint import pprint
 
-from pysvg.builders import *
-from pysvg.filter import *
-from pysvg.gradient import *
-from pysvg.linking import *
-from pysvg.script import *
-from pysvg.shape import *
 from pysvg.structure import *
-from pysvg.style import *
-from pysvg.text import *
+from pysvg.builders import *
 
 from util.geometry import Point
 from util.logger import *
@@ -23,8 +16,10 @@ from elements.swims.swim_pool import SwimPool
 from elements.flows.flow_object import EdgeObject
 from elements.flows.lane_flow import LaneFlow
 
+'''
+    a pool collection is a vertical stack of pools
+'''
 class PoolCollection(BpmnElement):
-    # a pool collection is a vertical stack of pools
     def __init__(self, bpmn_id, lane_id, pools, edges):
         self.theme = self.current_theme['swims']['PoolCollection']
         self.bpmn_id, self.lane_id, self.pools, self.edges = bpmn_id, lane_id, pools, edges
@@ -43,7 +38,7 @@ class PoolCollection(BpmnElement):
                 edge_type = EDGE_TYPE[edge['type']]
                 edge_label = edge.get('label', None)
 
-                # create an appropriate flow object, use ChannelFlow which manages flows inside a SwimChannel
+                # create an appropriate flow object, use LaneFlow which manages flows inside a SwimLane
                 flow_object = LaneFlow(edge_type, self.pool_collection)
                 flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label)
 
@@ -77,7 +72,6 @@ class PoolCollection(BpmnElement):
 
         # wrap it in a svg element
         self.label_element = SvgElement(svg=svg_group, width=group_width, height=group_height)
-        # pprint(self.label_element.svg.getXML())
         return self.label_element
 
     def collect_elements(self):
@@ -127,8 +121,8 @@ class PoolCollection(BpmnElement):
 
         # wrap it in a svg element
         self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height)
-        info('..assembling pools for [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
         self.pool_collection.element = self.svg_element
+        info('..assembling pools for [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))
         return self.svg_element
 
 
@@ -147,11 +141,11 @@ class PoolCollectionObject:
 
     '''
         connects two points in a lane only through straight lines.
-        a. The points are asumed to be outside a Pool's outer rectangle inside the routing area between pool
+        a. The points are asumed to be outside a Pool's outer rectangle inside the routing area between pools
         b. point_from must be above point_to
 
         1. We start by trying to go straight to the same y position of *point_to* (let us call it *target_point*) so that we can draw a straight horizontal line from there to *point_to*
-        2. but going straight to the *target_point* from *point_from* may not be possible as there may be a whole pool in between
+        2. but going straight to the *target_point* from *point_from* may not be possible as there may be a whole pools in between
         3. so, if there is a pool in between, we bypass the pool (by moving either to left or right) to the routing area east or west of the pool in the middle and now try to reach the *target_point* in a recursive manner
     '''
     def connect_southward(self, from_pool_number, point_from, to_pool_number, point_to):
@@ -160,7 +154,7 @@ class PoolCollectionObject:
             # yes we have pools in between
 
             # we bypass the northmost (first) pool
-            pool_number_to_bypass = from_pool_number+1
+            pool_number_to_bypass = from_pool_number + 1
             pool_to_bypass = self.channel_collection_list[pool_number_to_bypass]
             margin_spec = self.margin_spec(pool_number_to_bypass)
             points_to_bypass_the_pool = pool_to_bypass.bypass_vertically(coming_from=point_from, going_to=point_to, margin_spec=margin_spec)
@@ -168,8 +162,74 @@ class PoolCollectionObject:
             return [point_from] + points_to_bypass_the_pool + self.connect_southward(pool_number_to_bypass, points_to_bypass_the_pool[-1], to_pool_number, point_to)
 
         else:
-            # there is no pool in between, we can just return the intersection point
-            return [point_from, Point(point_from.x, point_to.y), point_to]
+            # there is no pool in between,
+            if point_from.y == point_to.y:
+                # they are on the same horizontal line - inside a pool routing area
+                return [point_from, Point(point_from.x, point_to.y), point_to]
+            else:
+                # they are not on a line, we need a connecting path, looks like one or both of them are at eastern/western boundary
+                # the north (point_from) needs to come down to southern boundary
+                point_from_next = Point(point_from.x, self.channel_collection_list[from_pool_number].element.xy.y + self.channel_collection_list[from_pool_number].element.height + self.margin_spec(to_pool_number)['bottom'])
+
+                # the south (point_to) needs to move up to northern boundary
+                point_to_next = Point(point_to.x, self.channel_collection_list[to_pool_number].element.xy.y - self.margin_spec(to_pool_number)['top'])
+
+                return [point_from, point_from_next, point_to_next, point_to]
+
+
+    def outside_the_lane(self, lane_boundary, pool_boundary, pool_number, channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type, lane_margin_spec):
+        # first get outside the lane
+        points_in_lane_coordinate = self.outside_the_pool(pool_boundary, pool_number, channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type)
+
+        # now get outside the lane (pool_collection) - to do so we we either go south or north depending on lane_boundary
+        last_pool_number = len(self.channel_collection_list) - 1
+        if lane_boundary == 'south':
+            # we have to get to the southern boundary of the lane
+            if role == 'from':
+                the_point = Point(points_in_lane_coordinate[-1].x, self.element.height + lane_margin_spec['bottom'])
+                the_points = self.connect_southward(pool_number, points_in_lane_coordinate[-1], last_pool_number, the_point)
+            else:
+                the_point = Point(points_in_lane_coordinate[0].x, self.element.height + lane_margin_spec['bottom'])
+                the_points = self.connect_southward(pool_number, points_in_lane_coordinate[0], last_pool_number, the_point)
+
+        elif lane_boundary == 'north':
+            # we have to get to the northern boundary of the lane
+            if role == 'from':
+                the_point = Point(points_in_lane_coordinate[-1].x, -lane_margin_spec['top'])
+                the_points = self.connect_southward(0, points_in_lane_coordinate[-1], pool_number, the_point)
+            else:
+                the_point = Point(points_in_lane_coordinate[0].x, -lane_margin_spec['top'])
+                the_points = self.connect_southward(0, points_in_lane_coordinate[0], pool_number, the_point)
+
+        elif lane_boundary == 'west':
+            # we have to get to the western boundary of the lane
+            if role == 'from':
+                the_points = [Point(-lane_margin_spec['left'], points_in_lane_coordinate[-1].y)]
+                # the_points = self.connect_southward(points_in_lane_coordinate[-1], the_point)
+            else:
+                the_points = [Point(-lane_margin_spec['left'], points_in_lane_coordinate[0].y)]
+                # the_points = self.connect_southward(points_in_lane_coordinate[0], the_point)
+
+        elif lane_boundary == 'east':
+            # we have to get to the eastern boundary of the lane
+            if role == 'from':
+                the_points = [Point(self.element.width + lane_margin_spec['right'], points_in_lane_coordinate[-1].y)]
+                # the_points = self.connect_southward(points_in_lane_coordinate[-1], the_point)
+            else:
+                the_points = [Point(self.element.width + lane_margin_spec['right'], points_in_lane_coordinate[0].y)]
+                # the_points = self.connect_southward(points_in_lane_coordinate[0], the_point)
+
+        else:
+            # should never happen
+            warn('lane boundary is unknown')
+            return points_in_lane_coordinate
+
+        # debug('{0} outside point for pool [{1}] xy: {2} ({3} x {4}) is at {5}'.format(pool_boundary, self.pool_id, self.element.xy, self.element.width, self.element.height, the_point))
+
+        if role == 'to':
+            return the_points + points_in_lane_coordinate
+        else:
+            return points_in_lane_coordinate + the_points
 
 
     '''
@@ -189,7 +249,7 @@ class PoolCollectionObject:
         given a node get its pool number and id
     '''
     def pool_number_and_id(self, node):
-        pool_number, pool_id, _ = self.pool_id_number_and_node(node.id)
+        pool_number, pool_id, _ = self.pool_number_id_and_node(node.id)
 
         return pool_number, pool_id
 
@@ -198,8 +258,8 @@ class PoolCollectionObject:
         given to node id's, return the corresponding nodes only if the nodes are in different pools of the same lane
     '''
     def get_if_from_different_pools(self, from_node_id, to_node_id):
-        from_pool_number, from_pool_id, from_node = self.pool_id_number_and_node(from_node_id)
-        to_pool_number, to_pool_id, to_node = self.pool_id_number_and_node(to_node_id)
+        from_pool_number, from_pool_id, from_node = self.pool_number_id_and_node(from_node_id)
+        to_pool_number, to_pool_id, to_node = self.pool_number_id_and_node(to_node_id)
 
         if from_pool_number != -1 and to_pool_number != -1 and from_pool_number != to_pool_number:
             if from_node is not None and to_node is not None:
@@ -211,7 +271,7 @@ class PoolCollectionObject:
     '''
         given a node's id returns its pool number and the node
     '''
-    def pool_id_number_and_node(self, node_id):
+    def pool_number_id_and_node(self, node_id):
         pool_number = 0
         for channel_collection in self.channel_collection_list:
             channel_number, node = channel_collection.channel_number_and_node(node_id)

@@ -2,17 +2,8 @@
 '''
 '''
 import importlib
+from copy import deepcopy
 from pprint import pprint
-
-from pysvg.builders import *
-from pysvg.filter import *
-from pysvg.gradient import *
-from pysvg.linking import *
-from pysvg.script import *
-from pysvg.shape import *
-from pysvg.structure import *
-from pysvg.style import *
-from pysvg.text import *
 
 from util.geometry import Point
 
@@ -27,6 +18,9 @@ from elements.swims.swim_channel import SwimChannel, ChannelObject
 from elements.flows.flow_object import EdgeObject
 from elements.flows.pool_flow import PoolFlow
 
+'''
+    a channel collection is a vertical stack of channels
+'''
 class ChannelCollection(BpmnElement):
     def __init__(self, bpmn_id, lane_id, pool_id, nodes, edges):
         self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges = bpmn_id, lane_id, pool_id, nodes, edges
@@ -45,7 +39,7 @@ class ChannelCollection(BpmnElement):
                 edge_type = EDGE_TYPE[edge['type']]
                 edge_label = edge.get('label', None)
 
-                # create an appropriate flow object, use ChannelFlow which manages flows inside a SwimChannel
+                # create an appropriate flow object, use PoolFlow which manages flows inside a SwimPool
                 flow_object = PoolFlow(edge_type, self.channel_collection)
                 flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label)
 
@@ -169,6 +163,9 @@ class ChannelCollectionObject:
         3. so, if there is a channel in between, we bypass the channel (by moving either to left or right) to the routing area east or west of the channel in the middle and now try to reach the *target_point* in a recursive manner
     '''
     def connect_southward(self, point_from, point_to):
+        if point_from == point_to:
+            return [point_from]
+
         # see if there is any channel (vertically or horizontally) between point_from and point_to
         channels_vertically_between, channels_horizontally_between = self.channels_blocking_southward(point_from, point_to)
 
@@ -182,8 +179,11 @@ class ChannelCollectionObject:
             channel_to_bypass = channels_vertically_between[0]
             margin_spec = self.margin_spec(channel_to_bypass)
             points_to_bypass_the_channel = channel_to_bypass.bypass_vertically(coming_from=point_from, going_to=point_to, margin_spec=margin_spec)
+            # warn('I {0} am going to south to {1} bypassing channel {2} [{3}]'.format(point_from, point_to, channel_to_bypass.name, points_to_bypass_the_channel))
 
-            return [point_from] + points_to_bypass_the_channel + self.connect_southward(points_to_bypass_the_channel[-1], point_to)
+            points = [point_from] + points_to_bypass_the_channel + self.connect_southward(points_to_bypass_the_channel[-1], point_to)
+            # warn('I {0} am going to south to {1} through [{2}]'.format(point_from, point_to, points))
+            return points
 
         # next we handle the channels which are obstructing the path horizontally only when we have no vertical obstruction
         elif len(channels_horizontally_between) > 0:
@@ -197,45 +197,60 @@ class ChannelCollectionObject:
             # debug('bypassing [{0}]:[{1}] from {2} towards {3}'.format(channel_to_bypass.number, channel_to_bypass.name, point_to, point_from))
             points_to_bypass_the_channel = channel_to_bypass.bypass_vertically(coming_from=point_to, going_to=point_from, margin_spec=margin_spec)
             points_to_bypass_the_channel.reverse()
-            return self.connect_southward(point_from, points_to_bypass_the_channel[0]) + points_to_bypass_the_channel + [point_to]
+            points = self.connect_southward(point_from, points_to_bypass_the_channel[0]) + points_to_bypass_the_channel + [point_to]
+            return points
 
         else:
             # there is no channel in between, we can just return the intersection point
-            return [point_from, Point(point_from.x, point_to.y), point_to]
+            if point_from.x == point_to.x or point_from.y == point_to.y:
+                return [point_from, point_to]
+            else:
+                return [point_from, Point(point_from.x, point_to.y), point_to]
 
 
     def outside_the_pool(self, pool_boundary, channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type, pool_margin_spec):
         # first get outside the channel
         points_in_pool_coordinate = self.outside_the_channel(channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type)
+        # warn('[{0}] role [{1}] points to channel boundary: [{2}]'.format(node.id, role, optimize_points(points_in_pool_coordinate)))
 
+        # debug('pool boundary is {0} and channel-boundary is {1} for [{2}]'.format(pool_boundary.upper(), channel_boundary.upper(), node.id))
         # now get outside the pool (channel_collection) - to do so we we either go south or north depending on pool_boundary
         if pool_boundary == 'south':
             # we have to get to the southern boundary of the pool
             if role == 'from':
                 the_point = Point(points_in_pool_coordinate[-1].x, self.element.height + pool_margin_spec['bottom'])
+                the_points = self.connect_southward(points_in_pool_coordinate[-1], the_point)
             else:
                 the_point = Point(points_in_pool_coordinate[0].x, self.element.height + pool_margin_spec['bottom'])
+                the_points = self.connect_southward(points_in_pool_coordinate[0], the_point)
 
         elif pool_boundary == 'north':
             # we have to get to the northern boundary of the pool
             if role == 'from':
                 the_point = Point(points_in_pool_coordinate[-1].x, -pool_margin_spec['top'])
+                the_points = self.connect_southward(the_point, points_in_pool_coordinate[-1])
+                the_points.reverse()
             else:
                 the_point = Point(points_in_pool_coordinate[0].x, -pool_margin_spec['top'])
+                the_points = self.connect_southward(the_point, points_in_pool_coordinate[0])
 
         elif pool_boundary == 'west':
             # we have to get to the western boundary of the pool
             if role == 'from':
                 the_point = Point(-pool_margin_spec['left'], points_in_pool_coordinate[-1].y)
+                the_points = self.connect_southward(points_in_pool_coordinate[-1], the_point)
             else:
                 the_point = Point(-pool_margin_spec['left'], points_in_pool_coordinate[0].y)
+                the_points = self.connect_southward(points_in_pool_coordinate[0], the_point)
 
         elif pool_boundary == 'east':
             # we have to get to the eastern boundary of the pool
             if role == 'from':
                 the_point = Point(self.element.width + pool_margin_spec['right'], points_in_pool_coordinate[-1].y)
+                the_points = self.connect_southward(points_in_pool_coordinate[-1], the_point)
             else:
                 the_point = Point(self.element.width + pool_margin_spec['right'], points_in_pool_coordinate[0].y)
+                the_points = self.connect_southward(points_in_pool_coordinate[0], the_point)
 
         else:
             # should never happen
@@ -245,9 +260,12 @@ class ChannelCollectionObject:
         # debug('{0} outside point for pool [{1}] xy: {2} ({3} x {4}) is at {5}'.format(pool_boundary, self.pool_id, self.element.xy, self.element.width, self.element.height, the_point))
 
         if role == 'to':
-            return [the_point] + points_in_pool_coordinate
+            points = the_points + points_in_pool_coordinate
         else:
-            return points_in_pool_coordinate + [the_point]
+            points = points_in_pool_coordinate + the_points
+
+        # warn('[{0}] role [{1}] points to pool   boundary: [{2}]'.format(node.id, role, optimize_points(points)))
+        return points
 
 
     '''

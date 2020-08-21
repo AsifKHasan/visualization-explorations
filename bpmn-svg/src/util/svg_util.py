@@ -55,11 +55,11 @@ def an_arrow_head(arrow_point, snap_direction, spec):
     svg_group.addElement(svg)
     return svg_group, 0, 0
 
-def a_snap_point(snap_point):
+def a_snap_point(snap_point, color='#FF0000'):
     svg_group = G()
 
-    radius = 4
-    spec = {'style': {'fill': '#FF0000', 'stroke-width': 0, 'stroke': '#FF8080'}}
+    radius = 3
+    spec = {'style': {'fill': color, 'stroke-width': 0, 'stroke': '#FF8080'}}
     circle_svg = Circle(cx=snap_point.x, cy=snap_point.y, r=radius)
     circle_svg.set_style(StyleBuilder(spec['style']).getStyle())
 

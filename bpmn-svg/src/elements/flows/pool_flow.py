@@ -9,39 +9,8 @@ from util.geometry import Point
 from util.svg_util import *
 
 '''
-    Class to handle a flows/edges between channels of a pool where from-node is in one channel and to-node is in another channel within the same ChabnnelCollection  (pool).
-
-    Criteria - from-node and to-node must be in same ChannelCollection, but not in same Channel. The possible scenarios are
-
-    #1  *from-node* channel is above the *to-node* channel
-        a.  *to-node* is the first node of its Channel
-            1) from-node's snap-position is on
-                a   SOUTH-MIDDLE
-            2) to-node's snap-position is on
-                a   WEST-MIDDLE if to_node is further east to *from-node*
-                b   NORTH-MIDDLE if to_node is further west to *from-node*
-        b.  *to-node* is NOT the first node of its Channel
-            1) from-node's snap-position is on
-                a   SOUTH-MIDDLE
-            2) to-node's snap-position is on
-                a   NORTH-LEFT for Activity
-                b   NORTH-MIDDLE for Gateway/Event/Data
-
-    #2  *from-node* channel is below the *to-node* channel
-        a)  *to-node* is to the left (west) of *from-node* in pool coordinate
-            1)  from-node's snap-position is on
-                a   EAST-TOP for Activity
-                b   EAST-MIDDLE for Gateway/Event/Data
-            2)   to-node's snap-position is on
-                a   SOUTH-RIGHT for Activity
-                b   SOUTH-MIDDLE for Gateway/Event/Data
-        b)  *to-node* is to the right (east) of *from-node* in pool coordinate
-            1)  from-node's snap-position is on
-                a   EAST-TOP for Activity
-                b   EAST-MIDDLE for Gateway/Event/Data
-            2)   to-node's snap-position is on
-                a   SOUTH-LEFT for Activity
-                b   SOUTH-MIDDLE for Gateway/Event/Data
+    Class to handle a flows/edges between channels of a pool
+    Criteria - from-node and to-node must be in in two different channels under the same pool
 '''
 SNAP_RULES = {
     'south': {
@@ -200,6 +169,7 @@ class PoolFlow(FlowObject):
             joining_points = self.channel_collection.connect_southward(point_from=north_point, point_to=south_point)
             joining_points.reverse()
 
+        # self.mark_points(joining_points, self.channel_collection.element.svg)
 
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_pool_coordinate + joining_points + to_node_points_in_pool_coordinate

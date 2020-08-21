@@ -48,7 +48,7 @@ class Bpmn(BpmnElement):
         info('processing BPMN [{0}]'.format(self.bpmn_id))
 
         # process the lane collection
-        self.lane_collection_instance = LaneCollection(self.bpmn_id, self.bpmn_data['lanes'])
+        self.lane_collection_instance = LaneCollection(self.bpmn_id, self.bpmn_data['lanes'], self.bpmn_data['edges'])
         self.lane_collection_instance.collect_elements()
 
         info('processing BPMN [{0}] DONE'.format(self.bpmn_id))

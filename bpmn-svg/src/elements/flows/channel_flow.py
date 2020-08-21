@@ -9,13 +9,9 @@ from util.geometry import Point
 from util.svg_util import *
 
 '''
-    Class to handle a flows/edges inside the channel which means between nodes inside a specific channel.
-
+    Class to handle a flows/edges inside a channel
     A channel is by definition a straight horizontal stack of nodes, so edges are mostly straight lines from left to right (west to east) except when there is a loop back from a child to a previous node towards left (west).
-
-    The rules are defined in SNAP_RULES
-    1. The first key is the direction from from_node to to_node (east/west)
-    2. the second key is the node's distance (adjacent/apart/*)
+    Criteria - from-node and to-node must be in the same channel
 '''
 
 SNAP_RULES = {
