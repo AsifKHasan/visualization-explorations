@@ -223,6 +223,7 @@ class ChannelCollectionObject:
             else:
                 the_point = Point(points_in_pool_coordinate[0].x, self.element.height + pool_margin_spec['bottom'])
                 the_points = self.connect_southward(points_in_pool_coordinate[0], the_point)
+                the_points.reverse()
 
         elif pool_boundary == 'north':
             # we have to get to the northern boundary of the pool

@@ -169,7 +169,8 @@ class PoolFlow(FlowObject):
             joining_points = self.channel_collection.connect_southward(point_from=north_point, point_to=south_point)
             joining_points.reverse()
 
-        # self.mark_points(joining_points, self.channel_collection.element.svg)
+        # self.mark_points(from_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'red')
+        # self.mark_points(to_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'green')
 
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_pool_coordinate + joining_points + to_node_points_in_pool_coordinate

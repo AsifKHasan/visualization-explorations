@@ -192,7 +192,7 @@ class BpmnFlow(FlowObject):
             joining_points = self.lane_collection.connect_southward(from_lane_number=to_node_lane_number, point_from=north_point, to_lane_number=from_node_lane_number, point_to=south_point)
             joining_points.reverse()
 
-        self.mark_points(joining_points, self.lane_collection.element.svg, color='red')
+        # self.mark_points(joining_points, self.lane_collection.element.svg, color='red')
 
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_bpmn_coordinate + joining_points + to_node_points_in_bpmn_coordinate

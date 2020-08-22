@@ -1,0 +1,58 @@
+graph brits_train_location_map {
+    label = "BR-BRITS Train Location Map"
+
+    lane customer {
+        label = "Customer"
+        pool logged_in_user {
+            label = "Logged-in User"
+
+            start							start
+            task							train_location_map_menu				[label="Click on train location map menu";]
+            intermediate					map_shown							[label="Map shown";]
+            exclusive						search_or_pick						[label="Search or Pick";]
+            task							pick_trains							[label="Pick one or more trains";move_x=100;]
+            task							search_for_trains					[label="Search for trains";]
+            task							view_updated_map					[label="View updated map";]
+            end								end
+
+            start							--> train_location_map_menu
+            train_location_map_menu			..> map_shown
+            map_shown						..> search_or_pick
+            search_or_pick					--> pick_trains
+            search_or_pick					--> search_for_trains
+            pick_trains						..> view_updated_map
+            view_updated_map				--> end
+        }
+    }
+    lane br {
+        label = "Bangladesh Railway"
+        pool application {
+            label = "BRITS Application"
+
+            call							generate_track_map					[label="Generate map with rail tracks and train list with search option";move_x=141;]
+            call							generate_train_list_on_search		[label="Generate train list based on search";move_x=129;]
+            call							generate_map_with_train_position	[label="Generate map marking positions for the selected train(s)";move_x=20;]
+        }
+        pool database {
+            label = "BRITS Database"
+
+            data							rail_track_map						[label="Rail track map";move_x=176;]
+            data							train_schedule						[label="Train schedule";move_x=185;]
+            data							train_location_data					[label="Train location GPS data";move_x=80;]
+        }
+
+
+        # between [application] and [database]
+        generate_track_map					..> rail_track_map
+        generate_train_list_on_search   	..> train_schedule
+        generate_map_with_train_position	..> train_location_data
+    }
+
+    # between [customer:logged_in_user] and [br:application]
+    train_location_map_menu					~~> generate_track_map
+    generate_track_map						~~> map_shown
+    search_for_trains						~~> generate_train_list_on_search
+    generate_train_list_on_search			~~> map_shown
+    pick_trains								~~> generate_map_with_train_position
+    generate_map_with_train_position		~~> view_updated_map
+}

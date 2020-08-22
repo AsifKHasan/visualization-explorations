@@ -1,4 +1,4 @@
-graph edge_test {
+graph edge_test_01 {
     label = "Edge Testing"
 
     lane L0 {

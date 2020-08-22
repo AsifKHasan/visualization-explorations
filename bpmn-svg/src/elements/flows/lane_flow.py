@@ -187,7 +187,6 @@ class LaneFlow(FlowObject):
             joining_points = self.pool_collection.connect_southward(from_pool_number=to_node_pool_number, point_from=north_point, to_pool_number=from_node_pool_number, point_to=south_point)
             joining_points.reverse()
 
-        # warn('joining points: [{0}]'.format(joining_points))
         # self.mark_points(from_node_points_in_lane_coordinate, self.pool_collection.element.svg, 'red')
         # self.mark_points(to_node_points_in_lane_coordinate, self.pool_collection.element.svg, 'green')
 

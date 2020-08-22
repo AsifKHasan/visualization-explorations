@@ -1,0 +1,80 @@
+graph edge_test_01 {
+    label = "Edge Testing"
+
+    lane L0 {
+        label = "Lane 0"
+        pool P0_0 {
+            label = "Lane 0 Pool 0"
+
+            start           start_00
+            task            t_L0_P0_T0
+            exclusive       exclusive_00            [label="X 00";]
+            task            t_L0_P0_T1
+            task            t_L0_P0_T2
+            task            t_L0_P0_T3
+            task            t_L0_P0_T4              [wrap_here=true;]
+            task            t_L0_P0_T5
+            task            t_L0_P0_T6
+            task            t_L0_P0_T7
+            task            t_L0_P0_T8
+            end             end_00                  [label="End 00";]
+
+            start_00        --> t_L0_P0_T0
+            t_L0_P0_T0      --> exclusive_00
+            exclusive_00    --> t_L0_P0_T1
+            exclusive_00    --> t_L0_P0_T5
+            t_L0_P0_T5      --> end_00
+            t_L0_P0_T1      --> t_L0_P0_T2
+            t_L0_P0_T2      --> t_L0_P0_T3
+            t_L0_P0_T3      --> t_L0_P0_T4
+            /* t_L0_P0_T4      --> t_L0_P0_T5
+            t_L0_P0_T5      --> t_L0_P0_T6 */
+            t_L0_P0_T4      --> t_L0_P0_T6
+            t_L0_P0_T6      --> t_L0_P0_T7
+            t_L0_P0_T7      --> t_L0_P0_T8
+            t_L0_P0_T8      --> end_00
+
+        }
+        pool P0_1 {
+            label = "Lane 0 Pool 1"
+
+            task            t_L0_P1_T0
+            exclusive       exclusive_01            [label="X 01";]
+            task            t_L0_P1_T1
+            task            t_L0_P1_T2
+            task            t_L0_P1_T3
+            task            t_L0_P1_T4
+            end             end_01                  [label="End 01";]
+
+            t_L0_P1_T0      --> exclusive_01
+            exclusive_01    --> t_L0_P1_T1
+            exclusive_01    --> t_L0_P1_T3
+            t_L0_P1_T1      --> t_L0_P1_T2
+            t_L0_P1_T3      --> t_L0_P1_T4
+            t_L0_P1_T4      --> end_01
+
+        }
+        pool P0_2 {
+            label = "Lane 0 Pool 2"
+
+            task            t_L0_P2_T0
+            exclusive       exclusive_02            [label="X 02";]
+            task            t_L0_P2_T1
+            task            t_L0_P2_T2
+            task            t_L0_P2_T3
+            task            t_L0_P2_T4
+            task            t_L0_P2_T5
+            task            t_L0_P2_T6
+
+            t_L0_P2_T0      --> exclusive_02
+            exclusive_02    --> t_L0_P2_T1
+            t_L0_P2_T1      --> t_L0_P2_T2
+            exclusive_02    --> t_L0_P2_T3
+            t_L0_P2_T3      --> t_L0_P2_T4
+            exclusive_02    --> t_L0_P2_T5
+            t_L0_P2_T5      --> t_L0_P2_T6
+        }
+        /* t_L0_P0_T1      --> t_L0_P2_T4 */
+        t_L0_P2_T4      --> t_L0_P0_T1
+    }
+}

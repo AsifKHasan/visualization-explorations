@@ -39,7 +39,7 @@ DEFAULT_THEME = {
                 'left': 24, 'top': 24, 'right': 24, 'bottom': 24
             },
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#FFB000'
+                'fill': 'none', 'stroke-width': 0, 'stroke': '#FFB000'
             },
         },
         'SwimLane': {
@@ -66,7 +66,7 @@ DEFAULT_THEME = {
                 'left': 24, 'top': 24, 'right': 24, 'bottom': 24
             },
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#FF0000'
+                'fill': 'none', 'stroke-width': 0.25, 'stroke': '#FF8000'
             },
         },
         'SwimPool': {
@@ -97,7 +97,7 @@ DEFAULT_THEME = {
                 'left': 24, 'top': 24, 'right': 24, 'bottom': 24
             },
             'style': {
-                'fill': 'none', 'stroke-width': 1, 'stroke': '#0482FF'
+                'fill': 'none', 'stroke-width': 0.25, 'stroke': '#0482FF'
             },
         },
         'SwimChannel': {
@@ -109,7 +109,7 @@ DEFAULT_THEME = {
                     'left': 24, 'top': 24, 'right': 24, 'bottom': 24
                 },
                 'style': {
-                    'fill': 'none', 'stroke-width': 1, 'stroke': '#FF8243'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#FF8243'
                 },
             },
             # actual channel content area where the nodes are to be placed
