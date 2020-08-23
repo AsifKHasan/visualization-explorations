@@ -1,6 +1,3 @@
-/*
-python bpmn-parser.py < ../data/bank-account-opening.bpmn | tee ../out/bank-account-opening.json | python bpmn-to-svg.py
-*/
 graph bank_account_opening {
     label = "Bank Account Opening"
     _ [hide_labels=true]

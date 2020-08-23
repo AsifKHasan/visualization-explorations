@@ -1,6 +1,4 @@
 /*
-python bpmn-parser.py < ../data/airline-check-in.bpmn | tee ../out/airline-check-in.json | python bpmn-to-svg.py
-
     move_x - a positive value means the node should move further to east (right) the specified point, negative value means movement to west (left). This is useful for visualization when we would like our edges to look straight without unnecessary corners when possible
 */
 

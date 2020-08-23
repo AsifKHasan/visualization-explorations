@@ -1,6 +1,3 @@
-/*
-python bpmn-parser.py < ../data/order-fulfillment-and-procurement.bpmn | tee ../out/order-fulfillment-and-procurement.json | python bpmn-to-svg.py
-*/
 graph order_fulfillment_and_procurement {
     label = "Order Fulfillment and Procurement"
     _ [hide_swim_labels="true"]

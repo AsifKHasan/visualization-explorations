@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 '''
-https://www.bpmnquickguide.com/view-bpmn-quick-guide/
-cd C:\projects\asifhasan@github\visualization-explorations\bpmn-svg\src
-python bpmn-parser.py < ../data/grp__hrm__award-and-publication.bpmn > ../data/grp__hrm__award-and-publication.json
 '''
 import sys
 import os
@@ -266,7 +263,12 @@ def parse(seq):
 
     dotfile = graph + skip(finished)
 
-    return dotfile.parse(seq)
+    try:
+        parsed = dotfile.parse(seq)
+        return parsed
+    except NoParseError as e:
+        print(e.message)
+        return None
 
 def pretty_parse_tree(x):
     """object -> str"""
@@ -416,32 +418,34 @@ def to_json(x):
             process_lane(stmt, json_data[x.id]['lanes'])
         elif isinstance(stmt, Pool):
             print('pools can not be directly under a graph, must be inside a lane. exiting ...')
-            sys.exit(1)
+            return None
         elif isinstance(stmt, Edge):
             # TODO: handle edges (across lanes) in the graph
             process_edges(stmt, json_data[x.id]['edges'] )
         elif isinstance(stmt, Attr):
             print('attrs can not be directly under a graph, must be inside a pool. exiting ...')
-            sys.exit(1)
+            return None
         elif isinstance(stmt, Node):
             print('nodes can not be directly under a graph, must be inside a pool. exiting ...')
-            sys.exit(1)
+            return None
         else:
             print('unknown statement in graph: {0}. exiting ...'.format(type(stmt)))
-            sys.exit(1)
+            return None
 
     return json_data
 
 def write_json(json_data):
     sys.stdout.write(json.dumps(json_data, sort_keys=False, indent=4))
 
+def parse_to_json(input):
+    tree = parse(tokenize(input))
+    return to_json(tree)
+
 def main():
     try:
         stdin = os.fdopen(sys.stdin.fileno(), 'rb')
         input = stdin.read().decode(ENCODING)
-        tree = parse(tokenize(input))
-        # print(pretty_parse_tree(tree))
-        write_json(to_json(tree))
+        write_json(parse_to_json(input))
     except (NoParseError, LexerError) as e:
         msg = ('syntax error: {0}'.format(e))
         print(msg)

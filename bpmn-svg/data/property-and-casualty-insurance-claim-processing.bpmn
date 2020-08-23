@@ -1,6 +1,3 @@
-/*
-python bpmn-parser.py < ../data/property-and-casualty-insurance-claim-processing.bpmn | tee ../out/property-and-casualty-insurance-claim-processing.json | python bpmn-to-svg.py
-*/
 graph property_and_casualty_insurance_claim_processing {
     label = "Property and Casualty Insurance Claim Processing"
     _ [hide_swim_labels=true]
