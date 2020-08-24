@@ -17,7 +17,11 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Bpmn to SVG</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>resources/generate-svg.png</normaloff>resources/generate-svg.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -65,6 +69,9 @@
              <property name="styleSheet">
               <string notr="true">background-color: '#f8f8f8'</string>
              </property>
+             <property name="lineWrapMode">
+              <enum>QPlainTextEdit::NoWrap</enum>
+             </property>
             </widget>
            </item>
            <item row="0" column="0">
@@ -91,17 +98,28 @@
                  <string>Open a bpmn file</string>
                 </property>
                 <property name="text">
-                 <string>Open</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/open-bpmn.png</normaloff>resources/open-bpmn.png</iconset>
                 </property>
                 <property name="shortcut">
                  <string>Ctrl+O</string>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QToolButton" name="button_save_file">
                 <property name="text">
-                 <string>Save</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/save-bpmn.png</normaloff>resources/save-bpmn.png</iconset>
                 </property>
                 <property name="shortcut">
                  <string>Ctrl+S</string>
@@ -112,6 +130,10 @@
                <widget class="QToolButton" name="button_new_file">
                 <property name="text">
                  <string>New</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/new-bpmn.jpeg</normaloff>resources/new-bpmn.jpeg</iconset>
                 </property>
                 <property name="shortcut">
                  <string>Ctrl+N</string>
@@ -132,9 +154,48 @@
                </spacer>
               </item>
               <item>
+               <widget class="QToolButton" name="button_decrease">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/decrease.webp</normaloff>resources/decrease.webp</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="button_increase">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/increase.png</normaloff>resources/increase.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="check_linewrap">
+                <property name="text">
+                 <string>Wrap lines</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QToolButton" name="button_generate">
+                <property name="styleSheet">
+                 <string notr="true">background-color: '#e0e0e0'</string>
+                </property>
                 <property name="text">
                  <string>svg</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/generate-svg.png</normaloff>resources/generate-svg.png</iconset>
                 </property>
                 <property name="shortcut">
                  <string>Ctrl+G</string>
@@ -213,9 +274,13 @@
                </spacer>
               </item>
               <item>
-               <widget class="QToolButton" name="toolButton_zoom_out">
+               <widget class="QToolButton" name="button_zoom_out">
                 <property name="text">
                  <string>-</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/zoom-out.svg</normaloff>resources/zoom-out.svg</iconset>
                 </property>
                 <property name="shortcut">
                  <string>Ctrl+-</string>
@@ -223,16 +288,20 @@
                </widget>
               </item>
               <item>
-               <widget class="QToolButton" name="toolButton_zoom_100">
+               <widget class="QToolButton" name="button_zoom_100">
                 <property name="text">
                  <string>100%</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QToolButton" name="toolButton_zoom_in">
+               <widget class="QToolButton" name="button_zoom_in">
                 <property name="text">
                  <string>+</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/zoom-in.svg</normaloff>resources/zoom-in.svg</iconset>
                 </property>
                 <property name="shortcut">
                  <string>Ctrl+=</string>
@@ -301,6 +370,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="ui-resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>resources/zoom-in.svg</file>
+    <file>resources/zoom-out.svg</file>
+    <file>resources/new-bpmn.jpeg</file>
+    <file>resources/generate-svg.png</file>
+    <file>resources/save-bpmn.png</file>
+    <file>resources/open-bpmn.png</file>
+  </qresource>
+</RCC>
