@@ -18,6 +18,7 @@ class SvgViewer(QObject):
         QObject.__init__(self)
         self.ui = ui
         self.zoom_factor = zoom_factor
+        self.ui.button_zoom_100.setText('{0}%'.format(int(self.zoom_factor * 100)))
 
         self.ui.svgwidget_svg = QWebEngineView()
         self.ui.gridLayout_svgarea.addWidget(self.ui.svgwidget_svg)
@@ -47,11 +48,14 @@ class SvgViewer(QObject):
     def on_zoom_100(self):
         self.zoom_factor = 1.0
         self.ui.svgwidget_svg.setZoomFactor(self.zoom_factor)
+        self.ui.button_zoom_100.setText('{0}%'.format(int(self.zoom_factor * 100)))
 
     def on_zoom_out(self):
-        self.zoom_factor = self.zoom_factor/1.25
+        self.zoom_factor = self.zoom_factor/1.1
         self.ui.svgwidget_svg.setZoomFactor(self.zoom_factor)
+        self.ui.button_zoom_100.setText('{0}%'.format(int(self.zoom_factor * 100)))
 
     def on_zoom_in(self):
-        self.zoom_factor = self.zoom_factor * 1.25
+        self.zoom_factor = self.zoom_factor * 1.1
         self.ui.svgwidget_svg.setZoomFactor(self.zoom_factor)
+        self.ui.button_zoom_100.setText('{0}%'.format(int(self.zoom_factor * 100)))

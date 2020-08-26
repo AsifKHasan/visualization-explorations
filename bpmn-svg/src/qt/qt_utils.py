@@ -81,12 +81,7 @@ class BpmnHighlighter (QSyntaxHighlighter):
     def __init__(self, document):
         QSyntaxHighlighter.__init__(self, document)
 
-        # Multi-line strings (expression, flag, style)
-        # FIXME: The triple-quotes in these two lines will mess up the
-        # syntax highlighting from this point onward
-        # self.tri_single = (QRegExp("'''"), 0, STYLES['string2'])
-        # self.tri_double = (QRegExp('"""'), 0, STYLES['string2'])
-
+        # Multi-line comments
         self.comment_start_expression = QRegExp("/\\*")
         self.comment_end_expression = QRegExp("\\*/")
 
@@ -104,11 +99,6 @@ class BpmnHighlighter (QSyntaxHighlighter):
             (r'"[^"\\]*(\\.[^"\\]*)*"', 0, STYLES['string']),
             # Single-quoted string, possibly containing escape sequences
             (r"'[^'\\]*(\\.[^'\\]*)*'", 0, STYLES['string']),
-
-            # # 'def' followed by an identifier
-            # (r'\bdef\b\s*(\w+)', 1, STYLES['defclass']),
-            # # 'class' followed by an identifier
-            # (r'\bclass\b\s*(\w+)', 1, STYLES['defclass']),
 
             # From '#' until a newline
             (r'#[^\n]*', 0, STYLES['comment']),
