@@ -45,7 +45,8 @@ class MainWindow(QMainWindow):
         if horizontal_splitter_size:
             self.ui.splitter_horizontal.setSizes(horizontal_splitter_size)
 
-        zoom_factor = float(self.settings.value('zoom-factor', int))
+        print(self.settings.value('zoom-factor', 1.0, float))
+        zoom_factor = float(self.settings.value('zoom-factor', 1.0, float))
         if zoom_factor is None or zoom_factor == 0:
             zoom_factor = 1.0
 
