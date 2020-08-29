@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 '''
 '''
+import sys
+
 from PyQt5 import QtWidgets, uic
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
@@ -8,9 +10,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtGui import QKeySequence
 
-from qt.qt_utils import *
-
 from util.logger import *
+
+from qt.qt_utils import *
+from qt.log_stream import LogStream
 
 from qt.script_editor import ScriptEditor
 from qt.schema_editor import SchemaEditor
@@ -20,6 +23,10 @@ class MainWindow(QMainWindow):
     def __init__(self, screen, parent=None):
         super(QtWidgets.QMainWindow, self).__init__(parent)
         self.settings = QtCore.QSettings('spectrum', 'bpmn-svg')
+
+        # the custom output stream
+        sys.stdout = LogStream(log_generated=self.on_log_generated)
+        sys.stderr = LogStream(log_generated=self.on_log_generated)
 
         self.screen = screen
         self.ui = uic.loadUi("./bpmn-svg.ui", self)
@@ -33,6 +40,11 @@ class MainWindow(QMainWindow):
 
         self.ui.show()
 
+    def __del__(self):
+        # restore sys.stdout
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+
     def restore_settings(self):
         self.ui.centralwidget.setContentsMargins(0, 0, 0, 0)
         # self.ui.splitter_vertical.setContentsMargins(0, 0, 0, 0)
@@ -45,7 +57,6 @@ class MainWindow(QMainWindow):
         if horizontal_splitter_size:
             self.ui.splitter_horizontal.setSizes(horizontal_splitter_size)
 
-        print(self.settings.value('zoom-factor', 1.0, float))
         zoom_factor = float(self.settings.value('zoom-factor', 1.0, float))
         if zoom_factor is None or zoom_factor == 0:
             zoom_factor = 1.0
@@ -122,3 +133,6 @@ class MainWindow(QMainWindow):
             step = sizes[1]
 
         self.ui.splitter_vertical.setSizes([sizes[0] + step,  sizes[1] - step])
+
+    def on_log_generated(self, text):
+        self.ui.plainTextEdit_log.insertPlainText(text)

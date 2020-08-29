@@ -31,6 +31,7 @@ class ScriptEditor(QObject):
         if path is not None and path != '':
             with open(path, mode='r') as f:
                 self.ui.plainTextEdit_file.setPlainText(f.read())
+                self.current_file_path = path
                 self.script_changed.emit(self.ui.plainTextEdit_file.toPlainText())
 
     def on_open_file(self):
