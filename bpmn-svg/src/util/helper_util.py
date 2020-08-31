@@ -14,12 +14,12 @@ from util.geometry import Point
 font_spec = {
     'arial' : {
         'win32' : 'arial',
-        'linux' : 'Arial.ttf',
+        'linux' : '/usr/share/fonts/truetype/msttcorefonts/arial.ttf',
         'darwin' : '/Library/Fonts/Arial.ttf'
     },
     'arial-bold' : {
         'win32' : 'arialbd',
-        'linux' : 'Arial Bold.ttf',
+        'linux' : 'A/usr/share/fonts/truetype/msttcorefonts/arialbd.ttf',
         'darwin' : '/Library/Fonts/Arial Bold.ttf'
     },
     'calibri' : {

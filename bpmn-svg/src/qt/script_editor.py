@@ -32,7 +32,7 @@ class ScriptEditor(QObject):
             with open(path, mode='r') as f:
                 self.ui.plainTextEdit_file.setPlainText(f.read())
                 self.current_file_path = path
-                self.script_changed.emit(self.ui.plainTextEdit_file.toPlainText())
+                # self.script_changed.emit(self.ui.plainTextEdit_file.toPlainText())
 
     def on_open_file(self):
         self.current_file_path, _ = open_file(self.ui, dialog_title='Open bpmn script', dialog_location=Path("../data").as_posix(), file_filter='*.bpmn')

@@ -374,6 +374,12 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: '#f8f8f8'</string>
           </property>
@@ -391,7 +397,7 @@
      <x>0</x>
      <y>0</y>
      <width>1120</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

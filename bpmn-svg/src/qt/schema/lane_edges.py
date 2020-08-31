@@ -9,25 +9,24 @@ from PyQt5.QtWidgets import *
 from qt.qt_utils import *
 from util.logger import *
 
-from qt.schema.lane_editor import LaneEditor
+from qt.schema.edge_editor import EdgeEditor
 
-class BpmnLanes(CollapsibleBox):
-    def __init__(self, bpmn_id, lanes, parent=None):
-        super().__init__(text='BPMN Lanes', parent=parent)
-        self.bpmn_id, self.lanes = bpmn_id, lanes
+class LaneEdges(CollapsibleBox):
+    def __init__(self, bpmn_id, lane_id, edges, parent=None):
+        super().__init__(text='Lane Edges', parent=parent)
+        self.bpmn_id, self.lane_id, self.edges = bpmn_id, lane_id, edges
 
         self.content_area.setStyleSheet('background-color: "#D0D0D0"; color: "#404040";')
 
         self.populate()
 
     def populate(self):
-        debug('BpmnLanes: {0}'.format(self.bpmn_id))
-
+        debug('LaneEdges: {0}'.format(self.lane_id))
         self.content_layout = QVBoxLayout()
 
-        for lane_id, lane_data in self.lanes.items():
-            lane_widget = LaneEditor(self.bpmn_id, lane_id, lane_data)
-            self.content_layout.addWidget(lane_widget)
+        for edge in self.edges:
+            edge_widget = EdgeEditor(self.bpmn_id, self.lane_id, None, edge)
+            self.content_layout.addWidget(edge_widget)
 
         self.content_layout.addStretch()
         self.setContentLayout(self.content_layout)

@@ -9,17 +9,17 @@ from PyQt5.QtWidgets import *
 from qt.qt_utils import *
 from util.logger import *
 
-class BpmnHeader(CollapsibleBox):
-    def __init__(self, bpmn_id, bpmn_data, parent=None):
-        super().__init__(text='BPMN id: {0}'.format(bpmn_id), parent=parent)
-        self.bpmn_id, self.bpmn_data = bpmn_id, bpmn_data
+class NodeEditor(CollapsibleBox):
+    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data, parent=None):
+        super().__init__(text='NODE id: {0}'.format(node_id), parent=parent)
+        self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
 
         self.content_area.setStyleSheet('background-color: "#D0D0D0"; color: "#404040";')
 
         self.populate()
 
     def populate(self):
-        debug('BpmnHeader: {0}'.format(self.bpmn_id))
+        debug('NodeEditor: {0}'.format(self.node_id))
         self.content_layout = QFormLayout()
 
         # Bpmn id
@@ -32,15 +32,7 @@ class BpmnHeader(CollapsibleBox):
         self.title.setStyleSheet('background-color: "#F8F8F8"')
         self.content_layout.addRow(QLabel("Title:"), self.title)
 
-        # styles
-        self.hide_labels = QCheckBox()
-        self.content_layout.addRow(QLabel("Hide labels:"), self.hide_labels)
-
         self.setContentLayout(self.content_layout)
 
-        self.id.setText(self.bpmn_id)
-        self.title.setText(self.bpmn_data['label'])
-        if self.bpmn_data['styles'].get('hide_labels', '') == 'true':
-            self.hide_labels.setChecked(True)
-        else:
-            self.hide_labels.setChecked(False)
+        self.id.setText(self.node_id)
+        self.title.setText(self.node_data['label'])
