@@ -13,9 +13,7 @@ class NodeEditor(CollapsibleBox):
     def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data, parent=None):
         super().__init__(text='NODE id: {0}'.format(node_id), parent=parent)
         self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
-
-        self.content_area.setStyleSheet('background-color: "#D0D0D0"; color: "#404040";')
-
+        self.content_area.setStyleSheet('background-color: "#D0D0D0"; color: "#404040"; font-size: 9pt;')
         self.populate()
 
     def populate(self):

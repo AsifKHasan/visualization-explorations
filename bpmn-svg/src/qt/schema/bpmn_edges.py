@@ -11,13 +11,26 @@ from util.logger import *
 
 from qt.schema.edge_editor import EdgeEditor
 
-class BpmnEdges(CollapsibleBox):
+class BpmnEdges(CollapsibleFrame):
     def __init__(self, bpmn_id, edges, parent=None):
         super().__init__(text='BPMN Edges', parent=parent)
         self.bpmn_id, self.edges = bpmn_id, edges
+        self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#D8D8D8"; color: "#404040";')
+        self.populate()
 
+    def populate(self):
+        debug('BpmnEdges: {0}'.format(self.bpmn_id))
+
+        for edge in self.edges:
+            edge_widget = EdgeEditor(self.bpmn_id, None, None, edge)
+            # edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+            self.addWidget(edge_widget)
+
+class BpmnEdges1(CollapsibleBox):
+    def __init__(self, bpmn_id, edges, parent=None):
+        super().__init__(text='BPMN Edges', parent=parent)
+        self.bpmn_id, self.edges = bpmn_id, edges
         self.content_area.setStyleSheet('background-color: "#D0D0D0"; color: "#404040";')
-
         self.populate()
 
     def populate(self):
@@ -31,20 +44,3 @@ class BpmnEdges(CollapsibleBox):
 
         self.content_layout.addStretch()
         self.setContentLayout(self.content_layout)
-
-class BpmnEdges1(CollapsibleFrame):
-    def __init__(self, bpmn_id, edges, parent=None):
-        super().__init__(title='BPMN Edges', parent=parent)
-        self.bpmn_id, self.edges = bpmn_id, edges
-
-        self.setStyleSheet('background-color: "#D0D0D0"; color: "#404040";')
-
-        self.populate()
-
-    def populate(self):
-        debug('BpmnEdges: {0}'.format(self.bpmn_id))
-
-        for edge in self.edges:
-            edge_widget = EdgeEditor(self.bpmn_id, None, None, edge)
-            # edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-            self.addWidget(edge_widget)

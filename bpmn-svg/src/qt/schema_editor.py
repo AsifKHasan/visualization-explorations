@@ -15,7 +15,7 @@ from qt.qt_utils import *
 
 from qt.schema.bpmn_header import BpmnHeader
 from qt.schema.bpmn_lanes import BpmnLanes
-from qt.schema.bpmn_edges import BpmnEdges1
+from qt.schema.bpmn_edges import BpmnEdges
 
 from qt.schema.lane_editor import LaneEditor
 from qt.schema.edge_editor import EdgeEditor
@@ -49,7 +49,7 @@ class SchemaEditor(QVBoxLayout):
         self.addWidget(self.bpmn_lanes_ui)
 
         # Edge container after the lane container
-        self.bpmn_edges_ui = BpmnEdges1(self.bpmn_id, self.bpmn_json_data[self.bpmn_id].get('edges', None))
+        self.bpmn_edges_ui = BpmnEdges(self.bpmn_id, self.bpmn_json_data[self.bpmn_id].get('edges', None))
         self.addWidget(self.bpmn_edges_ui)
 
         # vertical spacer at the bottom
