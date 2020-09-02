@@ -13,7 +13,7 @@ from qt.schema.lane_editor import LaneEditor
 
 class BpmnLanes(CollapsibleFrame):
     def __init__(self, bpmn_id, lanes, parent=None):
-        super().__init__(text='BPMN Lanes', parent=parent)
+        super().__init__(icon='lanes', text='BPMN Lanes', parent=parent)
         self.bpmn_id, self.lanes = bpmn_id, lanes
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#D8D8D8"; color: "#404040";')
         self.populate()

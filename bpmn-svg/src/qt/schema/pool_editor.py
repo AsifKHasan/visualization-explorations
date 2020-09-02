@@ -15,7 +15,7 @@ from qt.schema.pool_edges import PoolEdges
 
 class PoolEditor(CollapsibleFrame):
     def __init__(self, bpmn_id, lane_id, pool_id, pool_data, parent=None):
-        super().__init__(text='POOL id: {0}'.format(pool_id), parent=parent)
+        super().__init__(icon='bpmn', text='POOL id: {0}'.format(pool_id), parent=parent)
         self.bpmn_id, self.lane_id, self.pool_id, self.pool_data = bpmn_id, lane_id, pool_id, pool_data
         self.set_styles(title_style='background-color: "#C8C8C8"; color: "#404040";', content_style='background-color: "#D0D0D0"; color: "#404040";')
         self.populate()

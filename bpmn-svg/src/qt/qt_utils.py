@@ -2,12 +2,14 @@ import sys
 from pathlib import Path
 
 from PyQt5 import Qt, QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPainter, QColor, QTextCharFormat, QFont, QSyntaxHighlighter
+from PyQt5.QtGui import QPixmap, QPainter, QColor, QTextCharFormat, QFont, QSyntaxHighlighter
 from PyQt5.QtCore import QObject, QRegExp, QPoint, QPointF, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import *
 
+from qt import *
+
 class CollapsibleFrame(QWidget):
-    def __init__(self, parent=None, text=None, title_style=None, content_style=None):
+    def __init__(self, parent=None, text=None, icon='bpmn', title_style=None, content_style=None):
         QFrame.__init__(self, parent=parent)
 
         self._is_collasped = True
@@ -17,13 +19,13 @@ class CollapsibleFrame(QWidget):
         self._main_v_layout = QVBoxLayout(self)
         self._main_v_layout.setSpacing(0)
         self._main_v_layout.setContentsMargins(0, 0, 0, 0)
-        self._main_v_layout.addWidget(self.initTitleFrame(text, self._is_collasped, title_style))
+        self._main_v_layout.addWidget(self.initTitleFrame(text, self._is_collasped, icon, title_style))
         self._main_v_layout.addWidget(self.initContent(self._is_collasped, content_style))
 
         self.initCollapsable()
 
-    def initTitleFrame(self, text, collapsed, title_style=None):
-        self._title_frame = self.TitleFrame(text=text, collapsed=collapsed)
+    def initTitleFrame(self, text, collapsed, icon='bpmn', title_style=None):
+        self._title_frame = self.TitleFrame(icon=icon, text=text, collapsed=collapsed)
         self._title_frame.setStyleSheet(title_style)
 
         return self._title_frame
@@ -47,7 +49,6 @@ class CollapsibleFrame(QWidget):
     def toggleCollapsed(self):
         self._content.setVisible(self._is_collasped)
         self._is_collasped = not self._is_collasped
-        self._title_frame._arrow.setArrow(int(self._is_collasped))
 
     def set_styles(self, title_style, content_style):
         self._title_frame.setStyleSheet(title_style)
@@ -58,7 +59,7 @@ class CollapsibleFrame(QWidget):
     class TitleFrame(QFrame):
         clicked = pyqtSignal()
 
-        def __init__(self, parent=None, text="", collapsed=False):
+        def __init__(self, parent=None, icon='bpmn', text='', collapsed=False):
             super(QFrame, self).__init__(parent=parent)
 
             self.setMinimumHeight(24)
@@ -69,58 +70,53 @@ class CollapsibleFrame(QWidget):
             self._hlayout.setContentsMargins(0, 0, 0, 0)
             self._hlayout.setSpacing(0)
 
-            self._arrow = None
-            self._title = None
+            self._arrow, self._icon, self._title = None, None, None
 
-            self._hlayout.addWidget(self.initArrow(collapsed))
-            self._hlayout.addWidget(self.initTitle(text))
+            self._hlayout.addWidget(self.init_arrow())
+            self._hlayout.addWidget(self.init_title(text))
+            self._hlayout.addWidget(self.init_icon(icon))
+            # self._hlayout.addStretch()
 
-        def initArrow(self, collapsed):
-            self._arrow = CollapsibleFrame.Arrow(collapsed=collapsed)
-            self._arrow.setStyleSheet("border:0px")
+        def init_arrow(self):
+            self._arrow = QtWidgets.QToolButton(checkable=True, checked=False)
+            self._arrow.setStyleSheet("QToolButton { border: none; }")
+            self._arrow.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+            self._arrow.setArrowType(QtCore.Qt.RightArrow)
+            self._arrow.pressed.connect(self.on_pressed)
 
             return self._arrow
 
-        def initTitle(self, text=None):
+        def init_icon(self, icon='bpmn'):
+            self._icon = QLabel()
+
+            # print(icon, ICONS)
+            pixmap = QPixmap(ICONS[icon])
+            pixmap = pixmap.scaledToHeight(24)
+            self._icon.setPixmap(pixmap)
+            self._icon.setMask(pixmap.mask())
+            self._icon.setMinimumHeight(24)
+            # self._icon.setFixedSize(64, 64)
+            # self._icon.move(QPoint(24, 0))
+            # self._icon.show()
+            # self._icon.setStyleSheet("border:2px; border-color: #FF0000;")
+
+            return self._icon
+
+        def init_title(self, text=None):
             self._title = QLabel(text)
             self._title.setMinimumHeight(24)
-            self._title.move(QtCore.QPoint(24, 0))
-            self._title.setStyleSheet("border:0px")
+            # self._title.move(QtCore.QPoint(12, 0))
+            # self._title.setStyleSheet("border:1px; border-color: #FF0000;")
 
             return self._title
 
-        def mousePressEvent(self, event):
+        def on_pressed(self):
+            checked = self._arrow.isChecked()
+            self._arrow.setArrowType(QtCore.Qt.DownArrow if not checked else QtCore.Qt.RightArrow)
             self.clicked.emit()
 
-
-    # ARROW
-    class Arrow(QFrame):
-        def __init__(self, parent=None, collapsed=False):
-            super(QFrame, self).__init__(parent=parent)
-
-            self.setMaximumSize(24, 24)
-
-            # horizontal == 0
-            self._arrow_horizontal = (QPointF(7.0, 8.0), QPointF(17.0, 8.0), QPointF(12.0, 13.0))
-            # vertical == 1
-            self._arrow_vertical = (QPointF(8.0, 7.0), QPointF(13.0, 12.0), QPointF(8.0, 17.0))
-            # arrow
-            self._arrow = None
-            self.setArrow(int(collapsed))
-
-        def setArrow(self, arrow_dir):
-            if arrow_dir:
-                self._arrow = self._arrow_vertical
-            else:
-                self._arrow = self._arrow_horizontal
-
-        def paintEvent(self, event):
-            painter = QPainter()
-            painter.begin(self)
-            painter.setBrush(QtGui.QColor(192, 192, 192))
-            painter.setPen(QtGui.QColor(64, 64, 64))
-            painter.drawPolygon(*self._arrow)
-            painter.end()
+        def mousePressEvent(self, event):
+            self.clicked.emit()
 
 
 class CollapsibleBox(QtWidgets.QWidget):
@@ -174,75 +170,6 @@ class CollapsibleBox(QtWidgets.QWidget):
         content_animation.setDuration(200)
         content_animation.setStartValue(0)
         content_animation.setEndValue(content_height)
-
-
-class CollapsibleDialog(QDialog):
-    '''a dialog to which collapsible sections can be added;
-    subclass and reimplement define_sections() to define sections and
-    add them as (title, widget) tuples to self.sections
-    '''
-    def __init__(self, sections):
-        super().__init__()
-        self.tree = QTreeWidget()
-        self.tree.setHeaderHidden(True)
-        layout = QVBoxLayout()
-        layout.addWidget(self.tree)
-        self.setLayout(layout)
-        self.tree.setIndentation(0)
-        self.tree.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
-        self.sections = sections
-        self.add_sections()
-
-    def add_sections(self):
-        '''adds a collapsible sections for every (title, widget) tuple in self.sections
-        '''
-        for (title, widget) in self.sections:
-            button1 = self.add_button(title)
-            section1 = self.add_widget(button1, widget)
-            button1.addChild(section1)
-
-    def define_sections(self):
-        '''reimplement this to define all your sections and add them as (title, widget) tuples to self.sections
-        '''
-        widget = QFrame(self.tree)
-        layout = QHBoxLayout(widget)
-        layout.addWidget(QLabel(self.bpmn_id))
-        layout.addWidget(QLabel(self.bpmn_data['label']))
-        title = self.title
-        self.sections.append((title, widget))
-
-    def add_button(self, title):
-        '''creates a QTreeWidgetItem containing a button to expand or collapse its section
-        '''
-        item = QTreeWidgetItem()
-        self.tree.addTopLevelItem(item)
-        self.tree.setItemWidget(item, 0, SectionExpandButton(item, text=title))
-        return item
-
-    def add_widget(self, button, widget):
-        '''creates a QWidgetItem containing the widget, as child of the button-QWidgetItem
-        '''
-        section = QTreeWidgetItem(button)
-        section.setDisabled(True)
-        self.tree.setItemWidget(section, 0, widget)
-        return section
-
-class SectionExpandButton(QPushButton):
-    '''a QPushbutton that can expand or collapse its section
-    '''
-    def __init__(self, section, text='', parent=None):
-        super().__init__(text, parent)
-        self.section = section
-        self.clicked.connect(self.on_clicked)
-
-    def on_clicked(self):
-        '''toggle expand/collapse of section by clicking
-        '''
-        if self.section.isExpanded():
-            self.section.setExpanded(False)
-        else:
-            self.section.setExpanded(True)
 
 
 def open_file(parent, dialog_title, dialog_location=Path("~").expanduser().as_posix(), file_filter=None, ):

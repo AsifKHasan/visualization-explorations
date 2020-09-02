@@ -11,7 +11,7 @@ from util.logger import *
 
 class BpmnHeader(CollapsibleFrame):
     def __init__(self, bpmn_id, bpmn_data, parent=None):
-        super().__init__(text='BPMN id: {0}'.format(bpmn_id), parent=parent)
+        super().__init__(icon='bpmn', text='BPMN id: {0}'.format(bpmn_id), parent=parent)
         self.bpmn_id, self.bpmn_data = bpmn_id, bpmn_data
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#D8D8D8"; color: "#404040"; font-size: 9pt;')
         self.populate()

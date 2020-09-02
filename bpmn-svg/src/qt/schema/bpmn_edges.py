@@ -13,7 +13,7 @@ from qt.schema.edge_editor import EdgeEditor
 
 class BpmnEdges(CollapsibleFrame):
     def __init__(self, bpmn_id, edges, parent=None):
-        super().__init__(text='BPMN Edges', parent=parent)
+        super().__init__(icon='bpmn', text='BPMN Edges', parent=parent)
         self.bpmn_id, self.edges = bpmn_id, edges
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#D8D8D8"; color: "#404040";')
         self.populate()

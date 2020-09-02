@@ -11,7 +11,7 @@ from util.logger import *
 
 class PoolHeader(CollapsibleFrame):
     def __init__(self, bpmn_id, lane_id, pool_id, pool_data, parent=None):
-        super().__init__(text='Pool id: {0}'.format(pool_id), parent=parent)
+        super().__init__(icon='bpmn', text='Pool id: {0}'.format(pool_id), parent=parent)
         self.bpmn_id, self.lane_id, self.pool_id, self.pool_data = bpmn_id, lane_id, pool_id, pool_data
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040"; font-size: 9pt;')
         self.populate()
