@@ -2,16 +2,16 @@
     move_x - a positive value means the node should move further to east (right) the specified point, negative value means movement to west (left). This is useful for visualization when we would like our edges to look straight without unnecessary corners when possible
 */
 
-graph airline_check_in {
+graph airline_check_ins {
     label = "Airline Check-in"
     # _ means the style is applicable to the container (in this case the Graph itself)
     # hide_swim_labels - for BPMN's for which we do not want the name of lanes and pools to be shown as vertical labels to the left, this option will hide it when value is true, any other value will make it visible. This is useful for BPMN's without any lane/pool that is one single BPMN
     _ [hide_labels=true]
 
-    lane lane_1 {
+    lane lane_01 {
         label = "Lane"
 
-        pool pool_1 {
+        pool pool_01 {
             label = "Pool"
 
             start                   start

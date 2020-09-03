@@ -17,7 +17,7 @@ class EdgeEditor(CollapsibleBox):
         self.populate()
 
     def populate(self):
-        debug('EdgeEditor: {0} {1} {2}'.format(self.edge_data['from'], self.edge_data['type'], self.edge_data['to']))
+        # debug('EdgeEditor: {0} {1} {2}'.format(self.edge_data['from'], self.edge_data['type'], self.edge_data['to']))
         self.content_layout = QGridLayout()
 
         # from node

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -27,6 +27,12 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="styleSheet">
     <string notr="true"/>
    </property>
@@ -43,10 +49,22 @@
        <enum>Qt::Vertical</enum>
       </property>
       <widget class="QSplitter" name="splitter_horizontal">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
        <widget class="QFrame" name="frame_workarea">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: '#e0e0e0';</string>
         </property>
@@ -169,7 +187,18 @@
              </widget>
             </item>
             <item>
-             <widget class="QToolButton" name="button_generate">
+             <widget class="QToolButton" name="button_generate_script">
+              <property name="text">
+               <string>...</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>resources/generate-script.png</normaloff>resources/generate-script.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="button_generate_svg">
               <property name="styleSheet">
                <string notr="true">background-color: '#e0e0e0'</string>
               </property>
@@ -190,8 +219,14 @@
          </item>
          <item>
           <widget class="QTabWidget" name="tabWidget_workarea">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="tab_script">
             <property name="sizePolicy">
@@ -397,7 +432,7 @@
      <x>0</x>
      <y>0</y>
      <width>1120</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

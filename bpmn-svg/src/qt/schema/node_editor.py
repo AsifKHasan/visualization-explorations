@@ -17,7 +17,7 @@ class NodeEditor(CollapsibleBox):
         self.populate()
 
     def populate(self):
-        debug('NodeEditor: {0}'.format(self.node_id))
+        # debug('NodeEditor: {0}'.format(self.node_id))
         self.content_layout = QFormLayout()
 
         # Bpmn id

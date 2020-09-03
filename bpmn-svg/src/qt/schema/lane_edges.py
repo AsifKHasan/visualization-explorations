@@ -13,35 +13,15 @@ from qt.schema.edge_editor import EdgeEditor
 
 class LaneEdges(CollapsibleFrame):
     def __init__(self, bpmn_id, lane_id, edges, parent=None):
-        super().__init__(icon='bpmn', text='Lane Edges', parent=parent)
+        super().__init__(icon='edges', text='Lane Edges', parent=parent)
         self.bpmn_id, self.lane_id, self.edges = bpmn_id, lane_id, edges
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040";')
         self.populate()
 
     def populate(self):
-        debug('LaneEdges: {0}'.format(self.lane_id))
+        # debug('LaneEdges: {0}'.format(self.lane_id))
 
         for edge in self.edges:
             edge_widget = EdgeEditor(self.bpmn_id, self.lane_id, None, edge)
             # edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(edge_widget)
-
-class LaneEdges1(CollapsibleBox):
-    def __init__(self, bpmn_id, lane_id, edges, parent=None):
-        super().__init__(text='Lane Edges', parent=parent)
-        self.bpmn_id, self.lane_id, self.edges = bpmn_id, lane_id, edges
-
-        self.content_area.setStyleSheet('background-color: "#D0D0D0"; color: "#404040";')
-
-        self.populate()
-
-    def populate(self):
-        debug('LaneEdges: {0}'.format(self.lane_id))
-        self.content_layout = QVBoxLayout()
-
-        for edge in self.edges:
-            edge_widget = EdgeEditor(self.bpmn_id, self.lane_id, None, edge)
-            self.content_layout.addWidget(edge_widget)
-
-        self.content_layout.addStretch()
-        self.setContentLayout(self.content_layout)

@@ -25,8 +25,8 @@ class MainWindow(QMainWindow):
         self.settings = QtCore.QSettings('spectrum', 'bpmn-svg')
 
         # the custom output stream
-        sys.stdout = LogStream(log_generated=self.on_log_generated)
-        sys.stderr = LogStream(log_generated=self.on_log_generated)
+        # sys.stdout = LogStream(log_generated=self.on_log_generated)
+        # sys.stderr = LogStream(log_generated=self.on_log_generated)
 
         self.screen = screen
         self.ui = uic.loadUi("./bpmn-svg.ui", self)
@@ -84,12 +84,18 @@ class MainWindow(QMainWindow):
         self.settings.setValue('main-window-size', self.size())
         self.settings.setValue('main-window-geometry', self.geometry())
 
-
     def signals_and_slots(self):
         self.ui.button_open_file.clicked.connect(self.script_editor.on_open_file)
-        self.ui.button_generate.clicked.connect(self.schema_editor.on_generate)
+        self.ui.button_save_file.clicked.connect(self.script_editor.on_save_file)
+        self.ui.button_new_file.clicked.connect(self.script_editor.on_new_file)
 
-        self.script_editor.script_changed.connect(self.schema_editor.on_script_changed)
+        self.ui.button_generate_script.clicked.connect(self.schema_editor.on_generate_script)
+        self.ui.button_generate_svg.clicked.connect(self.schema_editor.on_generate_svg)
+
+        self.script_editor.script_modified.connect(self.on_script_modified)
+        self.script_editor.schema_update_triggered.connect(self.schema_editor.on_schema_update_triggered)
+
+        self.schema_editor.script_generated.connect(self.script_editor.on_script_generated)
         self.schema_editor.svg_generated.connect(self.svg_viewer.on_svg_generated)
 
         self.shortcut_horizontal_splitter_left = QShortcut(QKeySequence('Ctrl+<'), self)
@@ -136,3 +142,9 @@ class MainWindow(QMainWindow):
 
     def on_log_generated(self, text):
         self.ui.plainTextEdit_log.insertPlainText(text)
+
+    def on_script_modified(self, modified):
+        if modified:
+            self.ui.button_save_file.setEnabled(True)
+        else:
+            self.ui.button_save_file.setEnabled(False)
