@@ -61,6 +61,7 @@ class ScriptEditor(QObject):
 
     def on_modified(self, modified):
         self.script_modified.emit(modified)
+        # print('modified {0}'.format(modified))
 
     def on_save_file(self):
         self.save_bpmn_file(self.current_file_path)
@@ -70,6 +71,7 @@ class ScriptEditor(QObject):
 
     def on_script_generated(self, script):
         self.ui.plainTextEdit_file.setPlainText(script)
+        self.script_modified.emit(True)
 
     def on_increase(self):
         self.ui.plainTextEdit_file.zoomIn()
