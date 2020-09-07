@@ -58,7 +58,6 @@ class ScriptEditor(QObject):
         self.read_bpmn_file(self.current_file_path)
         self.script_modified.emit(False)
 
-
     def on_modified(self, modified):
         self.script_modified.emit(modified)
         # print('modified {0}'.format(modified))
