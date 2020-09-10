@@ -21,42 +21,56 @@ class BpmnHeader(CollapsibleFrame):
         # debug('BpmnHeader: {0}'.format(self.bpmn_id))
 
         content = QWidget()
-        self.content_layout = QFormLayout(content)
+        self.content_layout = QGridLayout(content)
 
-        # Bpmn id
+        # bpmn id
+        self.id_label = QLabel("Id:")
+        self.id_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.id = QLineEdit()
         self.id.setStyleSheet('background-color: "#F8F8F8"')
-        self.id.setEnabled(False)
-        self.content_layout.addRow(QLabel("Id:"), self.id)
+        self.content_layout.addWidget(self.id_label, 0, 0)
+        self.content_layout.addWidget(self.id, 0, 1)
 
-        # Bpmn title
-        self.title = QLineEdit()
-        self.title.setStyleSheet('background-color: "#F8F8F8"')
-        self.content_layout.addRow(QLabel("Title:"), self.title)
+        # bpmn label
+        self.label_label = QLabel("Label:")
+        self.label_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.label = QLineEdit()
+        self.label.setStyleSheet('background-color: "#F8F8F8"')
+        self.content_layout.addWidget(self.label_label, 1, 0)
+        self.content_layout.addWidget(self.label, 1, 1, 1, 3)
 
-        # styles
+        # hide_labels
+        self.hide_labels_label = QLabel("Hide labels:")
+        self.hide_labels_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.hide_labels = QCheckBox()
-        self.content_layout.addRow(QLabel("Hide labels:"), self.hide_labels)
+        # self.hide_label.setStyleSheet('background-color: "#F8F8F8"')
+        self.content_layout.addWidget(self.hide_labels_label, 2, 0)
+        self.content_layout.addWidget(self.hide_labels, 2, 1)
 
         self.addWidget(content)
 
         self.id.setText(self.bpmn_id)
-        self.title.setText(self.bpmn_data['label'])
+        self.label.setText(self.bpmn_data['label'])
+
+        # hide_labels
         if self.bpmn_data['styles'].get('hide_labels', '') == 'true':
             self.hide_labels.setChecked(True)
         else:
             self.hide_labels.setChecked(False)
 
+        for c in range(0, self.content_layout.columnCount()):
+            self.content_layout.setColumnStretch(c, 1)
+
     def signals_and_slots(self):
         self.id.editingFinished.connect(self.on_id_edited)
-        self.title.editingFinished.connect(self.on_title_edited)
+        self.label.editingFinished.connect(self.on_label_edited)
         self.hide_labels.stateChanged.connect(self.on_hide_labels_changed)
 
     def on_id_edited(self):
         pass
 
-    def on_title_edited(self):
-        self.bpmn_data['label'] = self.title.text()
+    def on_label_edited(self):
+        self.bpmn_data['label'] = self.label.text()
 
     def on_hide_labels_changed(self):
         if self.hide_labels.isChecked():
