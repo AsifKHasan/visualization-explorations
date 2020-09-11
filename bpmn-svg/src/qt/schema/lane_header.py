@@ -31,6 +31,10 @@ class LaneHeader(CollapsibleFrame):
         self.content_layout.addWidget(self.id_label, 0, 0)
         self.content_layout.addWidget(self.id, 0, 1)
 
+        reg_ex = QRegExp("[_a-zA-Z][_0-9a-zA-Z]*")
+        input_validator = QtGui.QRegExpValidator(reg_ex, self)
+        self.id.setValidator(input_validator)
+
         # lane label
         self.label_label = QLabel("Label:")
         self.label_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -63,10 +67,7 @@ class LaneHeader(CollapsibleFrame):
         self.label.setText(self.lane_data['label'])
 
         # hide_label
-        if self.lane_data['styles'].get('hide_label', '') == 'true':
-            self.hide_label.setChecked(True)
-        else:
-            self.hide_label.setChecked(False)
+        self.hide_label.setChecked(self.lane_data['styles'].get('hide_label', '') == 'true')
 
         # move_x
         self.move_x = self.lane_data['styles'].get('move_x', 0)

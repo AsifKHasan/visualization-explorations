@@ -31,6 +31,10 @@ class NodeEditor(CollapsibleFrame):
         self.content_layout.addWidget(self.id_label, 0, 0)
         self.content_layout.addWidget(self.id, 0, 1)
 
+        reg_ex = QRegExp("[_a-zA-Z][_0-9a-zA-Z]*")
+        input_validator = QtGui.QRegExpValidator(reg_ex, self)
+        self.id.setValidator(input_validator)
+
         # node type
         self.type_label = QLabel("Type:")
         self.type_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -64,6 +68,15 @@ class NodeEditor(CollapsibleFrame):
         self.content_layout.addWidget(self.label_pos_label, 2, 2)
         self.content_layout.addWidget(self.label_pos, 2, 3)
 
+        # wrap_here
+        self.wrap_here_label = QLabel("Wrap here:")
+        self.wrap_here_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.wrap_here = QCheckBox()
+        # self.wrap_here.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        # self.wrap_here.setStyleSheet('background-color: "#F8F8F8"')
+        self.content_layout.addWidget(self.wrap_here_label, 3, 0)
+        self.content_layout.addWidget(self.wrap_here, 3, 1)
+
         # move_x
         self.move_x_label = QLabel("Horizontally move:")
         self.move_x_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -71,8 +84,8 @@ class NodeEditor(CollapsibleFrame):
         self.move_x.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.move_x.setSuffix('px')
         self.move_x.setStyleSheet('background-color: "#F8F8F8"')
-        self.content_layout.addWidget(self.move_x_label, 3, 0)
-        self.content_layout.addWidget(self.move_x, 3, 1)
+        self.content_layout.addWidget(self.move_x_label, 3, 2)
+        self.content_layout.addWidget(self.move_x, 3, 3)
 
         self.addWidget(content)
 
@@ -81,13 +94,13 @@ class NodeEditor(CollapsibleFrame):
         self.label.setText(self.node_data['label'])
 
         # hide_label
-        if self.node_data['styles'].get('hide_label', '') == 'true':
-            self.hide_label.setChecked(True)
-        else:
-            self.hide_label.setChecked(False)
+        self.hide_label.setChecked(self.node_data['styles'].get('hide_label', '') == 'true')
 
         # label_pos
         self.label_pos.setCurrentText(self.node_data['styles'].get('label_pos', ''))
+
+        # wrap_here
+        self.wrap_here.setChecked(self.node_data['styles'].get('wrap_here', '') == 'true')
 
         # move_x
         self.move_x = self.node_data['styles'].get('move_x', 0)

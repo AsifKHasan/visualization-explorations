@@ -3,7 +3,7 @@
 '''
 from PyQt5 import QtWidgets, Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QObject, QRegExp, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import *
 
 from qt.qt_utils import *
@@ -31,6 +31,10 @@ class BpmnHeader(CollapsibleFrame):
         self.content_layout.addWidget(self.id_label, 0, 0)
         self.content_layout.addWidget(self.id, 0, 1)
 
+        reg_ex = QRegExp("[_a-zA-Z][_0-9a-zA-Z]*")
+        input_validator = QtGui.QRegExpValidator(reg_ex, self)
+        self.id.setValidator(input_validator)
+
         # bpmn label
         self.label_label = QLabel("Label:")
         self.label_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -53,10 +57,7 @@ class BpmnHeader(CollapsibleFrame):
         self.label.setText(self.bpmn_data['label'])
 
         # hide_labels
-        if self.bpmn_data['styles'].get('hide_labels', '') == 'true':
-            self.hide_labels.setChecked(True)
-        else:
-            self.hide_labels.setChecked(False)
+        self.hide_labels.setChecked(self.bpmn_data['styles'].get('hide_labels', '') == 'true')
 
         for c in range(0, self.content_layout.columnCount()):
             self.content_layout.setColumnStretch(c, 1)
