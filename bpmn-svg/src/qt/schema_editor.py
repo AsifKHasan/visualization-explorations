@@ -20,7 +20,7 @@ from qt.schema.bpmn_edges import BpmnEdges
 from qt.schema.lane_editor import LaneEditor
 from qt.schema.edge_editor import EdgeEditor
 
-class SchemaEditor(QVBoxLayout):
+class SchemaEditor1(QVBoxLayout):
 
     script_generated = pyqtSignal(str)
     svg_generated = pyqtSignal(str)
@@ -30,6 +30,63 @@ class SchemaEditor(QVBoxLayout):
         self.parent = parent
         self.bpmn_json_data = {}
         # self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
+        self.signals_and_slots()
+
+    def populate(self):
+
+        self.bpmn_id = list(self.bpmn_json_data.keys())[0]
+
+        # self.clear()
+
+        self.treeWidget = QTreeWidget()
+        self.bpmn_header_ui = BpmnHeader(self.bpmn_id, self.bpmn_json_data[self.bpmn_id])
+        self.bpmn_lanes_ui = BpmnLanes(self.bpmn_id, self.bpmn_json_data[self.bpmn_id].get('lanes', None))
+        self.bpmn_edges_ui = BpmnEdges(self.bpmn_id, self.bpmn_json_data[self.bpmn_id].get('edges', None))
+
+        self.bpmn_header_item = QTreeWidgetItem(self.treeWidget)
+        self.treeWidget.addTopLevelItem(self.bpmn_header_item)
+
+        self.bpmn_lanes_item = QTreeWidgetItem(self.treeWidget)
+        self.treeWidget.addTopLevelItem(self.bpmn_lanes_item)
+
+        self.bpmn_edges_item = QTreeWidgetItem(self.treeWidget)
+        self.treeWidget.addTopLevelItem(self.bpmn_edges_item)
+
+        self.treeWidget.setItemWidget(self.bpmn_header_item, 0, self.bpmn_header_ui)
+        self.treeWidget.setItemWidget(self.bpmn_lanes_item, 0, self.bpmn_lanes_ui)
+        self.treeWidget.setItemWidget(self.bpmn_edges_item, 0, self.bpmn_edges_ui)
+
+        self.addWidget(self.treeWidget)
+
+    def signals_and_slots(self):
+        pass
+
+    def on_schema_update_triggered(self, script):
+        if script is not None and script.strip() != '':
+            self.bpmn_json_data = parse_to_json(script)
+            self.populate()
+
+    def on_generate_script(self):
+        if self.bpmn_json_data is not None:
+            script = repr_bpmn(self.bpmn_id, self.bpmn_json_data[self.bpmn_id])
+            self.script_generated.emit(script)
+
+    def on_generate_svg(self):
+        if self.bpmn_json_data is not None:
+            self.svg_obj, self.bpmn_id = to_svg(self.bpmn_json_data)
+            self.svg_generated.emit(self.svg_obj.getXML())
+
+class SchemaEditor(QVBoxLayout):
+
+    script_generated = pyqtSignal(str)
+    svg_generated = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super(QVBoxLayout, self).__init__(parent)
+        self.parent = parent
+        self.bpmn_json_data = {}
+        # self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
 
         self.signals_and_slots()
 

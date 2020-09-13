@@ -84,10 +84,10 @@ class LaneHeader(CollapsibleFrame):
         pass
 
     def on_label_edited(self):
-        self.bpmn_data['label'] = self.label.text()
+        self.lane_data['label'] = self.label.text()
 
     def on_hide_label_changed(self):
         if self.hide_label.isChecked():
-            self.bpmn_data['styles']['hide_label'] = 'true'
+            self.lane_data['styles']['hide_label'] = 'true'
         else:
-            self.bpmn_data['styles']['hide_label'] = 'false'
+            self.lane_data['styles']['hide_label'] = 'false'

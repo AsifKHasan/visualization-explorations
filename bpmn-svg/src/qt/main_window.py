@@ -25,8 +25,8 @@ class MainWindow(QMainWindow):
         self.settings = QtCore.QSettings('spectrum', 'bpmn-svg')
 
         # the custom output stream
-        # sys.stdout = LogStream(log_generated=self.on_log_generated)
-        # sys.stderr = LogStream(log_generated=self.on_log_generated)
+        sys.stdout = LogStream(log_generated=self.on_log_generated)
+        sys.stderr = LogStream(log_generated=self.on_log_generated)
 
         self.screen = screen
         self.ui = uic.loadUi("./bpmn-svg.ui", self)
@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
         self.svg_viewer = SvgViewer(self.ui, zoom_factor)
 
         # bpmn schema editor
-        self.schema_editor = SchemaEditor(self.tab_schema)
+        self.schema_editor = SchemaEditor(self.scrollAreaWidgetContents)
 
         main_window_size = self.settings.value('main-window-size')
         if main_window_size:
