@@ -25,3 +25,6 @@ class BpmnLanes(CollapsibleFrame):
             lane_widget = LaneEditor(self.bpmn_id, lane_id, lane_data)
             # lane_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(lane_widget)
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id

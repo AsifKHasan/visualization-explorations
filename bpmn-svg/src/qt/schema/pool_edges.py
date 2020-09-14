@@ -16,7 +16,7 @@ class PoolEdges(CollapsibleFrame):
         super().__init__(icon='edges', text='Pool Edges', parent=parent)
         self.bpmn_id, self.lane_id, self.pool_id, self.edges = bpmn_id, lane_id, pool_id, edges
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040";')
-        self.populate()
+        # self.populate()
 
     def populate(self):
         # debug('PoolEdges: {0}'.format(self.pool_id))

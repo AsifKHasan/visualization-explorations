@@ -2,11 +2,100 @@ import sys
 from pathlib import Path
 
 from PyQt5 import Qt, QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPixmap, QPainter, QColor, QTextCharFormat, QFont, QSyntaxHighlighter
+from PyQt5.QtGui import QPixmap, QIcon, QPainter, QColor, QTextCharFormat, QFont, QSyntaxHighlighter
 from PyQt5.QtCore import QObject, QRegExp, QPoint, QPointF, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import *
 
 from qt import *
+
+def lane_pool_type_of_node(node_id, bpmn_data):
+    for lane_id in bpmn_data['lanes']:
+        for pool_id in bpmn_data['lanes'][lane_id]['pools']:
+            if node_id in bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:
+                return lane_id, pool_id, bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes'][node_id]['type']
+
+    return None, None, None
+
+class NodeSelectionDialog(QDialog):
+    def __init__(self, lane_id, pool_id, node_id, bpmn_data, scope, parent=None):
+        QDialog.__init__(self, parent=parent)
+        self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope = lane_id, pool_id, node_id, bpmn_data, scope
+        self.init_dialog()
+
+    def init_dialog(self):
+        layout = QVBoxLayout()
+
+        self.node_tree = QTreeWidget()
+        layout.addWidget(self.node_tree)
+
+
+        self.select = QPushButton('Select node')
+        layout.addWidget(self.select)
+
+        self.setLayout(layout)
+
+
+class EdgeNodeWidget(QWidget):
+    def __init__(self, node_id, bpmn_data, scope='bpmn', parent=None):
+        QFrame.__init__(self, parent=parent)
+        self.node_id, self.bpmn_data, self.scope = node_id, bpmn_data, scope
+        self.lane_id, self.pool_id, self.node_type = None, None, None
+        self.init_widget()
+        self.signals_and_slots()
+        self.populate()
+
+    def signals_and_slots(self):
+        self.icon.clicked.connect(self.on_selection_dialog)
+
+    def on_selection_dialog(self):
+        lane_id, pool_id, node_id = NodeSelectionDialog.open(self.lane_id, self.pool_id, self.node_id)
+        return lane_id, pool_id, node_id
+
+    def init_widget(self):
+        self.content_layout = QGridLayout(self)
+        self.content_layout.setSpacing(0)
+        self.content_layout.setContentsMargins(0, 0, 0, 0)
+
+        # lane and pool
+        self.lane_and_pool = QLineEdit()
+        self.lane_and_pool.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.lane_and_pool.setStyleSheet('background-color: "#D8D8D8"')
+        self.lane_and_pool.setReadOnly(True)
+        self.content_layout.addWidget(self.lane_and_pool, 0, 0, 1, 3)
+
+        # node_id
+        self.id = QLineEdit()
+        self.id.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.id.setStyleSheet('background-color: "#F8F8F8"')
+        self.id.setReadOnly(True)
+        self.content_layout.addWidget(self.id, 1, 0, 1, 2)
+
+        # node_type
+        self.icon = QPushButton()
+        self.content_layout.addWidget(self.icon, 1, 2, 1, 1)
+
+        for c in range(0, self.content_layout.columnCount()):
+            self.content_layout.setColumnStretch(c, 1)
+
+
+    def populate(self):
+        self.lane_id, self.pool_id, self.node_type = lane_pool_type_of_node(self.node_id, self.bpmn_data)
+
+        if self.lane_id:
+            self.lane_and_pool.setText('{0} : {1}'.format(self.lane_id, self.pool_id))
+
+        if self.node_id:
+            self.id.setText(self.node_id)
+
+        if self.node_type:
+            pixmap = QPixmap(ICONS[self.node_type])
+            # pixmap = pixmap.scaledToHeight(24)
+            self.icon.setIcon(QIcon(pixmap))
+
+
+    def values(self):
+        return self.lane_id, self.pool_id, self.node_id, self.node_type
+
 
 class CollapsibleFrame(QWidget):
     def __init__(self, parent=None, text=None, icon='bpmn', title_style=None, content_style=None):
@@ -54,6 +143,8 @@ class CollapsibleFrame(QWidget):
         self._title_frame.setStyleSheet(title_style)
         self._content.setStyleSheet(content_style)
 
+    def change_title(self, text=None):
+        self._title_frame.change_title(text)
 
     # TITLE
     class TitleFrame(QFrame):
@@ -109,6 +200,11 @@ class CollapsibleFrame(QWidget):
             # self._title.setStyleSheet("border:1px; border-color: #FF0000;")
 
             return self._title
+
+        def change_title(self, text=None):
+            self._title.setText(text)
+            self._title.setMinimumHeight(24)
+
 
         def on_pressed(self):
             checked = self._arrow.isChecked()

@@ -10,6 +10,9 @@ from qt.qt_utils import *
 from util.logger import *
 
 class BpmnHeader(CollapsibleFrame):
+
+    bpmn_id_changed = pyqtSignal(str)
+
     def __init__(self, bpmn_id, bpmn_data, parent=None):
         super().__init__(icon='bpmn', text='BPMN id: {0}'.format(bpmn_id), parent=parent)
         self.bpmn_id, self.bpmn_data = bpmn_id, bpmn_data
@@ -67,8 +70,12 @@ class BpmnHeader(CollapsibleFrame):
         self.label.editingFinished.connect(self.on_label_edited)
         self.hide_labels.stateChanged.connect(self.on_hide_labels_changed)
 
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        self.change_title('BPMN id: {0}'.format(self.bpmn_id))
+
     def on_id_edited(self):
-        pass
+        self.bpmn_id_changed.emit(self.id.text())
 
     def on_label_edited(self):
         self.bpmn_data['label'] = self.label.text()

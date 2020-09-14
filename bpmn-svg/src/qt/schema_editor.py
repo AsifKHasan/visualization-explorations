@@ -20,65 +20,9 @@ from qt.schema.bpmn_edges import BpmnEdges
 from qt.schema.lane_editor import LaneEditor
 from qt.schema.edge_editor import EdgeEditor
 
-class SchemaEditor1(QVBoxLayout):
-
-    script_generated = pyqtSignal(str)
-    svg_generated = pyqtSignal(str)
-
-    def __init__(self, parent=None):
-        super(QVBoxLayout, self).__init__(parent)
-        self.parent = parent
-        self.bpmn_json_data = {}
-        # self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
-        self.signals_and_slots()
-
-    def populate(self):
-
-        self.bpmn_id = list(self.bpmn_json_data.keys())[0]
-
-        # self.clear()
-
-        self.treeWidget = QTreeWidget()
-        self.bpmn_header_ui = BpmnHeader(self.bpmn_id, self.bpmn_json_data[self.bpmn_id])
-        self.bpmn_lanes_ui = BpmnLanes(self.bpmn_id, self.bpmn_json_data[self.bpmn_id].get('lanes', None))
-        self.bpmn_edges_ui = BpmnEdges(self.bpmn_id, self.bpmn_json_data[self.bpmn_id].get('edges', None))
-
-        self.bpmn_header_item = QTreeWidgetItem(self.treeWidget)
-        self.treeWidget.addTopLevelItem(self.bpmn_header_item)
-
-        self.bpmn_lanes_item = QTreeWidgetItem(self.treeWidget)
-        self.treeWidget.addTopLevelItem(self.bpmn_lanes_item)
-
-        self.bpmn_edges_item = QTreeWidgetItem(self.treeWidget)
-        self.treeWidget.addTopLevelItem(self.bpmn_edges_item)
-
-        self.treeWidget.setItemWidget(self.bpmn_header_item, 0, self.bpmn_header_ui)
-        self.treeWidget.setItemWidget(self.bpmn_lanes_item, 0, self.bpmn_lanes_ui)
-        self.treeWidget.setItemWidget(self.bpmn_edges_item, 0, self.bpmn_edges_ui)
-
-        self.addWidget(self.treeWidget)
-
-    def signals_and_slots(self):
-        pass
-
-    def on_schema_update_triggered(self, script):
-        if script is not None and script.strip() != '':
-            self.bpmn_json_data = parse_to_json(script)
-            self.populate()
-
-    def on_generate_script(self):
-        if self.bpmn_json_data is not None:
-            script = repr_bpmn(self.bpmn_id, self.bpmn_json_data[self.bpmn_id])
-            self.script_generated.emit(script)
-
-    def on_generate_svg(self):
-        if self.bpmn_json_data is not None:
-            self.svg_obj, self.bpmn_id = to_svg(self.bpmn_json_data)
-            self.svg_generated.emit(self.svg_obj.getXML())
-
 class SchemaEditor(QVBoxLayout):
 
+    bpmn_id_changed = pyqtSignal(str)
     script_generated = pyqtSignal(str)
     svg_generated = pyqtSignal(str)
 
@@ -88,14 +32,16 @@ class SchemaEditor(QVBoxLayout):
         self.bpmn_json_data = {}
         # self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
 
-        self.signals_and_slots()
-
     def signals_and_slots(self):
-        pass
+        self.bpmn_header_ui.bpmn_id_changed.connect(self.on_bpmn_id_changed)
+        self.bpmn_id_changed.connect(self.bpmn_header_ui.on_bpmn_id_changed)
+        self.bpmn_id_changed.connect(self.bpmn_lanes_ui.on_bpmn_id_changed)
+        self.bpmn_id_changed.connect(self.bpmn_edges_ui.on_bpmn_id_changed)
 
     def populate(self):
 
         self.bpmn_id = list(self.bpmn_json_data.keys())[0]
+        self.bpmn_data = self.bpmn_json_data[self.bpmn_id]
 
         for i in reversed(range(self.count())):
             widgetToRemove = self.itemAt(i).widget()
@@ -108,15 +54,15 @@ class SchemaEditor(QVBoxLayout):
         self.bpmn_header_ui, self.bpmn_lanes_ui, self.bpmn_edges_ui, self.vertical_spacer = None, None, None, None
 
         # Bpmn id, title and styles at the top
-        self.bpmn_header_ui = BpmnHeader(self.bpmn_id, self.bpmn_json_data[self.bpmn_id])
+        self.bpmn_header_ui = BpmnHeader(self.bpmn_id, self.bpmn_data)
         self.addWidget(self.bpmn_header_ui)
 
         # Lane container in the middle
-        self.bpmn_lanes_ui = BpmnLanes(self.bpmn_id, self.bpmn_json_data[self.bpmn_id].get('lanes', None))
+        self.bpmn_lanes_ui = BpmnLanes(self.bpmn_id, self.bpmn_data.get('lanes', None))
         self.addWidget(self.bpmn_lanes_ui)
 
         # Edge container after the lane container
-        self.bpmn_edges_ui = BpmnEdges(self.bpmn_id, self.bpmn_json_data[self.bpmn_id].get('edges', None))
+        self.bpmn_edges_ui = BpmnEdges(self.bpmn_data, self.bpmn_id, self.bpmn_data.get('edges', None))
         self.addWidget(self.bpmn_edges_ui)
 
         # vertical spacer at the bottom
@@ -124,6 +70,13 @@ class SchemaEditor(QVBoxLayout):
         self.addItem(self.vertical_spacer)
 
         # self.addStretch()
+        self.signals_and_slots()
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_json_data[bpmn_id] = self.bpmn_json_data.pop(self.bpmn_id)
+        self.bpmn_id = list(self.bpmn_json_data.keys())[0]
+        self.bpmn_data = self.bpmn_json_data[self.bpmn_id]
+        self.bpmn_id_changed.emit(self.bpmn_id)
 
     def on_schema_update_triggered(self, script):
         if script is not None and script.strip() != '':

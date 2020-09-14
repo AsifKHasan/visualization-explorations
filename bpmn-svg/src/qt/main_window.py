@@ -25,8 +25,8 @@ class MainWindow(QMainWindow):
         self.settings = QtCore.QSettings('spectrum', 'bpmn-svg')
 
         # the custom output stream
-        sys.stdout = LogStream(log_generated=self.on_log_generated)
-        sys.stderr = LogStream(log_generated=self.on_log_generated)
+        # sys.stdout = LogStream(log_generated=self.on_log_generated)
+        # sys.stderr = LogStream(log_generated=self.on_log_generated)
 
         self.screen = screen
         self.ui = uic.loadUi("./bpmn-svg.ui", self)
