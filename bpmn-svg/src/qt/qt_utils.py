@@ -17,12 +17,12 @@ def lane_pool_type_of_node(node_id, bpmn_data):
     return None, None, None
 
 class NodeSelectionDialog(QDialog):
-    def __init__(self, lane_id, pool_id, node_id, bpmn_data, scope, parent=None):
+    def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)
-        self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope = lane_id, pool_id, node_id, bpmn_data, scope
-        self.init_dialog()
 
-    def init_dialog(self):
+    def open(self, lane_id, pool_id, node_id, bpmn_data, scope):
+        self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope = lane_id, pool_id, node_id, bpmn_data, scope
+
         layout = QVBoxLayout()
 
         self.node_tree = QTreeWidget()
@@ -33,6 +33,8 @@ class NodeSelectionDialog(QDialog):
         layout.addWidget(self.select)
 
         self.setLayout(layout)
+
+        self.show()
 
 
 class EdgeNodeWidget(QWidget):
@@ -48,7 +50,7 @@ class EdgeNodeWidget(QWidget):
         self.icon.clicked.connect(self.on_selection_dialog)
 
     def on_selection_dialog(self):
-        lane_id, pool_id, node_id = NodeSelectionDialog.open(self.lane_id, self.pool_id, self.node_id)
+        lane_id, pool_id, node_id = NodeSelectionDialog(self).open(self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope)
         return lane_id, pool_id, node_id
 
     def init_widget(self):
