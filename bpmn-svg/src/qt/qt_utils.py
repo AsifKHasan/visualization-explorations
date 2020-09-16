@@ -19,22 +19,57 @@ def lane_pool_type_of_node(node_id, bpmn_data):
 class NodeSelectionDialog(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)
+        # self.setWindowFlags(QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
 
     def open(self, lane_id, pool_id, node_id, bpmn_data, scope):
         self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope = lane_id, pool_id, node_id, bpmn_data, scope
+        self.selected_lane, self.selected_pool, self.selected_node = None, None, None
+        self.setWindowTitle('Node selection')
+        self.setWindowFlags(QtCore.Qt.Window |
+            QtCore.Qt.CustomizeWindowHint |
+            QtCore.Qt.WindowTitleHint |
+            QtCore.Qt.WindowCloseButtonHint |
+            QtCore.Qt.WindowStaysOnTopHint)
 
         layout = QVBoxLayout()
 
-        self.node_tree = QTreeWidget()
+        # TODO:
+        # preselect node if passed (not None)
+        # Button Active/Inactive based on node selection
+        # for scope = lane, only populate the passed lane
+        # for scope = pool, only populate the passed pool
+        # for scope = bpmn, allow all lanes and pools
+
+        # the node tree
+        self.node_tree = QTreeWidget(self)
+        self.node_tree.setStyleSheet('background-color: "#F8F8F8"')
+        self.node_tree.setHeaderHidden(True)
+        for lane_id in bpmn_data['lanes']:
+            lane_item = QTreeWidgetItem(self.node_tree)
+            lane_item.setText(0, lane_id)
+            for pool_id in bpmn_data['lanes'][lane_id]['pools']:
+                pool_item = QTreeWidgetItem(lane_item)
+                pool_item.setText(0, pool_id)
+                for node_id in bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:
+                    node_item = QTreeWidgetItem(pool_item)
+                    node_item.setText(0, node_id)
+
         layout.addWidget(self.node_tree)
 
-
+        # the select button
         self.select = QPushButton('Select node')
+        self.select.setStyleSheet('background-color: "#D8D8D8"')
         layout.addWidget(self.select)
 
         self.setLayout(layout)
 
         self.show()
+
+    def signals_and_slots(self):
+        self.select.clicked.connect(self.on_accept)
+
+    def on_accept(self):
+        self.accept()
 
 
 class EdgeNodeWidget(QWidget):
@@ -50,8 +85,9 @@ class EdgeNodeWidget(QWidget):
         self.icon.clicked.connect(self.on_selection_dialog)
 
     def on_selection_dialog(self):
-        lane_id, pool_id, node_id = NodeSelectionDialog(self).open(self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope)
-        return lane_id, pool_id, node_id
+        selection_dialog = NodeSelectionDialog(self)
+        selection_dialog.open(self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope)
+        return selection_dialog.selected_lane, selection_dialog.selected_pool, selection_dialog.selected_node
 
     def init_widget(self):
         self.content_layout = QGridLayout(self)
