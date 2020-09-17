@@ -92,7 +92,6 @@ class NodeSelectionDialog(QDialog):
 
         self.accept()
 
-
     @staticmethod
     def open(parent, lane_id, pool_id, node_id, bpmn_data, scope):
 
@@ -109,7 +108,6 @@ class NodeSelectionDialog(QDialog):
 
 
 class EdgeNodeWidget(QWidget):
-
     nodeChanged = pyqtSignal()
 
     def __init__(self, node_id, bpmn_data, scope='bpmn', parent=None):

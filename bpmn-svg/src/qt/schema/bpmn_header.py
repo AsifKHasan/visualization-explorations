@@ -15,14 +15,16 @@ class BpmnHeader(CollapsibleFrame):
 
     def __init__(self, bpmn_data, bpmn_id, parent=None):
         super().__init__(icon='bpmn', text='BPMN id: {0}'.format(bpmn_id), parent=parent)
-        self.bpmn_data, self.bpmn_id = bpmn_data, bpmn_id
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#D8D8D8"; color: "#404040"; font-size: 9pt;')
-        self.populate()
+
+        self.bpmn_data, self.bpmn_id = bpmn_data, bpmn_id
+
+        self.init_ui()
         self.signals_and_slots()
 
-    def populate(self):
-        # debug('BpmnHeader: {0}'.format(self.bpmn_id))
+        self.populate()
 
+    def init_ui(self):
         content = QWidget()
         self.content_layout = QGridLayout(content)
 
@@ -56,14 +58,15 @@ class BpmnHeader(CollapsibleFrame):
 
         self.addWidget(content)
 
+        for c in range(0, self.content_layout.columnCount()):
+            self.content_layout.setColumnStretch(c, 1)
+
+    def populate(self):
         self.id.setText(self.bpmn_id)
         self.label.setText(self.bpmn_data['label'])
 
         # hide_labels
         self.hide_labels.setChecked(self.bpmn_data['styles'].get('hide_labels', '') == 'true')
-
-        for c in range(0, self.content_layout.columnCount()):
-            self.content_layout.setColumnStretch(c, 1)
 
     def signals_and_slots(self):
         self.id.editingFinished.connect(self.on_id_edited)

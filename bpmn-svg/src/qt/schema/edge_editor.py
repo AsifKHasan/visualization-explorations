@@ -12,14 +12,16 @@ from util.logger import *
 class EdgeEditor(CollapsibleFrame):
     def __init__(self, bpmn_data, scope, bpmn_id, lane_id, pool_id, edge_data, parent=None):
         super().__init__(icon='edge', text='EDGE: {0} {1} {2}'.format(edge_data['from'], edge_data['type'], edge_data['to']), parent=parent)
-        self.bpmn_data, self.scope, self.bpmn_id, self.lane_id, self.pool_id, self.edge_data = bpmn_data, scope, bpmn_id, lane_id, pool_id, edge_data
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040"; font-size: 9pt;')
-        self.populate()
+
+        self.bpmn_data, self.scope, self.bpmn_id, self.lane_id, self.pool_id, self.edge_data = bpmn_data, scope, bpmn_id, lane_id, pool_id, edge_data
+
+        self.init_ui()
         self.signals_and_slots()
 
-    def populate(self):
-        # debug('EdgeEditor: {0} {1} {2}'.format(self.edge_data['from'], self.edge_data['type'], self.edge_data['to']))
+        self.populate()
 
+    def init_ui(self):
         content = QWidget()
         self.content_layout = QGridLayout(content)
 
@@ -43,14 +45,15 @@ class EdgeEditor(CollapsibleFrame):
 
         self.addWidget(content)
 
+        for c in range(0, self.content_layout.columnCount()):
+            self.content_layout.setColumnStretch(c, 1)
+
+    def populate(self):
         self.edge_type.setText(self.edge_data['type'])
         if self.edge_data['label'] != '':
             self.label.setText(self.edge_data['label'])
         else:
             self.label.setPlaceholderText('label')
-
-        for c in range(0, self.content_layout.columnCount()):
-            self.content_layout.setColumnStretch(c, 1)
 
     def signals_and_slots(self):
         self.from_node.nodeChanged.connect(self.on_from_node_change)

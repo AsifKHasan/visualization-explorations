@@ -10,16 +10,19 @@ from qt.qt_utils import *
 from util.logger import *
 
 class NodeEditor(CollapsibleFrame):
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data, parent=None):
-        super().__init__(icon=node_data['type'], text='NODE id: {0}'.format(node_id), parent=parent)
-        self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.node_data = bpmn_id, lane_id, pool_id, node_id, node_data
+    def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, node_id, parent=None):
+        self.bpmn_data, self.bpmn_id, self.lane_id, self.pool_id, self.node_id  = bpmn_data, bpmn_id, lane_id, pool_id, node_id
+        self.node_data = self.bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes'][node_id]
+
+        super().__init__(icon=self.node_data['type'], text='NODE id: {0}'.format(self.node_id), parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#D8D8D8"; color: "#404040"; font-size: 9pt;')
-        self.populate()
+
+        self.init_ui()
         self.signals_and_slots()
 
-    def populate(self):
-        # debug('NodeEditor: {0}'.format(self.node_id))
+        self.populate()
 
+    def init_ui(self):
         content = QWidget()
         self.content_layout = QGridLayout(content)
 
@@ -89,6 +92,10 @@ class NodeEditor(CollapsibleFrame):
 
         self.addWidget(content)
 
+        for c in range(0, self.content_layout.columnCount()):
+            self.content_layout.setColumnStretch(c, 1)
+
+    def populate(self):
         self.id.setText(self.node_id)
         self.type.setText(self.node_data['type'])
         self.label.setText(self.node_data['label'])
@@ -104,9 +111,6 @@ class NodeEditor(CollapsibleFrame):
 
         # move_x
         self.move_x = self.node_data['styles'].get('move_x', 0)
-
-        for c in range(0, self.content_layout.columnCount()):
-            self.content_layout.setColumnStretch(c, 1)
 
     def signals_and_slots(self):
         pass

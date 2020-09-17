@@ -10,16 +10,19 @@ from qt.qt_utils import *
 from util.logger import *
 
 class LaneHeader(CollapsibleFrame):
-    def __init__(self, bpmn_data, bpmn_id, lane_id, lane_data, parent=None):
+    def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='lane', text='Lane id: {0}'.format(lane_id), parent=parent)
-        self.bpmn_data, self.bpmn_id, self.lane_id, self.lane_data = bpmn_data, bpmn_id, lane_id, lane_data
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040"; font-size: 9pt;')
-        self.populate()
+
+        self.bpmn_data, self.bpmn_id, self.lane_id = bpmn_data, bpmn_id, lane_id
+        self.lane_data = self.bpmn_data['lanes'][lane_id]
+
+        self.init_ui()
         self.signals_and_slots()
 
-    def populate(self):
-        # debug('LaneHeader: {0}'.format(self.lane_id))
+        self.populate()
 
+    def init_ui(self):
         content = QWidget()
         self.content_layout = QGridLayout(content)
 
@@ -63,6 +66,10 @@ class LaneHeader(CollapsibleFrame):
 
         self.addWidget(content)
 
+        for c in range(0, self.content_layout.columnCount()):
+            self.content_layout.setColumnStretch(c, 1)
+
+    def populate(self):
         self.id.setText(self.lane_id)
         self.label.setText(self.lane_data['label'])
 
@@ -71,9 +78,6 @@ class LaneHeader(CollapsibleFrame):
 
         # move_x
         self.move_x = self.lane_data['styles'].get('move_x', 0)
-
-        for c in range(0, self.content_layout.columnCount()):
-            self.content_layout.setColumnStretch(c, 1)
 
     def signals_and_slots(self):
         self.id.editingFinished.connect(self.on_id_edited)
