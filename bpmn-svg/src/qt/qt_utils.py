@@ -47,18 +47,20 @@ class NodeSelectionDialog(QDialog):
         self.setLayout(layout)
         self.signals_and_slots()
 
-
     def init_tree(self):
-        # TODO:
-        # for scope = lane, only populate the passed lane
-        # for scope = pool, only populate the passed pool
-        # for scope = bpmn, allow all lanes and pools
-
         # populate the tree
         for lane_id in self.bpmn_data['lanes']:
+            # if scope is lane or pool and lane_id is not None, we only show the specific lane
+            if self.scope in ['lane', 'pool'] and self.lane_id is not None and lane_id != self.lane_id:
+                continue
+
             lane_item = QTreeWidgetItem(self.node_tree, 0)
             lane_item.setText(0, lane_id)
             for pool_id in self.bpmn_data['lanes'][lane_id]['pools']:
+                # if scope is pool and pool_id is not None, we only show the specific pool
+                if self.scope in ['pool'] and self.lane_id is not None and self.pool_id is not None and lane_id == self.lane_id and pool_id != self.pool_id:
+                    continue
+
                 pool_item = QTreeWidgetItem(lane_item, 1)
                 pool_item.setText(0, pool_id)
                 for node_id in self.bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:

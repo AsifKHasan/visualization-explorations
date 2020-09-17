@@ -26,7 +26,7 @@ class EdgeEditor(CollapsibleFrame):
         self.content_layout = QGridLayout(content)
 
         # from node
-        self.from_node = EdgeNodeWidget(self.edge_data['from'], self.bpmn_data, scope='bpmn', parent=self)
+        self.from_node = EdgeNodeWidget(self.edge_data['from'], self.bpmn_data, scope=self.scope, parent=self)
         self.content_layout.addWidget(self.from_node, 0, 0, 1, 3)
 
         # edge_type
@@ -35,7 +35,7 @@ class EdgeEditor(CollapsibleFrame):
         self.content_layout.addWidget(self.edge_type, 0, 3)
 
         # to node
-        self.to_node = EdgeNodeWidget(self.edge_data['to'], self.bpmn_data, scope='bpmn', parent=self)
+        self.to_node = EdgeNodeWidget(self.edge_data['to'], self.bpmn_data, scope=self.scope, parent=self)
         self.content_layout.addWidget(self.to_node, 0, 4, 1, 3)
 
         # label
