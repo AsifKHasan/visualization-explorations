@@ -54,11 +54,11 @@ class SchemaEditor(QVBoxLayout):
         self.bpmn_header_ui, self.bpmn_lanes_ui, self.bpmn_edges_ui, self.vertical_spacer = None, None, None, None
 
         # Bpmn id, title and styles at the top
-        self.bpmn_header_ui = BpmnHeader(self.bpmn_id, self.bpmn_data)
+        self.bpmn_header_ui = BpmnHeader(self.bpmn_data, self.bpmn_id)
         self.addWidget(self.bpmn_header_ui)
 
         # Lane container in the middle
-        self.bpmn_lanes_ui = BpmnLanes(self.bpmn_id, self.bpmn_data.get('lanes', None))
+        self.bpmn_lanes_ui = BpmnLanes(self.bpmn_data, self.bpmn_id, self.bpmn_data.get('lanes', None))
         self.addWidget(self.bpmn_lanes_ui)
 
         # Edge container after the lane container

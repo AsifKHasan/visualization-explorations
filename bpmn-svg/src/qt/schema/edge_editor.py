@@ -33,8 +33,8 @@ class EdgeEditor(CollapsibleFrame):
         self.content_layout.addWidget(self.edge_type, 0, 3)
 
         # to node
-        self.from_node = EdgeNodeWidget(self.edge_data['to'], self.bpmn_data, scope='bpmn', parent=self)
-        self.content_layout.addWidget(self.from_node, 0, 4, 1, 3)
+        self.to_node = EdgeNodeWidget(self.edge_data['to'], self.bpmn_data, scope='bpmn', parent=self)
+        self.content_layout.addWidget(self.to_node, 0, 4, 1, 3)
 
         # label
         self.label = QLineEdit()
@@ -53,4 +53,19 @@ class EdgeEditor(CollapsibleFrame):
             self.content_layout.setColumnStretch(c, 1)
 
     def signals_and_slots(self):
-        pass
+        self.from_node.nodeChanged.connect(self.on_from_node_change)
+        self.to_node.nodeChanged.connect(self.on_to_node_change)
+        self.edge_type.textEdited.connect(self.on_edge_type_change)
+        self.label.textEdited.connect(self.on_edge_label_change)
+
+    def on_from_node_change(self):
+        self.edge_data['from'] = self.from_node.values()[2]
+
+    def on_to_node_change(self):
+        self.edge_data['to'] = self.from_node.values()[2]
+
+    def on_edge_type_change(self):
+        self.edge_data['type'] = self.edge_type.text()
+
+    def on_edge_label_change(self):
+        self.edge_data['label'] = self.label.text()

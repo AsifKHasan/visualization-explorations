@@ -19,10 +19,8 @@ def lane_pool_type_of_node(node_id, bpmn_data):
 class NodeSelectionDialog(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)
-        # self.setWindowFlags(QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
 
-    def open(self, lane_id, pool_id, node_id, bpmn_data, scope):
-        self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope = lane_id, pool_id, node_id, bpmn_data, scope
+        # self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope = lane_id, pool_id, node_id, bpmn_data, scope
         self.selected_lane, self.selected_pool, self.selected_node = None, None, None
         self.setWindowTitle('Node selection')
         self.setWindowFlags(QtCore.Qt.Window |
@@ -33,46 +31,87 @@ class NodeSelectionDialog(QDialog):
 
         layout = QVBoxLayout()
 
-        # TODO:
-        # preselect node if passed (not None)
-        # Button Active/Inactive based on node selection
-        # for scope = lane, only populate the passed lane
-        # for scope = pool, only populate the passed pool
-        # for scope = bpmn, allow all lanes and pools
-
         # the node tree
         self.node_tree = QTreeWidget(self)
         self.node_tree.setStyleSheet('background-color: "#F8F8F8"')
         self.node_tree.setHeaderHidden(True)
-        for lane_id in bpmn_data['lanes']:
-            lane_item = QTreeWidgetItem(self.node_tree)
-            lane_item.setText(0, lane_id)
-            for pool_id in bpmn_data['lanes'][lane_id]['pools']:
-                pool_item = QTreeWidgetItem(lane_item)
-                pool_item.setText(0, pool_id)
-                for node_id in bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:
-                    node_item = QTreeWidgetItem(pool_item)
-                    node_item.setText(0, node_id)
-
         layout.addWidget(self.node_tree)
 
         # the select button
         self.select = QPushButton('Select node')
-        self.select.setStyleSheet('background-color: "#D8D8D8"')
+        # self.select.setStyleSheet('background-color: "#D8D8D8"')
+        self.select.setStyleSheet('QPushButton:disabled {background-color:#E8E8E8;}')
+        self.select.setEnabled(False)
         layout.addWidget(self.select)
 
         self.setLayout(layout)
+        self.signals_and_slots()
 
-        self.show()
+
+    def init_tree(self):
+        # TODO:
+        # for scope = lane, only populate the passed lane
+        # for scope = pool, only populate the passed pool
+        # for scope = bpmn, allow all lanes and pools
+
+        # populate the tree
+        for lane_id in self.bpmn_data['lanes']:
+            lane_item = QTreeWidgetItem(self.node_tree, 0)
+            lane_item.setText(0, lane_id)
+            for pool_id in self.bpmn_data['lanes'][lane_id]['pools']:
+                pool_item = QTreeWidgetItem(lane_item, 1)
+                pool_item.setText(0, pool_id)
+                for node_id in self.bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:
+                    node_item = QTreeWidgetItem(pool_item, 2)
+                    node_item.setText(0, node_id)
+                    # preselect node if passed (not None)
+                    if self.node_id and node_id == self.node_id:
+                        self.node_tree.setCurrentItem(node_item)
 
     def signals_and_slots(self):
         self.select.clicked.connect(self.on_accept)
+        self.node_tree.currentItemChanged.connect(self.on_current_item_change)
+
+    def on_current_item_change(self, current, previous):
+        if current.type() == 2:
+            # print(current.text(0))
+            self.select.setEnabled(True)
+        else:
+            self.select.setEnabled(False)
 
     def on_accept(self):
+        selected_node_item = self.node_tree.currentItem()
+        if selected_node_item:
+            self.selected_node = selected_node_item.text(0)
+            selected_pool_item = selected_node_item.parent()
+            self.selected_pool = selected_pool_item.text(0)
+            selected_lane_item = selected_pool_item.parent()
+            self.selected_lane = selected_lane_item.text(0)
+        else:
+            self.selected_lane, self.selected_pool, self.selected_node = None, None, None
+
         self.accept()
 
 
+    @staticmethod
+    def open(parent, lane_id, pool_id, node_id, bpmn_data, scope):
+
+        dialog = NodeSelectionDialog(parent)
+        dialog.parent, dialog.lane_id, dialog.pool_id, dialog.node_id, dialog.bpmn_data, dialog.scope = parent, lane_id, pool_id, node_id, bpmn_data, scope
+        dialog.init_tree()
+
+        result = dialog.exec_()
+
+        if result == QDialog.Accepted:
+            return dialog.selected_lane, dialog.selected_pool, dialog.selected_node
+        else:
+            return None, None, None
+
+
 class EdgeNodeWidget(QWidget):
+
+    nodeChanged = pyqtSignal()
+
     def __init__(self, node_id, bpmn_data, scope='bpmn', parent=None):
         QFrame.__init__(self, parent=parent)
         self.node_id, self.bpmn_data, self.scope = node_id, bpmn_data, scope
@@ -85,9 +124,12 @@ class EdgeNodeWidget(QWidget):
         self.icon.clicked.connect(self.on_selection_dialog)
 
     def on_selection_dialog(self):
-        selection_dialog = NodeSelectionDialog(self)
-        selection_dialog.open(self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope)
-        return selection_dialog.selected_lane, selection_dialog.selected_pool, selection_dialog.selected_node
+        lane_id, pool_id, node_id = NodeSelectionDialog.open(self, self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope)
+        # print(lane_id, pool_id, node_id)
+        if node_id and node_id != self.node_id:
+            self.lane_id, self.pool_id, self.node_id = lane_id, pool_id, node_id
+            self.populate()
+            self.nodeChanged.emit()
 
     def init_widget(self):
         self.content_layout = QGridLayout(self)
@@ -129,7 +171,6 @@ class EdgeNodeWidget(QWidget):
             pixmap = QPixmap(ICONS[self.node_type])
             # pixmap = pixmap.scaledToHeight(24)
             self.icon.setIcon(QIcon(pixmap))
-
 
     def values(self):
         return self.lane_id, self.pool_id, self.node_id, self.node_type
