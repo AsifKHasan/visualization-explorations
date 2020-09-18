@@ -19,16 +19,20 @@ def lane_pool_type_of_node(node_id, bpmn_data):
 class NodeSelectionDialog(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)
-
-        # self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope = lane_id, pool_id, node_id, bpmn_data, scope
-        self.selected_lane, self.selected_pool, self.selected_node = None, None, None
         self.setWindowTitle('Node selection')
+        self.setMinimumSize(300, 400)
         self.setWindowFlags(QtCore.Qt.Window |
             QtCore.Qt.CustomizeWindowHint |
             QtCore.Qt.WindowTitleHint |
             QtCore.Qt.WindowCloseButtonHint |
             QtCore.Qt.WindowStaysOnTopHint)
 
+        self.selected_lane, self.selected_pool, self.selected_node = None, None, None
+
+        self.init_ui()
+        self.signals_and_slots()
+
+    def init_ui(self):
         layout = QVBoxLayout()
 
         # the node tree
@@ -45,7 +49,6 @@ class NodeSelectionDialog(QDialog):
         layout.addWidget(self.select)
 
         self.setLayout(layout)
-        self.signals_and_slots()
 
     def init_tree(self):
         # populate the tree
@@ -222,8 +225,8 @@ class CollapsibleFrame(QWidget):
         self._title_frame.setStyleSheet(title_style)
         self._content.setStyleSheet(content_style)
 
-    def change_title(self, text=None):
-        self._title_frame.change_title(text)
+    def change_title(self, text=None, icon=None):
+        self._title_frame.change_title(text, icon)
 
     # TITLE
     class TitleFrame(QFrame):
@@ -232,8 +235,8 @@ class CollapsibleFrame(QWidget):
         def __init__(self, parent=None, icon='bpmn', text='', collapsed=False):
             super(QFrame, self).__init__(parent=parent)
 
-            self.setMinimumHeight(24)
-            self.move(QPoint(24, 0))
+            self.setMinimumHeight(25)
+            self.move(QPoint(25, 0))
             # self.setStyleSheet("border:1px solid rgb(41, 41, 41); ")
 
             self._hlayout = QHBoxLayout(self)
@@ -261,10 +264,10 @@ class CollapsibleFrame(QWidget):
 
             # print(icon, ICONS)
             pixmap = QPixmap(ICONS[icon])
-            pixmap = pixmap.scaledToHeight(24)
+            pixmap = pixmap.scaledToHeight(25)
             self._icon.setPixmap(pixmap)
-            self._icon.setMask(pixmap.mask())
-            self._icon.setMinimumHeight(24)
+            # self._icon.setMask(pixmap.mask())
+            # self._icon.setMinimumHeight(25)
             # self._icon.setFixedSize(64, 64)
             # self._icon.move(QPoint(24, 0))
             # self._icon.show()
@@ -274,16 +277,19 @@ class CollapsibleFrame(QWidget):
 
         def init_title(self, text=None):
             self._title = QLabel(text)
-            self._title.setMinimumHeight(24)
+            self._title.setMinimumHeight(25)
             # self._title.move(QtCore.QPoint(12, 0))
             # self._title.setStyleSheet("border:1px; border-color: #FF0000;")
 
             return self._title
 
-        def change_title(self, text=None):
+        def change_title(self, text=None, icon=None):
             self._title.setText(text)
-            self._title.setMinimumHeight(24)
+            self._title.setMinimumHeight(25)
 
+            pixmap = QPixmap(ICONS[icon])
+            pixmap = pixmap.scaledToHeight(25)
+            self._icon.setPixmap(pixmap)
 
         def on_pressed(self):
             checked = self._arrow.isChecked()

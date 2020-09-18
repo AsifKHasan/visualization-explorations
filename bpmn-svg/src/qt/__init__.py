@@ -1,3 +1,18 @@
+'''
+inkscape -w 75 -h 25 flow-sequence.svg --export-filename flow-sequence.png
+inkscape -w 75 -h 25 flow-message.svg --export-filename flow-message.png
+inkscape -w 75 -h 25 flow-association.svg --export-filename flow-association.png
+inkscape -w 75 -h 25 flow-directed.svg --export-filename flow-directed.png
+inkscape -w 75 -h 25 flow-bidirectional.svg --export-filename flow-bidirectional.png
+'''
+EDGE_MAP = {
+    '-->': './resources/bpmn/flow-sequence.png',
+    '~~>': './resources/bpmn/flow-message.png',
+    '...': './resources/bpmn/flow-association.png',
+    '..>': './resources/bpmn/flow-directed.png',
+    '<.>': './resources/bpmn/flow-bidirectional.png',
+}
+
 ICONS = {
     'bpmn': './resources/bpmn/bpmn.png',
     'lanes': './resources/bpmn/lanes.png',
@@ -119,6 +134,11 @@ ICONS = {
     'eventBasedStart': './resources/bpmn/eventBasedStart.png',
     'eventBasedParallelStart': './resources/bpmn/eventBasedParallelStart.png',
 
+    '-->': './resources/bpmn/flow-sequence.png',
+    '~~>': './resources/bpmn/flow-message.png',
+    '...': './resources/bpmn/flow-association.png',
+    '..>': './resources/bpmn/flow-directed.png',
+    '<.>': './resources/bpmn/flow-bidirectional.png',
 }
 
 NEW_BPMN_SCRIPT = '''graph bpmn_id {
