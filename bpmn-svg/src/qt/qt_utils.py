@@ -53,6 +53,10 @@ class NodeSelectionDialog(QDialog):
     def init_tree(self):
         # populate the tree
         for lane_id in self.bpmn_data['lanes']:
+            # if scope is 'bpmn' and it is a to node, then we do not allow the lane from from_node
+            if self.scope in ['bpmn'] and self.role == 'to' and lane_id == self.other_node_values[0]:
+                continue
+
             # if scope is lane or pool and lane_id is not None, we only show the specific lane
             if self.scope in ['lane', 'pool'] and self.lane_id is not None and lane_id != self.lane_id:
                 continue
@@ -98,10 +102,10 @@ class NodeSelectionDialog(QDialog):
         self.accept()
 
     @staticmethod
-    def open(parent, lane_id, pool_id, node_id, bpmn_data, scope):
+    def open(parent, lane_id, pool_id, node_id, bpmn_data, scope, role, other_node_values):
 
         dialog = NodeSelectionDialog(parent)
-        dialog.parent, dialog.lane_id, dialog.pool_id, dialog.node_id, dialog.bpmn_data, dialog.scope = parent, lane_id, pool_id, node_id, bpmn_data, scope
+        dialog.parent, dialog.lane_id, dialog.pool_id, dialog.node_id, dialog.bpmn_data, dialog.scope, dialog.role, dialog.other_node_values = parent, lane_id, pool_id, node_id, bpmn_data, scope, role, other_node_values
         dialog.init_tree()
 
         result = dialog.exec_()
@@ -115,10 +119,10 @@ class NodeSelectionDialog(QDialog):
 class EdgeNodeWidget(QWidget):
     nodeChanged = pyqtSignal()
 
-    def __init__(self, node_id, bpmn_data, scope='bpmn', parent=None):
+    def __init__(self, node_id, bpmn_data, scope='bpmn', role='from', parent=None):
         QFrame.__init__(self, parent=parent)
-        self.node_id, self.bpmn_data, self.scope = node_id, bpmn_data, scope
-        self.lane_id, self.pool_id, self.node_type = None, None, None
+        self.node_id, self.bpmn_data, self.scope, self.role = node_id, bpmn_data, scope, role
+        self.lane_id, self.pool_id, self.node_type, self.other_node_values = None, None, None, None
         self.init_widget()
         self.signals_and_slots()
         self.populate()
@@ -127,7 +131,7 @@ class EdgeNodeWidget(QWidget):
         self.icon.clicked.connect(self.on_selection_dialog)
 
     def on_selection_dialog(self):
-        lane_id, pool_id, node_id = NodeSelectionDialog.open(self, self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope)
+        lane_id, pool_id, node_id = NodeSelectionDialog.open(self, self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope, self.role, self.other_node_values)
         # print(lane_id, pool_id, node_id)
         if node_id and node_id != self.node_id:
             self.lane_id, self.pool_id, self.node_id = lane_id, pool_id, node_id
@@ -178,6 +182,9 @@ class EdgeNodeWidget(QWidget):
     def values(self):
         return self.lane_id, self.pool_id, self.node_id, self.node_type
 
+    def set_other_node_values(self, val):
+        self.other_node_values = val
+
 
 class CollapsibleFrame(QWidget):
     def __init__(self, parent=None, text=None, icon='bpmn', title_style=None, content_style=None):
@@ -225,8 +232,8 @@ class CollapsibleFrame(QWidget):
         self._title_frame.setStyleSheet(title_style)
         self._content.setStyleSheet(content_style)
 
-    def change_title(self, text=None, icon=None):
-        self._title_frame.change_title(text, icon)
+    def change_title(self, text=None, icon=None, err=False):
+        self._title_frame.change_title(text, icon, err)
 
     # TITLE
     class TitleFrame(QFrame):
@@ -283,13 +290,19 @@ class CollapsibleFrame(QWidget):
 
             return self._title
 
-        def change_title(self, text=None, icon=None):
+        def change_title(self, text=None, icon=None, err=False):
             self._title.setText(text)
             self._title.setMinimumHeight(25)
 
             pixmap = QPixmap(ICONS[icon])
             pixmap = pixmap.scaledToHeight(25)
             self._icon.setPixmap(pixmap)
+
+            if err:
+                self.setStyleSheet("background-color: #F4CCCC; ")
+            else:
+                self.setStyleSheet("background-color: none; ")
+
 
         def on_pressed(self):
             checked = self._arrow.isChecked()

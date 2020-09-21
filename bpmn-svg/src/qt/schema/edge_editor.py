@@ -26,7 +26,7 @@ class EdgeEditor(CollapsibleFrame):
         self.content_layout = QGridLayout(content)
 
         # from node
-        self.from_node = EdgeNodeWidget(self.edge_data['from'], self.bpmn_data, scope=self.scope, parent=self)
+        self.from_node = EdgeNodeWidget(self.edge_data['from'], self.bpmn_data, scope=self.scope, role='from', parent=self)
         self.content_layout.addWidget(self.from_node, 0, 0, 1, 3)
 
         # edge_type
@@ -44,7 +44,7 @@ class EdgeEditor(CollapsibleFrame):
         self.content_layout.addWidget(self.edge_type, 0, 3)
 
         # to node
-        self.to_node = EdgeNodeWidget(self.edge_data['to'], self.bpmn_data, scope=self.scope, parent=self)
+        self.to_node = EdgeNodeWidget(self.edge_data['to'], self.bpmn_data, scope=self.scope, role='to', parent=self)
         self.content_layout.addWidget(self.to_node, 0, 4, 1, 3)
 
         # label
@@ -52,12 +52,20 @@ class EdgeEditor(CollapsibleFrame):
         self.label.setStyleSheet('background-color: "#F8F8F8"')
         self.content_layout.addWidget(self.label, 1, 0, 1, 7)
 
+        # Error
+        self.error_label = QLabel()
+        self.error_label.setStyleSheet('color: "#F80000"')
+        self.content_layout.addWidget(self.error_label, 2, 0, 1, 7)
+
         self.addWidget(content)
 
         for c in range(0, self.content_layout.columnCount()):
             self.content_layout.setColumnStretch(c, 1)
 
     def populate(self):
+        # we need to let the to-node know about the from-node
+        self.to_node.set_other_node_values(self.from_node.values())
+
         index = self.edge_type.findData(self.edge_data['type'])
         if index != -1:
             self.edge_type.setCurrentIndex(index);
@@ -67,6 +75,25 @@ class EdgeEditor(CollapsibleFrame):
         else:
             self.label.setPlaceholderText('label')
 
+        self.update_error()
+        self.update_title()
+
+    def update_error(self):
+        self.err = False
+        # for 'bpmn' scope, the to node must be in a different lane than from node
+        if self.scope == 'bpmn':
+            from_node_lane, _, _, _ = self.from_node.values()
+            to_node_lane, _, _, _ = self.to_node.values()
+            if from_node_lane == to_node_lane:
+                self.err = True
+                self.err_msg = 'from node and to node are from the same lane, not allowed for BPMN level edges'
+
+        if self.err:
+            self.error_label.setText(self.err_msg)
+            self.error_label.show()
+        else:
+            self.error_label.hide()
+
     def signals_and_slots(self):
         self.from_node.nodeChanged.connect(self.on_from_node_change)
         self.to_node.nodeChanged.connect(self.on_to_node_change)
@@ -75,6 +102,10 @@ class EdgeEditor(CollapsibleFrame):
 
     def on_from_node_change(self):
         self.edge_data['from'] = self.from_node.values()[2]
+
+        # we need to let the to-node know about the from-node
+        self.to_node.set_other_node_values(self.from_node.values())
+
         self.update_title()
 
     def on_to_node_change(self):
@@ -92,4 +123,5 @@ class EdgeEditor(CollapsibleFrame):
         self.edge_data['label'] = self.label.text()
 
     def update_title(self):
-        self.change_title(text='{0}\n{1}'.format(self.edge_data['from'], self.edge_data['to']), icon=self.edge_data['type'])
+        self.update_error()
+        self.change_title(text='{0}\n{1}'.format(self.edge_data['from'], self.edge_data['to']), icon=self.edge_data['type'], err=self.err)
