@@ -185,6 +185,25 @@ class EdgeNodeWidget(QWidget):
     def set_other_node_values(self, val):
         self.other_node_values = val
 
+class WarningWidget(QWidget):
+    def __init__(self, warning='', parent=None):
+        QFrame.__init__(self, parent=parent)
+        self.content_layout = QGridLayout(self)
+        self.content_layout.setSpacing(0)
+        self.content_layout.setContentsMargins(0, 0, 0, 0)
+
+        # warning
+        self.warning_label = QLabel()
+        self.warning_label.setStyleSheet('color: "#cc4125"')
+        self.content_layout.addWidget(self.warning_label, 0, 0, 1, 1)
+
+        self.warning_label.setText(warning)
+
+        # self.addWidget(content)
+
+        for c in range(0, self.content_layout.columnCount()):
+            self.content_layout.setColumnStretch(c, 1)
+
 
 class CollapsibleFrame(QWidget):
     def __init__(self, parent=None, text=None, icon='bpmn', title_style=None, content_style=None):
