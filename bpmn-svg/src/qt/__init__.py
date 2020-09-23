@@ -13,6 +13,10 @@ EDGE_MAP = {
     '<.>': './resources/bpmn/flow-bidirectional.png',
 }
 
+ACTION_ICONS = {
+    'add': './resources/add.png',
+}
+
 ICONS = {
     'bpmn': './resources/bpmn/bpmn.png',
     'lanes': './resources/bpmn/lanes.png',

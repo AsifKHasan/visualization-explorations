@@ -219,7 +219,7 @@ class CollapsibleFrame(QWidget):
         self._main_v_layout.addWidget(self.initTitleFrame(text, self._is_collasped, icon, title_style))
         self._main_v_layout.addWidget(self.initContent(self._is_collasped, content_style))
 
-        self.initCollapsable()
+        self.initCollapsible()
 
     def initTitleFrame(self, text, collapsed, icon='bpmn', title_style=None):
         self._title_frame = self.TitleFrame(icon=icon, text=text, collapsed=collapsed)
@@ -240,7 +240,7 @@ class CollapsibleFrame(QWidget):
     def addWidget(self, widget):
         self._content_layout.addWidget(widget)
 
-    def initCollapsable(self):
+    def initCollapsible(self):
         self._title_frame.clicked.connect(self.toggleCollapsed)
 
     def toggleCollapsed(self):
@@ -253,6 +253,9 @@ class CollapsibleFrame(QWidget):
 
     def change_title(self, text=None, icon=None, err=False):
         self._title_frame.change_title(text, icon, err)
+
+    def add_button(self, widget, key):
+        self._title_frame.add_button(widget, key)
 
     # TITLE
     class TitleFrame(QFrame):
@@ -273,7 +276,10 @@ class CollapsibleFrame(QWidget):
 
             self._hlayout.addWidget(self.init_arrow())
             self._hlayout.addWidget(self.init_title(text))
+            self._hlayout.addStretch()
             self._hlayout.addWidget(self.init_icon(icon))
+            self._hlayout.addStretch()
+            self._hlayout.addWidget(self.init_buttons())
             # self._hlayout.addStretch()
 
         def init_arrow(self):
@@ -304,10 +310,29 @@ class CollapsibleFrame(QWidget):
         def init_title(self, text=None):
             self._title = QLabel(text)
             self._title.setMinimumHeight(25)
+            self._title.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
             # self._title.move(QtCore.QPoint(12, 0))
             # self._title.setStyleSheet("border:1px; border-color: #FF0000;")
 
             return self._title
+
+        def init_buttons(self):
+            self._buttons = QWidget()
+            self._buttons.setMinimumHeight(25)
+            # self._title.move(QtCore.QPoint(12, 0))
+            # self._title.setStyleSheet("border:1px; border-color: #FF0000;")
+            self._buttons_layout = QHBoxLayout(self._buttons)
+            self._buttons_layout.setContentsMargins(0, 0, 0, 0)
+            self._buttons_layout.setSpacing(0)
+            self._buttons_layout.addStretch()
+
+            self._button_list = {}
+
+            return self._buttons
+
+        def add_button(self, widget, key):
+            self._button_list[key] = widget
+            self._buttons_layout.addWidget(widget)
 
         def change_title(self, text=None, icon=None, err=False):
             self._title.setText(text)
