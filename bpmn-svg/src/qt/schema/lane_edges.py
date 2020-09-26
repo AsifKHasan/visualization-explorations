@@ -22,7 +22,9 @@ class LaneEdges(CollapsibleFrame):
         self.populate()
 
     def populate(self):
+        index = 0
         for edge in self.edges:
-            edge_widget = EdgeEditor(self.bpmn_data, 'lane', self.bpmn_id, self.lane_id, None, edge)
+            edge_widget = EdgeEditor(self.bpmn_data, 'lane', self.bpmn_id, self.lane_id, None, edge, index)
             edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(edge_widget)
+            index = index + 1

@@ -1,4 +1,5 @@
 import sys
+import textwrap
 from pathlib import Path
 
 from PyQt5 import Qt, QtCore, QtGui, QtWidgets
@@ -237,6 +238,15 @@ class CollapsibleFrame(QWidget):
 
         return self._content
 
+    def clearContent(self):
+        # clear the layout safely
+        for i in reversed(range(self._content_layout.count())):
+            widgetToRemove = self._content_layout.itemAt(i).widget()
+            # remove it from the layout list
+            self._content_layout.removeWidget(widgetToRemove)
+            # remove it from the gui
+            widgetToRemove.setParent(None)
+
     def addWidget(self, widget):
         self._content_layout.addWidget(widget)
 
@@ -291,6 +301,17 @@ class CollapsibleFrame(QWidget):
 
             return self._arrow
 
+        def init_title(self, text=None):
+            # make the text at least 40 char wide
+            t = textwrap.fill(text, width=100)
+            self._title = QLabel(text)
+            self._title.setMinimumHeight(25)
+            self._title.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+            # self._title.move(QtCore.QPoint(12, 0))
+            # self._title.setStyleSheet("border:1px; border-color: #FF0000;")
+
+            return self._title
+
         def init_icon(self, icon='bpmn'):
             self._icon = QLabel()
 
@@ -306,15 +327,6 @@ class CollapsibleFrame(QWidget):
             # self._icon.setStyleSheet("border:2px; border-color: #FF0000;")
 
             return self._icon
-
-        def init_title(self, text=None):
-            self._title = QLabel(text)
-            self._title.setMinimumHeight(25)
-            self._title.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-            # self._title.move(QtCore.QPoint(12, 0))
-            # self._title.setStyleSheet("border:1px; border-color: #FF0000;")
-
-            return self._title
 
         def init_buttons(self):
             self._buttons = QWidget()

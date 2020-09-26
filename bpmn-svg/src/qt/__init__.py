@@ -14,7 +14,8 @@ EDGE_MAP = {
 }
 
 ACTION_ICONS = {
-    'add': './resources/add.png',
+    'new-edge': './resources/new-edge.png',
+    'remove-edge': './resources/remove-edge.png',
 }
 
 ICONS = {
@@ -145,29 +146,37 @@ ICONS = {
     '<.>': './resources/bpmn/flow-bidirectional.png',
 }
 
+NEW_EDGE = {
+    'from': '__UNDEFINED__',
+    'to': '__UNDEFINED__',
+    'type': '-->',
+    'label': '',
+    'styles': {}
+}
+
 NEW_BPMN_SCRIPT = '''graph bpmn_id {
-    label = "BPMN Title"
+    label = 'BPMN Title'
 
     lane lane_a {
-        label = "Lane A Label"
+        label = 'Lane A Label'
         pool pool_a1 {
-            label = "Pool A1 Label"
+            label = 'Pool A1 Label'
 
-            start       start1              [label="start";]
-            task        task_a1_01          [label="Task A1-01";]
+            start       start1              [label='start';]
+            task        task_a1_01          [label='Task A1-01';]
 
             start1      --> task_a1_01
         }
         pool pool_a2 {
-            label = "Pool A2 Label"
+            label = 'Pool A2 Label'
 
-            task        task_a2_01          [label="Task A2-01";]
+            task        task_a2_01          [label='Task A2-01';]
         }
         pool pool_a3 {
-            label = "Pool A3 Label"
+            label = 'Pool A3 Label'
 
-            task        task_a3_01          [label="Task A3-01";]
-            end         end1                [label="end";]
+            task        task_a3_01          [label='Task A3-01';]
+            end         end1                [label='end';]
 
             task_a3_01  --> end1
         }

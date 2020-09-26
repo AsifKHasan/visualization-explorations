@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 '''
 '''
+import copy
+
 from PyQt5 import QtWidgets, Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
@@ -31,15 +33,18 @@ class BpmnEdges(CollapsibleFrame):
 
         # *add* button to add a new edge
         self.add_new_edge = QPushButton()
-        pixmap = QPixmap(ACTION_ICONS['add'])
+        pixmap = QPixmap(ACTION_ICONS['new-edge'])
         self.add_new_edge.setIcon(QIcon(pixmap))
 
         self.add_new_edge.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
-        self.add_new_edge.setStyleSheet('font-size: 9px;')
+        self.add_new_edge.setStyleSheet('font-size: 9px; border: 0px; background-color: #B0B0B0')
 
         self.add_button(self.add_new_edge, 'new-bpmn-edge')
 
     def populate(self):
+        # first clear the layout with all edges
+        self.clearContent()
+
         # if we have only one lane, we ctually have no bpmn edges
         if len(self.bpmn_data['lanes']) < 2:
             self.warning_widget = WarningWidget(warning='there are no more than one lane in this bpmn, so no BPMN level edge is possible', parent=self)
@@ -54,13 +59,29 @@ class BpmnEdges(CollapsibleFrame):
         if self.warning_widget:
             self.warning_widget.hide()
 
+        index = 0
         for edge in self.edges:
-            edge_widget = EdgeEditor(self.bpmn_data, 'bpmn', self.bpmn_id, None, None, edge)
+            edge_widget = EdgeEditor(self.bpmn_data, 'bpmn', self.bpmn_id, None, None, edge, index)
             edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(edge_widget)
+            edge_widget.new_edge.connect(self.on_new_edge)
+            edge_widget.remove_edge.connect(self.on_remove_edge)
+            index = index + 1
 
     def on_bpmn_id_changed(self, bpmn_id):
         self.bpmn_id = bpmn_id
 
-    def on_new_edge(self):
-        pass
+    def on_new_edge(self, index=0):
+        # insert a blank edge in bpmn_data
+        new_edge_object = copy.deepcopy(NEW_EDGE)
+        self.bpmn_data['edges'].insert(index, new_edge_object)
+
+        # now populate again
+        self.populate()
+
+    def on_remove_edge(self, index):
+        # remove the edge from bpmn_data
+        self.bpmn_data['edges'].pop(index)
+
+        # now populate again
+        self.populate()

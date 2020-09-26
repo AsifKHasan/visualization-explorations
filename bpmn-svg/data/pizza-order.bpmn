@@ -78,10 +78,12 @@ graph pizza_orders {
         where_is_pizza                  --> deliver_pizza                   [label="";]
     }
 
+    order_pizza                     --> bake_pizza                      [label="";]
     order_pizza                     ~~> order_received                  [label="pizza order";]
     ask_for_pizza                   ~~> where_is_pizza                  [label="";]
     pay_for_pizza                   ~~> collect_payment                 [label="money";]
     deal_with_customer              ~~> ask_for_pizza                   [label="";]
     deliver_pizza                   ~~> pizza_received                  [label="pizza";]
     collect_payment                 ~~> pay_for_pizza                   [label="receipt";]
+    hunger_satisfied                --> end_terminate                   [label="";]
 }

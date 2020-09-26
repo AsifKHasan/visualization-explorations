@@ -22,7 +22,9 @@ class PoolEdges(CollapsibleFrame):
         self.populate()
 
     def populate(self):
+        index = 0
         for edge in self.edges:
-            edge_widget = EdgeEditor(self.bpmn_data, 'pool', self.bpmn_id, self.lane_id, self.pool_id, edge)
+            edge_widget = EdgeEditor(self.bpmn_data, 'pool', self.bpmn_id, self.lane_id, self.pool_id, edge, index)
             edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(edge_widget)
+            index = index + 1
