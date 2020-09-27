@@ -15,7 +15,7 @@ class EdgeEditor(CollapsibleFrame):
     remove_edge = pyqtSignal(int)
 
     def __init__(self, bpmn_data, scope, bpmn_id, lane_id, pool_id, edge_data, index, parent=None):
-        super().__init__(icon=edge_data['type'], text='{0:<20}\n{1:<20}'.format(edge_data['from'], edge_data['to']), parent=parent)
+        super().__init__(icon=edge_data['type'], text='{0:<30}\n{1:<30}'.format(edge_data['from'], edge_data['to']), parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040"; font-size: 9pt;')
 
         self.bpmn_data, self.scope, self.bpmn_id, self.lane_id, self.pool_id, self.edge_data, self.index = bpmn_data, scope, bpmn_id, lane_id, pool_id, edge_data, index
