@@ -16,6 +16,8 @@ EDGE_MAP = {
 ACTION_ICONS = {
     'new-edge': './resources/new-edge.png',
     'remove-edge': './resources/remove-edge.png',
+    'arrow-up': './resources/arrow-up.png',
+    'arrow-down': './resources/arrow-down.png',
 }
 
 ICONS = {

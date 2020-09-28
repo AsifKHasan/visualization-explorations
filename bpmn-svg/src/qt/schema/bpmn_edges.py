@@ -59,13 +59,15 @@ class BpmnEdges(CollapsibleFrame):
         if self.warning_widget:
             self.warning_widget.hide()
 
+        self.num_edges = len(self.edges)
         index = 0
         for edge in self.edges:
-            edge_widget = EdgeEditor(self.bpmn_data, 'bpmn', self.bpmn_id, None, None, edge, index)
+            edge_widget = EdgeEditor(self.bpmn_data, 'bpmn', self.bpmn_id, None, None, edge, index, self.num_edges)
             edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(edge_widget)
             edge_widget.new_edge.connect(self.on_new_edge)
             edge_widget.remove_edge.connect(self.on_remove_edge)
+            edge_widget.order_changed.connect(self.on_order_changed)
             index = index + 1
 
     def on_bpmn_id_changed(self, bpmn_id):
@@ -85,3 +87,21 @@ class BpmnEdges(CollapsibleFrame):
 
         # now populate again
         self.populate()
+
+    def on_order_changed(self, index, direction):
+        if self.num_edges <= 1:
+            pass
+
+        if index == 0 and direction == 'up':
+            pass
+
+        if index == self.num_edges - 1 and direction == 'down':
+            pass
+
+        # swap edges
+        if direction == 'up':
+            self.bpmn_data['edges'][index], self.bpmn_data['edges'][index - 1] = self.bpmn_data['edges'][index - 1], self.bpmn_data['edges'][index]
+            self.populate()
+        elif direction == 'down':
+            self.bpmn_data['edges'][index], self.bpmn_data['edges'][index + 1] = self.bpmn_data['edges'][index + 1], self.bpmn_data['edges'][index]
+            self.populate()

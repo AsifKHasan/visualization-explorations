@@ -59,6 +59,7 @@ class NodeSelectionDialog(QDialog):
                 continue
 
             # if scope is lane or pool and lane_id is not None, we only show the specific lane
+            print(self.scope, self.lane_id, self.pool_id)
             if self.scope in ['lane', 'pool'] and self.lane_id is not None and lane_id != self.lane_id:
                 continue
 
@@ -120,24 +121,13 @@ class NodeSelectionDialog(QDialog):
 class EdgeNodeWidget(QWidget):
     nodeChanged = pyqtSignal()
 
-    def __init__(self, node_id, bpmn_data, scope='bpmn', role='from', parent=None):
+    def __init__(self, lane_id, pool_id, node_id, bpmn_data, scope='bpmn', role='from', parent=None):
         QFrame.__init__(self, parent=parent)
         self.node_id, self.bpmn_data, self.scope, self.role = node_id, bpmn_data, scope, role
-        self.lane_id, self.pool_id, self.node_type, self.other_node_values = None, None, None, None
+        self.lane_id, self.pool_id, self.node_type, self.other_node_values = lane_id, pool_id, None, None
         self.init_widget()
         self.signals_and_slots()
         self.populate()
-
-    def signals_and_slots(self):
-        self.icon.clicked.connect(self.on_selection_dialog)
-
-    def on_selection_dialog(self):
-        lane_id, pool_id, node_id = NodeSelectionDialog.open(self, self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope, self.role, self.other_node_values)
-        # print(lane_id, pool_id, node_id)
-        if node_id and node_id != self.node_id:
-            self.lane_id, self.pool_id, self.node_id = lane_id, pool_id, node_id
-            self.populate()
-            self.nodeChanged.emit()
 
     def init_widget(self):
         self.content_layout = QGridLayout(self)
@@ -166,8 +156,20 @@ class EdgeNodeWidget(QWidget):
             self.content_layout.setColumnStretch(c, 1)
 
 
+    def signals_and_slots(self):
+        self.icon.clicked.connect(self.on_selection_dialog)
+
     def populate(self):
-        self.lane_id, self.pool_id, self.node_type = lane_pool_type_of_node(self.node_id, self.bpmn_data)
+        lane_id, pool_id, node_type = lane_pool_type_of_node(self.node_id, self.bpmn_data)
+        if self.scope == 'bpmn':
+            self.lane_id, self.pool_id, self.node_type = lane_id, pool_id, node_type
+
+        elif self.scope == 'lane':
+            self.pool_id, self.node_type = pool_id, node_type
+
+        elif self.scope == 'pool':
+            self.node_type = node_type
+
 
         if self.lane_id:
             self.lane_and_pool.setText('{0} : {1}'.format(self.lane_id, self.pool_id))
@@ -180,11 +182,20 @@ class EdgeNodeWidget(QWidget):
             # pixmap = pixmap.scaledToHeight(24)
             self.icon.setIcon(QIcon(pixmap))
 
+    def on_selection_dialog(self):
+        lane_id, pool_id, node_id = NodeSelectionDialog.open(self, self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope, self.role, self.other_node_values)
+        # print(lane_id, pool_id, node_id)
+        if node_id and node_id != self.node_id:
+            self.lane_id, self.pool_id, self.node_id = lane_id, pool_id, node_id
+            self.populate()
+            self.nodeChanged.emit()
+
     def values(self):
         return self.lane_id, self.pool_id, self.node_id, self.node_type
 
     def set_other_node_values(self, val):
         self.other_node_values = val
+
 
 class WarningWidget(QWidget):
     def __init__(self, warning='', parent=None):
