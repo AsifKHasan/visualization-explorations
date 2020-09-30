@@ -73,10 +73,6 @@ class BpmnHeader(CollapsibleFrame):
         self.label.editingFinished.connect(self.on_label_edited)
         self.hide_labels.stateChanged.connect(self.on_hide_labels_changed)
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
-        self.change_title('BPMN id: {0}'.format(self.bpmn_id))
-
     def on_id_edited(self):
         self.bpmn_id_changed.emit(self.id.text())
 
@@ -88,3 +84,7 @@ class BpmnHeader(CollapsibleFrame):
             self.bpmn_data['styles']['hide_labels'] = 'true'
         else:
             self.bpmn_data['styles']['hide_labels'] = 'false'
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        self.change_title('BPMN id: {0}'.format(self.bpmn_id), icon='bpmn')

@@ -24,7 +24,7 @@ class SchemaEditor(QVBoxLayout):
 
     bpmn_id_changed = pyqtSignal(str)
     script_generated = pyqtSignal(str)
-    svg_generated = pyqtSignal(str)
+    svg_generated = pyqtSignal(str, str)
 
     def __init__(self, parent=None):
         super(QVBoxLayout, self).__init__(parent)
@@ -91,4 +91,4 @@ class SchemaEditor(QVBoxLayout):
     def on_generate_svg(self):
         if self.bpmn_json_data is not None:
             self.svg_obj, self.bpmn_id = to_svg(self.bpmn_json_data)
-            self.svg_generated.emit(self.svg_obj.getXML())
+            self.svg_generated.emit(self.bpmn_id, self.svg_obj.getXML())

@@ -14,6 +14,9 @@ from util.logger import *
 from qt.schema.edge_editor import EdgeEditor
 
 class PoolEdges(CollapsibleFrame):
+
+    bpmn_id_changed = pyqtSignal(str)
+
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, parent=None):
         super().__init__(icon='edges', text='Pool Edges', parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040";')
@@ -68,16 +71,8 @@ class PoolEdges(CollapsibleFrame):
             edge_widget.new_edge.connect(self.on_new_edge)
             edge_widget.remove_edge.connect(self.on_remove_edge)
             edge_widget.order_changed.connect(self.on_order_changed)
+            self.bpmn_id_changed.connect(edge_widget.on_bpmn_id_changed)
             index = index + 1
-
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
-
-    def on_lane_id_changed(self, lane_id):
-        self.lane_id = lane_id
-
-    def on_pool_id_changed(self, pool_id):
-        self.pool_id = pool_id
 
     def on_new_edge(self, index=0):
         # insert a blank edge in bpmn_data
@@ -111,3 +106,14 @@ class PoolEdges(CollapsibleFrame):
         elif direction == 'down':
             self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['edges'][index], self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['edges'][index + 1] = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['edges'][index + 1], self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['edges'][index]
             self.populate()
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        # print(type(self).__name__, self.lane_id, self.pool_id, 'bpmn_id_changed')
+        self.bpmn_id_changed.emit(self.bpmn_id)
+
+    def on_lane_id_changed(self, lane_id):
+        self.lane_id = lane_id
+
+    def on_pool_id_changed(self, pool_id):
+        self.pool_id = pool_id

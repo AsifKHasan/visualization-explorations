@@ -14,6 +14,10 @@ from qt.schema.lane_pools import LanePools
 from qt.schema.lane_edges import LaneEdges
 
 class LaneEditor(CollapsibleFrame):
+
+    bpmn_id_changed = pyqtSignal(str)
+    lane_id_changed = pyqtSignal(str)
+
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='lane', text='LANE id: {0}'.format(lane_id), parent=parent)
         self.set_styles(title_style='background-color: "#D8D8D8"; color: "#404040";', content_style='background-color: "#D0D0D0"; color: "#404040";')
@@ -22,6 +26,7 @@ class LaneEditor(CollapsibleFrame):
         self.lane_data = self.bpmn_data['lanes'][lane_id]
 
         self.populate()
+        self.signals_and_slots()
 
     def populate(self):
         # Lane id, title and styles at the top
@@ -35,3 +40,26 @@ class LaneEditor(CollapsibleFrame):
         # Edge container after the pool container
         self.lane_edges_ui = LaneEdges(self.bpmn_data, self.bpmn_id, self.lane_id)
         self.addWidget(self.lane_edges_ui)
+
+    def signals_and_slots(self):
+        self.bpmn_id_changed.connect(self.lane_header_ui.on_bpmn_id_changed)
+        self.bpmn_id_changed.connect(self.lane_pools_ui.on_bpmn_id_changed)
+        self.bpmn_id_changed.connect(self.lane_edges_ui.on_bpmn_id_changed)
+
+        self.lane_header_ui.lane_id_changed.connect(self.on_lane_id_changed)
+        self.lane_id_changed.connect(self.lane_header_ui.on_lane_id_changed)
+        self.lane_id_changed.connect(self.lane_pools_ui.on_lane_id_changed)
+        self.lane_id_changed.connect(self.lane_edges_ui.on_lane_id_changed)
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
+        self.bpmn_id_changed.emit(self.bpmn_id)
+
+    def on_lane_id_changed(self, lane_id):
+        self.lane_id = lane_id
+
+        # TODO: change the bpmn_data
+
+        print(type(self).__name__, self.lane_id, 'lane_id_changed')
+        self.lane_id_changed.emit(self.lane_id)

@@ -12,6 +12,9 @@ from util.logger import *
 from qt.schema.lane_editor import LaneEditor
 
 class BpmnLanes(CollapsibleFrame):
+
+    bpmn_id_changed = pyqtSignal(str)
+
     def __init__(self, bpmn_data, bpmn_id, parent=None):
         super().__init__(icon='lanes', text='BPMN Lanes', parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#D8D8D8"; color: "#404040";')
@@ -20,12 +23,21 @@ class BpmnLanes(CollapsibleFrame):
         self.bpmn_lanes = self.bpmn_data['lanes']
 
         self.populate()
+        self.signals_and_slots()
 
     def populate(self):
         for lane_id, lane_data in self.bpmn_lanes.items():
             lane_widget = LaneEditor(self.bpmn_data, self.bpmn_id, lane_id, self)
             lane_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(lane_widget)
+            self.bpmn_id_changed.connect(lane_widget.on_bpmn_id_changed)
+
+    def signals_and_slots(self):
+        self.bpmn_header_ui.bpmn_id_changed.connect(self.on_bpmn_id_changed)
+        self.bpmn_id_changed.connect(self.bpmn_header_ui.on_bpmn_id_changed)
+        self.bpmn_id_changed.connect(self.bpmn_lanes_ui.on_bpmn_id_changed)
+        self.bpmn_id_changed.connect(self.bpmn_edges_ui.on_bpmn_id_changed)
 
     def on_bpmn_id_changed(self, bpmn_id):
         self.bpmn_id = bpmn_id
+        self.bpmn_id_changed.emit(self.bpmn_id)

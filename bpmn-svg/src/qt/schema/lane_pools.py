@@ -12,6 +12,10 @@ from util.logger import *
 from qt.schema.pool_editor import PoolEditor
 
 class LanePools(CollapsibleFrame):
+
+    bpmn_id_changed = pyqtSignal(str)
+    lane_id_changed = pyqtSignal(str)
+
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='pools', text='Lane Pools', parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040";')
@@ -26,3 +30,14 @@ class LanePools(CollapsibleFrame):
             pool_widget = PoolEditor(self.bpmn_data, self.bpmn_id, self.lane_id, pool_id, self)
             pool_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(pool_widget)
+            self.bpmn_id_changed.connect(pool_widget.on_bpmn_id_changed)
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
+        self.bpmn_id_changed.emit(self.bpmn_id)
+
+    def on_lane_id_changed(self, lane_id):
+        self.lane_id = lane_id
+        print(type(self).__name__, self.lane_id, 'lane_id_changed')
+        self.lane_id_changed.emit(self.lane_id)

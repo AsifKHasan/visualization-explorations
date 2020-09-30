@@ -95,3 +95,7 @@ class PoolHeader(CollapsibleFrame):
             self.pool_data['styles']['hide_label'] = 'true'
         else:
             self.pool_data['styles']['hide_label'] = 'false'
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        # print(type(self).__name__, self.lane_id, self.pool_id, 'bpmn_id_changed')

@@ -12,6 +12,9 @@ from util.logger import *
 from qt.schema.node_editor import NodeEditor
 
 class PoolNodes(CollapsibleFrame):
+
+    bpmn_id_changed = pyqtSignal(str)
+
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, parent=None):
         super().__init__(icon='nodes', text='Pool Nodes', parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040";')
@@ -26,3 +29,9 @@ class PoolNodes(CollapsibleFrame):
             node_widget = NodeEditor(self.bpmn_data, self.bpmn_id, self.lane_id, self.pool_id, node_id, self)
             node_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(node_widget)
+            self.bpmn_id_changed.connect(node_widget.on_bpmn_id_changed)
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        # print(type(self).__name__, self.lane_id, self.pool_id, 'bpmn_id_changed')
+        self.bpmn_id_changed.emit(self.bpmn_id)

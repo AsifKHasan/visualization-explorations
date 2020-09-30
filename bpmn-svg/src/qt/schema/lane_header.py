@@ -10,6 +10,9 @@ from qt.qt_utils import *
 from util.logger import *
 
 class LaneHeader(CollapsibleFrame):
+
+    lane_id_changed = pyqtSignal(str)
+
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='lane', text='Lane id: {0}'.format(lane_id), parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040"; font-size: 9pt;')
@@ -85,7 +88,7 @@ class LaneHeader(CollapsibleFrame):
         self.hide_label.stateChanged.connect(self.on_hide_label_changed)
 
     def on_id_edited(self):
-        pass
+        self.lane_id_changed.emit(self.id.text())
 
     def on_label_edited(self):
         self.lane_data['label'] = self.label.text()
@@ -95,3 +98,12 @@ class LaneHeader(CollapsibleFrame):
             self.lane_data['styles']['hide_label'] = 'true'
         else:
             self.lane_data['styles']['hide_label'] = 'false'
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
+
+    def on_lane_id_changed(self, lane_id):
+        self.lane_id = lane_id
+        print(type(self).__name__, self.lane_id, 'lane_id_changed')
+        self.change_title('Lane id: {0}'.format(self.lane_id), icon='lane')

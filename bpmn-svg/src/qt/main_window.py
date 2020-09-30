@@ -108,6 +108,9 @@ class MainWindow(QMainWindow):
         self.shortcut_vertical_splitter_up.activated.connect(self.on_vertical_splitter_up)
         self.shortcut_vertical_splitter_down.activated.connect(self.on_vertical_splitter_down)
 
+        # bpmn_id_changed from bpmn_header
+        self.schema_editor.bpmn_id_changed.connect(self.on_bpmn_id_changed)
+
     def on_horizontal_splitter_left(self):
         sizes = self.ui.splitter_horizontal.sizes()
         step = 100
@@ -148,3 +151,8 @@ class MainWindow(QMainWindow):
             self.ui.button_save_file.setEnabled(True)
         else:
             self.ui.button_save_file.setEnabled(False)
+            # a new script was loaded/created, clear the svg
+            self.svg_viewer.clear_svg()
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.svg_viewer.on_bpmn_id_changed(bpmn_id)

@@ -114,3 +114,7 @@ class NodeEditor(CollapsibleFrame):
 
     def signals_and_slots(self):
         pass
+
+    def on_bpmn_id_changed(self, bpmn_id):
+        self.bpmn_id = bpmn_id
+        # print(type(self).__name__, self.lane_id, self.pool_id, self.node_id, 'bpmn_id_changed')

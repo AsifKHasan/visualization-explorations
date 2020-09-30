@@ -12,7 +12,7 @@ enabled_levels = [
     '[ERROR]',
     '[WARN]',
     '[DEBUG]',
-    # '[INFO]'
+    # '[INFO]',
     ]
 
 log_color = {

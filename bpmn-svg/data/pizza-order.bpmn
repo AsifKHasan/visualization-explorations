@@ -1,4 +1,4 @@
-graph pizza_orders {
+graph pizza_orders1 {
     label = "Pizza Order Process Modeling"
     _ [hide_labels="true";]
 
