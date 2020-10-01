@@ -33,11 +33,8 @@ class BpmnLanes(CollapsibleFrame):
             self.bpmn_id_changed.connect(lane_widget.on_bpmn_id_changed)
 
     def signals_and_slots(self):
-        self.bpmn_header_ui.bpmn_id_changed.connect(self.on_bpmn_id_changed)
-        self.bpmn_id_changed.connect(self.bpmn_header_ui.on_bpmn_id_changed)
-        self.bpmn_id_changed.connect(self.bpmn_lanes_ui.on_bpmn_id_changed)
-        self.bpmn_id_changed.connect(self.bpmn_edges_ui.on_bpmn_id_changed)
-
+        pass
+        
     def on_bpmn_id_changed(self, bpmn_id):
         self.bpmn_id = bpmn_id
         self.bpmn_id_changed.emit(self.bpmn_id)
