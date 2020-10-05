@@ -337,4 +337,18 @@ bpmn_data  = {
     }
 
 pool_nodes = bpmn_data['lanes']['customer']['pools']['pizza_customer']['nodes']
+
 # ['hungry', 'select_pizza', 'order_pizza', 'on_order', 'pizza_received', 'timer_45_mins', 'ask_for_pizza', 'eat_pizza', 'pay_for_pizza', 'hunger_satisfied']
+
+# pool_nodes['order_pizza1'] = pool_nodes.pop('order_pizza')
+
+old_node_id = 'order_pizza'
+new_node_id = 'order_pizza1'
+old_keys = list(pool_nodes.keys())
+new_keys = [new_node_id if k == old_node_id else k for k in old_keys]
+
+pool_nodes = dict(zip(new_keys, pool_nodes.values()))
+
+for k, v in pool_nodes.items():
+    pprint(k)
+    pprint(v)

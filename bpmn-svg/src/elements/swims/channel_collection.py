@@ -682,7 +682,7 @@ class ChannelCollectionObject:
                 return
 
             # marked as wrap_here, it is a new child
-            if 'wrap_here' in node_data['styles']:
+            if 'wrap_here' in node_data['styles'] and node_data['styles']['wrap_here'] == 'true':
                 self.add_children(ChannelCollectionObject.Channel(node_id, self.orphans.pop(node_id, None)))
                 return
 

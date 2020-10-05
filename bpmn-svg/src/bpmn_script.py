@@ -8,7 +8,10 @@ import textwrap
 from util.logger import *
 
 def quote(s):
-    return '"{0}"'.format(s.replace('"', '"""'))
+    if isinstance(s, str):
+        return '"{0}"'.format(s.replace('"', '"""'))
+    else:
+        return s
 
 def repr_label_and_style(label, styles):
     s = '['
