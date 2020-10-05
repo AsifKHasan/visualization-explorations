@@ -48,8 +48,8 @@ class PoolNodes(CollapsibleFrame):
         old_keys = list(self.pool_nodes.keys())
         new_keys = [new_node_id if k == old_node_id else k for k in old_keys]
 
-        self.pool_nodes = dict(zip(new_keys, self.pool_nodes.values()))
-        print(list(self.pool_nodes.keys()))
+        self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'] = dict(zip(new_keys, self.pool_nodes.values()))
+        self.pool_nodes = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes']
 
         # populate the nodes
         self.populate()

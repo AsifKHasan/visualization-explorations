@@ -15,7 +15,6 @@ class NodeEditor(CollapsibleFrame):
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, node_id, parent=None):
         self.bpmn_data, self.bpmn_id, self.lane_id, self.pool_id, self.node_id  = bpmn_data, bpmn_id, lane_id, pool_id, node_id
-        print(list(self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'].keys()))
 
         self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
 
@@ -138,4 +137,3 @@ class NodeEditor(CollapsibleFrame):
 
     def on_bpmn_id_changed(self, bpmn_id):
         self.bpmn_id = bpmn_id
-        # print(type(self).__name__, self.lane_id, self.pool_id, self.node_id, 'bpmn_id_changed')
