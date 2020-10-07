@@ -15,15 +15,15 @@ from qt.schema.edge_editor import EdgeEditor
 
 class LaneEdges(CollapsibleFrame):
 
-    bpmn_id_changed = pyqtSignal(str)
-    lane_id_changed = pyqtSignal(str)
+    bpmn_id_changed = pyqtSignal(str, str)
+    lane_id_changed = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='edges', text='Lane Edges', parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040";')
 
         self.bpmn_data, self.bpmn_id, self.lane_id = bpmn_data, bpmn_id, lane_id
-        self.edges = self.bpmn_data['lanes'][lane_id]['edges']
+        self.edges = self.bpmn_data['lanes'][self.lane_id]['edges']
 
         self.init_ui()
         self.signals_and_slots()
@@ -72,7 +72,8 @@ class LaneEdges(CollapsibleFrame):
             edge_widget.new_edge.connect(self.on_new_edge)
             edge_widget.remove_edge.connect(self.on_remove_edge)
             edge_widget.order_changed.connect(self.on_order_changed)
-            self.bpmn_id_changed.connect(edge_widget.on_bpmn_id_changed)
+            self.bpmn_id_changed.connect(edge_widget.update_bpmn_id)
+            self.lane_id_changed.connect(edge_widget.update_lane_id)
             index = index + 1
 
     def on_new_edge(self, index=0):
@@ -108,12 +109,14 @@ class LaneEdges(CollapsibleFrame):
             self.bpmn_data['lanes'][self.lane_id]['edges'][index], self.bpmn_data['lanes'][self.lane_id]['edges'][index + 1] = self.bpmn_data['lanes'][self.lane_id]['edges'][index + 1], self.bpmn_data['lanes'][self.lane_id]['edges'][index]
             self.populate()
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
         # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
-        self.bpmn_id_changed.emit(self.bpmn_id)
+        self.bpmn_id_changed.emit(old_bpmn_id, new_bpmn_id)
 
-    def on_lane_id_changed(self, lane_id):
-        self.lane_id = lane_id
-        print(type(self).__name__, self.lane_id, 'lane_id_changed')
-        self.lane_id_changed.emit(self.lane_id)
+    def update_lane_id(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = new_lane_id
+            self.edges = self.bpmn_data['lanes'][self.lane_id]['edges']
+            # print(type(self).__name__, self.lane_id, 'lane_id_changed')
+            self.lane_id_changed.emit(old_lane_id, new_lane_id)

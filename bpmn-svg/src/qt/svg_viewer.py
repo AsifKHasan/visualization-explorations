@@ -14,7 +14,7 @@ from qt.qt_utils import *
 from util.logger import *
 
 class SvgViewer(QObject):
-    
+
     def __init__(self, ui, zoom_factor):
         QObject.__init__(self)
         self.ui = ui
@@ -86,5 +86,5 @@ class SvgViewer(QObject):
         self.ui.svgwidget_svg.setZoomFactor(self.zoom_factor)
         self.ui.button_zoom_100.setText('{0}%'.format(int(self.zoom_factor * 100)))
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id

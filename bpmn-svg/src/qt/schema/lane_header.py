@@ -18,7 +18,7 @@ class LaneHeader(CollapsibleFrame):
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040"; font-size: 9pt;')
 
         self.bpmn_data, self.bpmn_id, self.lane_id = bpmn_data, bpmn_id, lane_id
-        self.lane_data = self.bpmn_data['lanes'][lane_id]
+        self.lane_data = self.bpmn_data['lanes'][self.lane_id]
 
         self.init_ui()
         self.signals_and_slots()
@@ -99,11 +99,13 @@ class LaneHeader(CollapsibleFrame):
         else:
             self.lane_data['styles']['hide_label'] = 'false'
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
         # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
 
-    def on_lane_id_changed(self, lane_id):
-        self.lane_id = lane_id
-        print(type(self).__name__, self.lane_id, 'lane_id_changed')
-        self.change_title('Lane id: {0}'.format(self.lane_id), icon='lane')
+    def update_lane_id(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = new_lane_id
+            self.lane_data = self.bpmn_data['lanes'][self.lane_id]
+            print(type(self).__name__, self.lane_id, 'lane_id_changed')
+            self.change_title('Lane id: {0}'.format(self.lane_id), icon='lane')

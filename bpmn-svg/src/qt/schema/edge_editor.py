@@ -128,7 +128,7 @@ class EdgeEditor(CollapsibleFrame):
         else:
             self.label.setPlaceholderText('label')
 
-        self.update_error()
+        # self.update_error()
         self.update_title()
 
     def update_error(self):
@@ -189,6 +189,25 @@ class EdgeEditor(CollapsibleFrame):
         self.edge_type.currentIndexChanged.connect(self.on_edge_type_change)
         self.label.textEdited.connect(self.on_edge_label_change)
 
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
+        print(type(self).__name__, self.lane_id, self.pool_id, 'bpmn_id_changed')
+
+    def update_lane_id(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = new_lane_id
+            self.from_node.update_lane_id(old_lane_id, new_lane_id)
+            self.to_node.update_lane_id(old_lane_id, new_lane_id)
+            print(type(self).__name__, self.lane_id, self.pool_id, 'lane_id_changed')
+
+    def update_pool_id(self, old_pool_id, new_pool_id):
+        if self.pool_id == old_pool_id:
+            self.pool_id = new_pool_id
+            self.from_node.update_pool_id(old_pool_id, new_pool_id)
+            self.to_node.update_pool_id(old_pool_id, new_pool_id)
+            print(type(self).__name__, self.lane_id, self.pool_id, 'pool_id_changed')
+
+
     def on_arrow_down(self):
         self.order_changed.emit(self.index, 'down')
 
@@ -226,7 +245,3 @@ class EdgeEditor(CollapsibleFrame):
     def update_title(self):
         self.update_error()
         self.change_title(text='{0}\n{1}'.format(self.edge_data['from'], self.edge_data['to']), icon=self.edge_data['type'], err=self.err)
-
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
-        # print(type(self).__name__, self.lane_id, self.pool_id, 'bpmn_id_changed')

@@ -59,7 +59,7 @@ class NodeSelectionDialog(QDialog):
                 continue
 
             # if scope is lane or pool and lane_id is not None, we only show the specific lane
-            print(self.scope, self.lane_id, self.pool_id)
+            # print(self.scope, self.lane_id, self.pool_id)
             if self.scope in ['lane', 'pool'] and self.lane_id is not None and lane_id != self.lane_id:
                 continue
 
@@ -181,6 +181,11 @@ class EdgeNodeWidget(QWidget):
             pixmap = QPixmap(ICONS[self.node_type])
             # pixmap = pixmap.scaledToHeight(24)
             self.icon.setIcon(QIcon(pixmap))
+
+    def update_lane_id(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = new_lane_id
+            self.populate()
 
     def on_selection_dialog(self):
         lane_id, pool_id, node_id = NodeSelectionDialog.open(self, self.lane_id, self.pool_id, self.node_id, self.bpmn_data, self.scope, self.role, self.other_node_values)

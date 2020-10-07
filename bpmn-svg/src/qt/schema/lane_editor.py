@@ -15,7 +15,6 @@ from qt.schema.lane_edges import LaneEdges
 
 class LaneEditor(CollapsibleFrame):
 
-    bpmn_id_changed = pyqtSignal(str)
     lane_id_changed = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
@@ -23,7 +22,7 @@ class LaneEditor(CollapsibleFrame):
         self.set_styles(title_style='background-color: "#D8D8D8"; color: "#404040";', content_style='background-color: "#D0D0D0"; color: "#404040";')
 
         self.bpmn_data, self.bpmn_id, self.lane_id = bpmn_data, bpmn_id, lane_id
-        self.lane_data = self.bpmn_data['lanes'][lane_id]
+        self.lane_data = self.bpmn_data['lanes'][self.lane_id]
 
         self.populate()
         self.signals_and_slots()
@@ -42,24 +41,26 @@ class LaneEditor(CollapsibleFrame):
         self.addWidget(self.lane_edges_ui)
 
     def signals_and_slots(self):
-        self.bpmn_id_changed.connect(self.lane_header_ui.on_bpmn_id_changed)
-        self.bpmn_id_changed.connect(self.lane_pools_ui.on_bpmn_id_changed)
-        self.bpmn_id_changed.connect(self.lane_edges_ui.on_bpmn_id_changed)
-
         self.lane_header_ui.lane_id_changed.connect(self.on_lane_id_changed)
-        self.lane_id_changed.connect(self.lane_header_ui.on_lane_id_changed)
-        self.lane_id_changed.connect(self.lane_pools_ui.on_lane_id_changed)
-        self.lane_id_changed.connect(self.lane_edges_ui.on_lane_id_changed)
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
         # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
-        self.bpmn_id_changed.emit(self.bpmn_id)
+        # self.bpmn_id_changed.emit(old_bpmn_id, new_bpmn_id)
+        self.lane_header_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
+        self.lane_pools_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
+        self.lane_edges_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
 
     def on_lane_id_changed(self, old_lane_id, new_lane_id):
+        self.lane_id_changed.emit(old_lane_id, new_lane_id)
+
+    def update_lane_id(self, old_lane_id, new_lane_id):
         if self.lane_id == old_lane_id:
-            self.lane_id = lane_id
+            self.lane_id = new_lane_id
             self.lane_data = self.bpmn_data['lanes'][self.lane_id]
 
             print(type(self).__name__, self.lane_id, 'lane_id_changed')
-            self.lane_id_changed.emit(old_lane_id, self.lane_id)
+            self.change_title('Lane id: {0}'.format(self.lane_id), icon='lane')
+            self.lane_header_ui.update_lane_id(old_lane_id, new_lane_id)
+            self.lane_pools_ui.update_lane_id(old_lane_id, new_lane_id)
+            self.lane_edges_ui.update_lane_id(old_lane_id, new_lane_id)

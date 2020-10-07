@@ -15,7 +15,7 @@ from qt.schema.edge_editor import EdgeEditor
 
 class BpmnEdges(CollapsibleFrame):
 
-    bpmn_id_changed = pyqtSignal(str)
+    bpmn_id_changed = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, parent=None):
         super().__init__(icon='edges', text='BPMN Edges', parent=parent)
@@ -71,7 +71,7 @@ class BpmnEdges(CollapsibleFrame):
             edge_widget.new_edge.connect(self.on_new_edge)
             edge_widget.remove_edge.connect(self.on_remove_edge)
             edge_widget.order_changed.connect(self.on_order_changed)
-            self.bpmn_id_changed.connect(edge_widget.on_bpmn_id_changed)
+            self.bpmn_id_changed.connect(edge_widget.update_bpmn_id)
             index = index + 1
 
     def on_new_edge(self, index=0):
@@ -107,6 +107,6 @@ class BpmnEdges(CollapsibleFrame):
             self.bpmn_data['edges'][index], self.bpmn_data['edges'][index + 1] = self.bpmn_data['edges'][index + 1], self.bpmn_data['edges'][index]
             self.populate()
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
-        self.bpmn_id_changed.emit(self.bpmn_id)
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
+        self.bpmn_id_changed.emit(old_bpmn_id, new_bpmn_id)

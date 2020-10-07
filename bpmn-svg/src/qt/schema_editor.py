@@ -22,9 +22,10 @@ from qt.schema.edge_editor import EdgeEditor
 
 class SchemaEditor(QVBoxLayout):
 
-    bpmn_id_changed = pyqtSignal(str)
     script_generated = pyqtSignal(str)
     svg_generated = pyqtSignal(str, str)
+
+    bpmn_id_changed = pyqtSignal(str, str)
 
     def __init__(self, parent=None):
         super(QVBoxLayout, self).__init__(parent)
@@ -33,10 +34,7 @@ class SchemaEditor(QVBoxLayout):
         # self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
 
     def signals_and_slots(self):
-        self.bpmn_header_ui.bpmn_id_changed.connect(self.on_bpmn_id_changed)
-        self.bpmn_id_changed.connect(self.bpmn_header_ui.on_bpmn_id_changed)
-        self.bpmn_id_changed.connect(self.bpmn_lanes_ui.on_bpmn_id_changed)
-        self.bpmn_id_changed.connect(self.bpmn_edges_ui.on_bpmn_id_changed)
+        self.bpmn_header_ui.bpmn_id_changed.connect(self.update_bpmn_id)
 
     def populate(self):
 
@@ -72,12 +70,6 @@ class SchemaEditor(QVBoxLayout):
         # self.addStretch()
         self.signals_and_slots()
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_json_data[bpmn_id] = self.bpmn_json_data.pop(self.bpmn_id)
-        self.bpmn_id = list(self.bpmn_json_data.keys())[0]
-        self.bpmn_data = self.bpmn_json_data[self.bpmn_id]
-        self.bpmn_id_changed.emit(self.bpmn_id)
-
     def on_schema_update_triggered(self, script):
         if script is not None and script.strip() != '':
             self.bpmn_json_data = parse_to_json(script)
@@ -92,3 +84,12 @@ class SchemaEditor(QVBoxLayout):
         if self.bpmn_json_data is not None:
             self.svg_obj, self.bpmn_id = to_svg(self.bpmn_json_data)
             self.svg_generated.emit(self.bpmn_id, self.svg_obj.getXML())
+
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_json_data[new_bpmn_id] = self.bpmn_json_data.pop(old_bpmn_id)
+        self.bpmn_id = list(self.bpmn_json_data.keys())[0]
+        self.bpmn_data = self.bpmn_json_data[self.bpmn_id]
+        self.bpmn_header_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
+        self.bpmn_lanes_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
+        self.bpmn_edges_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
+        self.bpmn_id_changed.emit(old_bpmn_id, new_bpmn_id)

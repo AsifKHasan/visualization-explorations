@@ -109,7 +109,7 @@ class MainWindow(QMainWindow):
         self.shortcut_vertical_splitter_down.activated.connect(self.on_vertical_splitter_down)
 
         # bpmn_id_changed from bpmn_header
-        self.schema_editor.bpmn_id_changed.connect(self.on_bpmn_id_changed)
+        self.schema_editor.bpmn_id_changed.connect(self.update_bpmn_id)
 
     def on_horizontal_splitter_left(self):
         sizes = self.ui.splitter_horizontal.sizes()
@@ -154,5 +154,5 @@ class MainWindow(QMainWindow):
             # a new script was loaded/created, clear the svg
             self.svg_viewer.clear_svg()
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.svg_viewer.on_bpmn_id_changed(bpmn_id)
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.svg_viewer.update_bpmn_id(old_bpmn_id, new_bpmn_id)

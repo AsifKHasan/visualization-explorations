@@ -15,7 +15,6 @@ class NodeEditor(CollapsibleFrame):
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, node_id, parent=None):
         self.bpmn_data, self.bpmn_id, self.lane_id, self.pool_id, self.node_id  = bpmn_data, bpmn_id, lane_id, pool_id, node_id
-        print(list(self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'].keys()))
 
         self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
 
@@ -136,6 +135,15 @@ class NodeEditor(CollapsibleFrame):
         # self.move_x = v
         self.node_data['styles']['move_x'] = v
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
-        # print(type(self).__name__, self.lane_id, self.pool_id, self.node_id, 'bpmn_id_changed')
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
+
+    def update_lane_id(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = new_lane_id
+            self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
+
+    def update_pool_id(self, old_pool_id, new_pool_id):
+        if self.pool_id == old_pool_id:
+            self.pool_id = new_pool_id
+            self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]

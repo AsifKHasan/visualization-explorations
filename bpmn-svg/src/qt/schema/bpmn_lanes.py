@@ -13,7 +13,7 @@ from qt.schema.lane_editor import LaneEditor
 
 class BpmnLanes(CollapsibleFrame):
 
-    bpmn_id_changed = pyqtSignal(str)
+    bpmn_id_changed = pyqtSignal(str, str)
     lane_id_changed = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, parent=None):
@@ -31,24 +31,23 @@ class BpmnLanes(CollapsibleFrame):
             lane_widget = LaneEditor(self.bpmn_data, self.bpmn_id, lane_id, self)
             lane_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(lane_widget)
-            self.bpmn_id_changed.connect(lane_widget.on_bpmn_id_changed)
-            lane_widget.lane_id_changed.connect(self.on_lane_id_changed)
+            self.bpmn_id_changed.connect(lane_widget.update_bpmn_id)
+            self.lane_id_changed.connect(lane_widget.update_lane_id)
+            lane_widget.lane_id_changed.connect(self.update_lane_id)
 
     def signals_and_slots(self):
         pass
 
-    def on_bpmn_id_changed(self, bpmn_id):
-        self.bpmn_id = bpmn_id
-        self.bpmn_id_changed.emit(self.bpmn_id)
+    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
+        self.bpmn_id_changed.emit(old_bpmn_id, new_bpmn_id)
 
-    def on_lane_id_changed(self, old_lane_id, new_lane_id):
+    def update_lane_id(self, old_lane_id, new_lane_id):
         old_keys = list(self.bpmn_lanes.keys())
-        new_keys = [new_node_id if k == old_node_id else k for k in old_keys]
+        new_keys = [new_lane_id if k == old_lane_id else k for k in old_keys]
 
-        self.bpmn_lanes = dict(zip(new_keys, self.bpmn_lanes.values()))
-        print(list(self.pool_nodes.keys()))
-
-        # populate the nodes
-        # self.populate()
+        self.bpmn_data['lanes'] = dict(zip(new_keys, self.bpmn_lanes.values()))
+        self.bpmn_lanes = self.bpmn_data['lanes']
+        # print(list(self.bpmn_lanes.keys()))
 
         self.lane_id_changed.emit(old_lane_id, new_lane_id)
