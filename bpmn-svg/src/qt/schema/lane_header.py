@@ -11,7 +11,7 @@ from util.logger import *
 
 class LaneHeader(CollapsibleFrame):
 
-    lane_id_changed = pyqtSignal(str)
+    lane_id_changed = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='lane', text='Lane id: {0}'.format(lane_id), parent=parent)
@@ -88,7 +88,7 @@ class LaneHeader(CollapsibleFrame):
         self.hide_label.stateChanged.connect(self.on_hide_label_changed)
 
     def on_id_edited(self):
-        self.lane_id_changed.emit(self.id.text())
+        self.lane_id_changed.emit(self.lane_id, self.id.text())
 
     def on_label_edited(self):
         self.lane_data['label'] = self.label.text()

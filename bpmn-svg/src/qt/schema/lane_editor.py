@@ -16,7 +16,7 @@ from qt.schema.lane_edges import LaneEdges
 class LaneEditor(CollapsibleFrame):
 
     bpmn_id_changed = pyqtSignal(str)
-    lane_id_changed = pyqtSignal(str)
+    lane_id_changed = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='lane', text='LANE id: {0}'.format(lane_id), parent=parent)
@@ -56,10 +56,10 @@ class LaneEditor(CollapsibleFrame):
         # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
         self.bpmn_id_changed.emit(self.bpmn_id)
 
-    def on_lane_id_changed(self, lane_id):
-        self.lane_id = lane_id
+    def on_lane_id_changed(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = lane_id
+            self.lane_data = self.bpmn_data['lanes'][self.lane_id]
 
-        # TODO: change the bpmn_data
-
-        print(type(self).__name__, self.lane_id, 'lane_id_changed')
-        self.lane_id_changed.emit(self.lane_id)
+            print(type(self).__name__, self.lane_id, 'lane_id_changed')
+            self.lane_id_changed.emit(old_lane_id, self.lane_id)

@@ -49,7 +49,7 @@ class PoolNodes(CollapsibleFrame):
         new_keys = [new_node_id if k == old_node_id else k for k in old_keys]
 
         self.pool_nodes = dict(zip(new_keys, self.pool_nodes.values()))
-        print(list(self.pool_nodes.keys()))
+        # print(list(self.pool_nodes.keys()))
 
         # populate the nodes
         self.populate()
