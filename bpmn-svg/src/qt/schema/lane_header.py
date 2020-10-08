@@ -11,7 +11,7 @@ from util.logger import *
 
 class LaneHeader(CollapsibleFrame):
 
-    lane_id_changed = pyqtSignal(str, str)
+    lane_id_change_requested = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='lane', text='Lane id: {0}'.format(lane_id), parent=parent)
@@ -87,8 +87,24 @@ class LaneHeader(CollapsibleFrame):
         self.label.editingFinished.connect(self.on_label_edited)
         self.hide_label.stateChanged.connect(self.on_hide_label_changed)
 
+    def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
+        # print(type(self).__name__, self.lane_id, 'bpmn_id_change_done')
+
+    def on_lane_id_change_done(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = new_lane_id
+            self.lane_data = self.bpmn_data['lanes'][self.lane_id]
+
+            print('.' * 12, type(self).__name__, 'lane_id_change_done', old_lane_id, '-->', new_lane_id)
+            self.change_title('Lane id: {0}'.format(self.lane_id), icon='lane')
+
+    def on_pool_id_change_done(self, old_pool_id, new_pool_id):
+        pass
+
     def on_id_edited(self):
-        self.lane_id_changed.emit(self.lane_id, self.id.text())
+        print('.' * 12, type(self).__name__, 'lane_id_change_requested', self.lane_id, '-->', self.id.text())
+        self.lane_id_change_requested.emit(self.lane_id, self.id.text())
 
     def on_label_edited(self):
         self.lane_data['label'] = self.label.text()
@@ -98,14 +114,3 @@ class LaneHeader(CollapsibleFrame):
             self.lane_data['styles']['hide_label'] = 'true'
         else:
             self.lane_data['styles']['hide_label'] = 'false'
-
-    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
-        self.bpmn_id = new_bpmn_id
-        # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
-
-    def update_lane_id(self, old_lane_id, new_lane_id):
-        if self.lane_id == old_lane_id:
-            self.lane_id = new_lane_id
-            self.lane_data = self.bpmn_data['lanes'][self.lane_id]
-            print(type(self).__name__, self.lane_id, 'lane_id_changed')
-            self.change_title('Lane id: {0}'.format(self.lane_id), icon='lane')

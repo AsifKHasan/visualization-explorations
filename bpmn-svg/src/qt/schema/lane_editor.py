@@ -15,7 +15,12 @@ from qt.schema.lane_edges import LaneEdges
 
 class LaneEditor(CollapsibleFrame):
 
-    lane_id_changed = pyqtSignal(str, str)
+    lane_id_change_requested = pyqtSignal(str, str)
+    pool_id_change_requested = pyqtSignal(str, str)
+
+    bpmn_id_change_done = pyqtSignal(str, str)
+    lane_id_change_done = pyqtSignal(str, str)
+    pool_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='lane', text='LANE id: {0}'.format(lane_id), parent=parent)
@@ -41,26 +46,43 @@ class LaneEditor(CollapsibleFrame):
         self.addWidget(self.lane_edges_ui)
 
     def signals_and_slots(self):
-        self.lane_header_ui.lane_id_changed.connect(self.on_lane_id_changed)
+        self.lane_header_ui.lane_id_change_requested.connect(self.on_lane_id_change_requested)
+        self.lane_pools_ui.pool_id_change_requested.connect(self.on_pool_id_change_requested)
 
-    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id_change_done.connect(self.lane_header_ui.on_bpmn_id_change_done)
+        self.bpmn_id_change_done.connect(self.lane_pools_ui.on_bpmn_id_change_done)
+        self.bpmn_id_change_done.connect(self.lane_edges_ui.on_bpmn_id_change_done)
+
+        self.lane_id_change_done.connect(self.lane_header_ui.on_lane_id_change_done)
+        self.lane_id_change_done.connect(self.lane_pools_ui.on_lane_id_change_done)
+        self.lane_id_change_done.connect(self.lane_edges_ui.on_lane_id_change_done)
+
+        self.pool_id_change_done.connect(self.lane_header_ui.on_pool_id_change_done)
+        self.pool_id_change_done.connect(self.lane_pools_ui.on_pool_id_change_done)
+        self.pool_id_change_done.connect(self.lane_edges_ui.on_pool_id_change_done)
+
+    def on_lane_id_change_requested(self, old_lane_id, new_lane_id):
+        print('.' * 8, type(self).__name__, 'lane_id_change_requested', old_lane_id, '-->', new_lane_id)
+        self.lane_id_change_requested.emit(old_lane_id, new_lane_id)
+
+    def on_pool_id_change_requested(self, old_pool_id, new_pool_id):
+        print('.' * 8, type(self).__name__, 'pool_id_change_requested', old_pool_id, '-->', new_pool_id)
+        self.pool_id_change_requested.emit(old_pool_id, new_pool_id)
+
+    def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
         self.bpmn_id = new_bpmn_id
-        # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
-        # self.bpmn_id_changed.emit(old_bpmn_id, new_bpmn_id)
-        self.lane_header_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
-        self.lane_pools_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
-        self.lane_edges_ui.update_bpmn_id(old_bpmn_id, new_bpmn_id)
+        # print(type(self).__name__, self.lane_id, 'bpmn_id_change_done')
+        self.bpmn_id_change_done.emit(old_bpmn_id, new_bpmn_id)
 
-    def on_lane_id_changed(self, old_lane_id, new_lane_id):
-        self.lane_id_changed.emit(old_lane_id, new_lane_id)
-
-    def update_lane_id(self, old_lane_id, new_lane_id):
+    def on_lane_id_change_done(self, old_lane_id, new_lane_id):
         if self.lane_id == old_lane_id:
             self.lane_id = new_lane_id
             self.lane_data = self.bpmn_data['lanes'][self.lane_id]
 
-            print(type(self).__name__, self.lane_id, 'lane_id_changed')
+            print('.' * 8, type(self).__name__, 'lane_id_change_done', old_lane_id, '-->', new_lane_id)
             self.change_title('Lane id: {0}'.format(self.lane_id), icon='lane')
-            self.lane_header_ui.update_lane_id(old_lane_id, new_lane_id)
-            self.lane_pools_ui.update_lane_id(old_lane_id, new_lane_id)
-            self.lane_edges_ui.update_lane_id(old_lane_id, new_lane_id)
+            self.lane_id_change_done.emit(old_lane_id, new_lane_id)
+
+    def on_pool_id_change_done(self, old_pool_id, new_pool_id):
+        print('.' * 8, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
+        self.pool_id_change_done.emit(old_pool_id, new_pool_id)

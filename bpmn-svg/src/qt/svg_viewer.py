@@ -86,5 +86,5 @@ class SvgViewer(QObject):
         self.ui.svgwidget_svg.setZoomFactor(self.zoom_factor)
         self.ui.button_zoom_100.setText('{0}%'.format(int(self.zoom_factor * 100)))
 
-    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+    def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
         self.bpmn_id = new_bpmn_id

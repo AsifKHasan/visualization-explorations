@@ -15,7 +15,9 @@ from qt.schema.edge_editor import EdgeEditor
 
 class BpmnEdges(CollapsibleFrame):
 
-    bpmn_id_changed = pyqtSignal(str, str)
+    bpmn_id_change_done = pyqtSignal(str, str)
+    lane_id_change_done = pyqtSignal(str, str)
+    pool_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, parent=None):
         super().__init__(icon='edges', text='BPMN Edges', parent=parent)
@@ -71,8 +73,23 @@ class BpmnEdges(CollapsibleFrame):
             edge_widget.new_edge.connect(self.on_new_edge)
             edge_widget.remove_edge.connect(self.on_remove_edge)
             edge_widget.order_changed.connect(self.on_order_changed)
-            self.bpmn_id_changed.connect(edge_widget.update_bpmn_id)
+            self.bpmn_id_change_done.connect(edge_widget.on_bpmn_id_change_done)
+            self.lane_id_change_done.connect(edge_widget.on_lane_id_change_done)
+            self.pool_id_change_done.connect(edge_widget.on_pool_id_change_done)
             index = index + 1
+
+
+    def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
+        self.bpmn_id_change_done.emit(old_bpmn_id, new_bpmn_id)
+
+    def on_lane_id_change_done(self, old_lane_id, new_lane_id):
+        print('.' * 4, type(self).__name__, 'lane_id_change_done', old_lane_id, '-->', new_lane_id)
+        self.lane_id_change_done.emit(old_lane_id, new_lane_id)
+
+    def on_pool_id_change_done(self, old_pool_id, new_pool_id):
+        print('.' * 4, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
+        self.pool_id_change_done.emit(old_pool_id, new_pool_id)
 
     def on_new_edge(self, index=0):
         # insert a blank edge in bpmn_data
@@ -106,7 +123,3 @@ class BpmnEdges(CollapsibleFrame):
         elif direction == 'down':
             self.bpmn_data['edges'][index], self.bpmn_data['edges'][index + 1] = self.bpmn_data['edges'][index + 1], self.bpmn_data['edges'][index]
             self.populate()
-
-    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
-        self.bpmn_id = new_bpmn_id
-        self.bpmn_id_changed.emit(old_bpmn_id, new_bpmn_id)

@@ -10,6 +10,9 @@ from qt.qt_utils import *
 from util.logger import *
 
 class PoolHeader(CollapsibleFrame):
+
+    pool_id_change_requested = pyqtSignal(str, str)
+
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, parent=None):
         super().__init__(icon='pool', text='Pool id: {0}'.format(pool_id), parent=parent)
         self.set_styles(title_style='background-color: "#D0D0D0"; color: "#404040";', content_style='background-color: "#C8C8C8"; color: "#404040"; font-size: 9pt;')
@@ -84,8 +87,29 @@ class PoolHeader(CollapsibleFrame):
         self.label.editingFinished.connect(self.on_label_edited)
         self.hide_label.stateChanged.connect(self.on_hide_label_changed)
 
+    def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
+        # print(type(self).__name__, self.lane_id, self.pool_id, 'bpmn_id_change_done')
+
+    def on_lane_id_change_done(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = new_lane_id
+            self.pool_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]
+
+            print('.' * 20, type(self).__name__, 'lane_id_change_done', old_lane_id, '-->', new_lane_id)
+            # self.change_title('Pool id: {0}'.format(self.pool_id), icon='lane')
+
+    def on_pool_id_change_done(self, old_pool_id, new_pool_id):
+        if self.pool_id == old_pool_id:
+            self.pool_id = new_pool_id
+            self.pool_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]
+
+            print('.' * 20, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
+            self.change_title('Pool id: {0}'.format(self.pool_id), icon='lane')
+
     def on_id_edited(self):
-        pass
+        print('.' * 20, type(self).__name__, 'pool_id_change_requested', self.pool_id, '-->', self.id.text())
+        self.pool_id_change_requested.emit(self.pool_id, self.id.text())
 
     def on_label_edited(self):
         self.pool_data['label'] = self.label.text()
@@ -95,14 +119,3 @@ class PoolHeader(CollapsibleFrame):
             self.pool_data['styles']['hide_label'] = 'true'
         else:
             self.pool_data['styles']['hide_label'] = 'false'
-
-    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
-        self.bpmn_id = new_bpmn_id
-        print(type(self).__name__, self.lane_id, self.pool_id, 'bpmn_id_changed')
-
-    def update_lane_id(self, old_lane_id, new_lane_id):
-        if self.lane_id == old_lane_id:
-            self.lane_id = new_lane_id
-            self.pool_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]
-
-            print(type(self).__name__, self.lane_id, self.pool_id, 'lane_id_changed')

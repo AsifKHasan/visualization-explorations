@@ -13,8 +13,11 @@ from qt.schema.pool_editor import PoolEditor
 
 class LanePools(CollapsibleFrame):
 
-    bpmn_id_changed = pyqtSignal(str, str)
-    lane_id_changed = pyqtSignal(str, str)
+    pool_id_change_requested = pyqtSignal(str, str)
+
+    bpmn_id_change_done = pyqtSignal(str, str)
+    lane_id_change_done = pyqtSignal(str, str)
+    pool_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='pools', text='Lane Pools', parent=parent)
@@ -30,18 +33,37 @@ class LanePools(CollapsibleFrame):
             pool_widget = PoolEditor(self.bpmn_data, self.bpmn_id, self.lane_id, pool_id, self)
             pool_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(pool_widget)
-            self.bpmn_id_changed.connect(pool_widget.update_bpmn_id)
-            self.lane_id_changed.connect(pool_widget.update_lane_id)
 
-    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
+            self.bpmn_id_change_done.connect(pool_widget.on_bpmn_id_change_done)
+            self.lane_id_change_done.connect(pool_widget.on_lane_id_change_done)
+            self.pool_id_change_done.connect(pool_widget.on_pool_id_change_done)
+
+            pool_widget.pool_id_change_requested.connect(self.on_pool_id_change_requested)
+
+    def on_pool_id_change_requested(self, old_pool_id, new_pool_id):
+        print('.' * 12, type(self).__name__, 'pool_id_change_requested', old_pool_id, '-->', new_pool_id)
+        self.pool_id_change_requested.emit(old_pool_id, new_pool_id)
+
+    def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
         self.bpmn_id = new_bpmn_id
-        # print(type(self).__name__, self.lane_id, 'bpmn_id_changed')
-        self.bpmn_id_changed.emit(old_bpmn_id, new_bpmn_id)
+        # print(type(self).__name__, self.lane_id, 'bpmn_id_change_done')
+        self.bpmn_id_change_done.emit(old_bpmn_id, new_bpmn_id)
 
-    def update_lane_id(self, old_lane_id, new_lane_id):
+    def on_lane_id_change_done(self, old_lane_id, new_lane_id):
         if self.lane_id == old_lane_id:
             self.lane_id = new_lane_id
             self.lane_pools = self.bpmn_data['lanes'][self.lane_id]['pools']
 
-            print(type(self).__name__, self.lane_id, 'lane_id_changed')
-            self.lane_id_changed.emit(old_lane_id, new_lane_id)
+            print('.' * 12, type(self).__name__, 'lane_id_change_done', old_lane_id, '-->', new_lane_id)
+            self.lane_id_change_done.emit(old_lane_id, new_lane_id)
+
+    def on_pool_id_change_done(self, old_pool_id, new_pool_id):
+        old_keys = list(self.lane_pools.keys())
+        new_keys = [new_pool_id if k == old_pool_id else k for k in old_keys]
+
+        self.bpmn_data['lanes'][self.lane_id]['pools'] = dict(zip(new_keys, self.lane_pools.values()))
+        self.lane_pools = self.bpmn_data['lanes'][self.lane_id]['pools']
+        # print(list(self.bpmn_pools.keys()))
+
+        print('.' * 12, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
+        self.pool_id_change_done.emit(old_pool_id, new_pool_id)

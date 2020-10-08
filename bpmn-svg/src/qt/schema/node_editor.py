@@ -11,7 +11,7 @@ from util.logger import *
 
 class NodeEditor(CollapsibleFrame):
 
-    node_id_changed = pyqtSignal(str, str)
+    node_id_change_requested = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, node_id, parent=None):
         self.bpmn_data, self.bpmn_id, self.lane_id, self.pool_id, self.node_id  = bpmn_data, bpmn_id, lane_id, pool_id, node_id
@@ -45,8 +45,10 @@ class NodeEditor(CollapsibleFrame):
         # node type
         self.type_label = QLabel("Type:")
         self.type_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+
+        # node_type
         self.type = QPushButton()
-        self.type.setStyleSheet('border: 1px solid grey; background-color: "#D8D8D8"')
+        # self.type.setStyleSheet('border: 1px solid grey; background-color: "#D8D8D8"')
         self.content_layout.addWidget(self.type_label, 0, 2)
         self.content_layout.addWidget(self.type, 0, 3)
 
@@ -93,7 +95,12 @@ class NodeEditor(CollapsibleFrame):
 
     def populate(self):
         self.id.setText(self.node_id)
-        self.type.setText(self.node_data['type'])
+
+        if self.node_data['type']:
+            pixmap = QPixmap(ICONS[self.node_data['type']])
+            # pixmap = pixmap.scaledToHeight(24)
+            self.type.setIcon(QIcon(pixmap))
+
         self.label.setText(self.node_data['label'])
 
         # label_pos
@@ -107,14 +114,31 @@ class NodeEditor(CollapsibleFrame):
 
     def signals_and_slots(self):
         self.id.editingFinished.connect(self.on_id_edited)
-        # self.type.editingFinished.connect(self.on_type_edited)
+        self.type.clicked.connect(self.on_selection_dialog)
         self.label.editingFinished.connect(self.on_label_edited)
         self.label_pos.currentTextChanged.connect(self.on_label_pos_changed)
         self.wrap_here.stateChanged.connect(self.on_wrap_here_changed)
         self.move_x.valueChanged.connect(self.on_move_x_changed)
 
+    def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
+        self.bpmn_id = new_bpmn_id
+
+    def on_lane_id_change_done(self, old_lane_id, new_lane_id):
+        if self.lane_id == old_lane_id:
+            self.lane_id = new_lane_id
+            self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
+
+            print('.' * 24, type(self).__name__, 'lane_id_change_done', old_lane_id, '-->', new_lane_id)
+
+    def on_pool_id_change_done(self, old_pool_id, new_pool_id):
+        if self.pool_id == old_pool_id:
+            self.pool_id = new_pool_id
+            self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
+
+            print('.' * 24, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
+
     def on_id_edited(self):
-        self.node_id_changed.emit(self.node_id, self.id.text())
+        self.node_id_change_requested.emit(self.node_id, self.id.text())
 
     def on_type_edited(self):
         self.node_data['type'] = self.type.text()
@@ -135,15 +159,106 @@ class NodeEditor(CollapsibleFrame):
         # self.move_x = v
         self.node_data['styles']['move_x'] = v
 
-    def update_bpmn_id(self, old_bpmn_id, new_bpmn_id):
-        self.bpmn_id = new_bpmn_id
+    def on_selection_dialog(self):
+        node_type = TypeSelectionDialog.open(self, self.node_data['type'])
+        if node_type and node_type != self.node_data['type']:
+            self.node_data['type'] = node_type
+            pixmap = QPixmap(ICONS[self.node_data['type']])
+            # pixmap = pixmap.scaledToHeight(24)
+            self.type.setIcon(QIcon(pixmap))
 
-    def update_lane_id(self, old_lane_id, new_lane_id):
-        if self.lane_id == old_lane_id:
-            self.lane_id = new_lane_id
-            self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
+class TypeSelectionDialog(QDialog):
+    def __init__(self, parent=None):
+        QDialog.__init__(self, parent=parent)
+        self.setWindowTitle('Type selection')
+        self.setMinimumSize(300, 400)
+        self.setWindowFlags(QtCore.Qt.Window |
+            QtCore.Qt.CustomizeWindowHint |
+            QtCore.Qt.WindowTitleHint |
+            QtCore.Qt.WindowCloseButtonHint |
+            QtCore.Qt.WindowStaysOnTopHint)
 
-    def update_pool_id(self, old_pool_id, new_pool_id):
-        if self.pool_id == old_pool_id:
-            self.pool_id = new_pool_id
-            self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
+        self.selected_type = None
+
+        self.init_ui()
+        self.signals_and_slots()
+
+    def init_ui(self):
+        layout = QVBoxLayout()
+
+        # the node tree
+        self.node_tree = QTreeWidget(self)
+        self.node_tree.setStyleSheet('background-color: "#F8F8F8"')
+        self.node_tree.setHeaderHidden(True)
+        layout.addWidget(self.node_tree)
+
+        # the select button
+        self.select = QPushButton('Select type')
+        # self.select.setStyleSheet('background-color: "#D8D8D8"')
+        self.select.setStyleSheet('QPushButton:disabled {background-color:#E8E8E8;}')
+        self.select.setEnabled(False)
+        layout.addWidget(self.select)
+
+        self.setLayout(layout)
+
+    def init_tree(self):
+        # populate the tree
+        for lane_id in self.bpmn_data['lanes']:
+            # if scope is 'bpmn' and it is a to node, then we do not allow the lane from from_node
+            if self.scope in ['bpmn'] and self.role == 'to' and lane_id == self.other_node_values[0]:
+                continue
+
+            # if scope is lane or pool and lane_id is not None, we only show the specific lane
+            # print(self.scope, self.lane_id, self.pool_id)
+            if self.scope in ['lane', 'pool'] and self.lane_id is not None and lane_id != self.lane_id:
+                continue
+
+            lane_item = QTreeWidgetItem(self.node_tree, 0)
+            lane_item.setText(0, lane_id)
+            for pool_id in self.bpmn_data['lanes'][lane_id]['pools']:
+                # if scope is pool and pool_id is not None, we only show the specific pool
+                if self.scope in ['pool'] and self.lane_id is not None and self.pool_id is not None and lane_id == self.lane_id and pool_id != self.pool_id:
+                    continue
+
+                pool_item = QTreeWidgetItem(lane_item, 1)
+                pool_item.setText(0, pool_id)
+                for node_id in self.bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:
+                    node_item = QTreeWidgetItem(pool_item, 2)
+                    node_item.setText(0, node_id)
+                    # preselect node if passed (not None)
+                    if self.node_id and node_id == self.node_id:
+                        self.node_tree.setCurrentItem(node_item)
+
+    def signals_and_slots(self):
+        self.select.clicked.connect(self.on_accept)
+        self.node_tree.currentItemChanged.connect(self.on_current_item_change)
+
+    def on_current_item_change(self, current, previous):
+        if current.type() == 2:
+            # print(current.text(0))
+            self.select.setEnabled(True)
+        else:
+            self.select.setEnabled(False)
+
+    def on_accept(self):
+        selected_type_item = self.node_tree.currentItem()
+        if selected_type_item:
+            self.selected_type = selected_type_item.text(0)
+        else:
+            self.selected_type = None
+
+        self.accept()
+
+    @staticmethod
+    def open(parent, node_type):
+
+        dialog = TypeSelectionDialog(parent)
+        dialog.parent, dialog.selected_type = parent, node_type
+        dialog.init_tree()
+
+        result = dialog.exec_()
+
+        if result == QDialog.Accepted:
+            return dialog.selected_type
+        else:
+            return None
