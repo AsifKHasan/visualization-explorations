@@ -14,10 +14,12 @@ from qt.schema.pool_editor import PoolEditor
 class LanePools(CollapsibleFrame):
 
     pool_id_change_requested = pyqtSignal(str, str)
+    node_id_change_requested = pyqtSignal(str, str)
 
     bpmn_id_change_done = pyqtSignal(str, str)
     lane_id_change_done = pyqtSignal(str, str)
     pool_id_change_done = pyqtSignal(str, str)
+    node_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='pools', text='Lane Pools', parent=parent)
@@ -37,12 +39,18 @@ class LanePools(CollapsibleFrame):
             self.bpmn_id_change_done.connect(pool_widget.on_bpmn_id_change_done)
             self.lane_id_change_done.connect(pool_widget.on_lane_id_change_done)
             self.pool_id_change_done.connect(pool_widget.on_pool_id_change_done)
+            self.node_id_change_done.connect(pool_widget.on_node_id_change_done)
 
             pool_widget.pool_id_change_requested.connect(self.on_pool_id_change_requested)
+            pool_widget.node_id_change_requested.connect(self.on_node_id_change_requested)
 
     def on_pool_id_change_requested(self, old_pool_id, new_pool_id):
         print('.' * 12, type(self).__name__, 'pool_id_change_requested', old_pool_id, '-->', new_pool_id)
         self.pool_id_change_requested.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_requested(self, old_node_id, new_node_id):
+        print('.' * 12, type(self).__name__, 'node_id_change_requested', old_node_id, '-->', new_node_id)
+        self.node_id_change_requested.emit(old_node_id, new_node_id)
 
     def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
         self.bpmn_id = new_bpmn_id
@@ -67,3 +75,7 @@ class LanePools(CollapsibleFrame):
 
         print('.' * 12, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
         self.pool_id_change_done.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_done(self, old_node_id, new_node_id):
+        print('.' * 12, type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
+        self.node_id_change_done.emit(old_node_id, new_node_id)

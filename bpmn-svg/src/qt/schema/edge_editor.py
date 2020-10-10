@@ -211,6 +211,27 @@ class EdgeEditor(CollapsibleFrame):
 
         print('.' * 24, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
 
+    def on_node_id_change_done(self, old_node_id, new_node_id):
+        from_node_affected = False
+        to_node_affected = False
+
+        # TODO: from node, if matches, change id
+        if self.from_node.values()[2] == old_node_id:
+            from_node_affected = True
+
+        # TODO: to node, if matches, change id
+        if self.to_node.values()[2] == old_node_id:
+            to_node_affected = True
+
+        if from_node_affected:
+            self.from_node.update_node_id(old_node_id, new_node_id)
+            self.on_from_node_change()
+            print('.' * 24, type(self).__name__, 'node_id_change_done in [from] node', old_node_id, '-->', new_node_id)
+
+        if to_node_affected:
+            self.to_node.update_node_id(old_node_id, new_node_id)
+            self.on_to_node_change()
+            print('.' * 24, type(self).__name__, 'node_id_change_done in [to] node', old_node_id, '-->', new_node_id)
 
     def on_arrow_down(self):
         self.order_changed.emit(self.index, 'down')
@@ -422,6 +443,11 @@ class EdgeNodeWidget(QWidget):
     def update_pool_id(self, old_pool_id, new_pool_id):
         if self.pool_id == old_pool_id:
             self.pool_id = new_pool_id
+            self.populate()
+
+    def update_node_id(self, old_node_id, new_node_id):
+        if self.node_id == old_node_id:
+            self.node_id = new_node_id
             self.populate()
 
     def on_selection_dialog(self):

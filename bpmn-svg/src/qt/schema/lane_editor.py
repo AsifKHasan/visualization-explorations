@@ -17,10 +17,12 @@ class LaneEditor(CollapsibleFrame):
 
     lane_id_change_requested = pyqtSignal(str, str)
     pool_id_change_requested = pyqtSignal(str, str)
+    node_id_change_requested = pyqtSignal(str, str)
 
     bpmn_id_change_done = pyqtSignal(str, str)
     lane_id_change_done = pyqtSignal(str, str)
     pool_id_change_done = pyqtSignal(str, str)
+    node_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
         super().__init__(icon='lane', text='LANE id: {0}'.format(lane_id), parent=parent)
@@ -48,6 +50,7 @@ class LaneEditor(CollapsibleFrame):
     def signals_and_slots(self):
         self.lane_header_ui.lane_id_change_requested.connect(self.on_lane_id_change_requested)
         self.lane_pools_ui.pool_id_change_requested.connect(self.on_pool_id_change_requested)
+        self.lane_pools_ui.node_id_change_requested.connect(self.on_node_id_change_requested)
 
         self.bpmn_id_change_done.connect(self.lane_header_ui.on_bpmn_id_change_done)
         self.bpmn_id_change_done.connect(self.lane_pools_ui.on_bpmn_id_change_done)
@@ -61,6 +64,9 @@ class LaneEditor(CollapsibleFrame):
         self.pool_id_change_done.connect(self.lane_pools_ui.on_pool_id_change_done)
         self.pool_id_change_done.connect(self.lane_edges_ui.on_pool_id_change_done)
 
+        self.node_id_change_done.connect(self.lane_pools_ui.on_node_id_change_done)
+        self.node_id_change_done.connect(self.lane_edges_ui.on_node_id_change_done)
+
     def on_lane_id_change_requested(self, old_lane_id, new_lane_id):
         print('.' * 8, type(self).__name__, 'lane_id_change_requested', old_lane_id, '-->', new_lane_id)
         self.lane_id_change_requested.emit(old_lane_id, new_lane_id)
@@ -68,6 +74,10 @@ class LaneEditor(CollapsibleFrame):
     def on_pool_id_change_requested(self, old_pool_id, new_pool_id):
         print('.' * 8, type(self).__name__, 'pool_id_change_requested', old_pool_id, '-->', new_pool_id)
         self.pool_id_change_requested.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_requested(self, old_node_id, new_node_id):
+        print('.' * 8, type(self).__name__, 'node_id_change_requested', old_node_id, '-->', new_node_id)
+        self.node_id_change_requested.emit(old_node_id, new_node_id)
 
     def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
         self.bpmn_id = new_bpmn_id
@@ -86,3 +96,7 @@ class LaneEditor(CollapsibleFrame):
     def on_pool_id_change_done(self, old_pool_id, new_pool_id):
         print('.' * 8, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
         self.pool_id_change_done.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_done(self, old_node_id, new_node_id):
+        print('.' * 8, type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
+        self.node_id_change_done.emit(old_node_id, new_node_id)

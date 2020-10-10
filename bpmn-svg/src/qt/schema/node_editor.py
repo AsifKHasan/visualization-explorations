@@ -137,7 +137,15 @@ class NodeEditor(CollapsibleFrame):
 
             print('.' * 24, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
 
+    def on_node_id_change_done(self, old_node_id, new_node_id):
+        if self.node_id == old_node_id:
+            self.node_id = new_node_id
+            self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
+
+            print('.' * 24, type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
+
     def on_id_edited(self):
+        print('.' * 24, type(self).__name__, 'node_id_change_requested', self.node_id, '-->', self.id.text())
         self.node_id_change_requested.emit(self.node_id, self.id.text())
 
     def on_type_edited(self):
@@ -162,16 +170,22 @@ class NodeEditor(CollapsibleFrame):
     def on_selection_dialog(self):
         node_type = TypeSelectionDialog.open(self, self.node_data['type'])
         if node_type and node_type != self.node_data['type']:
+            # print('Node Type changed {0} --> {1}'.format(self.node_data['type'], node_type))
             self.node_data['type'] = node_type
             pixmap = QPixmap(ICONS[self.node_data['type']])
             # pixmap = pixmap.scaledToHeight(24)
             self.type.setIcon(QIcon(pixmap))
+            self.update_title()
+
+    def update_title(self):
+        self.change_title(icon=self.node_data['type'], text='NODE id: {0}'.format(self.node_id), err=False)
+
 
 class TypeSelectionDialog(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)
         self.setWindowTitle('Type selection')
-        self.setMinimumSize(300, 400)
+        self.setMinimumSize(400, 500)
         self.setWindowFlags(QtCore.Qt.Window |
             QtCore.Qt.CustomizeWindowHint |
             QtCore.Qt.WindowTitleHint |
@@ -203,38 +217,45 @@ class TypeSelectionDialog(QDialog):
 
     def init_tree(self):
         # populate the tree
-        for lane_id in self.bpmn_data['lanes']:
-            # if scope is 'bpmn' and it is a to node, then we do not allow the lane from from_node
-            if self.scope in ['bpmn'] and self.role == 'to' and lane_id == self.other_node_values[0]:
-                continue
+        for group, item in NODE_TYPES.items():
+            group_object = QTreeWidgetItem(self.node_tree, 0)
+            group_object.setText(0, group)
 
-            # if scope is lane or pool and lane_id is not None, we only show the specific lane
-            # print(self.scope, self.lane_id, self.pool_id)
-            if self.scope in ['lane', 'pool'] and self.lane_id is not None and lane_id != self.lane_id:
-                continue
+            # item may be a list or another dict (group)
+            if isinstance(item, dict):
+                # it is another group
+                for subgroup, subitem in item.items():
+                    subgroup_object = QTreeWidgetItem(group_object, 0)
+                    subgroup_object.setText(0, subgroup)
 
-            lane_item = QTreeWidgetItem(self.node_tree, 0)
-            lane_item.setText(0, lane_id)
-            for pool_id in self.bpmn_data['lanes'][lane_id]['pools']:
-                # if scope is pool and pool_id is not None, we only show the specific pool
-                if self.scope in ['pool'] and self.lane_id is not None and self.pool_id is not None and lane_id == self.lane_id and pool_id != self.pool_id:
-                    continue
+                    # the subgroup is a list
+                    for node_type in subitem:
+                        type_item = QTreeWidgetItem(subgroup_object, 1)
+                        type_item.setText(0, node_type)
+                        pixmap = QPixmap(ICONS[node_type])
+                        # pixmap = pixmap.scaledToHeight(24)
+                        type_item.setIcon(0, QIcon(pixmap))
 
-                pool_item = QTreeWidgetItem(lane_item, 1)
-                pool_item.setText(0, pool_id)
-                for node_id in self.bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:
-                    node_item = QTreeWidgetItem(pool_item, 2)
-                    node_item.setText(0, node_id)
-                    # preselect node if passed (not None)
-                    if self.node_id and node_id == self.node_id:
-                        self.node_tree.setCurrentItem(node_item)
+                        if self.selected_type and node_type == self.selected_type:
+                            self.node_tree.setCurrentItem(type_item)
+            else:
+                # it is a list of types
+                for node_type in item:
+                    type_item = QTreeWidgetItem(group_object, 1)
+                    type_item.setText(0, node_type)
+                    pixmap = QPixmap(ICONS[node_type])
+                    # pixmap = pixmap.scaledToHeight(24)
+                    type_item.setIcon(0, QIcon(pixmap))
+
+                    if self.selected_type and node_type == self.selected_type:
+                        self.node_tree.setCurrentItem(type_item)
 
     def signals_and_slots(self):
         self.select.clicked.connect(self.on_accept)
         self.node_tree.currentItemChanged.connect(self.on_current_item_change)
 
     def on_current_item_change(self, current, previous):
-        if current.type() == 2:
+        if current.type() == 1:
             # print(current.text(0))
             self.select.setEnabled(True)
         else:

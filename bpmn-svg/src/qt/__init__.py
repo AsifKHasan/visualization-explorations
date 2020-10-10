@@ -20,6 +20,23 @@ ACTION_ICONS = {
     'arrow-down': './resources/arrow-down.png',
 }
 
+NODE_TYPES = {
+    'Activities': {
+        'Tasks': ['task', 'businessRuleTask', 'manualTask', 'receiveTask', 'scriptTask', 'sendTask', 'serviceTask', 'userTask',],
+        'Calls': ['call', 'businessRuleCall', 'manualCall', 'scriptCall', 'userCall',],
+        'Subprocesses': ['process', 'adhoc', 'transaction',],
+        'Event Subprocesses': ['event', 'eventCompensation', 'eventConditional', 'eventConditionalNon', 'eventError', 'eventEscalation', 'eventEscalationNon', 'eventMessage', 'eventMessageNon', 'eventMultiple', 'eventMultipleNon', 'eventParallelMultiple', 'eventParallelMultipleNon', 'eventSignal', 'eventSignalNon', 'eventTimer', 'eventTimerNon',],
+    },
+    'Artifacts': ['group', 'annotation',],
+    'Data': ['data', 'dataCollection', 'dataInput', 'dataInputCollection', 'dataOutput', 'dataOutputCollection', 'dataStore',],
+    'Events': {
+        'Start Events': ['start', 'startCompensation', 'startConditional', 'startConditionalNon', 'startError', 'startEscalation', 'startEscalationNon', 'startMessage', 'startMessageNon', 'startMultiple', 'startMultipleNon', 'startParallelMultiple', 'startParallelMultipleNon', 'startSignal', 'startSignalNon', 'startTimer', 'startTimerNon',],
+        'Intermetiate Events': ['intermediate', 'catchCancel', 'catchCompensation', 'throwCompensation', 'catchError', 'catchEscalation', 'catchEscalationNon', 'throwEscalation', 'catchLink', 'throwLink', 'catchMessage', 'catchMessageNon', 'throwMessage', 'catchMultiple', 'catchMultipleNon', 'throwMultiple', 'catchParallelMultiple', 'catchParallelMultipleNon', 'catchSignal', 'catchSignalNon', 'throwSignal', 'conditional', 'conditionalNon', 'timer', 'timerNon',],
+        'End Events': ['end', 'endCancel', 'endCompensation', 'endError', 'endEscalation', 'endMessage', 'endMultiple', 'endSignal', 'endTerminate',],
+    },
+    'Gateways': ['inclusive', 'exclusive', 'parallel', 'complex', 'eventBased', 'eventBasedStart', 'eventBasedParallelStart',],
+}
+
 ICONS = {
     'bpmn': './resources/bpmn/bpmn.png',
     'lanes': './resources/bpmn/lanes.png',

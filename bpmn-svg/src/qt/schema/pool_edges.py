@@ -18,6 +18,7 @@ class PoolEdges(CollapsibleFrame):
     bpmn_id_change_done = pyqtSignal(str, str)
     lane_id_change_done = pyqtSignal(str, str)
     pool_id_change_done = pyqtSignal(str, str)
+    node_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, parent=None):
         super().__init__(icon='edges', text='Pool Edges', parent=parent)
@@ -76,6 +77,7 @@ class PoolEdges(CollapsibleFrame):
             self.bpmn_id_change_done.connect(edge_widget.on_bpmn_id_change_done)
             self.lane_id_change_done.connect(edge_widget.on_lane_id_change_done)
             self.pool_id_change_done.connect(edge_widget.on_pool_id_change_done)
+            self.node_id_change_done.connect(edge_widget.on_node_id_change_done)
             index = index + 1
 
     def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
@@ -98,6 +100,10 @@ class PoolEdges(CollapsibleFrame):
 
             print('.' * 20, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
             self.pool_id_change_done.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_done(self, old_node_id, new_node_id):
+        print('.' * 20, type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
+        self.node_id_change_done.emit(old_node_id, new_node_id)
 
     def on_new_edge(self, index=0):
         # insert a blank edge in bpmn_data

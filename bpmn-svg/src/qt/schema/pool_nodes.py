@@ -13,7 +13,10 @@ from qt.schema.node_editor import NodeEditor
 
 class PoolNodes(CollapsibleFrame):
 
+    node_id_change_requested = pyqtSignal(str, str)
+
     bpmn_id_change_done = pyqtSignal(str, str)
+    node_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, parent=None):
         super().__init__(icon='nodes', text='Pool Nodes', parent=parent)
@@ -35,19 +38,14 @@ class PoolNodes(CollapsibleFrame):
             self.addWidget(node_widget)
             node_widget.node_id_change_requested.connect(self.on_node_id_change_requested)
             self.bpmn_id_change_done.connect(node_widget.on_bpmn_id_change_done)
+            self.node_id_change_done.connect(node_widget.on_node_id_change_done)
 
     def signals_and_slots(self):
         pass
 
     def on_node_id_change_requested(self, old_node_id, new_node_id):
-        old_keys = list(self.pool_nodes.keys())
-        new_keys = [new_node_id if k == old_node_id else k for k in old_keys]
-
-        self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'] = dict(zip(new_keys, self.pool_nodes.values()))
-        self.pool_nodes = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes']
-
-        # populate the nodes
-        self.populate()
+        print('.' * 20, type(self).__name__, 'node_id_change_requested', old_node_id, '-->', new_node_id)
+        self.node_id_change_requested.emit(old_node_id, new_node_id)
 
     def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
         self.bpmn_id = new_bpmn_id
@@ -67,3 +65,13 @@ class PoolNodes(CollapsibleFrame):
             self.pool_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]
 
             print('.' * 20, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
+
+    def on_node_id_change_done(self, old_node_id, new_node_id):
+        old_keys = list(self.pool_nodes.keys())
+        new_keys = [new_node_id if k == old_node_id else k for k in old_keys]
+
+        self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'] = dict(zip(new_keys, self.pool_nodes.values()))
+        self.pool_nodes = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes']
+
+        # populate the nodes
+        self.populate()

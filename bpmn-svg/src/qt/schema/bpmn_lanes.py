@@ -15,10 +15,12 @@ class BpmnLanes(CollapsibleFrame):
 
     lane_id_change_requested = pyqtSignal(str, str)
     pool_id_change_requested = pyqtSignal(str, str)
+    node_id_change_requested = pyqtSignal(str, str)
 
     bpmn_id_change_done = pyqtSignal(str, str)
     lane_id_change_done = pyqtSignal(str, str)
     pool_id_change_done = pyqtSignal(str, str)
+    node_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, parent=None):
         super().__init__(icon='lanes', text='BPMN Lanes', parent=parent)
@@ -39,9 +41,11 @@ class BpmnLanes(CollapsibleFrame):
             self.bpmn_id_change_done.connect(lane_widget.on_bpmn_id_change_done)
             self.lane_id_change_done.connect(lane_widget.on_lane_id_change_done)
             self.pool_id_change_done.connect(lane_widget.on_pool_id_change_done)
+            self.node_id_change_done.connect(lane_widget.on_node_id_change_done)
 
             lane_widget.lane_id_change_requested.connect(self.on_lane_id_change_requested)
             lane_widget.pool_id_change_requested.connect(self.on_pool_id_change_requested)
+            lane_widget.node_id_change_requested.connect(self.on_node_id_change_requested)
 
     def signals_and_slots(self):
         pass
@@ -53,6 +57,10 @@ class BpmnLanes(CollapsibleFrame):
     def on_pool_id_change_requested(self, old_pool_id, new_pool_id):
         print('.' * 4, type(self).__name__, 'pool_id_change_requested', old_pool_id, '-->', new_pool_id)
         self.pool_id_change_requested.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_requested(self, old_node_id, new_node_id):
+        print('.' * 4, type(self).__name__, 'node_id_change_requested', old_node_id, '-->', new_node_id)
+        self.node_id_change_requested.emit(old_node_id, new_node_id)
 
     def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
         self.bpmn_id = new_bpmn_id
@@ -72,3 +80,7 @@ class BpmnLanes(CollapsibleFrame):
     def on_pool_id_change_done(self, old_pool_id, new_pool_id):
         print('.' * 4, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
         self.pool_id_change_done.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_done(self, old_node_id, new_node_id):
+        print('.' * 4, type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
+        self.node_id_change_done.emit(old_node_id, new_node_id)

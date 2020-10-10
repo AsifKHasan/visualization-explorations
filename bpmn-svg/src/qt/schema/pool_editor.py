@@ -16,10 +16,12 @@ from qt.schema.pool_edges import PoolEdges
 class PoolEditor(CollapsibleFrame):
 
     pool_id_change_requested = pyqtSignal(str, str)
+    node_id_change_requested = pyqtSignal(str, str)
 
     bpmn_id_change_done = pyqtSignal(str, str)
     lane_id_change_done = pyqtSignal(str, str)
     pool_id_change_done = pyqtSignal(str, str)
+    node_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, parent=None):
         super().__init__(icon='pool', text='POOL id: {0}'.format(pool_id), parent=parent)
@@ -46,6 +48,7 @@ class PoolEditor(CollapsibleFrame):
 
     def signals_and_slots(self):
         self.pool_header_ui.pool_id_change_requested.connect(self.on_pool_id_change_requested)
+        self.pool_nodes_ui.node_id_change_requested.connect(self.on_node_id_change_requested)
 
         self.bpmn_id_change_done.connect(self.pool_header_ui.on_bpmn_id_change_done)
         self.bpmn_id_change_done.connect(self.pool_nodes_ui.on_bpmn_id_change_done)
@@ -59,9 +62,16 @@ class PoolEditor(CollapsibleFrame):
         self.pool_id_change_done.connect(self.pool_nodes_ui.on_pool_id_change_done)
         self.pool_id_change_done.connect(self.pool_edges_ui.on_pool_id_change_done)
 
+        self.node_id_change_done.connect(self.pool_nodes_ui.on_node_id_change_done)
+        self.node_id_change_done.connect(self.pool_edges_ui.on_node_id_change_done)
+
     def on_pool_id_change_requested(self, old_pool_id, new_pool_id):
         print('.' * 16, type(self).__name__, 'pool_id_change_requested', old_pool_id, '-->', new_pool_id)
         self.pool_id_change_requested.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_requested(self, old_node_id, new_node_id):
+        print('.' * 16, type(self).__name__, 'node_id_change_requested', old_node_id, '-->', new_node_id)
+        self.node_id_change_requested.emit(old_node_id, new_node_id)
 
     def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
         self.bpmn_id = new_bpmn_id
@@ -83,3 +93,7 @@ class PoolEditor(CollapsibleFrame):
 
             print('.' * 16, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
             self.pool_id_change_done.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_done(self, old_node_id, new_node_id):
+        print('.' * 16, type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
+        self.node_id_change_done.emit(old_node_id, new_node_id)

@@ -28,6 +28,7 @@ class SchemaEditor(QVBoxLayout):
     bpmn_id_change_done = pyqtSignal(str, str)
     lane_id_change_done = pyqtSignal(str, str)
     pool_id_change_done = pyqtSignal(str, str)
+    node_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, parent=None):
         super(QVBoxLayout, self).__init__(parent)
@@ -39,6 +40,7 @@ class SchemaEditor(QVBoxLayout):
         self.bpmn_header_ui.bpmn_id_change_requested.connect(self.on_bpmn_id_change_requested)
         self.bpmn_lanes_ui.lane_id_change_requested.connect(self.on_lane_id_change_requested)
         self.bpmn_lanes_ui.pool_id_change_requested.connect(self.on_pool_id_change_requested)
+        self.bpmn_lanes_ui.node_id_change_requested.connect(self.on_node_id_change_requested)
 
         self.bpmn_id_change_done.connect(self.bpmn_header_ui.on_bpmn_id_change_done)
         self.bpmn_id_change_done.connect(self.bpmn_lanes_ui.on_bpmn_id_change_done)
@@ -51,6 +53,9 @@ class SchemaEditor(QVBoxLayout):
         self.pool_id_change_done.connect(self.bpmn_header_ui.on_pool_id_change_done)
         self.pool_id_change_done.connect(self.bpmn_lanes_ui.on_pool_id_change_done)
         self.pool_id_change_done.connect(self.bpmn_edges_ui.on_pool_id_change_done)
+
+        self.node_id_change_done.connect(self.bpmn_lanes_ui.on_node_id_change_done)
+        self.node_id_change_done.connect(self.bpmn_edges_ui.on_node_id_change_done)
 
     def populate(self):
 
@@ -101,6 +106,11 @@ class SchemaEditor(QVBoxLayout):
         print(type(self).__name__, 'pool_id_change_requested', old_pool_id, '-->', new_pool_id)
         print(type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
         self.pool_id_change_done.emit(old_pool_id, new_pool_id)
+
+    def on_node_id_change_requested(self, old_node_id, new_node_id):
+        print(type(self).__name__, 'node_id_change_requested', old_node_id, '-->', new_node_id)
+        print(type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
+        self.node_id_change_done.emit(old_node_id, new_node_id)
 
     def on_schema_update_triggered(self, script):
         if script is not None and script.strip() != '':
