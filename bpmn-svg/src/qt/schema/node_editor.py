@@ -11,10 +11,14 @@ from util.logger import *
 
 class NodeEditor(CollapsibleFrame):
 
+    new_node = pyqtSignal(int)
+    remove_node = pyqtSignal(int)
+    node_order_changed = pyqtSignal(int, str)
+
     node_id_change_requested = pyqtSignal(str, str)
 
-    def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, node_id, parent=None):
-        self.bpmn_data, self.bpmn_id, self.lane_id, self.pool_id, self.node_id  = bpmn_data, bpmn_id, lane_id, pool_id, node_id
+    def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, node_id, index, num_nodes, parent=None):
+        self.bpmn_data, self.bpmn_id, self.lane_id, self.pool_id, self.node_id, self.index, self.num_nodes  = bpmn_data, bpmn_id, lane_id, pool_id, node_id, index, num_nodes
 
         self.node_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'][self.node_id]
 
@@ -27,6 +31,53 @@ class NodeEditor(CollapsibleFrame):
         self.populate()
 
     def init_ui(self):
+        # 'up' button
+        self.arrow_up = QPushButton()
+        pixmap = QPixmap(ACTION_ICONS['arrow-up'])
+        self.arrow_up.setIcon(QIcon(pixmap))
+
+        self.arrow_up.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.arrow_up.setStyleSheet('font-size: 9px; border: 0px; background-color: none')
+
+        self.add_button(self.arrow_up, 'arrow-up')
+
+        # 'down' button
+        self.arrow_down = QPushButton()
+        pixmap = QPixmap(ACTION_ICONS['arrow-down'])
+        self.arrow_down.setIcon(QIcon(pixmap))
+
+        self.arrow_down.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.arrow_down.setStyleSheet('font-size: 9px; border: 0px; background-color: none')
+
+        self.add_button(self.arrow_down, 'arrow-down')
+
+        if self.index == 0:
+            self.arrow_up.hide()
+
+        if self.index == self.num_nodes - 1:
+            self.arrow_down.hide()
+
+        # *add* button to add a new node
+        self.add_new_node = QPushButton()
+        pixmap = QPixmap(ACTION_ICONS['new-node'])
+        self.add_new_node.setIcon(QIcon(pixmap))
+
+        self.add_new_node.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.add_new_node.setStyleSheet('font-size: 9px; border: 0px; background-color: #C8C8C8')
+
+        self.add_button(self.add_new_node, 'new-pool-node')
+
+        # *remove* button to remove node
+        self.delete_node = QPushButton()
+        pixmap = QPixmap(ACTION_ICONS['remove-node'])
+        self.delete_node.setIcon(QIcon(pixmap))
+
+        self.delete_node.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.delete_node.setStyleSheet('font-size: 9px; border: 0px; background-color: #C8C8C8')
+
+        self.add_button(self.delete_node, 'remove-pool-node')
+
+
         content = QWidget()
         self.content_layout = QGridLayout(content)
 
@@ -113,6 +164,12 @@ class NodeEditor(CollapsibleFrame):
         self.move_x = self.node_data['styles'].get('move_x', 0)
 
     def signals_and_slots(self):
+        self.add_new_node.clicked.connect(self.on_new_node)
+        self.delete_node.clicked.connect(self.on_remove_node)
+
+        self.arrow_down.clicked.connect(self.on_arrow_down)
+        self.arrow_up.clicked.connect(self.on_arrow_up)
+
         self.id.editingFinished.connect(self.on_id_edited)
         self.type.clicked.connect(self.on_selection_dialog)
         self.label.editingFinished.connect(self.on_label_edited)
@@ -176,6 +233,20 @@ class NodeEditor(CollapsibleFrame):
             # pixmap = pixmap.scaledToHeight(24)
             self.type.setIcon(QIcon(pixmap))
             self.update_title()
+
+
+    def on_arrow_down(self):
+        self.node_order_changed.emit(self.index, 'down')
+
+    def on_arrow_up(self):
+        self.node_order_changed.emit(self.index, 'up')
+
+    def on_new_node(self):
+        self.new_node.emit(self.index + 1)
+
+    def on_remove_node(self):
+        self.remove_node.emit(self.index)
+
 
     def update_title(self):
         self.change_title(icon=self.node_data['type'], text='NODE id: {0}'.format(self.node_id), err=False)

@@ -9,15 +9,6 @@ from PyQt5.QtWidgets import *
 
 from qt import *
 
-def lane_pool_type_of_node(node_id, bpmn_data):
-    for lane_id in bpmn_data['lanes']:
-        for pool_id in bpmn_data['lanes'][lane_id]['pools']:
-            if node_id in bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:
-                return lane_id, pool_id, bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes'][node_id]['type']
-
-    return None, None, None
-
-
 class WarningWidget(QWidget):
     def __init__(self, warning='', parent=None):
         QFrame.__init__(self, parent=parent)
@@ -82,6 +73,14 @@ class CollapsibleFrame(QWidget):
 
     def initCollapsible(self):
         self._title_frame.clicked.connect(self.toggleCollapsed)
+
+    def expand(self):
+        if self._is_collasped == True:
+            self.toggleCollapsed()
+
+    def collapse(self):
+        if self._is_collasped == False:
+            self.toggleCollapsed()
 
     def toggleCollapsed(self):
         self._content.setVisible(self._is_collasped)
@@ -197,6 +196,15 @@ class CollapsibleFrame(QWidget):
 
         def mousePressEvent(self, event):
             self.clicked.emit()
+
+
+def lane_pool_type_of_node(node_id, bpmn_data):
+    for lane_id in bpmn_data['lanes']:
+        for pool_id in bpmn_data['lanes'][lane_id]['pools']:
+            if node_id in bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes']:
+                return lane_id, pool_id, bpmn_data['lanes'][lane_id]['pools'][pool_id]['nodes'][node_id]['type']
+
+    return None, None, None
 
 
 def open_file(parent, dialog_title, dialog_location=Path("~").expanduser().as_posix(), file_filter=None, ):

@@ -47,7 +47,7 @@ class PoolEdges(CollapsibleFrame):
 
         self.add_button(self.add_new_edge, 'new-pool-edge')
 
-    def populate(self):
+    def populate(self, focus_on_edge=None, edges_to_expand=[]):
         # first clear the layout with all edges
         self.clearContent()
 
@@ -71,13 +71,22 @@ class PoolEdges(CollapsibleFrame):
             edge_widget = EdgeEditor(self.bpmn_data, 'pool', self.bpmn_id, self.lane_id, self.pool_id, edge, index, self.num_edges)
             edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(edge_widget)
+
             edge_widget.new_edge.connect(self.on_new_edge)
             edge_widget.remove_edge.connect(self.on_remove_edge)
-            edge_widget.order_changed.connect(self.on_order_changed)
+            edge_widget.edge_order_changed.connect(self.on_edge_order_changed)
+
             self.bpmn_id_change_done.connect(edge_widget.on_bpmn_id_change_done)
             self.lane_id_change_done.connect(edge_widget.on_lane_id_change_done)
             self.pool_id_change_done.connect(edge_widget.on_pool_id_change_done)
             self.node_id_change_done.connect(edge_widget.on_node_id_change_done)
+
+            if index in nodes_to_expand:
+                edge_widget.expand()
+
+            if focus_on_node and focus_on_node == index:
+                edge_widget.expand()
+
             index = index + 1
 
     def on_bpmn_id_change_done(self, old_bpmn_id, new_bpmn_id):
@@ -120,7 +129,7 @@ class PoolEdges(CollapsibleFrame):
         # now populate again
         self.populate()
 
-    def on_order_changed(self, index, direction):
+    def on_edge_order_changed(self, index, direction):
         if self.num_edges <= 1:
             pass
 

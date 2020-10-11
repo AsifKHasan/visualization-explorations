@@ -13,7 +13,7 @@ class EdgeEditor(CollapsibleFrame):
 
     new_edge = pyqtSignal(int)
     remove_edge = pyqtSignal(int)
-    order_changed = pyqtSignal(int, str)
+    edge_order_changed = pyqtSignal(int, str)
 
     def __init__(self, bpmn_data, scope, bpmn_id, lane_id, pool_id, edge_data, index, num_edges, parent=None):
         super().__init__(icon=edge_data['type'], text='{0:<30}\n{1:<30}'.format(edge_data['from'], edge_data['to']), parent=parent)
@@ -234,10 +234,10 @@ class EdgeEditor(CollapsibleFrame):
             print('.' * 24, type(self).__name__, 'node_id_change_done in [to] node', old_node_id, '-->', new_node_id)
 
     def on_arrow_down(self):
-        self.order_changed.emit(self.index, 'down')
+        self.edge_order_changed.emit(self.index, 'down')
 
     def on_arrow_up(self):
-        self.order_changed.emit(self.index, 'up')
+        self.edge_order_changed.emit(self.index, 'up')
 
     def on_new_edge(self):
         self.new_edge.emit(self.index + 1)

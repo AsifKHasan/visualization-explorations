@@ -14,10 +14,12 @@ EDGE_MAP = {
 }
 
 ACTION_ICONS = {
-    'new-edge': './resources/new-edge.png',
-    'remove-edge': './resources/remove-edge.png',
     'arrow-up': './resources/arrow-up.png',
     'arrow-down': './resources/arrow-down.png',
+    'new-edge': './resources/new-edge.png',
+    'remove-edge': './resources/remove-edge.png',
+    'new-node': './resources/new-node.png',
+    'remove-node': './resources/remove-node.png',
 }
 
 NODE_TYPES = {
@@ -163,6 +165,12 @@ ICONS = {
     '...': './resources/bpmn/flow-association.png',
     '..>': './resources/bpmn/flow-directed.png',
     '<.>': './resources/bpmn/flow-bidirectional.png',
+}
+
+NEW_NODE = {
+    "type": "task",
+    "label": "",
+    "styles": {}
 }
 
 NEW_EDGE = {
