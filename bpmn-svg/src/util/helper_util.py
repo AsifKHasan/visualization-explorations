@@ -5,7 +5,9 @@ import sys
 import math
 from PIL import ImageFont
 
+import random
 import textwrap
+import string
 
 from util.logger import *
 from util.geometry import Point
@@ -268,3 +270,7 @@ def points_to_curved_path(points):
 
 def id_to_label(id):
     return id.replace('_', ' ').capitalize()
+
+def random_string(length):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))

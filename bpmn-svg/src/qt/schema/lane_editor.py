@@ -19,6 +19,15 @@ class LaneEditor(CollapsibleFrame):
     pool_id_change_requested = pyqtSignal(str, str)
     node_id_change_requested = pyqtSignal(str, str)
 
+    lane_removed = pyqtSignal(str)
+    remove_lane = pyqtSignal(str)
+
+    pool_removed = pyqtSignal(str)
+    remove_pool = pyqtSignal(str)
+
+    node_removed = pyqtSignal(str)
+    remove_node = pyqtSignal(str)
+
     bpmn_id_change_done = pyqtSignal(str, str)
     lane_id_change_done = pyqtSignal(str, str)
     pool_id_change_done = pyqtSignal(str, str)
@@ -52,6 +61,9 @@ class LaneEditor(CollapsibleFrame):
         self.lane_pools_ui.pool_id_change_requested.connect(self.on_pool_id_change_requested)
         self.lane_pools_ui.node_id_change_requested.connect(self.on_node_id_change_requested)
 
+        self.lane_pools_ui.pool_removed.connect(self.on_pool_removed)
+        self.lane_pools_ui.node_removed.connect(self.on_node_removed)
+
         self.bpmn_id_change_done.connect(self.lane_header_ui.on_bpmn_id_change_done)
         self.bpmn_id_change_done.connect(self.lane_pools_ui.on_bpmn_id_change_done)
         self.bpmn_id_change_done.connect(self.lane_edges_ui.on_bpmn_id_change_done)
@@ -66,6 +78,12 @@ class LaneEditor(CollapsibleFrame):
 
         self.node_id_change_done.connect(self.lane_pools_ui.on_node_id_change_done)
         self.node_id_change_done.connect(self.lane_edges_ui.on_node_id_change_done)
+
+        self.remove_pool.connect(self.lane_pools_ui.on_remove_pool)
+        self.remove_pool.connect(self.lane_edges_ui.on_remove_pool)
+
+        self.remove_node.connect(self.lane_pools_ui.on_remove_node)
+        self.remove_node.connect(self.lane_edges_ui.on_remove_node)
 
     def on_lane_id_change_requested(self, old_lane_id, new_lane_id):
         print('.' * 8, type(self).__name__, 'lane_id_change_requested', old_lane_id, '-->', new_lane_id)
@@ -100,3 +118,30 @@ class LaneEditor(CollapsibleFrame):
     def on_node_id_change_done(self, old_node_id, new_node_id):
         print('.' * 8, type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
         self.node_id_change_done.emit(old_node_id, new_node_id)
+
+    def on_lane_removed(self, lane_id):
+        # emit node_removed to parent
+        print('.' * 8, type(self).__name__, 'lane_removed', lane_id)
+        self.lane_removed.emit(node_id)
+
+    def on_pool_removed(self, pool_id):
+        # emit node_removed to parent
+        print('.' * 8, type(self).__name__, 'pool_removed', pool_id)
+        self.pool_removed.emit(node_id)
+
+    def on_node_removed(self, node_id):
+        # emit node_removed to parent
+        print('.' * 8, type(self).__name__, 'node_removed', node_id)
+        self.node_removed.emit(node_id)
+
+    def on_remove_lane(self, lane_id):
+        print('.' * 8, type(self).__name__, 'remove_lane', lane_id)
+        self.remove_lane.emit(lane_id)
+
+    def on_remove_pool(self, pool_id):
+        print('.' * 8, type(self).__name__, 'remove_pool', pool_id)
+        self.remove_pool.emit(pool_id)
+
+    def on_remove_node(self, node_id):
+        print('.' * 8, type(self).__name__, 'remove_node', node_id)
+        self.remove_node.emit(node_id)

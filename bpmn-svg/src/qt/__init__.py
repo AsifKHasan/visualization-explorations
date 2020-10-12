@@ -20,6 +20,10 @@ ACTION_ICONS = {
     'remove-edge': './resources/remove-edge.png',
     'new-node': './resources/new-node.png',
     'remove-node': './resources/remove-node.png',
+    'new-pool': './resources/new-pool.png',
+    'remove-pool': './resources/remove-pool.png',
+    'new-lane': './resources/new-lane.png',
+    'remove-lane': './resources/remove-lane.png',
 }
 
 NODE_TYPES = {
@@ -179,6 +183,20 @@ NEW_EDGE = {
     'type': '-->',
     'label': '',
     'styles': {}
+}
+
+NEW_POOL = {
+    "styles": {},
+    "label": "",
+    "nodes": {},
+    "edges": []
+}
+
+NEW_LANE = {
+    "styles": {},
+    "label": "",
+    "pools": {},
+    "edges": []
 }
 
 NEW_BPMN_SCRIPT = '''graph bpmn_id {

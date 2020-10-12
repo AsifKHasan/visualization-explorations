@@ -271,6 +271,12 @@ class EdgeEditor(CollapsibleFrame):
         self.update_error()
         self.change_title(text='{0}\n{1}'.format(self.edge_data['from'], self.edge_data['to']), icon=self.edge_data['type'], err=self.err)
 
+    def associated_with_node(self, node_id):
+        if node_id == self.edge_data['from'] or node_id == self.edge_data['to']:
+            return True
+            
+        return False
+
 class NodeSelectionDialog(QDialog):
     def __init__(self, parent=None):
         QDialog.__init__(self, parent=parent)

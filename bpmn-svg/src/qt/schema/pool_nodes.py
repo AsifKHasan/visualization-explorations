@@ -10,12 +10,14 @@ from PyQt5.QtWidgets import *
 
 from qt.qt_utils import *
 from util.logger import *
+from util.helper_util import *
 
 from qt.schema.node_editor import NodeEditor
 
 class PoolNodes(CollapsibleFrame):
 
     node_id_change_requested = pyqtSignal(str, str)
+    node_removed = pyqtSignal(str)
 
     bpmn_id_change_done = pyqtSignal(str, str)
     node_id_change_done = pyqtSignal(str, str)
@@ -70,7 +72,6 @@ class PoolNodes(CollapsibleFrame):
             if focus_on_node and focus_on_node == node_id:
                 node_widget.expand()
 
-
     def signals_and_slots(self):
         self.add_new_node.clicked.connect(self.on_new_node)
 
@@ -111,9 +112,8 @@ class PoolNodes(CollapsibleFrame):
         old_keys = list(self.pool_nodes.keys())
 
         new_node_object = copy.deepcopy(NEW_NODE)
-        # TODO: generate a unique node key
-        new_node_key = 'new_node'
-        # new_keys = old_keys[0:index-1] + new_node_key + old_keys[index:]
+        # generate a unique node key
+        new_node_key = 'new_node_' + random_string(length=5)
 
         if index != 0:
             new_dict1 = dict(zip(old_keys[0:index], list(self.pool_nodes.values())[0:index]))
@@ -122,10 +122,6 @@ class PoolNodes(CollapsibleFrame):
 
         new_dict1[new_node_key] = new_node_object
         new_dict2 = dict(zip(old_keys[index:], list(self.pool_nodes.values())[index:]))
-
-        # print(index)
-        # print(new_dict1.keys())
-        # print(new_dict2.keys())
 
         self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes'] = {**new_dict1, **new_dict2}
         self.pool_nodes = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]['nodes']
@@ -143,6 +139,9 @@ class PoolNodes(CollapsibleFrame):
 
         # now populate again
         self.populate(nodes_to_expand=nodes_to_expand)
+
+        # emit node_removed to parent
+        self.node_removed.emit(key_to_remove)
 
     def on_node_order_changed(self, index, direction):
         if self.num_nodes <= 1:

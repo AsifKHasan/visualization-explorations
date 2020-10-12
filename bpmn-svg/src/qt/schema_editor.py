@@ -30,6 +30,10 @@ class SchemaEditor(QVBoxLayout):
     pool_id_change_done = pyqtSignal(str, str)
     node_id_change_done = pyqtSignal(str, str)
 
+    remove_lane = pyqtSignal(str)
+    remove_pool = pyqtSignal(str)
+    remove_node = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(QVBoxLayout, self).__init__(parent)
         self.parent = parent
@@ -41,6 +45,10 @@ class SchemaEditor(QVBoxLayout):
         self.bpmn_lanes_ui.lane_id_change_requested.connect(self.on_lane_id_change_requested)
         self.bpmn_lanes_ui.pool_id_change_requested.connect(self.on_pool_id_change_requested)
         self.bpmn_lanes_ui.node_id_change_requested.connect(self.on_node_id_change_requested)
+
+        self.bpmn_lanes_ui.lane_removed.connect(self.on_lane_removed)
+        self.bpmn_lanes_ui.pool_removed.connect(self.on_pool_removed)
+        self.bpmn_lanes_ui.node_removed.connect(self.on_node_removed)
 
         self.bpmn_id_change_done.connect(self.bpmn_header_ui.on_bpmn_id_change_done)
         self.bpmn_id_change_done.connect(self.bpmn_lanes_ui.on_bpmn_id_change_done)
@@ -56,6 +64,15 @@ class SchemaEditor(QVBoxLayout):
 
         self.node_id_change_done.connect(self.bpmn_lanes_ui.on_node_id_change_done)
         self.node_id_change_done.connect(self.bpmn_edges_ui.on_node_id_change_done)
+
+        self.remove_lane.connect(self.bpmn_lanes_ui.on_remove_lane)
+        self.remove_lane.connect(self.bpmn_edges_ui.on_remove_lane)
+
+        self.remove_pool.connect(self.bpmn_lanes_ui.on_remove_pool)
+        self.remove_pool.connect(self.bpmn_edges_ui.on_remove_pool)
+
+        self.remove_node.connect(self.bpmn_lanes_ui.on_remove_node)
+        self.remove_node.connect(self.bpmn_edges_ui.on_remove_node)
 
     def populate(self):
 
@@ -111,6 +128,21 @@ class SchemaEditor(QVBoxLayout):
         print(type(self).__name__, 'node_id_change_requested', old_node_id, '-->', new_node_id)
         print(type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
         self.node_id_change_done.emit(old_node_id, new_node_id)
+
+    def on_lane_removed(self, lane_id):
+        print(type(self).__name__, 'lane_removed', lane_id)
+        print(type(self).__name__, 'remove_lane', lane_id)
+        self.remove_lane.emit(lane_id)
+
+    def on_pool_removed(self, pool_id):
+        print(type(self).__name__, 'pool_removed', pool_id)
+        print(type(self).__name__, 'remove_pool', pool_id)
+        self.remove_pool.emit(pool_id)
+
+    def on_node_removed(self, node_id):
+        print(type(self).__name__, 'node_removed', node_id)
+        print(type(self).__name__, 'remove_node', node_id)
+        self.remove_node.emit(node_id)
 
     def on_schema_update_triggered(self, script):
         if script is not None and script.strip() != '':
