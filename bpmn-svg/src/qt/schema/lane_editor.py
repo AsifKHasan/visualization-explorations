@@ -19,8 +19,9 @@ class LaneEditor(CollapsibleFrame):
     pool_id_change_requested = pyqtSignal(str, str)
     node_id_change_requested = pyqtSignal(str, str)
 
-    lane_removed = pyqtSignal(str)
-    remove_lane = pyqtSignal(str)
+    new_lane = pyqtSignal(int)
+    remove_lane = pyqtSignal(int)
+    lane_order_changed = pyqtSignal(int, str)
 
     pool_removed = pyqtSignal(str)
     remove_pool = pyqtSignal(str)
@@ -33,15 +34,63 @@ class LaneEditor(CollapsibleFrame):
     pool_id_change_done = pyqtSignal(str, str)
     node_id_change_done = pyqtSignal(str, str)
 
-    def __init__(self, bpmn_data, bpmn_id, lane_id, parent=None):
+    def __init__(self, bpmn_data, bpmn_id, lane_id, index, num_lanes, parent=None):
         super().__init__(icon='lane', text='LANE id: {0}'.format(lane_id), parent=parent)
         self.set_styles(title_style='background-color: "#D8D8D8"; color: "#404040";', content_style='background-color: "#D0D0D0"; color: "#404040";')
 
-        self.bpmn_data, self.bpmn_id, self.lane_id = bpmn_data, bpmn_id, lane_id
+        self.bpmn_data, self.bpmn_id, self.lane_id, self.index, self.num_lanes = bpmn_data, bpmn_id, lane_id, index, num_lanes
         self.lane_data = self.bpmn_data['lanes'][self.lane_id]
 
+        self.init_ui()
         self.populate()
         self.signals_and_slots()
+
+    def init_ui(self):
+        # 'up' button
+        self.arrow_up = QPushButton()
+        pixmap = QPixmap(ACTION_ICONS['arrow-up'])
+        self.arrow_up.setIcon(QIcon(pixmap))
+
+        self.arrow_up.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.arrow_up.setStyleSheet('font-size: 9px; border: 0px; background-color: none')
+
+        self.add_button(self.arrow_up, 'arrow-up')
+
+        # 'down' button
+        self.arrow_down = QPushButton()
+        pixmap = QPixmap(ACTION_ICONS['arrow-down'])
+        self.arrow_down.setIcon(QIcon(pixmap))
+
+        self.arrow_down.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.arrow_down.setStyleSheet('font-size: 9px; border: 0px; background-color: none')
+
+        self.add_button(self.arrow_down, 'arrow-down')
+
+        if self.index == 0:
+            self.arrow_up.hide()
+
+        if self.index == self.num_lanes - 1:
+            self.arrow_down.hide()
+
+        # *add* button to add a new lane
+        self.add_new_lane = QPushButton()
+        pixmap = QPixmap(ACTION_ICONS['new-lane'])
+        self.add_new_lane.setIcon(QIcon(pixmap))
+
+        self.add_new_lane.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.add_new_lane.setStyleSheet('font-size: 9px; border: 0px; background-color: #C8C8C8')
+
+        self.add_button(self.add_new_lane, 'new-bpmn-lane')
+
+        # *remove* button to remove lane
+        self.delete_lane = QPushButton()
+        pixmap = QPixmap(ACTION_ICONS['remove-lane'])
+        self.delete_lane.setIcon(QIcon(pixmap))
+
+        self.delete_lane.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.delete_lane.setStyleSheet('font-size: 9px; border: 0px; background-color: #C8C8C8')
+
+        self.add_button(self.delete_lane, 'remove-bpmn-lane')
 
     def populate(self):
         # Lane id, title and styles at the top
@@ -57,6 +106,12 @@ class LaneEditor(CollapsibleFrame):
         self.addWidget(self.lane_edges_ui)
 
     def signals_and_slots(self):
+        self.add_new_lane.clicked.connect(self.on_new_lane)
+        self.delete_lane.clicked.connect(self.on_remove_lane)
+
+        self.arrow_down.clicked.connect(self.on_arrow_down)
+        self.arrow_up.clicked.connect(self.on_arrow_up)
+
         self.lane_header_ui.lane_id_change_requested.connect(self.on_lane_id_change_requested)
         self.lane_pools_ui.pool_id_change_requested.connect(self.on_pool_id_change_requested)
         self.lane_pools_ui.node_id_change_requested.connect(self.on_node_id_change_requested)
@@ -134,10 +189,6 @@ class LaneEditor(CollapsibleFrame):
         print('.' * 8, type(self).__name__, 'node_removed', node_id)
         self.node_removed.emit(node_id)
 
-    def on_remove_lane(self, lane_id):
-        print('.' * 8, type(self).__name__, 'remove_lane', lane_id)
-        self.remove_lane.emit(lane_id)
-
     def on_remove_pool(self, pool_id):
         print('.' * 8, type(self).__name__, 'remove_pool', pool_id)
         self.remove_pool.emit(pool_id)
@@ -145,3 +196,15 @@ class LaneEditor(CollapsibleFrame):
     def on_remove_node(self, node_id):
         print('.' * 8, type(self).__name__, 'remove_node', node_id)
         self.remove_node.emit(node_id)
+
+    def on_arrow_down(self):
+        self.lane_order_changed.emit(self.index, 'down')
+
+    def on_arrow_up(self):
+        self.lane_order_changed.emit(self.index, 'up')
+
+    def on_new_lane(self):
+        self.new_lane.emit(self.index + 1)
+
+    def on_remove_lane(self):
+        self.remove_lane.emit(self.index)

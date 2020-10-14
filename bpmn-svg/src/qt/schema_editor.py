@@ -65,7 +65,6 @@ class SchemaEditor(QVBoxLayout):
         self.node_id_change_done.connect(self.bpmn_lanes_ui.on_node_id_change_done)
         self.node_id_change_done.connect(self.bpmn_edges_ui.on_node_id_change_done)
 
-        self.remove_lane.connect(self.bpmn_lanes_ui.on_remove_lane)
         self.remove_lane.connect(self.bpmn_edges_ui.on_remove_lane)
 
         self.remove_pool.connect(self.bpmn_lanes_ui.on_remove_pool)

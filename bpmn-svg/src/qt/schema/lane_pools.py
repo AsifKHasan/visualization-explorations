@@ -72,10 +72,12 @@ class LanePools(CollapsibleFrame):
             self.lane_id_change_done.connect(pool_widget.on_lane_id_change_done)
             self.pool_id_change_done.connect(pool_widget.on_pool_id_change_done)
             self.node_id_change_done.connect(pool_widget.on_node_id_change_done)
+
             self.remove_node.connect(pool_widget.on_remove_node)
 
             pool_widget.pool_id_change_requested.connect(self.on_pool_id_change_requested)
             pool_widget.node_id_change_requested.connect(self.on_node_id_change_requested)
+
             pool_widget.node_removed.connect(self.on_node_removed)
 
             index = index + 1

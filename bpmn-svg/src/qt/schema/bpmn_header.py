@@ -74,7 +74,8 @@ class BpmnHeader(CollapsibleFrame):
         self.hide_labels.stateChanged.connect(self.on_hide_labels_changed)
 
     def on_id_edited(self):
-        self.bpmn_id_change_requested.emit(self.bpmn_id, self.id.text())
+        if self.bpmn_id != self.id.text():
+            self.bpmn_id_change_requested.emit(self.bpmn_id, self.id.text())
 
     def on_label_edited(self):
         self.bpmn_data['label'] = self.label.text()

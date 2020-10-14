@@ -69,9 +69,11 @@ class BpmnEdges(CollapsibleFrame):
             edge_widget = EdgeEditor(self.bpmn_data, 'bpmn', self.bpmn_id, None, None, edge, index, self.num_edges)
             edge_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             self.addWidget(edge_widget)
+
             edge_widget.new_edge.connect(self.on_new_edge)
             edge_widget.remove_edge.connect(self.on_remove_edge)
             edge_widget.edge_order_changed.connect(self.on_edge_order_changed)
+
             self.bpmn_id_change_done.connect(edge_widget.on_bpmn_id_change_done)
             self.lane_id_change_done.connect(edge_widget.on_lane_id_change_done)
             self.pool_id_change_done.connect(edge_widget.on_pool_id_change_done)

@@ -202,8 +202,9 @@ class NodeEditor(CollapsibleFrame):
             print('.' * 24, type(self).__name__, 'node_id_change_done', old_node_id, '-->', new_node_id)
 
     def on_id_edited(self):
-        print('.' * 24, type(self).__name__, 'node_id_change_requested', self.node_id, '-->', self.id.text())
-        self.node_id_change_requested.emit(self.node_id, self.id.text())
+        if self.node_id != self.id.text():
+            print('.' * 24, type(self).__name__, 'node_id_change_requested', self.node_id, '-->', self.id.text())
+            self.node_id_change_requested.emit(self.node_id, self.id.text())
 
     def on_type_edited(self):
         self.node_data['type'] = self.type.text()

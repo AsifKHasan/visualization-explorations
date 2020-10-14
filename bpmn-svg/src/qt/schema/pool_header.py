@@ -108,8 +108,9 @@ class PoolHeader(CollapsibleFrame):
             self.change_title('Pool id: {0}'.format(self.pool_id), icon='lane')
 
     def on_id_edited(self):
-        print('.' * 20, type(self).__name__, 'pool_id_change_requested', self.pool_id, '-->', self.id.text())
-        self.pool_id_change_requested.emit(self.pool_id, self.id.text())
+        if self.pool_id != self.id.text():
+            print('.' * 20, type(self).__name__, 'pool_id_change_requested', self.pool_id, '-->', self.id.text())
+            self.pool_id_change_requested.emit(self.pool_id, self.id.text())
 
     def on_label_edited(self):
         self.pool_data['label'] = self.label.text()

@@ -103,8 +103,9 @@ class LaneHeader(CollapsibleFrame):
         pass
 
     def on_id_edited(self):
-        print('.' * 12, type(self).__name__, 'lane_id_change_requested', self.lane_id, '-->', self.id.text())
-        self.lane_id_change_requested.emit(self.lane_id, self.id.text())
+        if self.lane_id != self.id.text():
+            print('.' * 12, type(self).__name__, 'lane_id_change_requested', self.lane_id, '-->', self.id.text())
+            self.lane_id_change_requested.emit(self.lane_id, self.id.text())
 
     def on_label_edited(self):
         self.lane_data['label'] = self.label.text()
