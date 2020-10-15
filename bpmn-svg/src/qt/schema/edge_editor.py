@@ -146,6 +146,11 @@ class EdgeEditor(CollapsibleFrame):
             self.err = True
             self.err_msg = 'to node is UNDEFINED'
 
+        # to and from nade are same
+        elif from_node_id == to_node_id:
+            self.err = True
+            self.err_msg = 'from node and to node are same, it is not allowed'
+
         # for 'bpmn' scope, the to node must be in a different lane than from node
         elif self.scope == 'bpmn':
             if from_node_lane == to_node_lane:
@@ -169,7 +174,6 @@ class EdgeEditor(CollapsibleFrame):
             elif from_node_pool != to_node_pool:
                 self.err = True
                 self.err_msg = 'from node and to node are from different pools of the specified lane, not allowed for POOL level edges'
-
 
         if self.err:
             self.error_label.setText(self.err_msg)
@@ -274,7 +278,7 @@ class EdgeEditor(CollapsibleFrame):
     def associated_with_node(self, node_id):
         if node_id == self.edge_data['from'] or node_id == self.edge_data['to']:
             return True
-            
+
         return False
 
 class NodeSelectionDialog(QDialog):

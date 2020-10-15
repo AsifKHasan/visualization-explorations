@@ -31,7 +31,7 @@ class PoolEditor(CollapsibleFrame):
     node_id_change_done = pyqtSignal(str, str)
 
     def __init__(self, bpmn_data, bpmn_id, lane_id, pool_id, index, num_pools, parent=None):
-        super().__init__(icon='pool', text='POOL id: {0}'.format(pool_id), parent=parent)
+        super().__init__(icon='pool', text='Pool id: {0}'.format(pool_id), parent=parent)
         self.set_styles(title_style='background-color: "#C8C8C8"; color: "#404040";', content_style='background-color: "#D0D0D0"; color: "#404040";')
 
         self.bpmn_data, self.bpmn_id, self.lane_id, self.pool_id, self.index, self.num_pools = bpmn_data, bpmn_id, lane_id, pool_id, index, num_pools
@@ -156,6 +156,7 @@ class PoolEditor(CollapsibleFrame):
             self.pool_data = self.bpmn_data['lanes'][self.lane_id]['pools'][self.pool_id]
 
             print('.' * 16, type(self).__name__, 'pool_id_change_done', old_pool_id, '-->', new_pool_id)
+            self.change_title('Pool id: {0}'.format(self.pool_id), icon='lane')
             self.pool_id_change_done.emit(old_pool_id, new_pool_id)
 
     def on_node_id_change_done(self, old_node_id, new_node_id):

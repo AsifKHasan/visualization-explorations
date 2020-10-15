@@ -492,10 +492,12 @@ class ChannelCollectionObject:
         edge_keys = []
         for edge in pool_edges:
             if edge['from'] in pool_nodes and edge['to'] in pool_nodes:
-                edge_key = '{0}__#__{1}'.format(edge['from'], edge['to'])
-                if edge_key not in edge_keys:
-                    filtered_pool_edges.append(edge)
-                    edge_keys.append(edge_key)
+                # discard edges where to and from node are same
+                if edge['from'] != edge['to']:
+                    edge_key = '{0}__#__{1}'.format(edge['from'], edge['to'])
+                    if edge_key not in edge_keys:
+                        filtered_pool_edges.append(edge)
+                        edge_keys.append(edge_key)
 
         # now we group and order the nodes in a root Channel to be returned
         root_channel = ChannelCollectionObject.Channel()

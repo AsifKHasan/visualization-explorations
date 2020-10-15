@@ -1,2 +1,19 @@
 graph bpmn_id {
+    label = ""
+    _ []
+
+    lane a {
+        label = ""
+        _ []
+
+        pool c {
+            label = "b"
+            _ []
+
+            task                            hi                                  [label="";]
+            task                            ho                                  [label="";]
+
+            hi                              --> hi                              [label="";]
+        }
+    }
 }
