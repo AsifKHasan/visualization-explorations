@@ -19,4 +19,4 @@ You will need familiarity with BPMN. Take a look at http://www.bpmn.org/ (Quick 
 
 3. if everything is ok, you should be able to run the tool from `visualization-explorations\bpmn-svg\src` by typing
 
-    python bpmn-svg-app.py
+    `python bpmn-svg-app.py`
