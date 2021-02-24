@@ -244,6 +244,64 @@ class PoolCollectionObject:
         points_in_lane_coordinate = [self.channel_collection_list[pool_number].element.xy + p for p in points_in_pool_coordinate]
         return points_in_lane_coordinate
 
+    '''
+        we want a path to bypass the lane through the routing area
+    '''
+    def bypass_vertically(self, coming_from, going_to, margin_spec):
+        # the coming_from point is north of going_to, so we have to reach a point south of the lane either through east or west or directly dpending on which direction we are going_to
+        if coming_from.north_of(going_to):
+            # if the coming_from point is already below the lane, we have no point
+            if coming_from.y >= self.element.xy.y + self.element.height + margin_spec['bottom']:
+                return []
+
+            # if the coming_from point's x position is outside the lane, we can directly go south
+            elif (self.element.xy.x - margin_spec['left']) >= coming_from.x or coming_from.x >= (self.element.xy.x + self.element.width + margin_spec['right']):
+                return [Point(coming_from.x, self.element.xy.y + self.element.height + margin_spec['bottom'])]
+
+            # if the coming_from point is properly above the lane, we make a path
+            else:
+                # to the lane north vertically below coming_from
+                p1 = Point(coming_from.x, self.element.xy.y - margin_spec['top'])
+                if going_to.east_of(coming_from):
+                    # to the lane north-east
+                    p2 = Point(self.element.xy.x + self.element.width + margin_spec['right'], p1.y)
+                    # debug('southward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
+                else:
+                    # to the lane north-west
+                    p2 = Point(self.element.xy.x - margin_spec['left'] , p1.y)
+                    # debug('northward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
+
+                # to the lane south vertically below p2
+                p3 = Point(p2.x, self.element.xy.y + self.element.height + margin_spec['bottom'])
+
+        # the coming_from point is south of lane, so we have to reach a point north of the lane either through east or west dpending on which direction we are going_to
+        else:
+            # if the coming_from point is already above the pool, we have no point
+            if coming_from.y <= self.element.xy.y - margin_spec['top']:
+                return []
+
+            # if the coming_from point's x position is outside the lane, we can directly go north
+            elif (self.element.xy.x - margin_spec['left']) >= coming_from.x or coming_from.x >= (self.element.xy.x + self.element.width + margin_spec['right']):
+                return [Point(coming_from.x, self.element.xy.y - margin_spec['top'])]
+
+            # if the coming_from point is properly below the lane, we make a path
+            else:
+                # to the lane south vertically above coming_from
+                p1 = Point(coming_from.x, self.element.xy.y + self.element.height + margin_spec['bottom'])
+                if going_to.east_of(coming_from):
+                    # to the lane south-east
+                    p2 = Point(self.element.xy.x + self.element.width + margin_spec['right'], p1.y)
+                    # debug('southward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
+                else:
+                    # to the lane south-west
+                    p2 = Point(self.element.xy.x - margin_spec['left'] , p1.y)
+                    # debug('northward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
+
+                # to the lane north vertically above p2
+                p3 = Point(p2.x, self.element.xy.y - margin_spec['top'])
+
+        return [p1, p2, p3]
+
 
     '''
         given a node get its pool number and id
