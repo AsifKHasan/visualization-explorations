@@ -1,0 +1,64 @@
+graph top_level_bkb_reg {
+    label = "Assisted Customer Onboarding : Top Level"
+
+    lane customer {
+        label = "Customer"
+
+        pool bkbCustomer {
+            label = "BKB Customer"
+            _ [move_x="350";]
+
+            userTask customer_tasks [label="BKB Existing Customer";]
+        }
+    }
+
+    lane bkb {
+        label = "BKB Branch"
+
+        pool bkbAdmin {
+            label = "Focal person"
+
+            start           request_received [label="Request Received";]
+            manualTask      provide_form [label="Provides Customer Registration Form";]
+            serviceTask     search_customer_info [label="Search Customer Info by A/C No.";]
+            exclusive       verify_customer_identity [label="Verify Customer Identity";]
+            exclusive       mobile_update [label="Update Mobile Number in CBS?";]
+            serviceTask     verify_mobile [label="Verfiy Mobile Number";]
+            serviceTask     create_credentials [label="Create Login Credentials";]
+            end             process_end [label="Process End"];
+
+            request_received            --> provide_form [label="";]
+            provide_form                --> search_customer_info [label="";]
+            search_customer_info        --> verify_customer_identity [label="";]
+            verify_customer_identity    --> process_end [label="Customer not found";]
+            verify_customer_identity    --> mobile_update [label="Customer found";]
+            mobile_update               --> verify_mobile [label="Update in CBS";]
+            mobile_update               --> create_credentials [label="Do not update in CBS";]
+            verify_mobile               --> create_credentials [label="";]
+            create_credentials          --> process_end [label="";]
+
+        }
+
+    }
+
+    lane bkbSystem {
+        label = "BKB System"
+
+        pool bkbAppSystem {
+            label = "BKB App"
+            _ [move_x="350";]
+
+            endTerminate    ending_node [label="End";]
+            serviceTask     login [label="Login";]
+
+            login     -->   ending_node [label="";]
+        }
+    }
+
+    customer_tasks          --> login [label="";]
+    provide_form            --> customer_tasks [label="";]
+    customer_tasks          --> provide_form [label="";]
+    create_credentials      --> customer_tasks [label="";]
+
+
+}

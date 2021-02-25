@@ -11,6 +11,7 @@ graph pizza_orders1 {
             _ []
 
             start                           hungry                              [label="Hungry";]
+	task 		goto_pizza_shop		[]
             task                            select_pizza                        [label="";]
             task                            order_pizza                         [label="";]
             eventBased                      on_order                            [label="Ordered"; label_pos="bottom";]
@@ -21,7 +22,8 @@ graph pizza_orders1 {
             task                            pay_for_pizza                       [label="";]
             end                             hunger_satisfied                    [label="Hunger Satisfied";]
 
-            hungry                          --> select_pizza                    [label="";]
+            hungry                          --> goto_pizza_shop                    [label="";]
+            goto_pizza_shop                          --> select_pizza                    [label="";]
             select_pizza                    --> order_pizza                     [label="";]
             order_pizza                     --> on_order                        [label="";]
             on_order                        --> pizza_received                  [label="";]
