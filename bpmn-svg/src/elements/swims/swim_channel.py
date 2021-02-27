@@ -169,10 +169,11 @@ class SwimChannel(BpmnElement):
                 to_node = self.channel_object.nodes[edge['to']]
                 edge_type = EDGE_TYPE[edge['type']]
                 edge_label = edge.get('label', None)
+                edge_style = edge.get('styles', None)
 
                 # create an appropriate flow object, use ChannelFlow which manages flows inside a SwimChannel
                 flow_object = ChannelFlow(edge_type, self.channel_object)
-                flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label)
+                flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label, edge_style)
 
                 # add to channel svg group
                 if flow_svg_element is not None and flow_svg_element.svg is not None:

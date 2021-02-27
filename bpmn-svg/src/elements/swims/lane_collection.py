@@ -29,7 +29,7 @@ class LaneCollection(BpmnElement):
         for child_lane_class in self.child_lane_classes:
             child_lane_class.lay_edges()
 
-        print(self.lane_collection)
+        # print(self.lane_collection)
 
         # lay inter-pool edges - get a filtered list of edges containing only those where from-node and to-node both are in this lane but are in different pools
         for edge in self.edges:
@@ -37,10 +37,11 @@ class LaneCollection(BpmnElement):
             if from_node is not None and to_node is not None:
                 edge_type = EDGE_TYPE[edge['type']]
                 edge_label = edge.get('label', None)
+                edge_style = edge.get('styles', None)
 
                 # create an appropriate flow object, use BpmnFlow which manages flows inside a Bpmn
                 flow_object = BpmnFlow(edge_type, self.lane_collection)
-                flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label)
+                flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label, edge_style)
 
                 # add to channel svg group
                 if flow_svg_element is not None and flow_svg_element.svg is not None:

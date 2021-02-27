@@ -100,7 +100,7 @@ class LaneFlow(FlowObject):
     '''
         the entry method that decides which rule to apply
     '''
-    def create_flow(self, from_node, to_node, label):
+    def create_flow(self, from_node, to_node, label, label_style):
         from_node_pool_number, from_node_pool_id = self.pool_collection.pool_number_and_id(from_node)
         to_node_pool_number, to_node_pool_id = self.pool_collection.pool_number_and_id(to_node)
 
@@ -193,6 +193,21 @@ class LaneFlow(FlowObject):
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_lane_coordinate + joining_points + to_node_points_in_lane_coordinate
         # warn('flow points: [{0}]'.format(optimize_points(flow_points)))
-        flow_svg, flow_width, flow_height = a_flow(flow_points, label, self.theme)
+
+        # determine the placement of the label
+        if label is not None and label != '':
+            label_data = {}
+            label_data['text'] = label
+            # get the first vertical line segment having a min-length
+            point_from, point_to = first_vertical_line_segment_longer_than(flow_points, 30)
+            # the main connecting line for ChannelFlow is a horizontal line
+            label_data['line-points'] = {'from': point_from, 'to': point_to}
+            label_data['line-direction'] = 'north-south'
+            # the text should be placed on top of the line
+            label_data['placement'] = label_style.get('placement', 'east')
+            label_data['move-x'] = float(label_style.get('move_x', 0))
+            label_data['move-y'] = float(label_style.get('move_y', 20))
+
+        flow_svg, flow_width, flow_height = a_flow(flow_points, label_data, self.theme)
 
         return SvgElement(svg=flow_svg, width=flow_width, height=flow_height)

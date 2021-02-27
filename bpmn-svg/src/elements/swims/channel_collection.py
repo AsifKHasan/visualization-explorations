@@ -38,10 +38,11 @@ class ChannelCollection(BpmnElement):
             if from_node is not None and to_node is not None:
                 edge_type = EDGE_TYPE[edge['type']]
                 edge_label = edge.get('label', None)
+                edge_style = edge.get('styles', None)
 
                 # create an appropriate flow object, use PoolFlow which manages flows inside a SwimPool
                 flow_object = PoolFlow(edge_type, self.channel_collection)
-                flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label)
+                flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label, edge_style)
 
                 # add to channel svg group
                 if flow_svg_element is not None and flow_svg_element.svg is not None:

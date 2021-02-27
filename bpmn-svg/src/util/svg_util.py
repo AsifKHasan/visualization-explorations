@@ -67,16 +67,66 @@ def a_snap_point(snap_point, color='#FF0000'):
     svg_group.addElement(circle_svg)
     return svg_group, radius * 2, radius * 2
 
-def a_path_with_label(points, label, spec):
+def a_path_with_label(points, label_data, spec):
     svg_group = G()
 
     path_data = points_to_curved_path(points)
     # path_data = points_to_path(points)
     # print(path_data)
+
     svg = Path(pathData=path_data)
     svg.set_style(StyleBuilder(spec['style']).getStyle())
 
-    # add to group
+    if label_data is not None:
+        # calculate max_width if line_direction is east-west
+        # print(label_data)
+        if label_data['line-direction'] == 'east-west':
+            max_width = abs(label_data['line-points']['to'].x - label_data['line-points']['from'].x)
+        else:
+            max_width = spec['label']['rectangle']['max-width']
+
+        label_group, label_group_width, label_group_height = text_inside_a_rectangle(
+                                                                text=label_data['text'],
+                                                                min_width=min(spec['label']['rectangle']['min-width'], max_width),
+                                                                max_width=max_width,
+                                                                rect_spec=spec['label']['rectangle'],
+                                                                text_spec=spec['label']['text'])
+
+        # for east-west (horizontal label line)
+        if label_data['line-direction'] == 'east-west':
+            if label_data['line-points']['to'].east_of(label_data['line-points']['from']):
+                label_pos_x = label_data['line-points']['from'].x + label_data['move-x']
+            else:
+                label_pos_x = label_data['line-points']['from'].x - label_group_width + label_data['move-x']
+
+            if label_data['placement'] == 'north':
+                label_pos_y = min(label_data['line-points']['from'].y, label_data['line-points']['to'].y) - label_group_height + label_data['move-y']
+            else:
+                label_pos_y = min(label_data['line-points']['from'].y, label_data['line-points']['to'].y) + label_data['move-y']
+
+        # for north-south (vertical label line)
+        else:
+            # label should be nearer to the from point
+            if label_data['line-points']['to'].north_of(label_data['line-points']['from']):
+                label_pos_y = label_data['line-points']['from'].y - label_group_height - label_data['move-y']
+            else:
+                label_pos_y = label_data['line-points']['from'].y + label_data['move-y']
+
+            if label_data['placement'] == 'east':
+                label_pos_x = min(label_data['line-points']['from'].x, label_data['line-points']['to'].x) + label_data['move-x']
+            else:
+                label_pos_x = min(label_data['line-points']['from'].x, label_data['line-points']['to'].x) - label_group_width + label_data['move-x']
+
+        # print('x: {} y: {} w: {} h: {}'.format(label_pos_x, label_pos_y, label_group_width, label_group_height))
+
+        # add label to group
+        label_pos_xy = Point(label_pos_x, label_pos_y)
+        transformer = TransformBuilder()
+        transformer.setTranslation(label_pos_xy)
+        label_group.set_transform(transformer.getTransform())
+        svg_group.addElement(label_group)
+
+    # add flow to group
     svg_group.addElement(svg)
     return svg_group, 0, 0
 
@@ -775,14 +825,14 @@ def an_equilateral_pentagon_in_two_concentric_circles(outer_radius, inner_radius
 # --------------------------------------------------------------------------------------
 
 # returns a tuple (svg group, group_width, group_height)
-def a_flow(points, label, spec):
+def a_flow(points, label_data, spec):
 
     if points is None:
         return None, 0, 0
 
     svg_group = G()
 
-    edge_svg, edge_width, edge_height = a_path_with_label(points=points, label=label, spec=spec)
+    edge_svg, edge_width, edge_height = a_path_with_label(points=points, label_data=label_data, spec=spec)
     svg_group.addElement(edge_svg)
 
     # the first point is always the from snap point

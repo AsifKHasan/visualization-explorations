@@ -1023,6 +1023,23 @@ DEFAULT_THEME = {
                     'fill': '#404040', 'stroke-width': 1, 'stroke': '#404040'
                 },
             },
+            'label': {
+                'rectangle': {
+                    'min-width': 60, 'max-width': 120, 'rx': 0, 'ry': 0,
+                    'pad-spec': {
+                        'left': 2, 'top': 0, 'right': 2, 'bottom': 0
+                    },
+                    'style': {
+                        'fill': 'none', 'stroke-width': 0, 'stroke': '#FF8080'
+                    }
+                },
+                'text': {
+                    'vertical-text': False, 'max-lines': 2,
+                    'style': {
+                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 9, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                    },
+                },
+            },
         },
         'Message': {
             'from-arrow': False,
@@ -1034,6 +1051,23 @@ DEFAULT_THEME = {
                 'arrow-side-length': 10,
                 'style': {
                     'fill': '#404040', 'stroke-width': 2, 'stroke': '#A0A0A0'
+                },
+            },
+            'label': {
+                'rectangle': {
+                    'min-width': 60, 'max-width': 120, 'rx': 0, 'ry': 0,
+                    'pad-spec': {
+                        'left': 2, 'top': 0, 'right': 2, 'bottom': 0
+                    },
+                    'style': {
+                        'fill': 'none', 'stroke-width': 0, 'stroke': '#FF8080'
+                    }
+                },
+                'text': {
+                    'vertical-text': False, 'max-lines': 2,
+                    'style': {
+                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 9, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                    },
                 },
             },
         },
@@ -1049,6 +1083,23 @@ DEFAULT_THEME = {
                     'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0'
                 },
             },
+            'label': {
+                'rectangle': {
+                    'min-width': 60, 'max-width': 120, 'rx': 0, 'ry': 0,
+                    'pad-spec': {
+                        'left': 2, 'top': 2, 'right': 2, 'bottom': 2
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+                    }
+                },
+                'text': {
+                    'vertical-text': False, 'max-lines': 2,
+                    'style': {
+                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 9, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                    },
+                },
+            },
         },
         'DirectedAssociation': {
             'from-arrow': False,
@@ -1062,6 +1113,23 @@ DEFAULT_THEME = {
                     'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0'
                 },
             },
+            'label': {
+                'rectangle': {
+                    'min-width': 60, 'max-width': 120, 'rx': 0, 'ry': 0,
+                    'pad-spec': {
+                        'left': 2, 'top': 2, 'right': 2, 'bottom': 2
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+                    }
+                },
+                'text': {
+                    'vertical-text': False, 'max-lines': 2,
+                    'style': {
+                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 9, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                    },
+                },
+            },
         },
         'BidirectionalAssociation': {
             'from-arrow': True,
@@ -1073,6 +1141,23 @@ DEFAULT_THEME = {
                 'arrow-side-length': 12,
                 'style': {
                     'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0'
+                },
+            },
+            'label': {
+                'rectangle': {
+                    'min-width': 60, 'max-width': 120, 'rx': 0, 'ry': 0,
+                    'pad-spec': {
+                        'left': 2, 'top': 2, 'right': 2, 'bottom': 2
+                    },
+                    'style': {
+                        'fill': '#FFFFFF', 'stroke-width': 0, 'stroke': '#FF8080'
+                    }
+                },
+                'text': {
+                    'vertical-text': False, 'max-lines': 2,
+                    'style': {
+                        'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'arial', 'font-size': 9, 'fill': '#202020', 'stroke': '#000000', 'stroke-width': 0
+                    },
                 },
             },
         },

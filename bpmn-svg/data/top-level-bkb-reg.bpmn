@@ -27,22 +27,18 @@ graph top_level_bkb_reg {
             serviceTask     create_credentials [label="Create Login Credentials";]
             end             process_end [label="Process End"];
 
+            search_customer_info        --> provide_form [label="Search again";]
             request_received            --> provide_form [label="";]
             provide_form                --> search_customer_info [label="";]
             search_customer_info        --> verify_customer_identity [label="";]
             verify_customer_identity    --> process_end [label="Customer not found";]
             verify_customer_identity    --> mobile_update [label="Customer found";]
             mobile_update               --> verify_mobile [label="Update in CBS";]
-            mobile_update               --> create_credentials [label="Do not update in CBS";]
-            verify_mobile               --> create_credentials [label="";]
-            create_credentials          --> process_end [label="";]
+            mobile_update               --> create_credentials [label="Do not update in CBS";move_x=0;]
+            verify_mobile               --> create_credentials [label="Verify mobile number";placement="west";]
+            create_credentials          --> process_end [label="process successful";placement="west";]
 
         }
-
-    }
-
-    lane bkbSystem {
-        label = "BKB System"
 
         pool bkbAppSystem {
             label = "BKB App"
@@ -55,10 +51,8 @@ graph top_level_bkb_reg {
         }
     }
 
-    customer_tasks          --> login [label="";]
-    provide_form            --> customer_tasks [label="";]
-    customer_tasks          --> provide_form [label="";]
-    create_credentials      --> customer_tasks [label="";]
-
-
+    customer_tasks          --> login [label="Log in";move_y=40]
+    provide_form            --> customer_tasks [label="Provide a form";]
+    customer_tasks          --> provide_form [label="Fill the form";]
+    create_credentials      --> customer_tasks [label="Credential created";placement="west";]
 }

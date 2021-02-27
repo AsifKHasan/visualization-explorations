@@ -274,3 +274,62 @@ def id_to_label(id):
 def random_string(length):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(length))
+
+def longest_horizontal_line_segment(points):
+    if len(points) < 2:
+        return None, None
+
+    point_from = points[0]
+    point_to = points[1]
+    longest_horizontal_length_so_far = abs(point_from.x - point_to.x)
+    previous_point = points[1]
+    for current_point in points[2:]:
+        if current_point.y == previous_point.y:
+            if longest_horizontal_length_so_far < abs(current_point.x - previous_point.x):
+                longest_horizontal_length_so_far = abs(current_point.x - previous_point.x)
+                point_from = previous_point
+                point_to = current_point
+
+        previous_point = current_point
+
+    return point_from, point_to
+
+def longest_vertical_line_segment(points):
+    if len(points) < 2:
+        return None, None
+
+    point_from = points[0]
+    point_to = points[1]
+    longest_vertical_length_so_far = abs(point_from.y - point_to.y)
+    previous_point = points[1]
+    for current_point in points[2:]:
+        if current_point.x == previous_point.x:
+            if longest_vertical_length_so_far < abs(current_point.y - previous_point.y):
+                longest_vertical_length_so_far = abs(current_point.y - previous_point.y)
+                point_from = previous_point
+                point_to = current_point
+
+        previous_point = current_point
+
+    return point_from, point_to
+
+def first_vertical_line_segment_longer_than(points, length):
+    if len(points) < 2:
+        return None, None
+
+    point_from = points[0]
+    point_to = points[1]
+    if abs(point_from.y - point_to.y) >= length:
+        return point_from, point_to
+
+    previous_point = points[1]
+    for current_point in points[2:]:
+        if current_point.x == previous_point.x:
+            if abs(current_point.y - previous_point.y) >= length:
+                point_from = previous_point
+                point_to = current_point
+                return point_from, point_to
+
+        previous_point = current_point
+
+    return point_from, point_to

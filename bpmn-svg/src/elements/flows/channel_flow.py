@@ -74,7 +74,7 @@ class ChannelFlow(FlowObject):
     '''
         the entry method that decides which rule to apply
     '''
-    def create_flow(self, from_node, to_node, label):
+    def create_flow(self, from_node, to_node, label, label_style):
         # first we need the diection from from_node to to_node
         if from_node.element.xy.west_of(to_node.element.xy):
             direction = 'east'
@@ -124,8 +124,25 @@ class ChannelFlow(FlowObject):
 
         # we now have two segments we connect the last point of *from-segment* to the first point of *to-segment* through a north-ward path
         flow_points = from_node_points_in_channel + to_node_points_in_channel
+        flow_points = optimize_points(flow_points)
+
+        # determine the placement of the label
+        label_data = None
+        if label is not None and label != '':
+            label_data = {}
+            label_data['text'] = label
+            # get the longest horizontal line segment
+            point_from, point_to = longest_horizontal_line_segment(flow_points)
+            # the main connecting line for ChannelFlow is a horizontal line
+            label_data['line-points'] = {'from': point_from, 'to': point_to}
+            label_data['line-direction'] = 'east-west'
+            # the text should be placed on top of the line
+            label_data['placement'] = label_style.get('placement', 'north')
+            label_data['move-x'] = float(label_style.get('move_x', 0))
+            label_data['move-y'] = float(label_style.get('move_y', 0))
 
         # we have the points, now create and return the flow
-        flow_svg, flow_width, flow_height = a_flow(flow_points, label, self.theme)
+        flow_svg, flow_width, flow_height = a_flow(flow_points, label_data, self.theme)
+
 
         return SvgElement(svg=flow_svg, width=flow_width, height=flow_height)
