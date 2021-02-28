@@ -67,7 +67,7 @@ def a_snap_point(snap_point, color='#FF0000'):
     svg_group.addElement(circle_svg)
     return svg_group, radius * 2, radius * 2
 
-def a_path_with_label(points, label_data, spec):
+def a_path_with_label(points, label_data, spec, flow_scope):
     svg_group = G()
 
     path_data = points_to_curved_path(points)
@@ -75,7 +75,7 @@ def a_path_with_label(points, label_data, spec):
     # print(path_data)
 
     svg = Path(pathData=path_data)
-    svg.set_style(StyleBuilder(spec['style']).getStyle())
+    svg.set_style(StyleBuilder(spec['style'][flow_scope]).getStyle())
 
     if label_data is not None:
         # calculate max_width if line_direction is east-west
@@ -825,14 +825,14 @@ def an_equilateral_pentagon_in_two_concentric_circles(outer_radius, inner_radius
 # --------------------------------------------------------------------------------------
 
 # returns a tuple (svg group, group_width, group_height)
-def a_flow(points, label_data, spec):
+def a_flow(points, label_data, spec, flow_scope):
 
     if points is None:
         return None, 0, 0
 
     svg_group = G()
 
-    edge_svg, edge_width, edge_height = a_path_with_label(points=points, label_data=label_data, spec=spec)
+    edge_svg, edge_width, edge_height = a_path_with_label(points=points, label_data=label_data, spec=spec, flow_scope=flow_scope)
     svg_group.addElement(edge_svg)
 
     # the first point is always the from snap point

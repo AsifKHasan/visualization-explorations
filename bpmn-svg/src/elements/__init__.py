@@ -109,7 +109,7 @@ DEFAULT_THEME = {
                     'left': 24, 'top': 24, 'right': 24, 'bottom': 24
                 },
                 'style': {
-                    'fill': 'none', 'stroke-width': 0, 'stroke': '#FF8243'
+                    'fill': 'none', 'stroke-width': 1, 'stroke': '#FF8243'
                 },
             },
             # actual channel content area where the nodes are to be placed
@@ -1015,7 +1015,18 @@ DEFAULT_THEME = {
             'from-arrow': False,
             'to-arrow': True,
             'style': {
-                'fill': 'transparent', 'stroke-width': 1, 'stroke': '#404040'
+                'ChannelFlow': {
+                    'fill': 'transparent', 'stroke-width': 0.5, 'stroke': '#404040'
+                },
+                'PoolFlow': {
+                    'fill': 'transparent', 'stroke-width': 1, 'stroke': '#404040'
+                },
+                'LaneFlow': {
+                    'fill': 'transparent', 'stroke-width': 0, 'stroke': '#404040'
+                },
+                'BpmnFlow': {
+                    'fill': 'transparent', 'stroke-width': 0, 'stroke': '#404040'
+                },
             },
             'arrow-head': {
                 'arrow-side-length': 10,
@@ -1045,7 +1056,18 @@ DEFAULT_THEME = {
             'from-arrow': False,
             'to-arrow': True,
             'style': {
-                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
+                'ChannelFlow': {
+                    'fill': 'none', 'stroke-width': 1, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
+                },
+                'PoolFlow': {
+                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
+                },
+                'LaneFlow': {
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
+                },
+                'BpmnFlow': {
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#A0A0A0', 'stroke-dasharray': '5,5'
+                },
             },
             'arrow-head': {
                 'arrow-side-length': 10,
@@ -1075,7 +1097,18 @@ DEFAULT_THEME = {
             'from-arrow': False,
             'to-arrow': False,
             'style': {
-                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                'ChannelFlow': {
+                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'PoolFlow': {
+                    'fill': 'none', 'stroke-width': 3, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'LaneFlow': {
+                    'fill': 'none', 'stroke-width': 4, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'BpmnFlow': {
+                    'fill': 'none', 'stroke-width': 5, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
             },
             'arrow-head': {
                 'arrow-side-length': 12,
@@ -1105,7 +1138,18 @@ DEFAULT_THEME = {
             'from-arrow': False,
             'to-arrow': True,
             'style': {
-                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                'ChannelFlow': {
+                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'PoolFlow': {
+                    'fill': 'none', 'stroke-width': 3, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'LaneFlow': {
+                    'fill': 'none', 'stroke-width': 4, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'BpmnFlow': {
+                    'fill': 'none', 'stroke-width': 5, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
             },
             'arrow-head': {
                 'arrow-side-length': 12,
@@ -1135,7 +1179,18 @@ DEFAULT_THEME = {
             'from-arrow': True,
             'to-arrow': True,
             'style': {
-                'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                'ChannelFlow': {
+                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'PoolFlow': {
+                    'fill': 'none', 'stroke-width': 3, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'LaneFlow': {
+                    'fill': 'none', 'stroke-width': 4, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
+                'BpmnFlow': {
+                    'fill': 'none', 'stroke-width': 5, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                },
             },
             'arrow-head': {
                 'arrow-side-length': 12,

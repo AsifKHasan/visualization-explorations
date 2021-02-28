@@ -81,6 +81,7 @@ class LaneFlow(FlowObject):
         super().__init__(edge_type)
         self.pool_collection = pool_collection
         self.snap_rules = SNAP_RULES
+        self.flow_scope = 'LaneFlow'
 
 
     def validate(self, from_node_pool_number, to_node_pool_number, from_node, to_node):
@@ -195,6 +196,7 @@ class LaneFlow(FlowObject):
         # warn('flow points: [{0}]'.format(optimize_points(flow_points)))
 
         # determine the placement of the label
+        label_data = None
         if label is not None and label != '':
             label_data = {}
             label_data['text'] = label
@@ -208,6 +210,6 @@ class LaneFlow(FlowObject):
             label_data['move-x'] = float(label_style.get('move_x', 0))
             label_data['move-y'] = float(label_style.get('move_y', 20))
 
-        flow_svg, flow_width, flow_height = a_flow(flow_points, label_data, self.theme)
+        flow_svg, flow_width, flow_height = a_flow(flow_points, label_data, self.theme, self.flow_scope)
 
         return SvgElement(svg=flow_svg, width=flow_width, height=flow_height)

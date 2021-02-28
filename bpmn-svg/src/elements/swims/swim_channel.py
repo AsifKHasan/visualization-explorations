@@ -291,6 +291,7 @@ class ChannelObject:
 
         return max_height
 
+
     '''
         given a node od, returns the x position of the node in the channel
     '''
@@ -401,6 +402,7 @@ class ChannelObject:
         else:
             point_to_extend = points_in_channel_coordinate[-1]
 
+        # we decide points based on baundary direction we want to reach
         if boundary == 'south':
             the_point = Point(point_to_extend.x, self.element.height + margin_spec['bottom'])
 
@@ -471,6 +473,7 @@ class ChannelObject:
 
         return result
 
+
     '''
         we want a path to bypass the channel through the routing area
     '''
@@ -535,6 +538,7 @@ class ChannelObject:
 
         return [p1, p2, p3]
 
+
     '''
         a channel's westmost x position may not always be the xy.x of the channel - when the westmost node has a move_x displacement, the westmost point will also be displaced
         returns position in pool coordinate
@@ -543,6 +547,7 @@ class ChannelObject:
         # get the first node
         first_node = self.nodes[[*self.nodes][0]]
         return self.element.xy.x + first_node.element.xy.x - self.theme['channel-outer-rect']['pad-spec']['left']
+
 
     def east_of(self, channel):
         if self.element.xy.x + self.element.width >= channel.element.xy.x + channel.element.width:

@@ -69,6 +69,7 @@ class ChannelFlow(FlowObject):
         super().__init__(edge_type)
         self.channel = channel
         self.snap_rules = SNAP_RULES
+        self.flow_scope = 'ChannelFlow'
 
 
     '''
@@ -142,7 +143,7 @@ class ChannelFlow(FlowObject):
             label_data['move-y'] = float(label_style.get('move_y', 0))
 
         # we have the points, now create and return the flow
-        flow_svg, flow_width, flow_height = a_flow(flow_points, label_data, self.theme)
+        flow_svg, flow_width, flow_height = a_flow(flow_points, label_data, self.theme, self.flow_scope)
 
 
         return SvgElement(svg=flow_svg, width=flow_width, height=flow_height)
