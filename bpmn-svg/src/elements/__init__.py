@@ -48,7 +48,7 @@ DEFAULT_THEME = {
                     'left': 5, 'top': 5, 'right': 5, 'bottom': 5
                 },
                 'style': {
-                    'fill': '#F0F0F0', 'stroke-width': 1, 'stroke': '#475F94'
+                    'fill': '#F0F0F0', 'stroke-width': 0, 'stroke': '#475F94'
                 }
             },
             'text': {
@@ -75,7 +75,7 @@ DEFAULT_THEME = {
                     'left': 2, 'top': 2, 'right': 2, 'bottom': 2
                 },
                 'style': {
-                    'fill': '#D0D0D0', 'stroke-width': 1, 'stroke': '#B8B8B8'
+                    'fill': '#D0D0D0', 'stroke-width': 0, 'stroke': '#B8B8B8'
                 }
             },
             'text': {
@@ -109,7 +109,7 @@ DEFAULT_THEME = {
                     'left': 24, 'top': 24, 'right': 24, 'bottom': 24
                 },
                 'style': {
-                    'fill': 'none', 'stroke-width': 1, 'stroke': '#FF8243'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#FF8243'
                 },
             },
             # actual channel content area where the nodes are to be placed
@@ -1022,10 +1022,10 @@ DEFAULT_THEME = {
                     'fill': 'transparent', 'stroke-width': 1, 'stroke': '#404040'
                 },
                 'LaneFlow': {
-                    'fill': 'transparent', 'stroke-width': 0, 'stroke': '#404040'
+                    'fill': 'transparent', 'stroke-width': 1, 'stroke': '#404040'
                 },
                 'BpmnFlow': {
-                    'fill': 'transparent', 'stroke-width': 0, 'stroke': '#404040'
+                    'fill': 'transparent', 'stroke-width': 1, 'stroke': '#404040'
                 },
             },
             'arrow-head': {
@@ -1098,7 +1098,7 @@ DEFAULT_THEME = {
             'to-arrow': False,
             'style': {
                 'ChannelFlow': {
-                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
                 },
                 'PoolFlow': {
                     'fill': 'none', 'stroke-width': 3, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
