@@ -109,7 +109,7 @@ DEFAULT_THEME = {
                     'left': 24, 'top': 24, 'right': 24, 'bottom': 24
                 },
                 'style': {
-                    'fill': 'none', 'stroke-width': 1, 'stroke': '#FF8243'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#FF8243'
                 },
             },
             # actual channel content area where the nodes are to be placed
@@ -1022,10 +1022,10 @@ DEFAULT_THEME = {
                     'fill': 'transparent', 'stroke-width': 1, 'stroke': '#404040'
                 },
                 'LaneFlow': {
-                    'fill': 'transparent', 'stroke-width': 0, 'stroke': '#404040'
+                    'fill': 'transparent', 'stroke-width': 1.5, 'stroke': '#404040'
                 },
                 'BpmnFlow': {
-                    'fill': 'transparent', 'stroke-width': 0, 'stroke': '#404040'
+                    'fill': 'transparent', 'stroke-width': 2, 'stroke': '#404040'
                 },
             },
             'arrow-head': {
@@ -1098,7 +1098,7 @@ DEFAULT_THEME = {
             'to-arrow': False,
             'style': {
                 'ChannelFlow': {
-                    'fill': 'none', 'stroke-width': 2, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
+                    'fill': 'none', 'stroke-width': 0, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
                 },
                 'PoolFlow': {
                     'fill': 'none', 'stroke-width': 3, 'stroke': '#A0A0A0', 'stroke-dasharray': '2,2'
