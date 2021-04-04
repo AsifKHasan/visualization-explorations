@@ -48,7 +48,7 @@ DEFAULT_THEME = {
                     'left': 5, 'top': 5, 'right': 5, 'bottom': 5
                 },
                 'style': {
-                    'fill': '#F0F0F0', 'stroke-width': 1, 'stroke': '#475F94'
+                    'fill': '#F0F0F0', 'stroke-width': 0, 'stroke': '#475F94'
                 }
             },
             'text': {
@@ -75,7 +75,7 @@ DEFAULT_THEME = {
                     'left': 2, 'top': 2, 'right': 2, 'bottom': 2
                 },
                 'style': {
-                    'fill': '#D0D0D0', 'stroke-width': 1, 'stroke': '#B8B8B8'
+                    'fill': '#D0D0D0', 'stroke-width': 0, 'stroke': '#B8B8B8'
                 }
             },
             'text': {

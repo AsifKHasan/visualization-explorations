@@ -1,0 +1,73 @@
+graph rop_remittance_disbursement {
+    label = "Remittance Disbursement in ROP"
+    _ [hide_labels="false";]
+
+    lane remittance {
+        label = ""
+        _ [hide_label="false";]
+
+        pool recipient {
+            label = "Recipient"
+            _ [hide_label="false";]
+
+            start                           start                               [label="";]
+            task                            goto_rop                            [label="Go to ROP location";]
+            task                            share_info                          [label="Show NID and share other related information";]
+            eventMessage                    otp_received                        [label="Receive OTP"; move_x="50"]
+            task                            receive_cash                        [label="Receive cash";]
+            end                             complete                            [label="";]
+
+            start                          --> goto_rop                         [label="";]
+            goto_rop                       --> share_info                       [label="";]
+
+            share_info                     ... otp_received                     [label="";]
+            otp_received                   ... receive_cash                     [label="";]
+
+            receive_cash                   --> complete                         [label="";]
+        }
+
+        pool merchant {
+            label = "Merchant"
+            _ [move_x="50";]
+
+            task                            input_receipient_info               [label="Input recipient info (name, mobile, NID, etc.)";]
+            task                            capture_photo                       [label="Capture recipient's photo";]
+            task                            input_sender_info                   [label="Input sender's info (name, origin, amount, remittance PIN)";]
+            task                            send_request                        [label="Send approval request";]
+            task                            input_otp                           [label="Input OTP in App"; move_x="300"]
+            task                            disburse_cash                       [label="Disburse cash";]
+
+            input_receipient_info           --> capture_photo                   [label="";]
+            capture_photo                   --> input_sender_info               [label="";]
+            input_sender_info               --> send_request                    [label="";]
+
+            input_otp                       --> disburse_cash                   [label="";]
+
+        }
+
+        pool bank {
+            label = "Bank"
+            _ [move_x="100";]
+
+            task                            receicve_request                    [label="Receive approval request";]
+            task                            verify_request                      [label="Verify PIN and remittance info via CPVC";]
+            exclusive                       verified                            [label="";]
+            eventError                      rejected                            [label="Request rejected";]
+            endError                        end_error                           [label="terminated";]
+
+            receicve_request                --> verify_request                  [label="";]
+            verify_request                  --> verified                        [label="";]
+            verified                        --> rejected                        [label="verification failed";]
+            rejected                        --> end_error                       [label="";]
+        }
+
+        share_info                          --> input_receipient_info           [label="";]
+
+        send_request                        --> receicve_request                [label="";]
+        verified                            --> otp_received                    [label="verification passed";]
+
+        otp_received                        --> input_otp                       [label="";]
+
+        disburse_cash                       --> receive_cash                    [label="";]
+    }
+}
