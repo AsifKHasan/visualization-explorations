@@ -1,0 +1,58 @@
+graph non_custom_01 {
+    label = "AW User Creation/Deactivate from Non-custom Office"
+    _ [hide_labels="false";]
+
+
+    lane L0 {
+        label = "AW User Creation/Deactivate from Non-custom Office"
+        _ []
+
+        pool P0_0 {
+            label = "Applicant"
+            _ []
+
+            start                           start_00                            [label="Start"; label_pos="middle";]
+            task                            fill_the_user_form                 [label="Fill the User Create/Deactivate Request Form ";]
+            task                            submit_the_application             [label="Submit the application for Approval";]                
+            task                            send_the_app_it_wing               [label="Send the signed application to IT Wing";  move_x=350;]
+            start_00                        --> fill_the_user_form             [label=""; label_pos="middle";]     
+            fill_the_user_form             --> submit_the_application
+            submit_the_application         ...  send_the_app_it_wing                        
+        }
+
+        pool P0_1 {
+            label = "License Section"
+            _ []
+
+            
+            task                            evaluate_application_form               [label="Evaluate Application Form By License Section"; move_x=250;]         
+            exclusive                       exclusive_22                            [label="Approved?";]
+            task                            inform_requester_Signature            [label="Inform to requester by signature";]
+            task                            inform_requester_correction            [label="Inform to requester for correction";]
+            end                             end_00                                   [label="End";]
+
+            evaluate_application_form          --> exclusive_22
+            exclusive_22                       --> inform_requester_Signature        [label="YES"; label_pos="middle";]        
+            exclusive_22                       --> inform_requester_correction       [label="NO";]
+            inform_requester_correction        --> end_00
+        }
+
+        pool P0_2 {
+            label = "IT Wing"
+            _ []
+
+             task                            user_deactivate_AW                [label="User Deactivate in the AW"; move_x=300;]
+             task                            notify_to_requester               [label="Notify to requester"; move_x=200;]
+             end                             end1                                [label="End"; move_x=100;]
+
+             user_deactivate_AW              --> notify_to_requester           
+             notify_to_requester             --> end1      [label="";]
+             
+        }
+             submit_the_application          --> evaluate_application_form     [label=""; ]         
+             inform_requester_Signature      --> send_the_app_it_wing               
+             send_the_app_it_wing            --> user_deactivate_AW
+    }
+
+                       
+}

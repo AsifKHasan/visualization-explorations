@@ -21,10 +21,11 @@ from elements.swims.lane_collection import LaneCollection
 class Bpmn(BpmnElement):
     # Bpmn is a text rectangle on top of another rectangle containing the lane collections
     def __init__(self, bpmn_id, bpmn_data):
-        self.theme = self.current_theme['bpmn']
         self.bpmn_id, self.bpmn_data = bpmn_id, bpmn_data
 
-    def to_svg(self):
+    def to_svg(self, current_theme):
+        self.current_theme = current_theme
+        self.theme = self.current_theme['bpmn']
         # We go through a collect -> tune -> assemble flow
 
         # collect the svg elements, but do not assemble now. we need tuning before assembly
@@ -48,7 +49,7 @@ class Bpmn(BpmnElement):
         info('processing BPMN [{0}]'.format(self.bpmn_id))
 
         # process the lane collection
-        self.lane_collection_instance = LaneCollection(self.bpmn_id, self.bpmn_data['lanes'], self.bpmn_data['edges'])
+        self.lane_collection_instance = LaneCollection(self.current_theme, self.bpmn_id, self.bpmn_data['lanes'], self.bpmn_data['edges'])
         self.lane_collection_instance.collect_elements()
 
         info('processing BPMN [{0}] DONE'.format(self.bpmn_id))
@@ -109,7 +110,6 @@ class Bpmn(BpmnElement):
                 # second child is an svg whose width needs to be adjusted by diff
                 pool_label_svg_width = pool_group.getElementAt(1).getAttribute('width')
                 pool_group.getElementAt(1).setAttribute('width', pool_label_svg_width + pool_label_width_diff)
-
 
 
     def assemble_elements(self):

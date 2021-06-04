@@ -31,7 +31,7 @@ class DataObject(BpmnElement):
         if self.node_data['label'] is None or self.node_data['label'] == '':
             self.label_pos = 'none'
 
-    def to_svg(self):
+    def to_svg(self, theme):
         info('......processing node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
         # the label element

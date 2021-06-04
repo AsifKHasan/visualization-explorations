@@ -19,8 +19,8 @@ from elements.activities.tasks.activity_task import ActivityTask
 
 class ActivityTaskBusinessRule(ActivityTask):
     # a task activity is a rounded rectangle with a text inside
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['activities']['tasks']['ActivityTaskBusinessRule']}
 
     def get_top_left_element(self):

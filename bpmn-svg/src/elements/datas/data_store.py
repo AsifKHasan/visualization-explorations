@@ -22,7 +22,7 @@ class DataStore(DataObject):
         super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['datas']['DataStore']}
 
-    def to_svg(self):
+    def to_svg(self, theme):
         info('......processing node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
 
         # the label element

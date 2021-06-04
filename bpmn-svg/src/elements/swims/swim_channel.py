@@ -154,9 +154,10 @@ CLASSES = {
     a channel is a horizontally laid group of nodes (bpmn elements)
 '''
 class SwimChannel(BpmnElement):
-    def __init__(self, bpmn_id, lane_id, pool_id, nodes, edges, channel_object):
-        self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, self.channel_object = bpmn_id, lane_id, pool_id, nodes, edges, channel_object
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, nodes, edges, channel_object):
+        self.current_theme = current_theme
         self.theme = self.current_theme['swims']['SwimChannel']
+        self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, self.channel_object = bpmn_id, lane_id, pool_id, nodes, edges, channel_object
         self.channel_object.theme = self.theme
 
     def lay_edges(self):
@@ -172,7 +173,7 @@ class SwimChannel(BpmnElement):
                 edge_style = edge.get('styles', None)
 
                 # create an appropriate flow object, use ChannelFlow which manages flows inside a SwimChannel
-                flow_object = ChannelFlow(edge_type, self.channel_object)
+                flow_object = ChannelFlow(self.current_theme, edge_type, self.channel_object)
                 flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label, edge_style)
 
                 # add to channel svg group
@@ -189,7 +190,8 @@ class SwimChannel(BpmnElement):
             if node_data['type'] in CLASSES:
                 # get the svg element
                 element_class = getattr(importlib.import_module(CLASSES[node_data['type']]['m']), CLASSES[node_data['type']]['c'])
-                element_instance = element_class(self.bpmn_id, self.lane_id, self.pool_id, node_id, node_data)
+                warn('instantiating [{0}]'.format(element_class.__name__))
+                element_instance = element_class(self.current_theme, self.bpmn_id, self.lane_id, self.pool_id, node_id, node_data)
                 svg_element = element_instance.to_svg()
                 self.channel_object.nodes[node_id] = NodeObject(id=node_id, category=CLASSES[node_data['type']]['g'], type=node_data['type'], styles=node_data['styles'], element=svg_element, instance=element_instance)
             else:

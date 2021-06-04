@@ -8,8 +8,9 @@ from util.svg_util import *
 from util.logger import *
 
 class FlowObject(BpmnElement):
-    def __init__(self, edge_type):
+    def __init__(self, current_theme, edge_type):
         self.edge_type = edge_type
+        self.current_theme = current_theme
         self.theme = self.current_theme['flows'][edge_type]
 
     def mark_points(self, points, svg, color):

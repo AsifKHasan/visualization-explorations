@@ -77,8 +77,8 @@ SNAP_RULES = {
 
 class BpmnFlow(FlowObject):
 
-    def __init__(self, edge_type, lane_collection):
-        super().__init__(edge_type)
+    def __init__(self, current_theme, edge_type, lane_collection):
+        super().__init__(current_theme, edge_type)
         self.lane_collection = lane_collection
         self.snap_rules = SNAP_RULES
         self.flow_scope = 'BpmnFlow'

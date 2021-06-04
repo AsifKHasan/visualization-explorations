@@ -77,8 +77,8 @@ SNAP_RULES = {
 
 class LaneFlow(FlowObject):
 
-    def __init__(self, edge_type, pool_collection):
-        super().__init__(edge_type)
+    def __init__(self, current_theme, edge_type, pool_collection):
+        super().__init__(current_theme, edge_type)
         self.pool_collection = pool_collection
         self.snap_rules = SNAP_RULES
         self.flow_scope = 'LaneFlow'
