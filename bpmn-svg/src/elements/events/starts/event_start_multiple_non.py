@@ -19,8 +19,8 @@ from elements.events.starts.event_start import EventStart
 
 class EventStartMultipleNon(EventStart):
     # a start event is circle. get a list of svg where the first one is the node circle
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['events']['starts']['EventStartMultipleNon']}
 
     def get_inside_element(self):

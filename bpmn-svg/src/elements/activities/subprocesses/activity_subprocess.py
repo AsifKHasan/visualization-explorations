@@ -19,8 +19,8 @@ from elements.svg_element import SvgElement
 
 class ActivitySubprocess(Activity):
     # a subprocess activity is a rounded rectangle with text inside, something in top left above the text and a + at the bottom floor of the rectangle below the text
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['activities']['subprocesses']['ActivitySubprocess']}
 
     def get_bottom_center_element(self):
