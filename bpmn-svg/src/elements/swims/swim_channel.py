@@ -211,6 +211,8 @@ class SwimChannel(BpmnElement):
         # now we have height and width adjusted, we place the elements with proper displacement
         transformer = TransformBuilder()
         current_x = self.theme['channel-outer-rect']['pad-spec']['left']
+        first_element = True
+        channel_x_movement = 0
         for node_id, node_object in self.channel_object.nodes.items():
             node_svg_element = node_object.element
             current_y = inner_rect_height/2 - node_svg_element.height/2 + self.theme['channel-outer-rect']['pad-spec']['top']
@@ -221,7 +223,13 @@ class SwimChannel(BpmnElement):
             else:
                 move_x = 0
 
-            current_x = current_x + move_x
+            # if this is the very first element in the channel, we better move the whole channel than moving only the element to make the edges better routed
+            if first_element:
+                channel_x_movement = channel_x_movement + move_x
+            else:
+                current_x = current_x + move_x
+
+            first_element = False
 
             # keep the x, y position and dimension for the node within the group for future reference
             node_svg_element.xy = Point(current_x, current_y)
@@ -248,7 +256,7 @@ class SwimChannel(BpmnElement):
         svg_group.addElement(channel_inner_rect_svg)
 
         # wrap it in a svg element
-        self.svg_element = SvgElement(svg=svg_group, width=outer_rect_width, height=outer_rect_height)
+        self.svg_element = SvgElement(svg=svg_group, width=outer_rect_width, height=outer_rect_height, move_x=channel_x_movement)
 
         # store the svg and dimensions for future reference
         self.channel_object.element = self.svg_element

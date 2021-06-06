@@ -19,3 +19,20 @@ Assuming you have a bpmn script at ../data/pizza-order.bpmn
 You may need to install Microsoft Core fonts in Linux
 sudo apt-get install ttf-mscorefonts-installer
 sudo fc-cache
+
+Some test scripts
+./bpmn-to-svg.sh airline-check-in
+./bpmn-to-svg.sh brits-train-location-map
+./bpmn-to-svg.sh grp__hrm__award-and-publication
+./bpmn-to-svg.sh request-aw-user-credential-applicant
+./bpmn-to-svg.sh aw-non-custom
+./bpmn-to-svg.sh clpia
+./bpmn-to-svg.sh order-fulfillment-and-procurement
+./bpmn-to-svg.sh rop-remittance-disbursement
+./bpmn-to-svg.sh bank-account-opening
+./bpmn-to-svg.sh edge-test-01
+./bpmn-to-svg.sh pizza-order
+./bpmn-to-svg.sh bpmn-sample
+./bpmn-to-svg.sh edge-test-02
+./bpmn-to-svg.sh property-and-casualty-insurance-claim-processing
+./bpmn-to-svg.sh top-level-bkb-reg

@@ -79,7 +79,7 @@ class ChannelCollection(BpmnElement):
                         parent_channel_object = self.channel_collection.channel_by_name(channel.parent_channel)
                         x_pos = parent_channel_object.element.xy.x + parent_channel_object.x_of_node(node_id=channel.name) + self.theme['dx-between-elements']
                     else:
-                        x_pos = 0
+                        x_pos =  0
 
                     if x_pos != 0:
                         current_x = self.theme['pad-spec']['left'] + x_pos + self.theme['dx-between-elements']
@@ -90,7 +90,7 @@ class ChannelCollection(BpmnElement):
 
                 channel_element = channel.element
                 channel_element_svg = channel_element.svg
-                channel_element.xy = Point(current_x, current_y)
+                channel_element.xy = Point(current_x + channel_element.move_x, current_y)
 
                 transformer.setTranslation(channel_element.xy)
                 channel_element_svg.set_transform(transformer.getTransform())
