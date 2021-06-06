@@ -19,8 +19,8 @@ from elements.events.intermediates.event_intermediate import EventIntermediate
 
 class EventIntermediateCatchMessage(EventIntermediate):
     # an intermediate event is two concentric circles
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme.update(self.current_theme['events']['intermediates']['EventIntermediateCatchMessage'])
 
     def get_inside_element(self):

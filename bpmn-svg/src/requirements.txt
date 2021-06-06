@@ -6,3 +6,5 @@ termcolor
 Pillow
 pyqt5
 pyqtwebengine
+cairosvg
+svglib

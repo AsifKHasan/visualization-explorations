@@ -18,8 +18,8 @@ from elements.svg_element import SvgElement
 from elements.datas.data_object import DataObject
 
 class DataStore(DataObject):
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['datas']['DataStore']}
 
     def to_svg(self):

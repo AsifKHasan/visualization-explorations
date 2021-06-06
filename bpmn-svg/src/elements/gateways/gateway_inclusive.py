@@ -19,8 +19,8 @@ from elements.svg_element import SvgElement
 
 class GatewayInclusive(Gateway):
     # an inclusive Gateway is a diamond with a circle inside
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['gateways']['GatewayInclusive']}
 
     def get_inside_element(self):

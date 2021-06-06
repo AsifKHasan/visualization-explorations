@@ -19,8 +19,8 @@ from elements.events.event import Event
 
 class EventStart(Event):
     # a start event is circle with a thin border
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['events']['starts']['EventStart']}
 
     def get_inside_element(self):

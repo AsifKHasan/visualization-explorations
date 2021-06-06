@@ -19,8 +19,8 @@ from elements.events.ends.event_end import EventEnd
 
 class EventEndMultiple(EventEnd):
     # a multiple end is an end event with filled pentagon inside
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme.update(self.current_theme['events']['ends']['EventEndMultiple'])
 
     def get_inside_element(self):

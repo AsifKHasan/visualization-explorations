@@ -408,7 +408,7 @@ def to_json(x):
         sys.exit(1)
 
     # root of the graph
-    json_data = {x.id: {'styles': {}, 'label': '', 'lanes': {}, 'edges': []}}
+    json_data = {x.id: {'theme': 'default', 'styles': {}, 'label': '', 'lanes': {}, 'edges': []}}
 
     # statements are children
     for stmt in x.stmts:

@@ -20,7 +20,8 @@ from elements.flows.lane_flow import LaneFlow
     a pool collection is a vertical stack of pools
 '''
 class PoolCollection(BpmnElement):
-    def __init__(self, bpmn_id, lane_id, pools, edges):
+    def __init__(self, current_theme, bpmn_id, lane_id, pools, edges):
+        self.current_theme = current_theme
         self.theme = self.current_theme['swims']['PoolCollection']
         self.bpmn_id, self.lane_id, self.pools, self.edges = bpmn_id, lane_id, pools, edges
 
@@ -40,7 +41,7 @@ class PoolCollection(BpmnElement):
                 edge_style = edge.get('styles', None)
 
                 # create an appropriate flow object, use LaneFlow which manages flows inside a SwimLane
-                flow_object = LaneFlow(edge_type, self.pool_collection)
+                flow_object = LaneFlow(self.current_theme, edge_type, self.pool_collection)
                 flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label, edge_style)
 
                 # add to channel svg group
@@ -82,7 +83,7 @@ class PoolCollection(BpmnElement):
         self.child_pool_classes = []
         self.pool_collection = PoolCollectionObject(self.lane_id, self.theme)
         for pool_id, pool_data in self.pools.items():
-            child_pool_class = SwimPool(self.bpmn_id, self.lane_id, pool_id, pool_data)
+            child_pool_class = SwimPool(self.current_theme, self.bpmn_id, self.lane_id, pool_id, pool_data)
             child_pool_class.collect_elements()
             # each child SwimPool's ChannelCollectionObject is a member of its own pool_collection
             self.pool_collection.channel_collection_list.append(child_pool_class.channel_collection_instance.channel_collection)

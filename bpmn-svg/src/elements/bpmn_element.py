@@ -26,11 +26,11 @@ EDGE_TYPE = {
 }
 
 class BpmnElement():
-    current_theme = DEFAULT_THEME
+    theme = None
     # the logical snap points are drawn out away from the actual shape for nice edge visuals
     snap_point_offset = 12
 
-    def to_svg(self):
+    def to_svg(self, theme):
         return None
 
     def label_position(self):

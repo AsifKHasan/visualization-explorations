@@ -20,7 +20,8 @@ from elements.flows.bpmn_flow import BpmnFlow
     a lane collection is a vertical stack of lanes
 '''
 class LaneCollection(BpmnElement):
-    def __init__(self, bpmn_id, lanes, edges):
+    def __init__(self, current_theme, bpmn_id, lanes, edges):
+        self.current_theme = current_theme
         self.theme = self.current_theme['swims']['LaneCollection']
         self.bpmn_id, self.lanes, self.edges = bpmn_id, lanes, edges
 
@@ -40,7 +41,7 @@ class LaneCollection(BpmnElement):
                 edge_style = edge.get('styles', None)
 
                 # create an appropriate flow object, use BpmnFlow which manages flows inside a Bpmn
-                flow_object = BpmnFlow(edge_type, self.lane_collection)
+                flow_object = BpmnFlow(self.current_theme, edge_type, self.lane_collection)
                 flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label, edge_style)
 
                 # add to channel svg group
@@ -82,7 +83,7 @@ class LaneCollection(BpmnElement):
         self.child_lane_classes = []
         self.lane_collection = LaneCollectionObject(self.bpmn_id, self.theme)
         for lane_id, lane_data in self.lanes.items():
-            child_lane_class = SwimLane(self.bpmn_id, lane_id, lane_data)
+            child_lane_class = SwimLane(self.current_theme, self.bpmn_id, lane_id, lane_data)
             child_lane_class.collect_elements()
             # each child SwimLane's PoolCollectionObject is a member of its own lane_collection
             self.lane_collection.pool_collection_list.append(child_lane_class.pool_collection_instance.pool_collection)

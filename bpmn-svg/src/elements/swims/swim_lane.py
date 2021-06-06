@@ -25,7 +25,8 @@ from elements.swims.pool_collection import PoolCollection
     a horizontal lane is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing Pool elements stacked vertically
 '''
 class SwimLane(BpmnElement):
-    def __init__(self, bpmn_id, lane_id, lane_data):
+    def __init__(self, current_theme, bpmn_id, lane_id, lane_data):
+        self.current_theme = current_theme
         self.theme = self.current_theme['swims']['SwimLane']
         self.bpmn_id, self.lane_id, self.lane_data = bpmn_id, lane_id, lane_data
 
@@ -69,7 +70,7 @@ class SwimLane(BpmnElement):
         info('..processing lane [{0}:{1}]'.format(self.bpmn_id, self.lane_id))
 
         # get the pool collection
-        self.pool_collection_instance = PoolCollection(self.bpmn_id, self.lane_id, self.lane_data['pools'], self.lane_data['edges'])
+        self.pool_collection_instance = PoolCollection(self.current_theme, self.bpmn_id, self.lane_id, self.lane_data['pools'], self.lane_data['edges'])
         self.pool_collection_instance.collect_elements()
 
         info('..processing lane [{0}:{1}] DONE'.format(self.bpmn_id, self.lane_id))

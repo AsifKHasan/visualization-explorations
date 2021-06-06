@@ -22,9 +22,10 @@ from elements.flows.pool_flow import PoolFlow
     a channel collection is a vertical stack of channels
 '''
 class ChannelCollection(BpmnElement):
-    def __init__(self, bpmn_id, lane_id, pool_id, nodes, edges):
-        self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges = bpmn_id, lane_id, pool_id, nodes, edges
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, nodes, edges):
+        self.current_theme = current_theme
         self.theme = self.current_theme['swims']['ChannelCollection']
+        self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges = bpmn_id, lane_id, pool_id, nodes, edges
 
     def lay_edges(self):
         # first lay the intra-channel edges
@@ -41,7 +42,7 @@ class ChannelCollection(BpmnElement):
                 edge_style = edge.get('styles', None)
 
                 # create an appropriate flow object, use PoolFlow which manages flows inside a SwimPool
-                flow_object = PoolFlow(edge_type, self.channel_collection)
+                flow_object = PoolFlow(self.current_theme, edge_type, self.channel_collection)
                 flow_svg_element = flow_object.create_flow(from_node, to_node, edge_label, edge_style)
 
                 # add to channel svg group
@@ -122,7 +123,7 @@ class ChannelCollection(BpmnElement):
         # create the swim channels
         for channel_list in self.channel_collection.channel_lists:
             for channel in channel_list:
-                channel.instance = SwimChannel(self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, channel)
+                channel.instance = SwimChannel(self.current_theme, self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, channel)
                 channel.instance.to_svg()
 
 

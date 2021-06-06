@@ -26,7 +26,8 @@ from elements.swims.channel_collection import ChannelCollection
     a horizontal pool is a narrow rectangle having a center-aligned text 90 degree anti-clockwise rotated at left and another adjacent rectangle () on its right containing nodes and edges
 '''
 class SwimPool(BpmnElement):
-    def __init__(self, bpmn_id, lane_id, pool_id, pool_data):
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, pool_data):
+        self.current_theme = current_theme
         self.theme = self.current_theme['swims']['SwimPool']
         self.bpmn_id, self.lane_id, self.pool_id, self.pool_data = bpmn_id, lane_id, pool_id, pool_data
 
@@ -58,7 +59,7 @@ class SwimPool(BpmnElement):
         info('....processing pool [{0}:{1}:{2}]'.format(self.bpmn_id, self.lane_id, self.pool_id))
 
         # get the channel collection
-        self.channel_collection_instance = ChannelCollection(self.bpmn_id, self.lane_id, self.pool_id, self.pool_data['nodes'], self.pool_data['edges'])
+        self.channel_collection_instance = ChannelCollection(self.current_theme, self.bpmn_id, self.lane_id, self.pool_id, self.pool_data['nodes'], self.pool_data['edges'])
         self.channel_collection_instance.collect_elements()
 
         info('....processing pool [{0}:{1}:{2}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id))

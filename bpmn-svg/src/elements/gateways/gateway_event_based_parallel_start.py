@@ -19,8 +19,8 @@ from elements.svg_element import SvgElement
 
 class GatewayEventBasedParallelStart(Gateway):
     # an event-based parallel start Gateway is a diamond with cross inside a circle
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['gateways']['GatewayEventBasedParallelStart']}
 
     def get_inside_element(self):

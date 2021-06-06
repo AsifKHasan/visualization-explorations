@@ -19,8 +19,8 @@ from elements.activities.subprocesses.activity_subprocess_event import ActivityE
 
 class ActivityEventConditionalNon(ActivityEventSubprocess):
     # a subprocess activity is a dashed rounded rectangle with text inside, something in top left above the text and a + at the bottom floor of the rectangle below the text
-    def __init__(self, bpmn_id, lane_id, pool_id, node_id, node_data):
-        super().__init__(bpmn_id, lane_id, pool_id, node_id, node_data)
+    def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
+        super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['activities']['subprocesses']['event-subprocesses']['ActivityEventConditionalNon']}
 
     def get_top_left_element(self):

@@ -1,104 +1,104 @@
 graph clpia_01 {
-    label = "Business process for CLPIAs"
-    _ [hide_labels="false";]
+  theme = "xyz"
+  label = "Business process for CLPIAs"
+  _ [hide_labels="false";]
 
 
-    lane L0 {
-        label = "Issuance of certificates, license and permits(CLPs)"
-        _ []
+  lane L0 {
+    label = "Issuance of certificates, license and permits(CLPs)"
+    _ []
 
-        pool P0_0 {
-            label = "Authorized Agent Of Importer"
-            _ []
+    pool P0_0 {
+      label = "Authorized Agent Of Importer"
+      _ []
 
-            start                           start_00                            [label="Start"; label_pos="middle";]
-            task                            visit_to_the_portal                 [label="Visit to the portal(www.xxx.gov.bd)";]
-            task                            log_in_to_portal1                    [label="Log in to portal(www.xxx.gov.bd)";]
-            exclusive                       exclusive_22                        [label="Existing UCR?";]
-            task                            go_for_ucr_generation_process       [label="Go for UCR Generation Process";]
-            task                            select_unique_consignment_reference [label="Select Unique Consignment Reference Number (UCR) from the drop down list";]
-            task                            system_mapping_clp_with_UCR         [label="System mapping of CLP Reference No. with UCR";]
-            task                            system_display_clp_ucr              [label="System displays the list of applicable CLPs for this UCR";]
-            task                            system_creates_CLP_form             [label="System creates a CLP form with prefilled information";]
-            task                            fill_up_CLP_form                    [label="Fill up CLP form with relevant information"; wrap_here="true"; move_x=600]
-            task                            upload_mandatory_supporting_documents  [label="Upload mandatory supporting documents";]
-            task                            submit_CLP_application_form         [label="Submit CLP Application form";]
-            task                            generate_ack_and_CLPRON             [label="Generate Acknowledgement and CLP Request Number(CLPRON)";]
-            task                            system_identify_and_transfer        [label="System will identify and transfer CLP request to concerned CLPIA";]
-            end                             end_00                                [label="End";]
+      start                           start_00                            [label="Start"; label_pos="middle";]
+      task                            visit_to_the_portal                 [label="Visit to the portal(www.xxx.gov.bd)";]
+      task                            log_in_to_portal1                    [label="Log in to portal(www.xxx.gov.bd)";]
+      exclusive                       exclusive_22                        [label="Existing UCR?";]
+      task                            go_for_ucr_generation_process       [label="Go for UCR Generation Process";]
+      task                            select_unique_consignment_reference [label="Select Unique Consignment Reference Number (UCR) from the drop down list";]
+      task                            system_mapping_clp_with_UCR         [label="System mapping of CLP Reference No. with UCR";]
+      task                            system_display_clp_ucr              [label="System displays the list of applicable CLPs for this UCR";]
+      task                            system_creates_CLP_form             [label="System creates a CLP form with prefilled information";]
+      task                            fill_up_CLP_form                    [label="Fill up CLP form with relevant information"; wrap_here="true"; move_x=600]
+      task                            upload_mandatory_supporting_documents  [label="Upload mandatory supporting documents";]
+      task                            submit_CLP_application_form         [label="Submit CLP Application form";]
+      task                            generate_ack_and_CLPRON             [label="Generate Acknowledgement and CLP Request Number(CLPRON)";]
+      task                            system_identify_and_transfer        [label="System will identify and transfer CLP request to concerned CLPIA";]
+      end                             end_00                                [label="End";]
 
-            task                            modify_clp_form                     [label="Modify CLP request form with additional data/documents"; move_x=700]
+      task                            modify_clp_form                     [label="Modify CLP request form with additional data/documents"; move_x=700]
 
-            start                           start_b                             [label="B"; label_pos="middle"; move_x=700;]
+      start                           start_b                             [label="B"; label_pos="middle"; move_x=700;]
 
-            start_00                        --> visit_to_the_portal             [label="Start"; label_pos="middle";]
-            visit_to_the_portal             --> log_in_to_portal1
-            log_in_to_portal1                --> exclusive_22                    [label="";]
-            exclusive_22                    --> select_unique_consignment_reference [label="YES"; label_pos="middle";]
-            select_unique_consignment_reference--> system_mapping_clp_with_UCR
-            system_mapping_clp_with_UCR    --> system_display_clp_ucr
-            system_display_clp_ucr         --> system_creates_CLP_form
-            system_creates_CLP_form        --> fill_up_CLP_form
-            fill_up_CLP_form               --> upload_mandatory_supporting_documents
-            upload_mandatory_supporting_documents --> submit_CLP_application_form
-            submit_CLP_application_form    --> generate_ack_and_CLPRON
-            generate_ack_and_CLPRON        --> system_identify_and_transfer
+      start_00                        --> visit_to_the_portal             [label="Start"; label_pos="middle";]
+      visit_to_the_portal             --> log_in_to_portal1
+      log_in_to_portal1                --> exclusive_22                    [label="";]
+      exclusive_22                    --> select_unique_consignment_reference [label="YES"; label_pos="middle";]
+      select_unique_consignment_reference--> system_mapping_clp_with_UCR
+      system_mapping_clp_with_UCR    --> system_display_clp_ucr
+      system_display_clp_ucr         --> system_creates_CLP_form
+      system_creates_CLP_form        --> fill_up_CLP_form
+      fill_up_CLP_form               --> upload_mandatory_supporting_documents
+      upload_mandatory_supporting_documents --> submit_CLP_application_form
+      submit_CLP_application_form    --> generate_ack_and_CLPRON
+      generate_ack_and_CLPRON        --> system_identify_and_transfer
 
-            exclusive_22                    --> go_for_ucr_generation_process   [label="NO";]
-            go_for_ucr_generation_process   --> end_00
+      exclusive_22                    --> go_for_ucr_generation_process   [label="NO";]
+      go_for_ucr_generation_process   --> end_00
 
-            end_00                          ... start_b                         [label="";]
+      end_00                          ... start_b                         [label="";]
 
-            modify_clp_form                 --> submit_CLP_application_form     [label="";]
-        }
-
-        pool P0_1 {
-            label = "CLPIAs"
-            _ []
-
-
-            task                            log_in_to_portal2                        [label="Log in to portal(www.xxx.gov.bd)";]
-            task                            receive_clp_request_form                [label="Receive CLP Request Form";]
-            task                            view_work_bench                         [label="View Workbench";]
-            task                            select_CLPRQN                           [label="Select CLPRQN";]
-            task                            open_clp_request_form                   [label="Open CLP Request Form";]
-            task                            verify_clp_form                         [label="Verify CLP Form";]
-            exclusive                       exclusive_22                            [label="Found Ok?";]
-            task                            intimation_to_applicant                 [label="Intimation to applicant";]
-            task                            approve_clp_request                             [label="Approve CLP Request";]
-            task                            system_generate_payment_request                 [label="System generates Payment request for CLP fee";]
-            task                            intimation_agent_importer                       [label="Intimation to agent of Importer";]
-
-            log_in_to_portal2                  --> receive_clp_request_form
-            receive_clp_request_form           --> view_work_bench
-            view_work_bench                    --> select_CLPRQN
-            select_CLPRQN                      --> open_clp_request_form
-            open_clp_request_form              --> verify_clp_form
-            verify_clp_form                    --> exclusive_22                            [label="";]
-            exclusive_22                       --> approve_clp_request                     [label="YES"; label_pos="middle";]
-            approve_clp_request                --> system_generate_payment_request
-            system_generate_payment_request    --> intimation_agent_importer
-
-            exclusive_22                       --> intimation_to_applicant                 [label="NO";]
-        }
-
-        pool P0_2 {
-            label = "Online payment gateway"
-            _ []
-
-            start                           start_01                            [label="B"; label_pos="middle";]
-             task                            payment_of_clp_fees                 [label="Payment of CLP fees";]
-             task                            payment_receipt_generation          [label="Payment Receipt Generation";]
-             end                             end1                                [label="End";]
-
-             start_01                        --> payment_of_clp_fees
-             payment_of_clp_fees             --> payment_receipt_generation      [label="";]
-             payment_receipt_generation      --> end1                            [label="";]
-        }
-
-        start_00                              --> log_in_to_portal2             [label="";]
-        intimation_agent_importer             --> start_b                       [label="";]
-        intimation_to_applicant               --> modify_clp_form               [label="";]
-
+      modify_clp_form                 --> submit_CLP_application_form     [label="";]
     }
+
+    pool P0_1 {
+      label = "CLPIAs"
+      _ []
+
+
+      task                            log_in_to_portal2                        [label="Log in to portal(www.xxx.gov.bd)";]
+      task                            receive_clp_request_form                [label="Receive CLP Request Form";]
+      task                            view_work_bench                         [label="View Workbench";]
+      task                            select_CLPRQN                           [label="Select CLPRQN";]
+      task                            open_clp_request_form                   [label="Open CLP Request Form";]
+      task                            verify_clp_form                         [label="Verify CLP Form";]
+      exclusive                       exclusive_22                            [label="Found Ok?";]
+      task                            intimation_to_applicant                 [label="Intimation to applicant";]
+      task                            approve_clp_request                             [label="Approve CLP Request";]
+      task                            system_generate_payment_request                 [label="System generates Payment request for CLP fee";]
+      task                            intimation_agent_importer                       [label="Intimation to agent of Importer";]
+
+      log_in_to_portal2                  --> receive_clp_request_form
+      receive_clp_request_form           --> view_work_bench
+      view_work_bench                    --> select_CLPRQN
+      select_CLPRQN                      --> open_clp_request_form
+      open_clp_request_form              --> verify_clp_form
+      verify_clp_form                    --> exclusive_22                            [label="";]
+      exclusive_22                       --> approve_clp_request                     [label="YES"; label_pos="middle";]
+      approve_clp_request                --> system_generate_payment_request
+      system_generate_payment_request    --> intimation_agent_importer
+
+      exclusive_22                       --> intimation_to_applicant                 [label="NO";]
+    }
+
+    pool P0_2 {
+      label = "Online payment gateway"
+      _ []
+
+      start                           start_01                            [label="B"; label_pos="middle";]
+       task                            payment_of_clp_fees                 [label="Payment of CLP fees";]
+       task                            payment_receipt_generation          [label="Payment Receipt Generation";]
+       end                             end1                                [label="End";]
+
+       start_01                        --> payment_of_clp_fees
+       payment_of_clp_fees             --> payment_receipt_generation      [label="";]
+       payment_receipt_generation      --> end1                            [label="";]
+    }
+
+    start_00                              --> log_in_to_portal2             [label="";]
+    intimation_agent_importer             --> start_b                       [label="";]
+    intimation_to_applicant               --> modify_clp_form               [label="";]
+  }
 }
