@@ -279,7 +279,7 @@ class ChannelCollectionObject:
     '''
     def outside_the_channel(self, boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type):
         # we need to calculate the margin_spec for this channel
-        points_in_channel_coordinate = channel.outside_the_channel(boundary, node, side, position, role, approach_snap_point_from, peer, edge_type, margin_spec=self.margin_spec(channel))
+        points_in_channel_coordinate = channel.outside_the_channel(boundary, node, side, position, role, approach_snap_point_from, peer, edge_type)
         points_in_pool_coordinate = [channel.element.xy + p for p in points_in_channel_coordinate]
         return points_in_pool_coordinate
 
@@ -537,13 +537,13 @@ class ChannelCollectionObject:
                     if channel_list: self.channel_lists.append(channel_list)
                     channel_list = []
                     nodes = {node_id: {} for node_id in node_id_list}
-                    channel = ChannelObject(name=node_id_list[0], number=channel_number, is_root=True, parent_channel=None, nodes=nodes)
+                    channel = ChannelObject(name=node_id_list[0], number=channel_number, is_root=True, parent_channel=None, nodes=nodes, theme=self.theme['SwimChannel'])
                     channel_list.append(channel)
                     channel_number = channel_number + 1
                 else:
                     # this must be a sub channel of a previous channel, append in the current channel (the first node becomes the name and will not be in the channel_nodes)
                     nodes = {node_id: {} for node_id in node_id_list[1:]}
-                    channel = ChannelObject(name=node_id_list[0], number=channel_number, is_root=False, parent_channel=parent_channel_name, nodes=nodes)
+                    channel = ChannelObject(name=node_id_list[0], number=channel_number, is_root=False, parent_channel=parent_channel_name, nodes=nodes, theme=self.theme['SwimChannel'])
                     channel_list.append(channel)
                     channel_number = channel_number + 1
 
@@ -554,7 +554,7 @@ class ChannelCollectionObject:
         if len(root_channel.islands):
             channel_list = []
             nodes = {node_id: {} for node_id in root_channel.islands}
-            channel = ChannelObject(name='-', number=channel_number, is_root=False, parent_channel=None, nodes=nodes)
+            channel = ChannelObject(name='-', number=channel_number, is_root=False, parent_channel=None, nodes=nodes, theme=self.theme['SwimChannel'])
             channel_list.append(channel)
             channel_number = channel_number + 1
             self.channel_lists.append(channel_list)

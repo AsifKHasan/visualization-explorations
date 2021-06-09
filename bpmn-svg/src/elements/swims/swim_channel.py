@@ -156,7 +156,7 @@ CLASSES = {
 class SwimChannel(BpmnElement):
     def __init__(self, current_theme, bpmn_id, lane_id, pool_id, nodes, edges, channel_object):
         self.current_theme = current_theme
-        self.theme = self.current_theme['swims']['SwimChannel']
+        self.theme = self.current_theme['swims']['ChannelCollection']['SwimChannel']
         self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, self.channel_object = bpmn_id, lane_id, pool_id, nodes, edges, channel_object
         self.channel_object.theme = self.theme
 
@@ -272,7 +272,7 @@ class SwimChannel(BpmnElement):
     collection of nodes
 '''
 class ChannelObject:
-    def __init__(self, name, number, is_root, parent_channel, nodes):
+    def __init__(self, name, number, is_root, parent_channel, nodes, theme):
         self.name = name
         self.number = number
         self.is_root = is_root
@@ -282,17 +282,26 @@ class ChannelObject:
         self.instance = None
         self.element = None
 
+        # flow routes are the lines (grooves) through which a flow can pass, a chennel may have *max-number-of-flows* grooves spaced in the *pad-spec* area of the SwimChannel
+        self.flow_routes = []
+        max_number_of_flows = theme['channel-outer-rect']['max-number-of-flows']
+        west_max, north_max, east_max, south_max = theme['channel-outer-rect']['pad-spec']['left'], theme['channel-outer-rect']['pad-spec']['top'], theme['channel-outer-rect']['pad-spec']['right'], theme['channel-outer-rect']['pad-spec']['bottom']
+        for route in range(0, max_number_of_flows):
+            east = (route + 0.5) * (east_max / max_number_of_flows)
+            north = (route + 0.5) * (north_max / max_number_of_flows)
+            west = (route + 0.5) * (west_max / max_number_of_flows)
+            south = (route + 0.5) * (south_max / max_number_of_flows)
+            route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': east, 'north': -north, 'west': -west, 'south': south}}
+            self.flow_routes.append(route_object)
 
-    '''
-        the string representation of the Channel
+    ''' the string representation of the Channel
     '''
     def __repr__(self):
         s = 'number: {0}, root: {1}, name: {2}, parent: [{3}], nodes: {4}'.format(self.number, self.is_root, self.name, self.parent_channel, [*self.nodes])
         return s
 
 
-    '''
-        height of the node which has the maximum height among all nodes in the channel
+    ''' height of the node which has the maximum height among all nodes in the channel
     '''
     def max_node_height(self):
         max_height = 0
@@ -302,8 +311,7 @@ class ChannelObject:
         return max_height
 
 
-    '''
-        given a node od, returns the x position of the node in the channel
+    ''' given a node od, returns the x position of the node in the channel
     '''
     def x_of_node(self, node_id):
         if node_id in self.nodes:
@@ -313,8 +321,7 @@ class ChannelObject:
         return 0
 
 
-    '''
-        given a node, returns the ordinal position of the node in the channel
+    ''' given a node, returns the ordinal position of the node in the channel
     '''
     def node_ordinal(self, node):
         ordinal = 0
@@ -327,8 +334,31 @@ class ChannelObject:
         return -1
 
 
+    ''' get a route through which an edge can be routed so that it does not overlap with another edge
     '''
-        (path from the snap point to the exact point of the node) or (path to the snap point from the exact point of the node) in channel coordinates
+    def get_a_route(self, boundary, node, peer):
+        if len(self.flow_routes) == 0:
+            warn('no flow-routes available for getting outside the channel [{0}:{1}]'.format(self.number, self.name))
+            return None
+
+        # get the route which has a minimum flow-count in that direction
+        route_with_min_flow_count = 0
+        min_flow_count = 100
+        for route in range(0, len(self.flow_routes)):
+            route_object = self.flow_routes[route]
+            if route_object['flow-count'][boundary] <= min_flow_count:
+                min_flow_count = route_object['flow-count'][boundary]
+                route_with_min_flow_count = route
+
+        if self.flow_routes[route_with_min_flow_count]['flow-count'][boundary] > 0:
+            warn('no free flow-routes (out of {0}) for getting outside the channel [{1}:{2}] towards [{3}] from node [{4}] to node [{5}], edges may overlap'.format(len(self.flow_routes), self.number, self.name, boundary, node.id, peer.id))
+
+        self.flow_routes[route_with_min_flow_count]['flow-count'][boundary] = self.flow_routes[route_with_min_flow_count]['flow-count'][boundary] + 1
+
+        return self.flow_routes[route_with_min_flow_count]
+
+
+    ''' (path from the snap point to the exact point of the node) or (path to the snap point from the exact point of the node) in channel coordinates
     '''
     def to_snap_point(self, node, side, position, role, approach_snap_point_from, peer, edge_type):
         points_in_node_coordinate = node.instance.to_snap_point(side, position, role, approach_snap_point_from, peer, edge_type)
@@ -336,8 +366,7 @@ class ChannelObject:
         return points_in_channel_coordinate
 
 
-    '''
-        the path connects node to the boundary of the channel in channel coordinate.
+    ''' the path connects node to the boundary of the channel in channel coordinate.
         the path may cross inner node-boundary depending on the value of boundary (if not None), but does not cross the channel boundary
         boundary - [north|south|east|west]
     '''
@@ -388,12 +417,11 @@ class ChannelObject:
             return points_in_channel_coordinate + [the_point]
 
 
-    '''
-        the path connects node to the boundary point outside the channel in channel coordinate.
+    ''' the path connects node to the boundary point outside the channel in channel coordinate.
         the path is for getting outside of the channel from a node or getting into a node from outside the channel
         boundary is the side through which the path should get out of the channel or get into the channel [north|south|east|west]
     '''
-    def outside_the_channel(self, boundary, node, side, position, role, approach_snap_point_from, peer, edge_type, margin_spec):
+    def outside_the_channel(self, boundary, node, side, position, role, approach_snap_point_from, peer, edge_type):
         forbidden_combinations = [('north', 'south'), ('south', 'north'), ('east', 'west'), ('west', 'east')]
 
         points_in_node_coordinate = node.instance.to_snap_point(side, position, role, approach_snap_point_from, peer, edge_type)
@@ -412,17 +440,31 @@ class ChannelObject:
         else:
             point_to_extend = points_in_channel_coordinate[-1]
 
+        debug('getting outside channel [{0}:{1}] from node [{2}] towards [{3}] to node [{4}]'.format(self.number, self.name, node.id, boundary, peer.id))
+
         # we decide points based on baundary direction we want to reach
         if boundary == 'south':
-            the_point = Point(point_to_extend.x, self.element.height + margin_spec['bottom'])
+            route_object = self.get_a_route(boundary=boundary, node=node, peer=peer)
+            if route_object:
+                the_point = Point(point_to_extend.x, self.element.height + route_object['route'][boundary])
+            else:
+                return points_in_channel_coordinate
 
         elif boundary == 'north':
-            the_point = Point(point_to_extend.x, -margin_spec['top'])
+            route_object = self.get_a_route(boundary=boundary, node=node, peer=peer)
+            if route_object:
+                the_point = Point(point_to_extend.x, route_object['route'][boundary])
+            else:
+                return points_in_channel_coordinate
 
         elif boundary == 'east':
             # allow only for east-most node
             if self.node_ordinal(node) == len(self.nodes) - 1:
-                the_point = Point(self.element.width + margin_spec['right'], point_to_extend.y)
+                route_object = self.get_a_route(boundary=boundary, node=node, peer=peer)
+                if route_object:
+                    the_point = Point(self.element.width + route_object['route'][boundary], point_to_extend.y)
+                else:
+                    return points_in_channel_coordinate
             else:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
@@ -430,10 +472,17 @@ class ChannelObject:
         elif boundary == 'west':
             # allow only for west-most node
             if self.node_ordinal(node) == 0:
-                the_point = Point(-margin_spec['left'], point_to_extend.y)
+                route_object = self.get_a_route(boundary=boundary, node=node, peer=peer)
+                if route_object:
+                    the_point = Point(route_object['route'][boundary], point_to_extend.y)
+                else:
+                    return points_in_channel_coordinate
             else:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
+
+        debug('route chosen: {0}'.format(route_object))
+        print('')
 
         if role == 'to':
             return [the_point] + points_in_channel_coordinate
@@ -441,8 +490,7 @@ class ChannelObject:
             return points_in_channel_coordinate + [the_point]
 
 
-    '''
-        given a vertical line segment, finds out whether any portion of the channel falls on the line segment
+    ''' given a vertical line segment, finds out whether any portion of the channel falls on the line segment
     '''
     def is_vertically_between(self, x, north_y, south_y, padding):
         result = False
@@ -464,8 +512,7 @@ class ChannelObject:
         return result
 
 
-    '''
-        given a horizontal line segment, finds out whether any portion of the channel falls on the line segment
+    ''' given a horizontal line segment, finds out whether any portion of the channel falls on the line segment
     '''
     def is_horizontally_between(self, y, west_x, east_x, padding):
         result = False
@@ -484,8 +531,7 @@ class ChannelObject:
         return result
 
 
-    '''
-        we want a path to bypass the channel through the routing area
+    ''' we want a path to bypass the channel through the routing area
     '''
     def bypass_vertically(self, coming_from, going_to, margin_spec):
         # the coming_from point is north of going_to, so we have to reach a point south of the channel either through east or west or directly dpending on which direction we are going_to
@@ -549,8 +595,7 @@ class ChannelObject:
         return [p1, p2, p3]
 
 
-    '''
-        a channel's westmost x position may not always be the xy.x of the channel - when the westmost node has a move_x displacement, the westmost point will also be displaced
+    ''' a channel's westmost x position may not always be the xy.x of the channel - when the westmost node has a move_x displacement, the westmost point will also be displaced
         returns position in pool coordinate
     '''
     def westmost_x(self):

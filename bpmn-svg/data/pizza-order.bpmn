@@ -33,6 +33,8 @@ graph pizza_orders {
             on_order                        --> timer_45_mins                   [label="";]
             timer_45_mins                   --> ask_for_pizza                   [label="";]
             ask_for_pizza                   --> on_order                        [label="";]
+            ask_for_pizza                   --> pay_for_pizza                        [label="";]
+            ask_for_pizza                   --> pizza_received                        [label="";]
         }
     }
 
@@ -80,12 +82,12 @@ graph pizza_orders {
         where_is_pizza                  --> deliver_pizza                   [label="";]
     }
 
-    order_pizza                     --> bake_pizza                      [label="";]
-    order_pizza                     ~~> order_received                  [label="pizza order";]
-    ask_for_pizza                   ~~> where_is_pizza                  [label="";]
-    pay_for_pizza                   ~~> collect_payment                 [label="money";]
-    deal_with_customer              ~~> ask_for_pizza                   [label="";]
-    deliver_pizza                   ~~> pizza_received                  [label="pizza";]
-    collect_payment                 ~~> pay_for_pizza                   [label="receipt";]
-    hunger_satisfied                --> end_terminate                   [label="";]
+    #order_pizza                     --> bake_pizza                      [label="";]
+    #order_pizza                     ~~> order_received                  [label="pizza order";]
+    #ask_for_pizza                   ~~> where_is_pizza                  [label="";]
+    #pay_for_pizza                   ~~> collect_payment                 [label="money";]
+    #deal_with_customer              ~~> ask_for_pizza                   [label="";]
+    #deliver_pizza                   ~~> pizza_received                  [label="pizza";]
+    #collect_payment                 ~~> pay_for_pizza                   [label="receipt";]
+    #hunger_satisfied                --> end_terminate                   [label="";]
 }
