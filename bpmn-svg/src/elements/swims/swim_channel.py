@@ -150,8 +150,7 @@ CLASSES = {
     'eventBasedParallelStart':  {'m': 'elements.gateways.gateway_event_based_parallel_start',                           'c': 'GatewayEventBasedParallelStart',              'g': 'gateway'},
 }
 
-'''
-    a channel is a horizontally laid group of nodes (bpmn elements)
+''' a channel is a horizontally laid group of nodes (bpmn elements)
 '''
 class SwimChannel(BpmnElement):
     def __init__(self, current_theme, bpmn_id, lane_id, pool_id, nodes, edges, channel_object):
@@ -293,6 +292,7 @@ class ChannelObject:
             south = (route + 0.5) * (south_max / max_number_of_flows)
             route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': east, 'north': -north, 'west': -west, 'south': south}}
             self.flow_routes.append(route_object)
+
 
     ''' the string representation of the Channel
     '''
@@ -440,7 +440,7 @@ class ChannelObject:
         else:
             point_to_extend = points_in_channel_coordinate[-1]
 
-        debug('getting outside channel [{0}:{1}] from node [{2}] towards [{3}] to node [{4}]'.format(self.number, self.name, node.id, boundary, peer.id))
+        # debug('getting outside channel [{0}:{1}] from node [{2}] towards [{3}] to node [{4}]'.format(self.number, self.name, node.id, boundary, peer.id))
 
         # we decide points based on baundary direction we want to reach
         if boundary == 'south':
@@ -481,8 +481,8 @@ class ChannelObject:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
 
-        debug('route chosen: {0}'.format(route_object))
-        print('')
+        # debug('route chosen: {0}'.format(route_object))
+        # print('')
 
         if role == 'to':
             return [the_point] + points_in_channel_coordinate
@@ -604,6 +604,8 @@ class ChannelObject:
         return self.element.xy.x + first_node.element.xy.x - self.theme['channel-outer-rect']['pad-spec']['left']
 
 
+    ''' whether this channel is to the east (right) of the other *channel*
+    '''
     def east_of(self, channel):
         if self.element.xy.x + self.element.width >= channel.element.xy.x + channel.element.width:
             return True
@@ -611,6 +613,8 @@ class ChannelObject:
             return False
 
 
+    ''' whether this channel is to the west (left) of the other *channel*
+    '''
     def west_of(self, channel):
         if self.element.xy.x <= channel.element.xy.x:
             return True
@@ -618,6 +622,8 @@ class ChannelObject:
             return False
 
 
+    ''' whether this channel is to the north (top) of the other *channel*
+    '''
     def north_of(self, channel):
         if self.element.xy.y <= channel.element.xy.y:
             return True
@@ -625,6 +631,8 @@ class ChannelObject:
             return False
 
 
+    ''' whether this channel is to the south (bottom) of the other *channel*
+    '''
     def south_of(self, channel):
         if self.element.xy.y + self.element.height >= channel.element.xy.y + channel.element.height:
             return True

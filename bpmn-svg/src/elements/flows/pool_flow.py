@@ -8,8 +8,7 @@ from util.logger import *
 from util.geometry import Point
 from util.svg_util import *
 
-'''
-    Class to handle a flows/edges between channels of a pool
+''' Class to handle a flows/edges between channels of a pool
     Criteria - from-node and to-node must be in in two different channels under the same pool
 '''
 SNAP_RULES = {
@@ -98,8 +97,7 @@ class PoolFlow(FlowObject):
             return False
 
 
-    '''
-        the entry method that decides which rule to apply
+    ''' the entry method that decides which rule to apply
     '''
     def create_flow(self, from_node, to_node, label, label_style):
         from_node_channel, from_node_ordinal = self.channel_collection.channel_and_ordinal(from_node)
@@ -160,6 +158,7 @@ class PoolFlow(FlowObject):
             return None
 
         # we always connect from the north point to the south point
+        # TODO: the connect_southward is problematic, no 
         if from_node_points_in_pool_coordinate[-1].north_of(to_node_points_in_pool_coordinate[0]):
             north_point = from_node_points_in_pool_coordinate[-1]
             south_point = to_node_points_in_pool_coordinate[0]
@@ -175,6 +174,11 @@ class PoolFlow(FlowObject):
 
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_pool_coordinate + joining_points + to_node_points_in_pool_coordinate
+
+        debug('points outside channel from node [{0}]: {1}'.format(from_node.id, from_node_points_in_pool_coordinate))
+        debug('points outside channel to   node [{0}]: {1}'.format(to_node.id, to_node_points_in_pool_coordinate))
+        debug('[{0}] -> [{1}] joining points: {2}'.format(from_node.id, to_node.id, joining_points))
+
         flow_points = optimize_points(flow_points)
 
         # determine the placement of the label
@@ -193,5 +197,7 @@ class PoolFlow(FlowObject):
             label_data['move-y'] = float(label_style.get('move_y', 20))
 
         flow_svg, flow_width, flow_height = a_flow(flow_points, label_data, self.theme, self.flow_scope)
+
+        # debug('[{0}] -> [{1}] : {2}'.format(from_node.id, to_node.id, flow_points))
 
         return SvgElement(svg=flow_svg, width=flow_width, height=flow_height)

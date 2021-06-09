@@ -8,12 +8,10 @@ from util.logger import *
 from util.geometry import Point
 from util.svg_util import *
 
-'''
-    Class to handle a flows/edges inside a channel
+''' Class to handle a flows/edges inside a channel
     A channel is by definition a straight horizontal stack of nodes, so edges are mostly straight lines from left to right (west to east) except when there is a loop back from a child to a previous node towards left (west).
     Criteria - from-node and to-node must be in the same channel
 '''
-
 SNAP_RULES = {
     'east': {
         'adjacent' : {
@@ -72,8 +70,7 @@ class ChannelFlow(FlowObject):
         self.flow_scope = 'ChannelFlow'
 
 
-    '''
-        the entry method that decides which rule to apply
+    ''' the entry method that decides which rule to apply
     '''
     def create_flow(self, from_node, to_node, label, label_style):
         # first we need the diection from from_node to to_node
@@ -145,5 +142,6 @@ class ChannelFlow(FlowObject):
         # we have the points, now create and return the flow
         flow_svg, flow_width, flow_height = a_flow(flow_points, label_data, self.theme, self.flow_scope)
 
+        # debug('[{0}] -> [{1}] : {2}'.format(from_node.id, to_node.id, flow_points))
 
         return SvgElement(svg=flow_svg, width=flow_width, height=flow_height)
