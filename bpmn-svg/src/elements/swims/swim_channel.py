@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-'''
-'''
 import importlib
 from pprint import pprint
 
@@ -267,8 +265,7 @@ class SwimChannel(BpmnElement):
         return self.svg_element
 
 
-''' ----------------------------------------------------------------------------------------------------------------------------------
-    collection of nodes
+''' collection of nodes
 '''
 class ChannelObject:
     def __init__(self, name, number, is_root, parent_channel, nodes, theme):
@@ -531,9 +528,15 @@ class ChannelObject:
         return result
 
 
+    ''' whether the given point is inside the channel, or within the channel routing area or totally outside
+        returns inside, west, west-north, north, north-east, east, east-south, south on None if it is totally out of the channel outer-rect
+    '''
+    def point_location(self, point):
+        pass
+
     ''' we want a path to bypass the channel through the routing area
     '''
-    def bypass_vertically(self, coming_from, going_to, margin_spec):
+    def bypass_vertically(self, coming_from, going_to):
         # the coming_from point is north of going_to, so we have to reach a point south of the channel either through east or west or directly dpending on which direction we are going_to
         if coming_from.north_of(going_to):
             # if the coming_from point is already below the channel, we have no point
@@ -568,8 +571,8 @@ class ChannelObject:
         # the coming_from point is south of going_to, so we have to reach a point north of the channel either through east or west dpending on which direction we are going_to
         else:
             # if the coming_from point is already above the channel, we have no point
-            # warn('I {0} am going to north to {1} bypassing channel {2}'.format(coming_from, going_to, self.name))
-            if coming_from.y <= self.element.xy.y - margin_spec['top']:
+            # theme['channel-outer-rect']['pad-spec']['top']
+            if coming_from.y <= self.element.xy.y:
                 return []
 
             # if the coming_from point's x position is outside the channel, we can directly go north

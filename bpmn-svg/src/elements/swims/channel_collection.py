@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-'''
-'''
 import importlib
 from copy import deepcopy
 from pprint import pprint
@@ -18,8 +16,7 @@ from elements.swims.swim_channel import SwimChannel, ChannelObject
 from elements.flows.flow_object import EdgeObject
 from elements.flows.pool_flow import PoolFlow
 
-'''
-    a channel collection is a vertical stack of channels
+''' a channel collection is a vertical stack of channels
 '''
 class ChannelCollection(BpmnElement):
     def __init__(self, current_theme, bpmn_id, lane_id, pool_id, nodes, edges):
@@ -127,8 +124,7 @@ class ChannelCollection(BpmnElement):
                 channel.instance.to_svg()
 
 
-''' ----------------------------------------------------------------------------------------------------------------------------------
-    collection of channel Lists
+''' collection of channel Lists
 '''
 class ChannelCollectionObject:
 
@@ -137,7 +133,7 @@ class ChannelCollectionObject:
         self.theme = theme
 
 
-    '''
+    ''' given two points return two lists - list of channels lying vertically between the points and list of channels lying horizontally between the points
         the points must be on same vertical line
     '''
     def channels_blocking_southward(self, north_point, south_point):
@@ -155,8 +151,7 @@ class ChannelCollectionObject:
         return channels_vertically_between, channels_horizontally_between
 
 
-    '''
-        connects two points in a pool only through straight lines.
+    ''' connects two points in a pool only through straight lines.
         a. The points are asumed to be outside a Channel's outer rectangle inside the routing area between channels
         b. point_from must be above point_to
 
@@ -173,18 +168,16 @@ class ChannelCollectionObject:
 
         # first we bypass the channels which are obstructing the path vertically
         if len(channels_vertically_between) > 0:
-            # debug('...vertically blocking channels')
-            # for channel in channels_vertically_between:
-            #     debug('......[{0}]:[{1}]'.format(channel.number, channel.name))
-
             # we bypass the northmost (first) channel
             channel_to_bypass = channels_vertically_between[0]
-            margin_spec = self.margin_spec(channel_to_bypass)
-            points_to_bypass_the_channel = channel_to_bypass.bypass_vertically(coming_from=point_from, going_to=point_to, margin_spec=margin_spec)
-            # warn('I {0} am going to south to {1} bypassing channel {2} [{3}]'.format(point_from, point_to, channel_to_bypass.name, points_to_bypass_the_channel))
+
+            debug('bypassing vertically blocking channel [{0}:{1}]'.format(channel_to_bypass.number, channel_to_bypass.name))
+
+            points_to_bypass_the_channel = channel_to_bypass.bypass_vertically(coming_from=point_from, going_to=point_to)
+            debug('[{0}] -> [{1}] channel [{2}:{3}] bypass points [{4}]'.format(point_from, point_to, channel_to_bypass.number, channel_to_bypass.name, points_to_bypass_the_channel))
 
             points = [point_from] + points_to_bypass_the_channel + self.connect_southward(points_to_bypass_the_channel[-1], point_to)
-            # warn('I {0} am going to south to {1} through [{2}]'.format(point_from, point_to, points))
+            debug('[{0}] -> [{1}] connection points [{2}]'.format(point_from, point_to, points))
             return points
 
         # next we handle the channels which are obstructing the path horizontally only when we have no vertical obstruction
@@ -195,9 +188,8 @@ class ChannelCollectionObject:
 
             # there may be a number of such obstructing channels, our target is to, find the channel closest to point_to (the last channel)
             channel_to_bypass = channels_horizontally_between[-1]
-            margin_spec = self.margin_spec(channel_to_bypass)
             # debug('bypassing [{0}]:[{1}] from {2} towards {3}'.format(channel_to_bypass.number, channel_to_bypass.name, point_to, point_from))
-            points_to_bypass_the_channel = channel_to_bypass.bypass_vertically(coming_from=point_to, going_to=point_from, margin_spec=margin_spec)
+            points_to_bypass_the_channel = channel_to_bypass.bypass_vertically(coming_from=point_to, going_to=point_from)
             points_to_bypass_the_channel.reverse()
             points = self.connect_southward(point_from, points_to_bypass_the_channel[0]) + points_to_bypass_the_channel + [point_to]
             return points
@@ -210,6 +202,11 @@ class ChannelCollectionObject:
                 return [point_from, Point(point_from.x, point_to.y), point_to]
 
 
+    ''' the path connects node to the boundary point outside the pool in channel-collection (pool) coordinate.
+        the path is for getting outside of the pool from a node or getting into a node from outside the pool
+        boundary is the side through which the path should get out of the pool or get into the pool [north|south|east|west]
+        approach_snap_point_from is the direction from which the path should approach the snap-point specially when the snap-point can not be approached directly due to the presence of a label (for north and south snap-points for gateway, event and data)
+    '''
     def outside_the_pool(self, pool_boundary, channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type, pool_margin_spec):
         # first get outside the channel
         points_in_pool_coordinate = self.outside_the_channel(channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type)
@@ -271,8 +268,7 @@ class ChannelCollectionObject:
         return points
 
 
-    '''
-        the path connects node to the boundary point outside the channel in channel-collection (pool) coordinate.
+    ''' the path connects node to the boundary point outside the channel in channel-collection (pool) coordinate.
         the path is for getting outside of the channel from a node or getting into a node from outside the channel
         boundary is the side through which the path should get out of the channel or get into the channel [north|south|east|west]
         approach_snap_point_from is the direction from which the path should approach the snap-point specially when the snap-point can not be approached directly due to the presence of a label (for north and south snap-points for gateway, event and data)
@@ -284,8 +280,7 @@ class ChannelCollectionObject:
         return points_in_pool_coordinate
 
 
-    '''
-        we want a path to bypass the pool through the routing area
+    ''' we want a path to bypass the pool through the routing area
     '''
     def bypass_vertically(self, coming_from, going_to, margin_spec):
 
@@ -344,8 +339,7 @@ class ChannelCollectionObject:
         return [p1, p2, p3]
 
 
-    '''
-        a chennel's margin spec is the margin outside the channel outer boundary through which the inter-channel edges are routed
+    ''' a chennel's margin spec is the margin outside the channel outer boundary through which the inter-channel edges are routed
         1. if it is a top-most channel within the channel-collection (pool) then we assume that 1/2 of pool's top pad-spec is the top margin, else it is 1/2 of dy-between-channels
         2. if it is a bottom-most channel within the channel-collection (pool) then we assume that 1/2 of pool's bottom pad-spec is the top margin, else it is 1/2 of dy-between-channels
         3. if it is a left-most channel within the channel-collection (pool) then we assume that 1/2 of pool's left pad-spec is the left margin, else it is 1/2 of dx-between-channels
@@ -381,8 +375,7 @@ class ChannelCollectionObject:
         return margin_spec
 
 
-    '''
-        a given node's xy Point in pool coordinate
+    ''' a given node's xy Point in pool coordinate
     '''
     def node_xy(self, node):
         for channel_list in self.channel_lists:
@@ -393,8 +386,7 @@ class ChannelCollectionObject:
         return None
 
 
-    '''
-        given a nodes returns its channel
+    ''' given a node returns its channel
     '''
     def channel_of_node(self, node):
         for channel_list in self.channel_lists:
@@ -405,8 +397,7 @@ class ChannelCollectionObject:
         return None
 
 
-    '''
-        given a node returns its channel and the node's ordinal position in the channel
+    ''' given a node returns its channel and the node's ordinal position in the channel
     '''
     def channel_and_ordinal(self, node):
         for channel_list in self.channel_lists:
@@ -418,8 +409,7 @@ class ChannelCollectionObject:
         return None, -1
 
 
-    '''
-        given a node's id returns its channel number and the node
+    ''' given a node's id returns its channel number and the node
     '''
     def channel_number_and_node(self, node_id):
         for channel_list in self.channel_lists:
@@ -430,8 +420,7 @@ class ChannelCollectionObject:
         return -1, None
 
 
-    '''
-        given a channel's name returns the channel
+    ''' given a channel's name returns the channel
     '''
     def channel_by_name(self, channel_name):
         for channel_list in self.channel_lists:
@@ -442,8 +431,7 @@ class ChannelCollectionObject:
         return None
 
 
-    '''
-        given to node id's, return the corresponding nodes only if the nodes are in different channels
+    ''' given to node id's, return the corresponding nodes only if the nodes are in different channels
     '''
     def get_if_from_different_channels(self, from_node_id, to_node_id):
         from_channel_number, from_node = self.channel_number_and_node(from_node_id)
@@ -456,8 +444,7 @@ class ChannelCollectionObject:
         return None, None
 
 
-    '''
-        given a channel-list and node_id, returns the channel name and and the node if the node is in any channel within the channel-list
+    ''' given a channel-list and node_id, returns the channel name and and the node if the node is in any channel within the channel-list
     '''
     def find_channel_in_list_with_node(self, channel_list, node_id):
         if not channel_list:
@@ -470,8 +457,7 @@ class ChannelCollectionObject:
         return None, None
 
 
-    '''
-        the str representation of a ChannelCollectionObject
+    ''' the str representation of a ChannelCollectionObject
     '''
     def __repr__(self):
         for channel_list in self.channel_lists:
@@ -482,8 +468,7 @@ class ChannelCollectionObject:
         return s
 
 
-    '''
-        in a pool, nodes need to be processed (ordered and grouped)
+    ''' in a pool, nodes need to be processed (ordered and grouped)
         1. nodes that are connected with other nodes (in the same pool) should be ordered in a group so that they are in the same channel (a channel is vertical lines for node flow, a lane may have multiple channels if the edges are branched like a tree) and flow from left to right based or edge order (from node at left, to node at right)
         2. isolated nodes (nodes that do not connect to any other nodes) should be put in a separate group (in which channel they should go is a TODO)
         3. If any node connects to two or more nodes (in the same pool) a new group starts for each branch so that they can be placed into different channels
@@ -560,8 +545,7 @@ class ChannelCollectionObject:
             self.channel_lists.append(channel_list)
 
 
-    '''
-        # a channel is a node and another channel which is the next node and so on. Basically this represents node -> node -> .......
+    ''' # a channel is a node and another channel which is the next node and so on. Basically this represents node -> node -> .......
         # a channel may have more than one next nodes if it has two or more branches
     '''
     class Channel:
@@ -574,6 +558,7 @@ class ChannelCollectionObject:
             self.node_id = node_id
             self.add_children(child)
 
+
         def __repr__(self):
             if self.node_id:
                 s = '[{0}]'.format(self.node_id)
@@ -585,6 +570,7 @@ class ChannelCollectionObject:
                 s = '{0}\n'.format(s).replace('\n\n', '\n')
 
             return s
+
 
         def as_list(self):
             if len(self.children) == 0:
@@ -605,6 +591,7 @@ class ChannelCollectionObject:
 
             return the_list_of_list
 
+
         def as_full_list(self):
             if len(self.children) == 0:
                 if self.node_id:
@@ -622,9 +609,11 @@ class ChannelCollectionObject:
 
             return the_list_of_list
 
+
         def add_children(self, child):
             if child:
                 self.children.append(child)
+
 
         def group_and_order(self):
             while True:
@@ -643,6 +632,7 @@ class ChannelCollectionObject:
                         parent.add_children(self.orphans.pop(key))
                         debug('  orphans [{0}] under [{1}] moved as child'.format(newdict[key], parent.node_id))
 
+
         def add_orphans(self, parent_node_id, child_node_id):
             # find inside all orpahn values whether the parent is already there
             # print('[{0}] marked as orphan of [{1}]'.format(child_node_id, parent_node_id))
@@ -660,7 +650,6 @@ class ChannelCollectionObject:
                 else:
                     self.orphans[parent_node_id] = ChannelCollectionObject.Channel(child_node_id)
 
-                # debug('[{0}] added as a direct orphan under key [{1}]'.format(child_node_id, parent_node_id))
 
         def find(self, node_id):
             if self.node_id == node_id:
@@ -676,6 +665,7 @@ class ChannelCollectionObject:
 
             # it was not found
             return None
+
 
         def add(self, node_id, node_data, parents, children):
             # no parent, no children, it is an island

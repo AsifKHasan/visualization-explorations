@@ -122,7 +122,6 @@ class PoolFlow(FlowObject):
         else:
             to_node_position = '*'
 
-
         # now we know the rule to chose for snapping and routing for the *from* and *to* node
         from_node_spec = self.snap_rules[direction]['from-node'][from_node_position][from_node.category]
         to_node_spec = self.snap_rules[direction]['to-node'][to_node_position][to_node.category]
@@ -158,7 +157,7 @@ class PoolFlow(FlowObject):
             return None
 
         # we always connect from the north point to the south point
-        # TODO: the connect_southward is problematic, no 
+        # TODO: the connect_southward is problematic, no
         if from_node_points_in_pool_coordinate[-1].north_of(to_node_points_in_pool_coordinate[0]):
             north_point = from_node_points_in_pool_coordinate[-1]
             south_point = to_node_points_in_pool_coordinate[0]
@@ -175,9 +174,9 @@ class PoolFlow(FlowObject):
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_pool_coordinate + joining_points + to_node_points_in_pool_coordinate
 
-        debug('points outside channel from node [{0}]: {1}'.format(from_node.id, from_node_points_in_pool_coordinate))
-        debug('points outside channel to   node [{0}]: {1}'.format(to_node.id, to_node_points_in_pool_coordinate))
-        debug('[{0}] -> [{1}] joining points: {2}'.format(from_node.id, to_node.id, joining_points))
+        debug('[{0}] -> [{1}] point outside channel from node: {2}'.format(from_node.id, to_node.id, from_node_points_in_pool_coordinate[-1]))
+        debug('[{0}] -> [{1}] point outside channel to   node: {2}'.format(from_node.id, to_node.id, to_node_points_in_pool_coordinate[0]))
+        debug('[{0}] -> [{1}] joining points                 : {2}'.format(from_node.id, to_node.id, joining_points))
 
         flow_points = optimize_points(flow_points)
 
