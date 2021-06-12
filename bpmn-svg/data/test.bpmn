@@ -35,7 +35,8 @@ graph pizza_orders {
             ask_for_pizza                   --> on_order                        [label="";]
             #ask_for_pizza                   --> pizza_received                        [label="";]
             #ask_for_pizza                   --> pay_for_pizza                        [label="";]
-            #ask_for_pizza                   --> timer_45_mins                        [label="";]
+
+            ask_for_pizza                   --> timer_45_mins                        [label="";]
 
             # eat_pizza                       --> pay_for_pizza
             # eat_pizza                       --> pizza_received

@@ -189,7 +189,7 @@ class SwimChannel(BpmnElement):
             if node_data['type'] in CLASSES:
                 # get the svg element
                 element_class = getattr(importlib.import_module(CLASSES[node_data['type']]['m']), CLASSES[node_data['type']]['c'])
-                warn('instantiating [{0}]'.format(element_class.__name__))
+                # warn('instantiating [{0}]'.format(element_class.__name__))
                 element_instance = element_class(self.current_theme, self.bpmn_id, self.lane_id, self.pool_id, node_id, node_data)
                 svg_element = element_instance.to_svg()
                 self.channel_object.nodes[node_id] = NodeObject(id=node_id, category=CLASSES[node_data['type']]['g'], type=node_data['type'], styles=node_data['styles'], element=svg_element, instance=element_instance)
