@@ -23,6 +23,8 @@ from elements.flows.channel_flow import ChannelFlow
 from elements.bpmn_element import BpmnElement, NodeObject, EDGE_TYPE
 from elements.svg_element import SvgElement
 
+from util.enum import PointInChannel
+
 CLASSES = {
     ### activity    ------------------------------------------------------------------------------------------------------------------------------
     # tasks
@@ -529,14 +531,22 @@ class ChannelObject:
 
 
     ''' whether the given point is inside the channel, or within the channel routing area or totally outside
-        returns inside, west, west-north, north, north-east, east, east-south, south on None if it is totally out of the channel outer-rect
+        returns PointInChannel
     '''
     def point_location(self, point):
-        pass
+        if (self.element.xy.x + self.element.width) >= point.x >= self.element.xy.x:
+            # point lies between the channel inner-rect horizontally
+            if (self.element.xy.y + self.element.height) >= point.y >= self.element.xy.y:
+                # point lies between the channel inner-rect vertically
+                return PointInChannel.INSIDE
+
+
+
 
     ''' we want a path to bypass the channel through the routing area
     '''
     def bypass_vertically(self, coming_from, going_to):
+        margin_spec = {"left": 24, "top": 24, "right": 24, "bottom": 24}
         # the coming_from point is north of going_to, so we have to reach a point south of the channel either through east or west or directly dpending on which direction we are going_to
         if coming_from.north_of(going_to):
             # if the coming_from point is already below the channel, we have no point
