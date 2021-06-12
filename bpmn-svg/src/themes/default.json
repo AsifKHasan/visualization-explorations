@@ -86,14 +86,17 @@
         }
     },
     "ChannelCollection": {
-      "_comment": "min y gap between two adjacent channels so that inter-channel edges between two adjacent channels can be routed along this gap",
-      "dy-between-channels": 24,
-
       "_comment": "min x gap between two adjacent nodes so that straight edges can be drawn there",
       "dx-between-elements": 40,
 
+      "_comment": "min y gap between two adjacent channels so that inter-channel edges between two adjacent channels can be routed along this gap",
+      "dy-between-channels": 24,
+
       "_comment": "min x gap between two side-by-side channels so that inter-channel edges between two adjacent channels can be routed along this gap",
       "dx-between-channels": 24,
+
+      "_comment": "maximum number of pool-flows that can be routed through the pool-flow area so that flows do not overlap",
+      "max-number-of-pool-flows": 4,
 
       "_comment": "gaps to keep on sides for routing edges within channels in this ChannelCollection (which is actually the pool)",
       "pad-spec": {
@@ -103,23 +106,25 @@
           "fill": "none", "stroke-width": 0.25, "stroke": "#0482FF"
       },
       "SwimChannel": {
-          "_comment": "full channel area including the space for internal edge routing",
-          "channel-outer-rect": {
-              "_comment": "gaps to keep on sides for routing edges totally within this channel",
-              "_comment": "normally we try to route internl edges over the top and left if required",
+          "_comment": "maximum number of channel-flows that can be routed through the channel-flow area (channel-flow-rect padding) so that flows do not overlap",
+          "max-number-of-channel-flows": 4,
+
+          "_comment": "min x gap between two adjacent nodes so that straight edges can be drawn there",
+          "dx-between-elements": 40,
+
+          "_comment": "full channel area including the space for internal channel-flow routing",
+          "channel-flow-rect": {
+              "_comment": "gaps to keep on sides for channel-flow routing totally within this channel. Normally we try to route internl edges over the top and left if required",
               "pad-spec":{
                   "left": 24, "top": 24, "right": 24, "bottom": 24
               },
-              "_comment": "maximum number of flows that can be routed through the pading area (outside_the_channel method) so that flows do not overlap",
-              "max-number-of-flows": 3,
               "style": {
                   "fill": "none", "stroke-width": 1, "stroke": "#FF8243"
               }
           },
+
           "_comment": "actual channel content area where the nodes are to be placed",
-          "channel-inner-rect": {
-              "_comment": "min x gap between two adjacent nodes so that straight edges can be drawn there",
-              "dx-between-elements": 40,
+          "channel-content-rect": {
               "style": {
                   "fill": "none", "stroke-width": 1, "stroke": "#008080"
               }

@@ -171,13 +171,13 @@ class ChannelCollectionObject:
             # we bypass the northmost (first) channel
             channel_to_bypass = channels_vertically_between[0]
 
-            debug('bypassing vertically blocking channel [{0}:{1}]'.format(channel_to_bypass.number, channel_to_bypass.name))
+            # debug('bypassing vertically blocking channel [{0}:{1}]'.format(channel_to_bypass.number, channel_to_bypass.name))
 
             points_to_bypass_the_channel = channel_to_bypass.bypass_vertically(coming_from=point_from, going_to=point_to)
-            debug('[{0}] -> [{1}] channel [{2}:{3}] bypass points [{4}]'.format(point_from, point_to, channel_to_bypass.number, channel_to_bypass.name, points_to_bypass_the_channel))
+            # debug('[{0}] -> [{1}] channel [{2}:{3}] bypass points [{4}]'.format(point_from, point_to, channel_to_bypass.number, channel_to_bypass.name, points_to_bypass_the_channel))
 
             points = [point_from] + points_to_bypass_the_channel + self.connect_southward(points_to_bypass_the_channel[-1], point_to)
-            debug('[{0}] -> [{1}] connection points [{2}]'.format(point_from, point_to, points))
+            # debug('[{0}] -> [{1}] connection points [{2}]'.format(point_from, point_to, points))
             return points
 
         # next we handle the channels which are obstructing the path horizontally only when we have no vertical obstruction
@@ -522,13 +522,13 @@ class ChannelCollectionObject:
                     if channel_list: self.channel_lists.append(channel_list)
                     channel_list = []
                     nodes = {node_id: {} for node_id in node_id_list}
-                    channel = ChannelObject(name=node_id_list[0], number=channel_number, is_root=True, parent_channel=None, nodes=nodes, theme=self.theme['SwimChannel'])
+                    channel = ChannelObject(name=node_id_list[0], number=channel_number, is_root=True, parent_channel=None, nodes=nodes, theme=self.theme)
                     channel_list.append(channel)
                     channel_number = channel_number + 1
                 else:
                     # this must be a sub channel of a previous channel, append in the current channel (the first node becomes the name and will not be in the channel_nodes)
                     nodes = {node_id: {} for node_id in node_id_list[1:]}
-                    channel = ChannelObject(name=node_id_list[0], number=channel_number, is_root=False, parent_channel=parent_channel_name, nodes=nodes, theme=self.theme['SwimChannel'])
+                    channel = ChannelObject(name=node_id_list[0], number=channel_number, is_root=False, parent_channel=parent_channel_name, nodes=nodes, theme=self.theme)
                     channel_list.append(channel)
                     channel_number = channel_number + 1
 
@@ -539,7 +539,7 @@ class ChannelCollectionObject:
         if len(root_channel.islands):
             channel_list = []
             nodes = {node_id: {} for node_id in root_channel.islands}
-            channel = ChannelObject(name='-', number=channel_number, is_root=False, parent_channel=None, nodes=nodes, theme=self.theme['SwimChannel'])
+            channel = ChannelObject(name='-', number=channel_number, is_root=False, parent_channel=None, nodes=nodes, theme=self.theme)
             channel_list.append(channel)
             channel_number = channel_number + 1
             self.channel_lists.append(channel_list)

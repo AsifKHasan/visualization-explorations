@@ -168,15 +168,15 @@ class PoolFlow(FlowObject):
             joining_points = self.channel_collection.connect_southward(point_from=north_point, point_to=south_point)
             joining_points.reverse()
 
-        # self.mark_points(from_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'red')
+        self.mark_points(from_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'red')
         # self.mark_points(to_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'green')
 
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_pool_coordinate + joining_points + to_node_points_in_pool_coordinate
 
-        debug('[{0}] -> [{1}] point outside channel from node: {2}'.format(from_node.id, to_node.id, from_node_points_in_pool_coordinate[-1]))
-        debug('[{0}] -> [{1}] point outside channel to   node: {2}'.format(from_node.id, to_node.id, to_node_points_in_pool_coordinate[0]))
-        debug('[{0}] -> [{1}] joining points                 : {2}'.format(from_node.id, to_node.id, joining_points))
+        # debug('[{0}] -> [{1}] point outside channel from node: {2}'.format(from_node.id, to_node.id, from_node_points_in_pool_coordinate[-1]))
+        # debug('[{0}] -> [{1}] point outside channel to   node: {2}'.format(from_node.id, to_node.id, to_node_points_in_pool_coordinate[0]))
+        # debug('[{0}] -> [{1}] joining points                 : {2}'.format(from_node.id, to_node.id, joining_points))
 
         flow_points = optimize_points(flow_points)
 

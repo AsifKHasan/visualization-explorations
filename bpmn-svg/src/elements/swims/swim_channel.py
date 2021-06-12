@@ -198,23 +198,25 @@ class SwimChannel(BpmnElement):
 
     def assemble_elements(self):
         # a channel is a rectangular area with padding for edge routes and nodes inside between the paddings
-        # the edges are inside another rectangle, all inner references are from the outer (rectangle) group
+        # the edges are inside another rectangle, all content references are from the channel-flow-rect group
 
         # wrap it in a svg group
         svg_group = G()
 
+        channel_flow_rect_padding = self.theme['channel-flow-rect']['pad-spec']
+
         # get the max height and cumulative width of all elements and adjust height and width accordingly
-        outer_rect_height = self.theme['channel-outer-rect']['pad-spec']['top'] + self.channel_object.max_node_height() + self.theme['channel-outer-rect']['pad-spec']['bottom']
-        inner_rect_height = outer_rect_height - self.theme['channel-outer-rect']['pad-spec']['top'] - self.theme['channel-outer-rect']['pad-spec']['bottom']
+        channel_content_rect_height = self.channel_object.max_node_height()
+        channel_flow_rect_height = channel_flow_rect_padding['top'] + channel_content_rect_height + channel_flow_rect_padding['bottom']
 
         # now we have height and width adjusted, we place the elements with proper displacement
         transformer = TransformBuilder()
-        current_x = self.theme['channel-outer-rect']['pad-spec']['left']
+        current_x = channel_flow_rect_padding['left']
         first_element = True
         channel_x_movement = 0
         for node_id, node_object in self.channel_object.nodes.items():
             node_svg_element = node_object.element
-            current_y = inner_rect_height/2 - node_svg_element.height/2 + self.theme['channel-outer-rect']['pad-spec']['top']
+            current_y = channel_content_rect_height/2 - node_svg_element.height/2 + channel_flow_rect_padding['top']
 
             # the node may have a *move_x* style to indicate whether and how much it should move to east (+ve) or west (-ve)
             if 'move_x' in node_object.styles:
@@ -237,25 +239,25 @@ class SwimChannel(BpmnElement):
             svg_group.addElement(node_svg_element.svg)
 
             # curent_x to be repositioned for next node
-            current_x = current_x + node_svg_element.width + self.theme['channel-inner-rect']['dx-between-elements']
+            current_x = current_x + node_svg_element.width + self.theme['dx-between-elements']
 
-        outer_rect_width = current_x - self.theme['channel-inner-rect']['dx-between-elements'] + self.theme['channel-outer-rect']['pad-spec']['right']
+        channel_flow_rect_width = current_x - self.theme['dx-between-elements'] + channel_flow_rect_padding['right']
 
-        # channel outer rect
-        channel_outer_rect_svg = Rect(width=outer_rect_width, height=outer_rect_height)
-        channel_outer_rect_svg.set_style(StyleBuilder(self.theme['channel-outer-rect']['style']).getStyle())
-        svg_group.addElement(channel_outer_rect_svg)
+        # channel flow rect
+        channel_flow_rect_svg = Rect(width=channel_flow_rect_width, height=channel_flow_rect_height)
+        channel_flow_rect_svg.set_style(StyleBuilder(self.theme['channel-flow-rect']['style']).getStyle())
+        svg_group.addElement(channel_flow_rect_svg)
 
-        # channel inner rect
-        inner_rect_x = self.theme['channel-outer-rect']['pad-spec']['left']
-        inner_rect_y = self.theme['channel-outer-rect']['pad-spec']['top']
-        inner_rect_width = outer_rect_width - self.theme['channel-outer-rect']['pad-spec']['left'] - self.theme['channel-outer-rect']['pad-spec']['right']
-        channel_inner_rect_svg = Rect(x=inner_rect_x, y=inner_rect_y, width=inner_rect_width, height=inner_rect_height)
-        channel_inner_rect_svg.set_style(StyleBuilder(self.theme['channel-inner-rect']['style']).getStyle())
-        svg_group.addElement(channel_inner_rect_svg)
+        # channel content rect
+        channel_content_rect_x = channel_flow_rect_padding['left']
+        channel_content_rect_y = channel_flow_rect_padding['top']
+        channel_content_rect_width = channel_flow_rect_width - channel_flow_rect_padding['left'] - channel_flow_rect_padding['right']
+        channel_content_rect_svg = Rect(x=channel_content_rect_x, y=channel_content_rect_y, width=channel_content_rect_width, height=channel_content_rect_height)
+        channel_content_rect_svg.set_style(StyleBuilder(self.theme['channel-content-rect']['style']).getStyle())
+        svg_group.addElement(channel_content_rect_svg)
 
         # wrap it in a svg element
-        self.svg_element = SvgElement(svg=svg_group, width=outer_rect_width, height=outer_rect_height, move_x=channel_x_movement)
+        self.svg_element = SvgElement(svg=svg_group, width=channel_flow_rect_width, height=channel_flow_rect_height, move_x=channel_x_movement)
 
         # store the svg and dimensions for future reference
         self.channel_object.element = self.svg_element
@@ -280,17 +282,30 @@ class ChannelObject:
         self.instance = None
         self.element = None
 
-        # flow routes are the lines (grooves) through which a flow can pass, a chennel may have *max-number-of-flows* grooves spaced in the *pad-spec* area of the SwimChannel
-        self.flow_routes = []
-        max_number_of_flows = theme['channel-outer-rect']['max-number-of-flows']
-        west_max, north_max, east_max, south_max = theme['channel-outer-rect']['pad-spec']['left'], theme['channel-outer-rect']['pad-spec']['top'], theme['channel-outer-rect']['pad-spec']['right'], theme['channel-outer-rect']['pad-spec']['bottom']
-        for route in range(0, max_number_of_flows):
-            east = (route + 0.5) * (east_max / max_number_of_flows)
-            north = (route + 0.5) * (north_max / max_number_of_flows)
-            west = (route + 0.5) * (west_max / max_number_of_flows)
-            south = (route + 0.5) * (south_max / max_number_of_flows)
-            route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': east, 'north': -north, 'west': -west, 'south': south}}
-            self.flow_routes.append(route_object)
+        # channel flow routes are the lines (grooves) through which a channel-flow can pass, a channel may have *max-number-of-flows* grooves spaced in the *pad-spec* area of the SwimChannel
+        self.channel_flow_routes = []
+        max_number_of_channel_flows = theme['SwimChannel']['max-number-of-channel-flows']
+        channel_flow_rect_padding = theme['SwimChannel']['channel-flow-rect']['pad-spec']
+        west_max, north_max, east_max, south_max = channel_flow_rect_padding['left'], channel_flow_rect_padding['top'], channel_flow_rect_padding['right'], channel_flow_rect_padding['bottom']
+        for route in range(0, max_number_of_channel_flows):
+            east = (route + 0.5) * (east_max / max_number_of_channel_flows)
+            north = (route + 0.5) * (north_max / max_number_of_channel_flows)
+            west = (route + 0.5) * (west_max / max_number_of_channel_flows)
+            south = (route + 0.5) * (south_max / max_number_of_channel_flows)
+            channel_route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': east, 'north': north, 'west': -west, 'south': -south}}
+            self.channel_flow_routes.append(channel_route_object)
+
+        # pool flow routes are the lines (grooves) through which a pool-flow can pass
+        self.pool_flow_routes = []
+        max_number_of_pool_flows = theme['max-number-of-pool-flows']
+        west_max, north_max, east_max, south_max = theme['dx-between-channels'], theme['dy-between-channels'], theme['dx-between-channels'], theme['dy-between-channels']
+        for route in range(0, max_number_of_pool_flows):
+            east = (route + 0.5) * (east_max / max_number_of_pool_flows)
+            north = (route + 0.5) * (north_max / max_number_of_pool_flows)
+            west = (route + 0.5) * (west_max / max_number_of_pool_flows)
+            south = (route + 0.5) * (south_max / max_number_of_pool_flows)
+            pool_route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': -east, 'north': -north, 'west': west, 'south': south}}
+            self.pool_flow_routes.append(pool_route_object)
 
 
     ''' the string representation of the Channel
@@ -333,28 +348,52 @@ class ChannelObject:
         return -1
 
 
-    ''' get a route through which an edge can be routed so that it does not overlap with another edge
+    ''' get a route through which a channel-flow can be routed so that it does not overlap with another channel-flow
     '''
-    def get_a_route(self, boundary, node, peer):
-        if len(self.flow_routes) == 0:
-            warn('no flow-routes available for getting outside the channel [{0}:{1}]'.format(self.number, self.name))
+    def get_a_channel_flow_route(self, boundary, node, peer):
+        if len(self.channel_flow_routes) == 0:
+            warn('no channel-flow-route available for getting outside the channel [{0}:{1}]'.format(self.number, self.name))
             return None
 
         # get the route which has a minimum flow-count in that direction
         route_with_min_flow_count = 0
         min_flow_count = 100
-        for route in range(0, len(self.flow_routes)):
-            route_object = self.flow_routes[route]
+        for route in range(0, len(self.channel_flow_routes)):
+            route_object = self.channel_flow_routes[route]
             if route_object['flow-count'][boundary] <= min_flow_count:
                 min_flow_count = route_object['flow-count'][boundary]
                 route_with_min_flow_count = route
 
-        if self.flow_routes[route_with_min_flow_count]['flow-count'][boundary] > 0:
-            warn('no free flow-routes (out of {0}) for getting outside the channel [{1}:{2}] towards [{3}] from node [{4}] to node [{5}], edges may overlap'.format(len(self.flow_routes), self.number, self.name, boundary, node.id, peer.id))
+        if self.channel_flow_routes[route_with_min_flow_count]['flow-count'][boundary] > 0:
+            warn('no free channel-flow-route (out of {0}) for getting outside the channel [{1}:{2}] towards [{3}] from node [{4}] to node [{5}], edges may overlap'.format(len(self.channel_flow_routes), self.number, self.name, boundary, node.id, peer.id))
 
-        self.flow_routes[route_with_min_flow_count]['flow-count'][boundary] = self.flow_routes[route_with_min_flow_count]['flow-count'][boundary] + 1
+        self.channel_flow_routes[route_with_min_flow_count]['flow-count'][boundary] = self.channel_flow_routes[route_with_min_flow_count]['flow-count'][boundary] + 1
 
-        return self.flow_routes[route_with_min_flow_count]
+        return self.channel_flow_routes[route_with_min_flow_count]
+
+
+    ''' get a route through which an pool-flow can be routed so that it does not overlap with another pool-flow
+    '''
+    def get_a_pool_flow_route(self, boundary, node, peer):
+        if len(self.pool_flow_routes) == 0:
+            warn('no pool-flow-route available for getting outside the channel [{0}:{1}]'.format(self.number, self.name))
+            return None
+
+        # get the route which has a minimum flow-count in that direction
+        route_with_min_flow_count = 0
+        min_flow_count = 100
+        for route in range(0, len(self.pool_flow_routes)):
+            route_object = self.pool_flow_routes[route]
+            if route_object['flow-count'][boundary] <= min_flow_count:
+                min_flow_count = route_object['flow-count'][boundary]
+                route_with_min_flow_count = route
+
+        if self.pool_flow_routes[route_with_min_flow_count]['flow-count'][boundary] > 0:
+            warn('no free pool-flow-route (out of {0}) for getting outside the channel [{1}:{2}] towards [{3}] from node [{4}] to node [{5}], edges may overlap'.format(len(self.pool_flow_routes), self.number, self.name, boundary, node.id, peer.id))
+
+        self.pool_flow_routes[route_with_min_flow_count]['flow-count'][boundary] = self.pool_flow_routes[route_with_min_flow_count]['flow-count'][boundary] + 1
+
+        return self.pool_flow_routes[route_with_min_flow_count]
 
 
     ''' (path from the snap point to the exact point of the node) or (path to the snap point from the exact point of the node) in channel coordinates
@@ -366,10 +405,10 @@ class ChannelObject:
 
 
     ''' the path connects node to the boundary of the channel in channel coordinate.
-        the path may cross inner node-boundary depending on the value of boundary (if not None), but does not cross the channel boundary
+        the path may cross content boundary depending on the value of boundary (if not None), but does not cross the channel (flow-rect) boundary
         boundary - [north|south|east|west]
     '''
-    def inside_the_channel(self, boundary, node, side, position, role, approach_snap_point_from, peer, edge_type):
+    def points_to_channel_flow_area(self, boundary, node, side, position, role, approach_snap_point_from, peer, edge_type, flow_route):
         forbidden_combinations = [('north', 'south'), ('south', 'north'), ('east', 'west'), ('west', 'east')]
 
         points_in_node_coordinate = node.instance.to_snap_point(side, position, role, approach_snap_point_from, peer, edge_type)
@@ -389,15 +428,23 @@ class ChannelObject:
             point_to_extend = points_in_channel_coordinate[-1]
 
         if boundary == 'south':
-            the_point = Point(point_to_extend.x, self.element.height - self.theme['channel-outer-rect']['pad-spec']['bottom']/2)
+            if flow_route:
+                the_point = Point(point_to_extend.x, self.element.height + flow_route['route'][boundary])
+            else:
+                the_point = None
 
         elif boundary == 'north':
-            the_point = Point(point_to_extend.x, self.theme['channel-outer-rect']['pad-spec']['top']/2)
+            if flow_route:
+                the_point = Point(point_to_extend.x, flow_route['route'][boundary])
+            else:
+                the_point = None
+
+            # the_point = Point(point_to_extend.x, channel_flow_rect_padding['top']/2)
 
         elif boundary == 'east':
             # allow only for east-most node
             if self.node_ordinal(node) == len(self.nodes) - 1:
-                the_point = Point(self.element.width - self.theme['channel-outer-rect']['pad-spec']['right']/2, point_to_extend.y)
+                the_point = Point(self.element.width  + flow_route['route'][boundary], point_to_extend.y)
             else:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
@@ -405,7 +452,7 @@ class ChannelObject:
         elif boundary == 'west':
             # allow only for west-most node
             if self.node_ordinal(node) == 0:
-                the_point = Point(self.theme['channel-outer-rect']['pad-spec']['left']/2, point_to_extend.y)
+                the_point = Point( + flow_route['route'][boundary], point_to_extend.y)
             else:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
@@ -443,14 +490,14 @@ class ChannelObject:
 
         # we decide points based on baundary direction we want to reach
         if boundary == 'south':
-            route_object = self.get_a_route(boundary=boundary, node=node, peer=peer)
+            route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
             if route_object:
                 the_point = Point(point_to_extend.x, self.element.height + route_object['route'][boundary])
             else:
                 return points_in_channel_coordinate
 
         elif boundary == 'north':
-            route_object = self.get_a_route(boundary=boundary, node=node, peer=peer)
+            route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
             if route_object:
                 the_point = Point(point_to_extend.x, route_object['route'][boundary])
             else:
@@ -459,7 +506,7 @@ class ChannelObject:
         elif boundary == 'east':
             # allow only for east-most node
             if self.node_ordinal(node) == len(self.nodes) - 1:
-                route_object = self.get_a_route(boundary=boundary, node=node, peer=peer)
+                route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
                 if route_object:
                     the_point = Point(self.element.width + route_object['route'][boundary], point_to_extend.y)
                 else:
@@ -471,7 +518,7 @@ class ChannelObject:
         elif boundary == 'west':
             # allow only for west-most node
             if self.node_ordinal(node) == 0:
-                route_object = self.get_a_route(boundary=boundary, node=node, peer=peer)
+                route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
                 if route_object:
                     the_point = Point(route_object['route'][boundary], point_to_extend.y)
                 else:
@@ -479,9 +526,6 @@ class ChannelObject:
             else:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
-
-        # debug('route chosen: {0}'.format(route_object))
-        # print('')
 
         if role == 'to':
             return [the_point] + points_in_channel_coordinate
@@ -494,7 +538,7 @@ class ChannelObject:
     def is_vertically_between(self, x, north_y, south_y, padding):
         result = False
 
-        # we make sure we consider that the channel area includes edge routing area outside the outer-rect of the channel
+        # we make sure we consider that the channel area includes edge routing area outside the flow-rect of the channel
         # west-most point of channel is
         channel_west_x = self.westmost_x() - 0
         channel_east_x = self.element.xy.x + self.element.width + 0
@@ -516,7 +560,7 @@ class ChannelObject:
     def is_horizontally_between(self, y, west_x, east_x, padding):
         result = False
 
-        # we make sure we consider that the channel area includes edge routing area outside the outer-rect of the channel
+        # we make sure we consider that the channel area includes edge routing area outside the flow-rect of the channel
         channel_west_x = self.westmost_x() - 0
         channel_east_x = self.element.xy.x + self.element.width + 0
         if (west_x < channel_east_x < east_x) or (west_x < channel_east_x < east_x):
@@ -535,9 +579,9 @@ class ChannelObject:
     '''
     def point_location(self, point):
         if (self.element.xy.x + self.element.width) >= point.x >= self.element.xy.x:
-            # point lies between the channel inner-rect horizontally
+            # point lies between the channel content-rect horizontally
             if (self.element.xy.y + self.element.height) >= point.y >= self.element.xy.y:
-                # point lies between the channel inner-rect vertically
+                # point lies between the channel content-rect vertically
                 return PointInChannel.INSIDE
 
 
@@ -581,7 +625,7 @@ class ChannelObject:
         # the coming_from point is south of going_to, so we have to reach a point north of the channel either through east or west dpending on which direction we are going_to
         else:
             # if the coming_from point is already above the channel, we have no point
-            # theme['channel-outer-rect']['pad-spec']['top']
+            # theme['channel-flow_width-rect']['pad-spec']['top']
             if coming_from.y <= self.element.xy.y:
                 return []
 
@@ -614,7 +658,7 @@ class ChannelObject:
     def westmost_x(self):
         # get the first node
         first_node = self.nodes[[*self.nodes][0]]
-        return self.element.xy.x + first_node.element.xy.x - self.theme['channel-outer-rect']['pad-spec']['left']
+        return self.element.xy.x + first_node.element.xy.x - self.theme['channel-flow-rect']['pad-spec']['left']
 
 
     ''' whether this channel is to the east (right) of the other *channel*

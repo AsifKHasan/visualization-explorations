@@ -1,0 +1,50 @@
+graph pizza_orders {
+    label = "Pizza Order Process Modeling"
+    _ [hide_labels="false";]
+
+    lane customer {
+        label = "Customer"
+        _ []
+
+        pool pizza_customer {
+            label = "Pizza Customer"
+            _ []
+
+            start                           hungry                              [label="Hungry";]
+            task 		                        goto_pizza_shop		                  []
+            task                            select_pizza                        [label="";]
+            task                            order_pizza                         [label="";]
+            eventBased                      on_order                            [label="Ordered"; label_pos="bottom";]
+            throwMessage                    pizza_received                      [label="";]
+            timer                           timer_45_mins                       [label="45 Minutes";]
+            task                            ask_for_pizza                       [label="";]
+            task                            eat_pizza                           [label="";]
+            task                            pay_for_pizza                       [label="";]
+            end                             hunger_satisfied                    [label="Hunger Satisfied";]
+
+            hungry                          --> goto_pizza_shop                 [label="";]
+            goto_pizza_shop                 --> select_pizza                    [label="";]
+            select_pizza                    --> order_pizza                     [label="";]
+            order_pizza                     --> on_order                        [label="";]
+            on_order                        --> pizza_received                  [label="";]
+            pizza_received                  --> pay_for_pizza                   [label="";]
+            pay_for_pizza                   --> eat_pizza                       [label="";]
+            eat_pizza                       --> hunger_satisfied                [label="";]
+            on_order                        --> timer_45_mins                   [label="";]
+            timer_45_mins                   --> ask_for_pizza                   [label="";]
+            ask_for_pizza                   --> on_order                        [label="";]
+            #ask_for_pizza                   --> pizza_received                        [label="";]
+            #ask_for_pizza                   --> pay_for_pizza                        [label="";]
+            #ask_for_pizza                   --> timer_45_mins                        [label="";]
+
+            # eat_pizza                       --> pay_for_pizza
+            # eat_pizza                       --> pizza_received
+            # eat_pizza                       --> on_order
+            # on_order                        --> order_pizza
+            # order_pizza                     --> select_pizza
+            # select_pizza                    --> goto_pizza_shop
+
+
+        }
+    }
+}

@@ -79,20 +79,26 @@ class ChannelFlow(FlowObject):
             # are they adjacent or apart
             if (self.channel.node_ordinal(to_node) - self.channel.node_ordinal(from_node)) == 1:
                 distance = 'adjacent'
+                flow_route = None
             else:
                 distance = 'apart'
+                flow_route = self.channel.get_a_channel_flow_route(boundary=direction, node=from_node, peer=to_node)
+
         elif from_node.element.xy.east_of(to_node.element.xy):
             direction = 'west'
             distance = '*'
+            flow_route = self.channel.get_a_channel_flow_route(boundary=direction, node=from_node, peer=to_node)
         else:
             warn('from-node [{0}] and to-node [{1}] starts at same x position, they can not be connected inside a channel which is supposed to have all nodes on different x position on same y')
             return None
+
+
 
         # now we know the rule to chose for snapping and routing for the *from* and *to* node
         from_node_spec = self.snap_rules[direction][distance]['from-node'][from_node.category]
         to_node_spec = self.snap_rules[direction][distance]['to-node'][to_node.category]
 
-        from_node_points_in_channel = self.channel.inside_the_channel(
+        from_node_points_in_channel = self.channel.points_to_channel_flow_area(
                                         boundary=from_node_spec['cross-through-boundary'],
                                         node=from_node,
                                         side=from_node_spec['side'],
@@ -100,13 +106,17 @@ class ChannelFlow(FlowObject):
                                         role='from',
                                         approach_snap_point_from=from_node_spec['approach-snap-point-from'],
                                         peer=to_node,
-                                        edge_type=self.edge_type)
+                                        edge_type=self.edge_type,
+                                        flow_route=flow_route)
 
         if from_node_points_in_channel is None:
             warn('could not calculate snap points for from-node [{0}]'.format(from_node.id))
             return None
 
-        to_node_points_in_channel = self.channel.inside_the_channel(
+        # if from_node_spec['cross-through-boundary']:
+        #     debug('[{0}] to channel-flow-area points : {1}'.format(from_node.id, from_node_points_in_channel))
+
+        to_node_points_in_channel = self.channel.points_to_channel_flow_area(
                                         boundary=to_node_spec['cross-through-boundary'],
                                         node=to_node,
                                         side=to_node_spec['side'],
@@ -114,11 +124,16 @@ class ChannelFlow(FlowObject):
                                         role='to',
                                         approach_snap_point_from=to_node_spec['approach-snap-point-from'],
                                         peer=to_node,
-                                        edge_type=self.edge_type)
+                                        edge_type=self.edge_type,
+                                        flow_route=flow_route)
 
         if to_node_points_in_channel is None:
             warn('could not calculate snap points for to-node [{0}]'.format(to_node.id))
             return None
+
+        # if to_node_spec['cross-through-boundary']:
+        #     debug('[{0}] to channel-flow-area points : {1}'.format(to_node.id, to_node_points_in_channel))
+
 
         # we now have two segments we connect the last point of *from-segment* to the first point of *to-segment* through a north-ward path
         flow_points = from_node_points_in_channel + to_node_points_in_channel
