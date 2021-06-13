@@ -132,6 +132,10 @@ class ChannelCollectionObject:
         self.pool_id = pool_id
         self.theme = theme
 
+    def mark_points(self, points, svg, color):
+        for point in points:
+            svg_element, _, _ = a_snap_point(point, color)
+            svg.addElement(svg_element)
 
     ''' given two points return two lists - list of channels lying vertically between the points and list of channels lying horizontally between the points
         the points must be on same vertical line
@@ -152,7 +156,7 @@ class ChannelCollectionObject:
 
 
     ''' connects two points in a pool only through straight lines.
-        a. The points are asumed to be outside a Channel's outer rectangle inside the routing area between channels
+        a. The points are asumed to be outside a Channel's outer rectangle inside the routing area between channels (pool-flow-area)
         b. point_from must be above point_to
 
         1. We start by trying to go straight to the same y position of *point_to* (let us call it *target_point*) so that we can draw a straight horizontal line from there to *point_to*
@@ -171,10 +175,13 @@ class ChannelCollectionObject:
             # we bypass the northmost (first) channel
             channel_to_bypass = channels_vertically_between[0]
 
-            # debug('bypassing vertically blocking channel [{0}:{1}]'.format(channel_to_bypass.number, channel_to_bypass.name))
+            debug('bypassing vertically blocking channel [{0}:{1}]'.format(channel_to_bypass.number, channel_to_bypass.name))
+            # self.mark_points([point_from], self.element.svg, 'red')
+            # self.mark_points([point_to], self.element.svg, 'green')
 
             points_to_bypass_the_channel = channel_to_bypass.bypass_vertically(coming_from=point_from, going_to=point_to)
             # debug('[{0}] -> [{1}] channel [{2}:{3}] bypass points [{4}]'.format(point_from, point_to, channel_to_bypass.number, channel_to_bypass.name, points_to_bypass_the_channel))
+            # self.mark_points(points_to_bypass_the_channel, self.element.svg, 'blue')
 
             points = [point_from] + points_to_bypass_the_channel + self.connect_southward(points_to_bypass_the_channel[-1], point_to)
             # debug('[{0}] -> [{1}] connection points [{2}]'.format(point_from, point_to, points))
@@ -209,7 +216,7 @@ class ChannelCollectionObject:
     '''
     def outside_the_pool(self, pool_boundary, channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type, pool_margin_spec):
         # first get outside the channel
-        points_in_pool_coordinate = self.outside_the_channel(channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type)
+        points_in_pool_coordinate = self.points_to_pool_flow_area(channel_boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type)
         # warn('[{0}] role [{1}] points to channel boundary: [{2}]'.format(node.id, role, optimize_points(points_in_pool_coordinate)))
 
         # debug('pool boundary is {0} and channel-boundary is {1} for [{2}]'.format(pool_boundary.upper(), channel_boundary.upper(), node.id))
@@ -273,9 +280,9 @@ class ChannelCollectionObject:
         boundary is the side through which the path should get out of the channel or get into the channel [north|south|east|west]
         approach_snap_point_from is the direction from which the path should approach the snap-point specially when the snap-point can not be approached directly due to the presence of a label (for north and south snap-points for gateway, event and data)
     '''
-    def outside_the_channel(self, boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type):
+    def points_to_pool_flow_area(self, boundary, channel, node, side, position, role, approach_snap_point_from, peer, edge_type):
         # we need to calculate the margin_spec for this channel
-        points_in_channel_coordinate = channel.outside_the_channel(boundary, node, side, position, role, approach_snap_point_from, peer, edge_type)
+        points_in_channel_coordinate = channel.points_to_pool_flow_area(boundary, node, side, position, role, approach_snap_point_from, peer, edge_type)
         points_in_pool_coordinate = [channel.element.xy + p for p in points_in_channel_coordinate]
         return points_in_pool_coordinate
 

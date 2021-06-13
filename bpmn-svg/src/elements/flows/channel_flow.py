@@ -113,8 +113,9 @@ class ChannelFlow(FlowObject):
             warn('could not calculate snap points for from-node [{0}]'.format(from_node.id))
             return None
 
-        # if from_node_spec['cross-through-boundary']:
-        #     debug('[{0}] to channel-flow-area points : {1}'.format(from_node.id, from_node_points_in_channel))
+        if from_node_spec['cross-through-boundary']:
+            # self.mark_points([from_node_points_in_channel[-1]], self.channel.element.svg, 'red')
+            pass
 
         to_node_points_in_channel = self.channel.points_to_channel_flow_area(
                                         boundary=to_node_spec['cross-through-boundary'],
@@ -131,8 +132,9 @@ class ChannelFlow(FlowObject):
             warn('could not calculate snap points for to-node [{0}]'.format(to_node.id))
             return None
 
-        # if to_node_spec['cross-through-boundary']:
-        #     debug('[{0}] to channel-flow-area points : {1}'.format(to_node.id, to_node_points_in_channel))
+        if to_node_spec['cross-through-boundary']:
+            # self.mark_points([to_node_points_in_channel[0]], self.channel.element.svg, 'green')
+            pass
 
 
         # we now have two segments we connect the last point of *from-segment* to the first point of *to-segment* through a north-ward path

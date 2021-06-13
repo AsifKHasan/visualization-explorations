@@ -28,7 +28,7 @@ EDGE_TYPE = {
 class BpmnElement():
     theme = None
     # the logical snap points are drawn out away from the actual shape for nice edge visuals
-    snap_point_offset = 12
+    snap_point_offset = 8
 
     def to_svg(self, theme):
         return None

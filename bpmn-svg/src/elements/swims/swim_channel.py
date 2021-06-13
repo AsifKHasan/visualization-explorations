@@ -292,7 +292,7 @@ class ChannelObject:
             north = (route + 0.5) * (north_max / max_number_of_channel_flows)
             west = (route + 0.5) * (west_max / max_number_of_channel_flows)
             south = (route + 0.5) * (south_max / max_number_of_channel_flows)
-            channel_route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': east, 'north': north, 'west': -west, 'south': -south}}
+            channel_route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': -east, 'north': north, 'west': west, 'south': -south}}
             self.channel_flow_routes.append(channel_route_object)
 
         # pool flow routes are the lines (grooves) through which a pool-flow can pass
@@ -304,8 +304,14 @@ class ChannelObject:
             north = (route + 0.5) * (north_max / max_number_of_pool_flows)
             west = (route + 0.5) * (west_max / max_number_of_pool_flows)
             south = (route + 0.5) * (south_max / max_number_of_pool_flows)
-            pool_route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': -east, 'north': -north, 'west': west, 'south': south}}
+            pool_route_object = {'flow-count': {'east': 0, 'north': 0, 'west': 0, 'south': 0}, 'route': {'east': east, 'north': -north, 'west': -west, 'south': south}}
             self.pool_flow_routes.append(pool_route_object)
+
+
+    def mark_points(self, points, svg, color):
+        for point in points:
+            svg_element, _, _ = a_snap_point(point, color)
+            svg.addElement(svg_element)
 
 
     ''' the string representation of the Channel
@@ -380,7 +386,7 @@ class ChannelObject:
             return None
 
         # get the route which has a minimum flow-count in that direction
-        route_with_min_flow_count = 0
+        route_with_min_flow_count = -1
         min_flow_count = 100
         for route in range(0, len(self.pool_flow_routes)):
             route_object = self.pool_flow_routes[route]
@@ -392,6 +398,8 @@ class ChannelObject:
             warn('no free pool-flow-route (out of {0}) for getting outside the channel [{1}:{2}] towards [{3}] from node [{4}] to node [{5}], edges may overlap'.format(len(self.pool_flow_routes), self.number, self.name, boundary, node.id, peer.id))
 
         self.pool_flow_routes[route_with_min_flow_count]['flow-count'][boundary] = self.pool_flow_routes[route_with_min_flow_count]['flow-count'][boundary] + 1
+
+        debug('pool-flow-route [{0}] selected for {1}ward direction for [{2}] -> [{3}]'.format(route_with_min_flow_count, boundary, node.id, peer.id))
 
         return self.pool_flow_routes[route_with_min_flow_count]
 
@@ -424,8 +432,10 @@ class ChannelObject:
 
         if role == 'to':
             point_to_extend = points_in_channel_coordinate[0]
+            # self.mark_points(points_in_channel_coordinate, self.element.svg, 'red')
         else:
             point_to_extend = points_in_channel_coordinate[-1]
+            # self.mark_points(points_in_channel_coordinate, self.element.svg, 'green')
 
         if boundary == 'south':
             if flow_route:
@@ -467,7 +477,7 @@ class ChannelObject:
         the path is for getting outside of the channel from a node or getting into a node from outside the channel
         boundary is the side through which the path should get out of the channel or get into the channel [north|south|east|west]
     '''
-    def outside_the_channel(self, boundary, node, side, position, role, approach_snap_point_from, peer, edge_type):
+    def points_to_pool_flow_area(self, boundary, node, side, position, role, approach_snap_point_from, peer, edge_type):
         forbidden_combinations = [('north', 'south'), ('south', 'north'), ('east', 'west'), ('west', 'east')]
 
         points_in_node_coordinate = node.instance.to_snap_point(side, position, role, approach_snap_point_from, peer, edge_type)
@@ -486,7 +496,7 @@ class ChannelObject:
         else:
             point_to_extend = points_in_channel_coordinate[-1]
 
-        # debug('getting outside channel [{0}:{1}] from node [{2}] towards [{3}] to node [{4}]'.format(self.number, self.name, node.id, boundary, peer.id))
+        # debug('getting to pool-flow-area of [{0}:{1}] from node [{2}] towards [{3}] to node [{4}]'.format(self.number, self.name, node.id, boundary, peer.id))
 
         # we decide points based on baundary direction we want to reach
         if boundary == 'south':
@@ -506,11 +516,15 @@ class ChannelObject:
         elif boundary == 'east':
             # allow only for east-most node
             if self.node_ordinal(node) == len(self.nodes) - 1:
+                # debug('getting to pool-flow-area of [{0}:{1}] from node [{2}] towards [{3}] to node [{4}]'.format(self.number, self.name, node.id, boundary, peer.id))
+                # debug(points_in_channel_coordinate)
                 route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
                 if route_object:
                     the_point = Point(self.element.width + route_object['route'][boundary], point_to_extend.y)
                 else:
                     return points_in_channel_coordinate
+
+                # debug(the_point)
             else:
                 warn('path from [{0}] of the node [{1}] to [{2}] of [{3}] boundary is not allowed as it is not the {3}-most node'.format(side, node.id, edgeover, boundary))
                 return points_in_channel_coordinate
@@ -590,66 +604,29 @@ class ChannelObject:
     ''' we want a path to bypass the channel through the routing area
     '''
     def bypass_vertically(self, coming_from, going_to):
-        margin_spec = {"left": 24, "top": 24, "right": 24, "bottom": 24}
-        # the coming_from point is north of going_to, so we have to reach a point south of the channel either through east or west or directly dpending on which direction we are going_to
+
+        # the coming_from point is north of going_to, so we have to reach a point south of the channel either through east or west or directly depending on which direction we are going_to
         if coming_from.north_of(going_to):
+            debug('southward [{0}] -> [{1}] bypassing [{2}:{3}]'.format(coming_from, going_to, self.number, self.name))
+
             # if the coming_from point is already below the channel, we have no point
-            # warn('I {0} am going to south to {1} bypassing channel {2}'.format(coming_from, going_to, self.name))
-            if coming_from.y >= self.element.xy.y + self.element.height + margin_spec['bottom']:
+            if coming_from.y >= self.element.xy.y + self.element.height:
                 # warn('I {0} am going to {1} and I am already below the channel {2}'.format(coming_from, going_to, self.name))
                 return []
 
-            # if the coming_from point's x position is outside the channel, we can directly go south
-            elif (self.element.xy.x - margin_spec['left']) >= coming_from.x or coming_from.x >= (self.element.xy.x + self.element.width + margin_spec['right']):
-                # warn('I {0} am going to south to {1} going straight through {2}'.format(coming_from, going_to, self.name))
-                return [Point(coming_from.x, self.element.xy.y + self.element.height + margin_spec['bottom'])]
-
-            # if the coming_from point is properly above the channel, we make a path
-            else:
-                # to the channel north vertically below coming_from
-                p1 = Point(coming_from.x, self.element.xy.y - margin_spec['top'])
-                if going_to.east_of(coming_from):
-                    # warn('I {0} am going to south to {1} bypassing channel {2} from east'.format(coming_from, going_to, self.name))
-                    # to the channel north-east
-                    p2 = Point(self.element.xy.x + self.element.width + margin_spec['right'], p1.y)
-                    # debug('southward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
-                else:
-                    # warn('I {0} am going to south to {1} bypassing channel {2} from west'.format(coming_from, going_to, self.name))
-                    # to the channel north-west
-                    p2 = Point(self.element.xy.x - margin_spec['left'], p1.y)
-                    # debug('northward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
-
-                # to the channel south vertically below p2
-                p3 = Point(p2.x, self.element.xy.y + self.element.height + margin_spec['bottom'])
+            # we move horizontally from coming_from to the y location of going_to
+            return [Point(going_to.x, coming_from.y)]
 
         # the coming_from point is south of going_to, so we have to reach a point north of the channel either through east or west dpending on which direction we are going_to
         else:
+            debug('northward [{0}] -> [{1}] bypassing [{2}:{3}]'.format(coming_from, going_to, self.number, self.name))
+
             # if the coming_from point is already above the channel, we have no point
-            # theme['channel-flow_width-rect']['pad-spec']['top']
             if coming_from.y <= self.element.xy.y:
                 return []
 
-            # if the coming_from point's x position is outside the channel, we can directly go north
-            elif (self.element.xy.x - margin_spec['left']) >= coming_from.x or coming_from.x >= (self.element.xy.x + self.element.width + margin_spec['right']):
-                return [Point(coming_from.x, self.element.xy.y - margin_spec['top'])]
-
-            # if the coming_from point is properly below the channel, we make a path
-            else:
-                # to the channel south vertically above coming_from
-                p1 = Point(coming_from.x, self.element.xy.y + self.element.height + margin_spec['bottom'])
-                if going_to.east_of(coming_from):
-                    # to the channel south-east
-                    p2 = Point(self.element.xy.x + self.element.width + margin_spec['right'], p1.y)
-                    # debug('southward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
-                else:
-                    # to the channel south-west
-                    p2 = Point(self.element.xy.x - margin_spec['left'] , p1.y)
-                    # debug('northward from: {0} to {1} new {2}'.format(point_from, point_to, new_target_point))
-
-                # to the channel north vertically above p2
-                p3 = Point(p2.x, self.element.xy.y - margin_spec['top'])
-
-        return [p1, p2, p3]
+            # we move horizontally from coming_from to the y location of going_to
+            return [Point(coming_from.x, going_to.y)]
 
 
     ''' a channel's westmost x position may not always be the xy.x of the channel - when the westmost node has a move_x displacement, the westmost point will also be displaced

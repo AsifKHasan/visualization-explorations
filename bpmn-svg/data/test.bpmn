@@ -10,41 +10,53 @@ graph pizza_orders {
             label = "Pizza Customer"
             _ []
 
-            start                           hungry                              [label="Hungry";]
-            task 		                        goto_pizza_shop		                  []
-            task                            select_pizza                        [label="";]
-            task                            order_pizza                         [label="";]
-            eventBased                      on_order                            [label="Ordered"; label_pos="bottom";]
-            throwMessage                    pizza_received                      [label="";]
-            timer                           timer_45_mins                       [label="45 Minutes";]
-            task                            ask_for_pizza                       [label="";]
-            task                            eat_pizza                           [label="";]
-            task                            pay_for_pizza                       [label="";]
-            end                             hunger_satisfied                    [label="Hunger Satisfied";]
+            start                      a_e1                    [label="A e1";]
+            task 		                   a_t1		                 [label="A t1";]
+            exclusive                  a_x1                    [label="A x1";]
+            task 		                   a_t2		                 [label="A t2";]
+            exclusive                  a_x2                    [label="A x2";]
+            task 		                   a_t3		                 [label="A t3";]
+            end                        a_e2                    [label="A e2";]
 
-            hungry                          --> goto_pizza_shop                 [label="";]
-            goto_pizza_shop                 --> select_pizza                    [label="";]
-            select_pizza                    --> order_pizza                     [label="";]
-            order_pizza                     --> on_order                        [label="";]
-            on_order                        --> pizza_received                  [label="";]
-            pizza_received                  --> pay_for_pizza                   [label="";]
-            pay_for_pizza                   --> eat_pizza                       [label="";]
-            eat_pizza                       --> hunger_satisfied                [label="";]
-            on_order                        --> timer_45_mins                   [label="";]
-            timer_45_mins                   --> ask_for_pizza                   [label="";]
-            ask_for_pizza                   --> on_order                        [label="";]
-            #ask_for_pizza                   --> pizza_received                        [label="";]
-            #ask_for_pizza                   --> pay_for_pizza                        [label="";]
+            task 		                   b_t1		                 [label="B t1";]
+            exclusive                  b_x1                    [label="B x1";]
+            task 		                   b_t2		                 [label="B t2";]
 
-            ask_for_pizza                   --> timer_45_mins                        [label="";]
+            task 		                   c_t1		                 [label="C t1";]
+            exclusive                  c_x1                    [label="C x1";]
+            task 		                   c_t2		                 [label="C t2";]
 
-            # eat_pizza                       --> pay_for_pizza
-            # eat_pizza                       --> pizza_received
-            # eat_pizza                       --> on_order
-            # on_order                        --> order_pizza
-            # order_pizza                     --> select_pizza
-            # select_pizza                    --> goto_pizza_shop
+            task 		                   d_t1		                 [label="D t1";]
+            task 		                   d_t2		                 [label="D t2";]
 
+            a_e1                       --> a_t1                [label="";]
+            a_t1                       --> a_x1                [label="";]
+            a_x1                       --> a_t2                [label="";]
+            a_t2                       --> a_x2                [label="";]
+            a_x2                       --> a_t3                [label="";]
+            a_t3                       --> a_e2                [label="";]
+
+            a_x1                       --> b_t1                [label="";]
+            b_t1                       --> b_x1                [label="";]
+            b_x1                       --> b_t2                [label="";]
+            b_t2                       --> a_e2                [label="";]
+
+            b_x1                       --> c_t1                [label="";]
+            c_t1                       --> c_x1                [label="";]
+            c_x1                       --> c_t2                [label="";]
+            c_t2                       --> a_e2                [label="";]
+
+            c_x1                       --> d_t1                [label="";]
+            d_t1                       --> d_t2                [label="";]
+            d_t2                       --> a_e2                [label="";]
+
+            #d_t1                       --> a_t2                [label="";]
+            d_t1                       --> b_t2                [label="";]
+            d_t1                       --> c_t2                [label="";]
+
+            #d_t2                       --> a_t2                [label="";]
+            #d_t2                       --> b_t2                [label="";]
+            #d_t2                       --> c_t2                [label="";]
 
         }
     }

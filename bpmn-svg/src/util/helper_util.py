@@ -178,7 +178,7 @@ def points_to_curved_path(points):
         path = '{0} L {1}'.format(path, points[1])
         return path
 
-    default_offset = 10
+    default_offset = 5
     i = 0
     while i < (len(new_points) - 2):
         p1, p2, p3 = new_points[i], new_points[i+1], new_points[i+2]

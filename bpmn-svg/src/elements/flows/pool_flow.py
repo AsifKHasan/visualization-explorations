@@ -126,7 +126,7 @@ class PoolFlow(FlowObject):
         from_node_spec = self.snap_rules[direction]['from-node'][from_node_position][from_node.category]
         to_node_spec = self.snap_rules[direction]['to-node'][to_node_position][to_node.category]
 
-        from_node_points_in_pool_coordinate = self.channel_collection.outside_the_channel(
+        from_node_points_in_pool_coordinate = self.channel_collection.points_to_pool_flow_area(
                                                 boundary=from_node_spec['cross-through-boundary'],
                                                 channel=from_node_channel,
                                                 node=from_node,
@@ -141,7 +141,7 @@ class PoolFlow(FlowObject):
             warn('could not calculate snap points for from-node [{0}]'.format(from_node.id))
             return None
 
-        to_node_points_in_pool_coordinate = self.channel_collection.outside_the_channel(
+        to_node_points_in_pool_coordinate = self.channel_collection.points_to_pool_flow_area(
                                                 boundary=to_node_spec['cross-through-boundary'],
                                                 channel=to_node_channel,
                                                 node=to_node,
@@ -149,7 +149,7 @@ class PoolFlow(FlowObject):
                                                 position=to_node_spec['position'],
                                                 role='to',
                                                 approach_snap_point_from=to_node_spec['approach-snap-point-from'],
-                                                peer=to_node,
+                                                peer=from_node,
                                                 edge_type=self.edge_type)
 
         if to_node_points_in_pool_coordinate is None:
@@ -157,19 +157,32 @@ class PoolFlow(FlowObject):
             return None
 
         # we always connect from the north point to the south point
-        # TODO: the connect_southward is problematic, no
-        if from_node_points_in_pool_coordinate[-1].north_of(to_node_points_in_pool_coordinate[0]):
-            north_point = from_node_points_in_pool_coordinate[-1]
-            south_point = to_node_points_in_pool_coordinate[0]
-            joining_points = self.channel_collection.connect_southward(point_from=north_point, point_to=south_point)
-        else:
-            north_point = to_node_points_in_pool_coordinate[0]
-            south_point = from_node_points_in_pool_coordinate[-1]
-            joining_points = self.channel_collection.connect_southward(point_from=north_point, point_to=south_point)
-            joining_points.reverse()
+        # if the points are vertically close it means that they are inside the same pool-flow-area between same two channels, we just connect them by adjusting the to_point y positions
+        from_node_end_point = from_node_points_in_pool_coordinate[-1]
+        to_node_start_point = to_node_points_in_pool_coordinate[0]
+        # TODO: this 48 is a hack, it shold be the sy-between-channels value
+        if abs(from_node_end_point.y - to_node_start_point.y) <= 24:
+            joining_points = [Point(to_node_start_point.x, from_node_end_point.y)]
 
-        self.mark_points(from_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'red')
-        # self.mark_points(to_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'green')
+        else:
+            # TODO: the connect_southward is problematic, no
+            if from_node_points_in_pool_coordinate[-1].north_of(to_node_points_in_pool_coordinate[0]):
+                north_point = from_node_points_in_pool_coordinate[-1]
+                south_point = to_node_points_in_pool_coordinate[0]
+                joining_points = self.channel_collection.connect_southward(point_from=north_point, point_to=south_point)
+            else:
+                # self.mark_points([from_node_points_in_pool_coordinate[-1]], self.channel_collection.element.svg, 'red')
+                # self.mark_points([to_node_points_in_pool_coordinate[0]], self.channel_collection.element.svg, 'green')
+
+                north_point = to_node_points_in_pool_coordinate[0]
+                south_point = from_node_points_in_pool_coordinate[-1]
+                joining_points = self.channel_collection.connect_southward(point_from=north_point, point_to=south_point)
+                joining_points.reverse()
+
+                # self.mark_points(joining_points, self.channel_collection.element.svg, 'blue')
+
+            # self.mark_points(from_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'red')
+            # self.mark_points(to_node_points_in_pool_coordinate, self.channel_collection.element.svg, 'green')
 
         # we have the points, now create and return the flow
         flow_points = from_node_points_in_pool_coordinate + joining_points + to_node_points_in_pool_coordinate
