@@ -44,19 +44,20 @@ graph pizza_orders {
             b_x1                       --> c_t1                [label="";]
             c_t1                       --> c_x1                [label="";]
             c_x1                       --> c_t2                [label="";]
-            c_t2                       --> a_e2                [label="";]
+            #c_t2                       --> a_e2                [label="";]
 
             c_x1                       --> d_t1                [label="";]
             d_t1                       --> d_t2                [label="";]
             d_t2                       --> a_e2                [label="";]
 
-            #d_t1                       --> a_t2                [label="";]
+            d_t1                       --> a_t2                [label="";]
             d_t1                       --> b_t2                [label="";]
+            d_t1                       --> b_t1                [label="";]
             d_t1                       --> c_t2                [label="";]
 
-            #d_t2                       --> a_t2                [label="";]
-            #d_t2                       --> b_t2                [label="";]
-            #d_t2                       --> c_t2                [label="";]
+            d_t2                       --> a_t2                [label="";]
+            d_t2                       --> b_t2                [label="";]
+            d_t2                       --> c_t2                [label="";]
 
         }
     }

@@ -317,7 +317,7 @@ class ChannelObject:
     ''' the string representation of the Channel
     '''
     def __repr__(self):
-        s = 'number: {0}, root: {1}, name: {2}, parent: [{3}], nodes: {4}'.format(self.number, self.is_root, self.name, self.parent_channel, [*self.nodes])
+        s = 'number: {0}, root: {1}, name: {2}, parent: [{3}], nodes: {4}, WxH: {5} x {6}, xy: {7}'.format(self.number, self.is_root, self.name, self.parent_channel, [*self.nodes], self.element.width, self.element.height, self.element.xy)
         return s
 
 
@@ -380,7 +380,7 @@ class ChannelObject:
 
     ''' get a route through which an pool-flow can be routed so that it does not overlap with another pool-flow
     '''
-    def get_a_pool_flow_route(self, boundary, node, peer):
+    def get_a_pool_flow_route(self, boundary):
         if len(self.pool_flow_routes) == 0:
             warn('no pool-flow-route available for getting outside the channel [{0}:{1}]'.format(self.number, self.name))
             return None
@@ -395,13 +395,26 @@ class ChannelObject:
                 route_with_min_flow_count = route
 
         if self.pool_flow_routes[route_with_min_flow_count]['flow-count'][boundary] > 0:
-            warn('no free pool-flow-route (out of {0}) for getting outside the channel [{1}:{2}] towards [{3}] from node [{4}] to node [{5}], edges may overlap'.format(len(self.pool_flow_routes), self.number, self.name, boundary, node.id, peer.id))
+            warn('no free pool-flow-route (out of {0}) for getting outside the channel [{1}:{2}] towards [{3}], edges may overlap'.format(len(self.pool_flow_routes), self.number, self.name, boundary))
 
         self.pool_flow_routes[route_with_min_flow_count]['flow-count'][boundary] = self.pool_flow_routes[route_with_min_flow_count]['flow-count'][boundary] + 1
 
-        debug('pool-flow-route [{0}] selected for {1}ward direction for [{2}] -> [{3}]'.format(route_with_min_flow_count, boundary, node.id, peer.id))
+        # debug('pool-flow-route [{0}] selected for {1}ward direction'.format(route_with_min_flow_count, boundary))
 
         return self.pool_flow_routes[route_with_min_flow_count]
+
+
+    ''' get a pool flow route given the direction and route displacement
+    '''
+    def get_pool_flow_route_from_displacement(self, direction, displacement):
+        # print(self.pool_flow_routes)
+        for route in range(0, len(self.pool_flow_routes)):
+            route_object = self.pool_flow_routes[route]
+            if abs(route_object['route'][direction]) == displacement:
+                route_object['flow-count'][direction] = route_object['flow-count'][direction] + 1
+                return route_object
+
+        return None
 
 
     ''' (path from the snap point to the exact point of the node) or (path to the snap point from the exact point of the node) in channel coordinates
@@ -500,14 +513,14 @@ class ChannelObject:
 
         # we decide points based on baundary direction we want to reach
         if boundary == 'south':
-            route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
+            route_object = self.get_a_pool_flow_route(boundary=boundary)
             if route_object:
                 the_point = Point(point_to_extend.x, self.element.height + route_object['route'][boundary])
             else:
                 return points_in_channel_coordinate
 
         elif boundary == 'north':
-            route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
+            route_object = self.get_a_pool_flow_route(boundary=boundary)
             if route_object:
                 the_point = Point(point_to_extend.x, route_object['route'][boundary])
             else:
@@ -518,7 +531,7 @@ class ChannelObject:
             if self.node_ordinal(node) == len(self.nodes) - 1:
                 # debug('getting to pool-flow-area of [{0}:{1}] from node [{2}] towards [{3}] to node [{4}]'.format(self.number, self.name, node.id, boundary, peer.id))
                 # debug(points_in_channel_coordinate)
-                route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
+                route_object = self.get_a_pool_flow_route(boundary=boundary)
                 if route_object:
                     the_point = Point(self.element.width + route_object['route'][boundary], point_to_extend.y)
                 else:
@@ -532,7 +545,7 @@ class ChannelObject:
         elif boundary == 'west':
             # allow only for west-most node
             if self.node_ordinal(node) == 0:
-                route_object = self.get_a_pool_flow_route(boundary=boundary, node=node, peer=peer)
+                route_object = self.get_a_pool_flow_route(boundary=boundary)
                 if route_object:
                     the_point = Point(route_object['route'][boundary], point_to_extend.y)
                 else:
@@ -599,34 +612,69 @@ class ChannelObject:
                 return PointInChannel.INSIDE
 
 
-
-
     ''' we want a path to bypass the channel through the routing area
     '''
     def bypass_vertically(self, coming_from, going_to):
 
         # the coming_from point is north of going_to, so we have to reach a point south of the channel either through east or west or directly depending on which direction we are going_to
         if coming_from.north_of(going_to):
-            debug('southward [{0}] -> [{1}] bypassing [{2}:{3}]'.format(coming_from, going_to, self.number, self.name))
+            # debug('southward [{0}] -> [{1}] bypassing {2}'.format(coming_from, going_to, self))
 
             # if the coming_from point is already below the channel, we have no point
             if coming_from.y >= self.element.xy.y + self.element.height:
                 # warn('I {0} am going to {1} and I am already below the channel {2}'.format(coming_from, going_to, self.name))
                 return []
 
-            # we move horizontally from coming_from to the y location of going_to
-            return [Point(going_to.x, coming_from.y)]
+            # the channel we want to bypass is vertically in the middle, we have to either
+            # a. go east (from coming_from point) to the channel's pool-flow-area, or
+            # b. go west (from coming_from point) to the channel's pool-flow-area
+            # whatever path is shorter
+
+            eastward_distance = abs(coming_from.x - self.element.width)
+            westward_distance = abs(coming_from.x)
+            direction = 'north'
+            displacement = abs(coming_from.y - self.element.xy.y)
+
+            # displacement may be large if we are coming from a point which has one or more intermediate channels which are not actually blocking the path to going_to
+            # TODO: the check value is a hack, should be dy-between-channels
+            if displacement >= 24:
+                # we need to come south to a point which is in the north stretch of the channels' pool-flow-area
+                route_object = self.get_a_pool_flow_route(boundary=direction)
+            else:
+                # now we know that we are at the north pool-flow-route-area of the channel that needs to be bypassed, so we get the actual route where we are
+                route_object = self.get_pool_flow_route_from_displacement(direction=direction, displacement=displacement)
+
+            if route_object is None:
+                warn('no pool-flow-route (out of {0}) for channel [{1}:{2}] towards [{3}] at displacement {4}'.format(len(self.pool_flow_routes), self.number, self.name, direction, displacement))
+                return []
+
+            if eastward_distance <= westward_distance:
+                # we go east, how far we will go depends on the pool-flow-route we are currently in
+                # east point
+                p1 = Point(self.element.xy.x + self.element.width + route_object['route']['east'], coming_from.y)
+                # south point, which may be below the going_to point
+                south_point_y = self.element.xy.y + self.element.height + route_object['route']['south']
+                if south_point_y > going_to.y: south_point_y = going_to.y
+                p2 = Point(p1.x, south_point_y)
+
+                return [p1, p2]
+
+            else:
+                # we go west, how far we will go depends on the pool-flow-route we are currently in
+                # east point
+                p1 = Point(self.element.xy.x + route_object['route']['west'], coming_from.y)
+                # south point, which may be below the going_to point
+                south_point_y = self.element.xy.y + self.element.height + route_object['route']['south']
+                if south_point_y > going_to.y: south_point_y = going_to.y
+                p2 = Point(p1.x, south_point_y)
+
+                return [p1, p2]
 
         # the coming_from point is south of going_to, so we have to reach a point north of the channel either through east or west dpending on which direction we are going_to
         else:
-            debug('northward [{0}] -> [{1}] bypassing [{2}:{3}]'.format(coming_from, going_to, self.number, self.name))
-
-            # if the coming_from point is already above the channel, we have no point
-            if coming_from.y <= self.element.xy.y:
-                return []
-
-            # we move horizontally from coming_from to the y location of going_to
-            return [Point(coming_from.x, going_to.y)]
+            # TODO: why are we here?
+            warn('I do not know why I am here 1')
+            return []
 
 
     ''' a channel's westmost x position may not always be the xy.x of the channel - when the westmost node has a move_x displacement, the westmost point will also be displaced

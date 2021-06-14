@@ -119,7 +119,7 @@
                   "left": 24, "top": 24, "right": 24, "bottom": 24
               },
               "style": {
-                  "fill": "none", "stroke-width": 1, "stroke": "#FF8243"
+                  "fill": "#F8F8F860", "stroke-width": 0.25, "stroke": "#FF8243"
               }
           },
 
