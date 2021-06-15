@@ -25,33 +25,77 @@ EDGE_TYPE = {
     '<.>' : 'BidirectionalAssociation',
 }
 
+''' the logical snap points are drawn out away from the actual shape for nice edge visuals
+'''
 class BpmnElement():
     theme = None
-    # the logical snap points are drawn out away from the actual shape for nice edge visuals
     snap_point_offset = 8
+
 
     def to_svg(self, theme):
         return None
 
+
     def label_position(self):
         pass
+
 
     def switch_label_position(self):
         pass
 
-    '''
-        path from snap point to the exact point of the node in node coordinates
+
+    def get_a_snap_position(self, side, position):
+        if side is None or position is None:
+            warn('[{0}] side:position {1}-{2} can not be None'.format(self.node_id, side, position))
+            return None
+
+        try:
+            snap_positions = self.svg_element.snap_points[side][position]
+        except:
+            warn('[{0}] side:position {1}-{2} does not have any snap-points'.format(self.node_id, side, position))
+            return None
+
+        # if there is no snap_position, we return it
+        if len(snap_positions) == 0:
+            warn('[{0}] side:position {1}-{2} does not have any snap-points'.format(self.node_id, side, position))
+            return None
+
+        # if there is just one snap_position, we return it
+        if len(snap_positions) == 1:
+            return snap_positions[0]
+
+        # return the snap_position with lowest count of occupancy
+        min_occupancy_so_far = 100
+        sp_with_min_occupancy = None
+        for sp in snap_positions:
+            if len(sp.edge_roles) < min_occupancy_so_far:
+                sp_with_min_occupancy = sp
+                min_occupancy_so_far = len(sp.edge_roles)
+
+        if sp_with_min_occupancy:
+            return sp_with_min_occupancy
+        else:
+            return snap_positions[0]
+
+
+    ''' path from snap point to the exact point of the node in node coordinates
         for Gateways, Events, Datas snap points may lie outside the inner Circle, diamond, folded rectangle as they have labels wider than the shape which takes space on top and bottom
     '''
     def to_snap_point(self, side, position, role, direction_hint, peer, edge_type):
-        if side is None or role is None:
+        snap_position = self.get_a_snap_position(side, position)
+        if snap_position is None:
+            warn('node {0:>30} has no snap-point at {1}-{2}'.format(self.node_id, side, position))
             return []
 
+        # see if the snap points are occupied or not
+        if len(snap_position.edge_roles) > 0:
+            warn('snap-point {0:>30}:{1}-{2} is occupied ... flows may merge together'.format(self.node_id, side, position))
+
+
+        snap_point = snap_position.point
         points = []
 
         # east and west are easier, we just get the point inside
-        snap_position = self.svg_element.snap_points[side][position]
-        snap_point = snap_position.point
         if side == 'east':
             # the actual point is to the left
             points = [snap_point, snap_point + Point(self.snap_offset_x * -1, 0)]
@@ -128,35 +172,40 @@ class BpmnElement():
                     debug('Direction hint: {0}'.format(direction_hint))
 
         else:
-            return [snap_point]
+            warn('unknown side {0} for snapping at node {1:>30}'.format(side, self.node_id))
+            return []
 
         # the points are calculated assuming the internal points are coming from snap-point to inside that is role is *to*
         if role == 'from':
             points.reverse()
-
-
-        # see if the snap points are occupied or not
-        if len(snap_position.edge_roles) > 0:
-            # TODO: occupied, do something
-            # warn('snap-point {0:>30}:{1}-{2} is occupied ... we may want to do something about it'.format(self.node_id, side.upper(), position.upper()))
-            pass
 
         # this snap point is getting a new edge-role
         snap_position.edge_roles.append(EdgeRole(role=role, peer=peer, type=edge_type))
 
         return points
 
+
+    ''' a snap point may have zero or more edge roles meaning how many edge connections are there to this snap point
+        an edge-role is a dictionary that looks like {'role': 'from|to', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
+    '''
     def snap_points(self, width, height):
-        # a snap point may have zero or more edge roles meaning how many edge connections are there to this snap point
-        # an edge-role is a dictionary that looks like {'role': 'from|to', 'peer-node': '[lane]:[pool]:[channel-name]:node_id', 'edge-type': 'edge-type'}
         snaps = {
-            'north': {'middle': SnapPoint(point=Point(width * 0.5, self.snap_point_offset * -1))},
-            'south': { 'middle': SnapPoint(point=Point(width * 0.5, height + self.snap_point_offset * 1)) },
-            'east': {'middle': SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.5)) },
-            'west': {'middle': SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.5)) },
+            'north': {
+                'middle': [SnapPoint(point=Point(width * 0.5, self.snap_point_offset * -1))]
+            },
+            'south': {
+                'middle': [SnapPoint(point=Point(width * 0.5, height + self.snap_point_offset * 1))]
+            },
+            'east': {
+                'middle': [SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.5))]
+            },
+            'west': {
+                'middle': [SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.5))]
+            },
         }
 
         return snaps
+
 
     def draw_snaps(self, snaps, svg_group, x_offset, y_offset):
         offset_multiplier = {'north': Point(0, 1), 'south': Point(0, -1), 'east': Point(-1, 0), 'west': Point(1, 0)}
@@ -166,8 +215,7 @@ class BpmnElement():
                 svg_group.addElement(snap_point_group)
 
 
-''' ----------------------------------------------------------------------------------------------------------------------------------
-    Node Object
+''' Node Object
 '''
 class NodeObject:
     def __init__(self, id, category, type, styles, element, instance):
@@ -179,8 +227,7 @@ class NodeObject:
         self.instance = instance
 
 
-''' ----------------------------------------------------------------------------------------------------------------------------------
-    snap point for a node
+''' snap point for a node
 '''
 class SnapPoint:
     def __init__(self, point):
@@ -188,8 +235,7 @@ class SnapPoint:
         self.edge_roles = []
 
 
-''' ----------------------------------------------------------------------------------------------------------------------------------
-    EdgeRole object for node snap-points
+''' EdgeRole object for node snap-points
 '''
 class EdgeRole:
     def __init__(self, role, peer, type):

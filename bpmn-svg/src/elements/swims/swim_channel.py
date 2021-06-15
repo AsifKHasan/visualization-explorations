@@ -159,6 +159,7 @@ class SwimChannel(BpmnElement):
         self.bpmn_id, self.lane_id, self.pool_id, self.nodes, self.edges, self.channel_object = bpmn_id, lane_id, pool_id, nodes, edges, channel_object
         self.channel_object.theme = self.theme
 
+
     def lay_edges(self):
         # get a filtered list of edges containing only those where from-node and to-node both are in this channel
         self.channel_object.edges = []
@@ -182,6 +183,7 @@ class SwimChannel(BpmnElement):
                     # store object for future reference
                     self.channel_object.edges.append(EdgeObject(edge=edge, type=edge_type, element=flow_svg_element))
 
+
     def collect_elements(self):
         for node_id in self.channel_object.nodes:
             node_data = self.nodes[node_id]
@@ -195,6 +197,7 @@ class SwimChannel(BpmnElement):
                 self.channel_object.nodes[node_id] = NodeObject(id=node_id, category=CLASSES[node_data['type']]['g'], type=node_data['type'], styles=node_data['styles'], element=svg_element, instance=element_instance)
             else:
                 warn('node type [{0}] is not supported. skipping ..'.format(node_data['type']))
+
 
     def assemble_elements(self):
         # a channel is a rectangular area with padding for edge routes and nodes inside between the paddings
@@ -261,6 +264,7 @@ class SwimChannel(BpmnElement):
 
         # store the svg and dimensions for future reference
         self.channel_object.element = self.svg_element
+
 
     def to_svg(self):
         self.collect_elements()
@@ -652,29 +656,65 @@ class ChannelObject:
                 # we go east, how far we will go depends on the pool-flow-route we are currently in
                 # east point
                 p1 = Point(self.element.xy.x + self.element.width + route_object['route']['east'], coming_from.y)
-                # south point, which may be below the going_to point
-                south_point_y = self.element.xy.y + self.element.height + route_object['route']['south']
-                if south_point_y > going_to.y: south_point_y = going_to.y
-                p2 = Point(p1.x, south_point_y)
-
-                return [p1, p2]
 
             else:
                 # we go west, how far we will go depends on the pool-flow-route we are currently in
-                # east point
+                # west point
                 p1 = Point(self.element.xy.x + route_object['route']['west'], coming_from.y)
-                # south point, which may be below the going_to point
-                south_point_y = self.element.xy.y + self.element.height + route_object['route']['south']
-                if south_point_y > going_to.y: south_point_y = going_to.y
-                p2 = Point(p1.x, south_point_y)
 
-                return [p1, p2]
+            # south point, which may be below the going_to point
+            south_point_y = self.element.xy.y + self.element.height + route_object['route']['south']
+            if south_point_y > going_to.y: south_point_y = going_to.y
+            p2 = Point(p1.x, south_point_y)
+
+            return [p1, p2]
 
         # the coming_from point is south of going_to, so we have to reach a point north of the channel either through east or west dpending on which direction we are going_to
         else:
-            # TODO: why are we here?
-            warn('I do not know why I am here 1')
-            return []
+            # if the coming_from point is already above the channel, we have no point
+            if coming_from.y <= self.element.xy.y:
+                # warn('I {0} am going to {1} and I am already above the channel {2}'.format(coming_from, going_to, self.name))
+                return []
+
+            # the channel we want to bypass is vertically in the middle, we have to either
+            # a. go east (from coming_from point) to the channel's pool-flow-area, or
+            # b. go west (from coming_from point) to the channel's pool-flow-area
+            # whatever path is shorter
+
+            eastward_distance = abs(coming_from.x - self.element.width)
+            westward_distance = abs(coming_from.x)
+            direction = 'south'
+            displacement = abs(coming_from.y - (self.element.xy.y + self.element.height))
+
+            # displacement may be large if we are coming from a point which has one or more intermediate channels which are not actually blocking the path to going_to
+            # TODO: the check value is a hack, should be dy-between-channels
+            if displacement >= 24:
+                # we need to go north to a point which is in the south stretch of the channels' pool-flow-area
+                route_object = self.get_a_pool_flow_route(boundary=direction)
+            else:
+                # now we know that we are at the south pool-flow-route-area of the channel that needs to be bypassed, so we get the actual route where we are
+                route_object = self.get_pool_flow_route_from_displacement(direction=direction, displacement=displacement)
+
+            if route_object is None:
+                warn('no pool-flow-route (out of {0}) for channel [{1}:{2}] towards [{3}] at displacement {4}'.format(len(self.pool_flow_routes), self.number, self.name, direction, displacement))
+                return []
+
+            if eastward_distance <= westward_distance:
+                # we go east, how far we will go depends on the pool-flow-route we are currently in
+                # east point
+                p1 = Point(self.element.xy.x + self.element.width + route_object['route']['east'], coming_from.y)
+
+            else:
+                # we go west, how far we will go depends on the pool-flow-route we are currently in
+                # west point
+                p1 = Point(self.element.xy.x + route_object['route']['west'], coming_from.y)
+
+            # north point, which may be below the going_to point
+            north_point_y = self.element.xy.y + route_object['route']['north']
+            if north_point_y > going_to.y: north_point_y = going_to.y
+            p2 = Point(p1.x, north_point_y)
+
+            return [p1, p2]
 
 
     ''' a channel's westmost x position may not always be the xy.x of the channel - when the westmost node has a move_x displacement, the westmost point will also be displaced

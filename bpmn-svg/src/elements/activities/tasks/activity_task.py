@@ -17,8 +17,9 @@ from util.svg_util import *
 from elements.svg_element import SvgElement
 from elements.activities.activity import Activity
 
+''' a task activity is a rounded rectangle with a text inside
+'''
 class ActivityTask(Activity):
-    # a task activity is a rounded rectangle with a text inside
     def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
         super().__init__(current_theme, bpmn_id, lane_id, pool_id, node_id, node_data)
         self.theme = {**self.theme, **self.current_theme['activities']['tasks']['ActivityTask']}

@@ -15,11 +15,12 @@ from util.geometry import Point
 from util.logger import *
 from util.svg_util import *
 
-from elements.bpmn_element import BpmnElement
+from elements.bpmn_element import BpmnElement, SnapPoint
 from elements.svg_element import SvgElement
 
+''' an event is a circle
+'''
 class Event(BpmnElement):
-    # an event is a circle
     def __init__(self, current_theme, bpmn_id, lane_id, pool_id, node_id, node_data):
         self.current_theme = current_theme
         self.theme = self.current_theme['events']['Event']
@@ -32,6 +33,31 @@ class Event(BpmnElement):
 
         if self.node_data['label'] is None or self.node_data['label'] == '':
             self.label_pos = 'none'
+
+
+    ''' events have more snap points, in all sides in all positions we add at least two more so that edges do not overlap
+    '''
+    def snap_points(self, width, height):
+        snaps = super().snap_points(width, height)
+
+        # add two more (slight left and slight right) for north-middle)
+        snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.45, self.snap_point_offset * -1)))
+        snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.55, self.snap_point_offset * -1)))
+
+        # add two more (slight left and slight right) for south-middle)
+        snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.45, height + self.snap_point_offset * 1)))
+        snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.55, height + self.snap_point_offset * 1)))
+
+        # add two more (slight up and slight down) for east-middle)
+        snaps['east']['middle'].append(SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.40)))
+        snaps['east']['middle'].append(SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.60)))
+
+        # add two more (slight up and slight down) for west-middle)
+        snaps['west']['middle'].append(SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.40)))
+        snaps['west']['middle'].append(SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.60)))
+
+        return snaps
+
 
     def to_svg(self):
         info('......processing node [{0}:{1}:{2}:{3}]'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
@@ -95,6 +121,7 @@ class Event(BpmnElement):
         info('......processing node [{0}:{1}:{2}:{3}] DONE'.format(self.bpmn_id, self.lane_id, self.pool_id, self.node_id))
         self.svg_element = SvgElement(svg=svg_group, width=group_width, height=group_height, snap_points=snap_points, label_pos=self.label_pos)
         return self.svg_element
+
 
     def get_inside_element(self):
         return None
