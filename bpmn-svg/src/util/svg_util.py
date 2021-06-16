@@ -17,10 +17,13 @@ from util.logger import *
 from util.geometry import Point
 from util.helper_util import *
 
-# --------------------------------------------------------------------------------------
-# basic shapes ---------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------
+''' --------------------------------------------------------------------------------------
+    basic shapes ---------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------
+'''
 
+'''
+'''
 def an_arrow_head(arrow_point, snap_direction, spec):
     svg_group = G()
 
@@ -55,10 +58,13 @@ def an_arrow_head(arrow_point, snap_direction, spec):
     svg_group.addElement(svg)
     return svg_group, 0, 0
 
+
+'''
+'''
 def a_snap_point(snap_point, color='#FF0000'):
     svg_group = G()
 
-    radius = 3
+    radius = 1
     spec = {'style': {'fill': color, 'stroke-width': 0, 'stroke': '#FF8080'}}
     circle_svg = Circle(cx=snap_point.x, cy=snap_point.y, r=radius)
     circle_svg.set_style(StyleBuilder(spec['style']).getStyle())
@@ -67,6 +73,9 @@ def a_snap_point(snap_point, color='#FF0000'):
     svg_group.addElement(circle_svg)
     return svg_group, radius * 2, radius * 2
 
+
+'''
+'''
 def a_path_with_label(points, label_data, spec, flow_scope):
     svg_group = G()
 
@@ -130,7 +139,9 @@ def a_path_with_label(points, label_data, spec, flow_scope):
     svg_group.addElement(svg)
     return svg_group, 0, 0
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_circle(radius, spec):
     svg_group = G()
 
@@ -141,7 +152,9 @@ def a_circle(radius, spec):
     svg_group.addElement(circle_svg)
     return svg_group, radius * 2, radius * 2
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_rectangle(width, height, spec):
     svg_group = G()
 
@@ -155,7 +168,9 @@ def a_rectangle(width, height, spec):
     svg_group.addElement(rect_svg)
     return svg_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_diamond(diagonal_x, diagonal_y, spec):
     svg_group = G()
 
@@ -167,7 +182,9 @@ def a_diamond(diagonal_x, diagonal_y, spec):
     svg_group.addElement(diamond_svg)
     return svg_group, diagonal_x, diagonal_y
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def two_concentric_circles(outer_radius, inner_radius, outer_circle_spec, inner_circle_spec):
     # outer circle
     outer_circle_group, _, _ = a_circle(radius=outer_radius, spec=outer_circle_spec)
@@ -177,7 +194,9 @@ def two_concentric_circles(outer_radius, inner_radius, outer_circle_spec, inner_
 
     return outer_circle_group, outer_radius * 2, outer_radius * 2
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def an_x(width, height, x, spec):
     svg_group = G()
 
@@ -210,7 +229,9 @@ def an_x(width, height, x, spec):
 
     return svg_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_cross(width, height, x_bar_height, y_bar_width, spec):
     svg_group = G()
 
@@ -236,7 +257,9 @@ def a_cross(width, height, x_bar_height, y_bar_width, spec):
 
     return svg_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_star(width, height, spec):
     svg_group = G()
 
@@ -262,7 +285,9 @@ def a_star(width, height, spec):
 
     return svg_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_clock(radius, spec):
     clock_group_svg, _, _ = a_circle(radius, spec)
 
@@ -290,7 +315,9 @@ def a_clock(radius, spec):
     # add to group
     return clock_group_svg, radius * 2, radius * 2
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_page(width, height, spec):
     rect_svg_group, _, _ = a_rectangle(width=width, height=height, spec=spec)
 
@@ -308,7 +335,9 @@ def a_page(width, height, spec):
 
     return rect_svg_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_triangular_rewind(width, height, spec):
     svg_group = G()
 
@@ -334,7 +363,9 @@ def a_triangular_rewind(width, height, spec):
 
     return svg_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def an_upword_arrowhead(width, height, spec):
     mid_point = Point(width/2, height/2)
     top_point = Point(width/2, 0)
@@ -348,7 +379,9 @@ def an_upword_arrowhead(width, height, spec):
 
     return arrowhead_svg, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_right_arrow(width, height, spec):
     arrow_height = height/3
 
@@ -367,7 +400,9 @@ def a_right_arrow(width, height, spec):
 
     return arrow_svg, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_lightning(width, height, spec):
     diagonal = math.sqrt(width * width + height * height)
     len_mb_mt = (diagonal/2) * 0.3
@@ -391,7 +426,9 @@ def a_lightning(width, height, spec):
 
     return lightning_svg, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_tilde(width, height, spec):
 
     mid_x = width/2
@@ -417,7 +454,9 @@ def a_tilde(width, height, spec):
 
     return tilde_svg, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_folded_rectangle(width, height, spec):
     svg_group = G()
 
@@ -441,6 +480,9 @@ def a_folded_rectangle(width, height, spec):
     svg_group.addElement(shape2_svg)
     return svg_group, width, height
 
+
+'''
+'''
 def an_envelop(width, height, spec):
     envelop_group, envelop_width, envelop_height = a_rectangle(width, height, spec=spec)
 
@@ -461,7 +503,9 @@ def an_envelop(width, height, spec):
 
     return envelop_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def three_bars(width, height, spec):
     svg_group = G()
 
@@ -475,7 +519,9 @@ def three_bars(width, height, spec):
 
     return svg_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_gear(radius, spec):
     mark_length = radius * 0.3
     circle_radius = radius - mark_length
@@ -500,10 +546,13 @@ def a_gear(radius, spec):
     return gear_group_svg, radius * 2, radius * 2
 
 
-# --------------------------------------------------------------------------------------
-# shapes inside a rectangular shape ---------------------------------------------------------------
-# --------------------------------------------------------------------------------------
+''' --------------------------------------------------------------------------------------
+    shapes inside a rectangular shape ---------------------------------------------------------------
+    --------------------------------------------------------------------------------------
+'''
 
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_tilde_in_a_rectangular_shape(width, height, rect_spec, tilde_spec):
     svg_group = G()
@@ -525,6 +574,9 @@ def a_tilde_in_a_rectangular_shape(width, height, rect_spec, tilde_spec):
 
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def something_missing_inside_a_rectangular_shape(width, height, inner_shape_spec):
     x = width * 0.2
@@ -534,10 +586,13 @@ def something_missing_inside_a_rectangular_shape(width, height, inner_shape_spec
     return missing_group, width, height
 
 
-# --------------------------------------------------------------------------------------
-# shapes inside a circular shape ---------------------------------------------------------------
-# --------------------------------------------------------------------------------------
+''' --------------------------------------------------------------------------------------
+    shapes inside a circular shape ---------------------------------------------------------------
+    --------------------------------------------------------------------------------------
+'''
 
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_circle_inside_a_circular_shape(outer_radius, inner_radius, inner_shape_spec):
     pad = outer_radius - inner_radius
@@ -551,6 +606,9 @@ def a_circle_inside_a_circular_shape(outer_radius, inner_radius, inner_shape_spe
 
     return circle_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def an_envelop_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -559,6 +617,9 @@ def an_envelop_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = an_envelop(width=width, height=height, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def an_equilateral_pentagon_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group = G()
@@ -579,6 +640,9 @@ def an_equilateral_pentagon_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group.addElement(pentagon_svg)
     return svg_group, radius * 2, radius * 2
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def an_equilateral_triangle_inside_a_circular_shape(radius, inner_shape_spec):
     # in a trangle ABC, A is alwys the top vertex
@@ -598,6 +662,9 @@ def an_equilateral_triangle_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group.addElement(triangle_svg)
     return svg_group, radius * 2, radius * 2
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_cross_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -608,6 +675,9 @@ def a_cross_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = a_cross(width=width, height=height, x_bar_height=x_bar_height, y_bar_width=y_bar_width, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def an_x_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -617,6 +687,9 @@ def an_x_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def something_missing_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -627,12 +700,18 @@ def something_missing_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = an_x(width=width, height=height, x=x, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_clock_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
     svg_group, width, height = a_clock(radius=radius - pad, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_page_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -641,6 +720,9 @@ def a_page_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = a_page(width=width, height=height, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_triangular_rewind_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -649,6 +731,9 @@ def a_triangular_rewind_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = a_triangular_rewind(width=width, height=height, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def an_upword_arrowhead_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -657,6 +742,9 @@ def an_upword_arrowhead_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = an_upword_arrowhead(width=width, height=height, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_right_arrow_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -665,6 +753,9 @@ def a_right_arrow_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = a_right_arrow(width=width, height=height, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_lightning_inside_a_circular_shape(radius, inner_shape_spec):
     pad = radius * 0.2
@@ -673,6 +764,9 @@ def a_lightning_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group, _, _ = a_lightning(width=width, height=height, spec=inner_shape_spec)
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def two_gears_inside_a_circular_shape(radius, inner_shape_spec):
     svg_group = G()
@@ -702,11 +796,13 @@ def two_gears_inside_a_circular_shape(radius, inner_shape_spec):
     return svg_group, radius * 2, radius * 2
 
 
-# --------------------------------------------------------------------------------------
-# shapes inside a rectangle ---------------------------------------------------------------
-# --------------------------------------------------------------------------------------
+''' --------------------------------------------------------------------------------------
+    shapes inside a rectangle ---------------------------------------------------------------
+    --------------------------------------------------------------------------------------
+'''
 
-# returns a tuple (svg group, group_width, group_height)
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def a_cross_in_a_rectangle(width, height, rect_spec, cross_spec):
     rect_group, rect_group_width, rect_group_height = a_rectangle(width, height, rect_spec)
 
@@ -731,7 +827,9 @@ def a_cross_in_a_rectangle(width, height, rect_spec, cross_spec):
 
     return rect_group, width, height
 
-# returns a tuple (svg group, group_width, group_height)
+
+''' returns a tuple (svg group, group_width, group_height)
+'''
 def text_inside_a_rectangle(text, min_width, max_width, rect_spec, text_spec, debug_enabled=False):
 
     # to get the width, height we need to calculate the text rendering function
@@ -773,10 +871,13 @@ def text_inside_a_rectangle(text, min_width, max_width, rect_spec, text_spec, de
     return svg_group, group_width, group_height
 
 
-# --------------------------------------------------------------------------------------
-# shapes inside a circle ---------------------------------------------------------------
-# --------------------------------------------------------------------------------------
+''' --------------------------------------------------------------------------------------
+    shapes inside a circle ---------------------------------------------------------------
+    --------------------------------------------------------------------------------------
+'''
 
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def a_cross_in_a_circle(radius, circle_spec, cross_spec):
     circle_group, circle_group_width, circle_group_height = a_circle(radius, circle_spec)
@@ -797,6 +898,9 @@ def a_cross_in_a_circle(radius, circle_spec, cross_spec):
 
     return circle_group, circle_group_width, circle_group_height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def an_equilateral_pentagon_in_a_circle(radius, circle_spec, pentagon_spec):
     circle_group, circle_group_width, circle_group_height = a_circle(radius, circle_spec)
@@ -806,6 +910,9 @@ def an_equilateral_pentagon_in_a_circle(radius, circle_spec, pentagon_spec):
 
     return circle_group, circle_group_width, circle_group_height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def an_equilateral_pentagon_in_two_concentric_circles(outer_radius, inner_radius, outer_circle_spec, inner_circle_spec, pad, pentagon_spec):
     svg_group = G()
@@ -858,10 +965,14 @@ def a_flow(points, label_data, spec, flow_scope):
 
     return svg_group, edge_width, edge_height
 
-# --------------------------------------------------------------------------------------
-# mesecllaneous utilities
-# --------------------------------------------------------------------------------------
 
+''' --------------------------------------------------------------------------------------
+    mesecllaneous utilities
+    --------------------------------------------------------------------------------------
+'''
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def include_and_scale_svg(spec):
     if 'width' not in spec or 'height' not in spec or 'svg-path' not in spec:
@@ -887,6 +998,9 @@ def include_and_scale_svg(spec):
 
     return svg_group, width, height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def envelop_and_center_in_a_circle(circle_spec, svg, svg_width, svg_height):
     radius = circle_spec['radius']
@@ -905,6 +1019,9 @@ def envelop_and_center_in_a_circle(circle_spec, svg, svg_width, svg_height):
 
     return circle_group, radius * 2, radius * 2
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def envelop_and_center_in_a_rectangle(svg, svg_width, svg_height, rect_spec):
     rectangle_width = svg_width + rect_spec['pad-spec']['left'] + rect_spec['pad-spec']['right']
@@ -921,6 +1038,9 @@ def envelop_and_center_in_a_rectangle(svg, svg_width, svg_height, rect_spec):
 
     return rectangle_group, rectangle_width, rectangle_height
 
+
+'''
+'''
 # returns a tuple (svg group, group_width, group_height)
 def align_and_combine_horizontally(svg_elements):
     svg_group = G()
@@ -946,6 +1066,9 @@ def align_and_combine_horizontally(svg_elements):
 
     return svg_group, group_width, group_height
 
+
+'''
+'''
 def center_text_inside_rect(text, width, height, style, vertical_text=False, pad_spec=None, text_wrap_at=0, debug=False):
     if pad_spec is None:
         pad_spec = {'left': 10, 'top': 10, 'right': 10, 'bottom': 10}
@@ -991,10 +1114,16 @@ def center_text_inside_rect(text, width, height, style, vertical_text=False, pad
 
     return svg
 
+
+'''
+'''
 def radius_of_the_circle_inside_the_diamond(width, height):
     theta = math.atan(max((width, height))/min(width, height))
     return math.sin(theta) * min(width, height)/2
 
+
+'''
+'''
 def rectangle_dimension_inside_a_circle(radius, width_by_height):
     width = radius * math.sin(math.atan(width_by_height)) * 2
     height = radius * math.cos(math.atan(width_by_height)) * 2

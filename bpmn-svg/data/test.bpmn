@@ -36,6 +36,16 @@ graph pizza_orders {
             a_x2                       --> a_t3                [label="";]
             a_t3                       --> a_e2                [label="";]
 
+            a_x2                       --> a_e2                [label="";]
+            a_t2                       --> a_e2                [label="";]
+            a_x1                       --> a_e2                [label="";]
+            a_e2                       --> a_t3                [label="";]
+            a_e2                       --> a_x2                [label="";]
+            a_e2                       --> a_t2                [label="";]
+            a_e2                       --> a_x1                [label="";]
+            a_x2                       --> a_t2                [label="";]
+
+
             a_x1                       --> b_t1                [label="";]
             b_t1                       --> b_x1                [label="";]
             b_x1                       --> b_t2                [label="";]

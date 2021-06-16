@@ -41,20 +41,44 @@ class Gateway(BpmnElement):
         snaps = super().snap_points(width, height)
 
         # add two more (slight left and slight right) for north-middle)
-        snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.45, self.snap_point_offset * -1)))
-        snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.55, self.snap_point_offset * -1)))
+        distance = height/10
+        p1 = snaps['north']['middle'][0].point.to_point(-45, distance)
+        p2 = snaps['north']['middle'][0].point.to_point(-135, distance)
+        snaps['north']['middle'].append(SnapPoint(point=p1))
+        snaps['north']['middle'].append(SnapPoint(point=p2))
+
+        # snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.45, self.snap_point_offset * -1)))
+        # snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.55, self.snap_point_offset * -1)))
 
         # add two more (slight left and slight right) for south-middle)
-        snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.45, height + self.snap_point_offset * 1)))
-        snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.55, height + self.snap_point_offset * 1)))
+        distance = height/10
+        p1 = snaps['south']['middle'][0].point.to_point(45, distance)
+        p2 = snaps['south']['middle'][0].point.to_point(135, distance)
+        snaps['south']['middle'].append(SnapPoint(point=p1))
+        snaps['south']['middle'].append(SnapPoint(point=p2))
+
+        # snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.45, height + self.snap_point_offset * 1)))
+        # snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.55, height + self.snap_point_offset * 1)))
 
         # add two more (slight up and slight down) for east-middle)
-        snaps['east']['middle'].append(SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.40)))
-        snaps['east']['middle'].append(SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.60)))
+        distance = width/10
+        p1 = snaps['east']['middle'][0].point.to_point(-135, distance)
+        p2 = snaps['east']['middle'][0].point.to_point(135, distance)
+        snaps['east']['middle'].append(SnapPoint(point=p1))
+        snaps['east']['middle'].append(SnapPoint(point=p2))
+
+        # snaps['east']['middle'].append(SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.40)))
+        # snaps['east']['middle'].append(SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.60)))
 
         # add two more (slight up and slight down) for west-middle)
-        snaps['west']['middle'].append(SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.40)))
-        snaps['west']['middle'].append(SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.60)))
+        distance = width/10
+        p1 = snaps['west']['middle'][0].point.to_point(45, distance)
+        p2 = snaps['west']['middle'][0].point.to_point(-45, distance)
+        snaps['west']['middle'].append(SnapPoint(point=p1))
+        snaps['west']['middle'].append(SnapPoint(point=p2))
+
+        # snaps['west']['middle'].append(SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.40)))
+        # snaps['west']['middle'].append(SnapPoint(point=Point(self.snap_point_offset * -1, height * 0.60)))
 
         return snaps
 

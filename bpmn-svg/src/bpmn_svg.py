@@ -47,5 +47,5 @@ if __name__ == "__main__":
     bpmn_json_data = json.load(sys.stdin)
     svg, bpmn_id = to_svg(bpmn_json_data)
     output_svg_file_path = '../out/{0}.svg'.format(bpmn_id)
-    svg.save(output_svg_file_path)
+    svg.save(output_svg_file_path, encoding="UTF-8")
     info('Output at {0}'.format(output_svg_file_path))

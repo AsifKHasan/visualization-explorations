@@ -1026,10 +1026,10 @@
           "to-arrow": true,
           "style": {
               "ChannelFlow": {
-                  "fill": "transparent", "stroke-width": 0.75, "stroke": "#343837"
+                  "fill": "transparent", "stroke-width": 0.75, "stroke": "#808080"
               },
               "PoolFlow": {
-                  "fill": "transparent", "stroke-width": 1.00, "stroke": "#B30049"
+                  "fill": "transparent", "stroke-width": 1.00, "stroke": "#606060"
               },
               "LaneFlow": {
                   "fill": "transparent", "stroke-width": 1.25, "stroke": "#10A674"
@@ -1080,7 +1080,7 @@
               }
           },
           "arrow-head": {
-              "arrow-side-length": 10,
+              "arrow-side-length": 6,
               "style": {
                   "fill": "#404040", "stroke-width": 2, "stroke": "#A0A0A0"
               }

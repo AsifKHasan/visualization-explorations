@@ -211,8 +211,9 @@ class BpmnElement():
         offset_multiplier = {'north': Point(0, 1), 'south': Point(0, -1), 'east': Point(-1, 0), 'west': Point(1, 0)}
         for side in snaps:
             for position in snaps[side]:
-                snap_point_group, snap_point_width, snap_point_height = a_snap_point(snaps[side][position].point + Point(x_offset, y_offset).scale(offset_multiplier[side]))
-                svg_group.addElement(snap_point_group)
+                for point in snaps[side][position]:
+                    snap_point_group, snap_point_width, snap_point_height = a_snap_point(point.point + Point(x_offset, y_offset).scale(offset_multiplier[side]))
+                    svg_group.addElement(snap_point_group)
 
 
 ''' Node Object

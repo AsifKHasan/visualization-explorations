@@ -11,8 +11,8 @@ graph pizza_orders {
             _ []
 
             start                           hungry                              [label="Hungry";]
-            task 		                        goto_pizza_shop		                  []
-            task                            select_pizza                        [label="";]
+            task 		                        goto_pizza_shop		                  [label="Goto pizza shop";]
+            task                            select_pizza                        [label="আমি";]
             task                            order_pizza                         [label="";]
             eventBased                      on_order                            [label="Ordered"; label_pos="bottom";]
             throwMessage                    pizza_received                      [label="";]

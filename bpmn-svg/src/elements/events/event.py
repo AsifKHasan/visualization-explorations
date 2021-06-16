@@ -41,12 +41,12 @@ class Event(BpmnElement):
         snaps = super().snap_points(width, height)
 
         # add two more (slight left and slight right) for north-middle)
-        snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.45, self.snap_point_offset * -1)))
-        snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.55, self.snap_point_offset * -1)))
+        snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.40, self.snap_point_offset * -1)))
+        snaps['north']['middle'].append(SnapPoint(point=Point(width * 0.60, self.snap_point_offset * -1)))
 
         # add two more (slight left and slight right) for south-middle)
-        snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.45, height + self.snap_point_offset * 1)))
-        snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.55, height + self.snap_point_offset * 1)))
+        snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.40, height + self.snap_point_offset * 1)))
+        snaps['south']['middle'].append(SnapPoint(point=Point(width * 0.60, height + self.snap_point_offset * 1)))
 
         # add two more (slight up and slight down) for east-middle)
         snaps['east']['middle'].append(SnapPoint(point=Point(width + self.snap_point_offset * 1, height * 0.40)))
