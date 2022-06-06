@@ -3,11 +3,34 @@ digraph g {
     # center=true
     # compound=true
     dpi=150
-    edge [len=3]
-    edge [ penwidth="0.5"; color="#202020"; style="solid,"];
 
+    # neato specific
+    mode=KK
+    # model=circuit
+    # model=subset
+
+
+    edge [penwidth="0.5" color="#202020" style="solid,"];
+    node [shape=ellipse penwidth="1.0" fillcolor="#E0E0E0" fontcolor="#202020" fontname="Helvetica" fontsize=16]
+
+
+    CAS [penwidth="2.0" style=filled fillcolor="#E8E8E8" fontcolor="#202020" fontname="Helvetica" fontsize=32]
+    Business [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Requirements [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Engineering [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Design [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Development [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Testing [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Deployment [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Integration [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Components [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+    Support [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+
+
+    edge [len=4]
     CAS -> Business
     CAS -> Requirements
+    CAS -> Engineering
     CAS -> Design
     CAS -> Development
     CAS -> Testing
@@ -16,7 +39,14 @@ digraph g {
     CAS -> Components
     CAS -> Support
 
-    edge [len=1.5]
+
+    node [shape=ellipse penwidth="1.0" fillcolor="#E0E0E0" fontcolor="#202020" fontname="Helvetica" fontsize=16]
+    edge [len=3]
+
+    Business -> "Scope\nMapping"
+    Business -> "Proposal\nSubmission"
+
+
     Requirements -> Collection
     Requirements -> Analysis
     Requirements -> Documentation
@@ -25,11 +55,43 @@ digraph g {
     Documentation -> FRS
 
 
-    Integration -> Teletalk
-    Integration -> "Payment Gateway"
+    Engineering -> "Dev\nEnvironment"
+    Engineering -> "Test\nEnvironment"
 
-    Components -> "SMS Gateway"
+
+    Design -> "UI/UX\nMock"
+    Design -> Database
+    Design -> API
+
+
+    Development -> Backend
+    Development -> "API\nEndpoints"
+    Development -> Frontend
+
+    Frontend -> "Registration\nWeb"
+    Frontend -> "Registration\nApp"
+    Frontend -> "Administration\nWeb"
+
+
+    Testing -> "Functional\nTest"
+    Testing -> "Load\nTest"
+
+    "Functional\nTest" -> Automation
+
+
+    Deployment -> "CI/CD Pipeline"
+    Deployment -> "Observability\nand Monitoring"
+
+
+    Integration -> Teletalk
+    Integration -> "Payment\nGateway"
+
+    Components -> "SMS\nGateway"
     Components -> Chatbot
-    Components -> "Authentication and Authorization"
+    Components -> "Authentication\nAuthorization"
+
+
+    Support -> "Operation\nSupport"
+    Support -> "Tech\nSupport"
 
 }
