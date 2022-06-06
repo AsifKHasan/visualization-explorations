@@ -1,0 +1,35 @@
+digraph g {
+    # ratio=auto
+    # center=true
+    # compound=true
+    dpi=150
+    edge [len=3]
+    edge [ penwidth="0.5"; color="#202020"; style="solid,"];
+
+    CAS -> Business
+    CAS -> Requirements
+    CAS -> Design
+    CAS -> Development
+    CAS -> Testing
+    CAS -> Deployment
+    CAS -> Integration
+    CAS -> Components
+    CAS -> Support
+
+    edge [len=1.5]
+    Requirements -> Collection
+    Requirements -> Analysis
+    Requirements -> Documentation
+    Requirements -> Review
+
+    Documentation -> FRS
+
+
+    Integration -> Teletalk
+    Integration -> "Payment Gateway"
+
+    Components -> "SMS Gateway"
+    Components -> Chatbot
+    Components -> "Authentication and Authorization"
+
+}

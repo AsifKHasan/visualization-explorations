@@ -2,3 +2,34 @@ dot -Kdot -Tpng -o../out/grp-deployment__single-stakeholder.png grp-deployment__
 dot -Kdot -Tpng -o../out/code-to-deployment.png code-to-deployment.gv
 dot -Kdot -Tpng -o../out/grp-deployment__all-stakeholders.png grp-deployment__all-stakeholders.gv
 dot -Kdot -Tpng -o../out/grp-deployment.png grp-deployment.gv
+
+set FMT=png
+set ENGINE=neato
+dot -K%ENGINE% -T%FMT% -o./out/SAU-CAS__mindmap.%FMT% ./src/SAU-CAS__mindmap.gv
+
+
+
+
+dot
+“hierarchical” or layered drawings of directed graphs.
+
+neato
+“spring model” layouts.
+
+fdp
+stands for Force Directed Placement.
+
+sfdp
+stands for Scalable Force Directed Placement.
+
+circo
+circular layout.
+
+twopi
+radial layout.
+
+osage
+draws clustered graphs.
+
+patchwork
+draws clustered graphs using a squarif
