@@ -1,97 +1,104 @@
 digraph g {
-    # ratio=auto
-    # center=true
-    # compound=true
-    dpi=150
+  size="11,8"
+  ratio=fill
+  center=true
+  # compound=true
+  dpi=96
 
-    # neato specific
-    mode=KK
-    # model=circuit
-    # model=subset
-
-
-    edge [penwidth="0.5" color="#202020" style="solid,"];
-    node [shape=ellipse penwidth="1.0" fillcolor="#E0E0E0" fontcolor="#202020" fontname="Helvetica" fontsize=16]
+  # neato specific
+  mode=KK
+  # model=circuit
+  # model=subset
 
 
-    CAS [penwidth="2.0" style=filled fillcolor="#E8E8E8" fontcolor="#202020" fontname="Helvetica" fontsize=32]
-    Business [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Requirements [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Engineering [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Design [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Development [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Testing [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Deployment [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Integration [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Components [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
-    Support [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  edge [penwidth="0.5" color="#202020" style="solid,"];
+  node [shape=ellipse penwidth="1.0" fillcolor="#E0E0E0" fontcolor="#202020" fontname="Helvetica" fontsize=16]
 
 
-    edge [len=4]
-    CAS -> Business
-    CAS -> Requirements
-    CAS -> Engineering
-    CAS -> Design
-    CAS -> Development
-    CAS -> Testing
-    CAS -> Deployment
-    CAS -> Integration
-    CAS -> Components
-    CAS -> Support
+  CAS [penwidth="2.0" style=filled fillcolor="#E8E8E8" fontcolor="#202020" fontname="Helvetica" fontsize=32]
+  Business [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Requirements [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Engineering [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Design [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Development [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Testing [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Deployment [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Integration [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Components [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  Support [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
 
 
-    node [shape=ellipse penwidth="1.0" fillcolor="#E0E0E0" fontcolor="#202020" fontname="Helvetica" fontsize=16]
-    edge [len=3]
-
-    Business -> "Scope\nMapping"
-    Business -> "Proposal\nSubmission"
-
-
-    Requirements -> Collection
-    Requirements -> Analysis
-    Requirements -> Documentation
-    Requirements -> Review
-
-    Documentation -> FRS
+  edge [len=4]
+  CAS -> Business
+  CAS -> Requirements
+  CAS -> Engineering
+  CAS -> Design
+  CAS -> Development
+  CAS -> Testing
+  CAS -> Deployment
+  CAS -> Integration
+  CAS -> Components
+  CAS -> Support
 
 
-    Engineering -> "Dev\nEnvironment"
-    Engineering -> "Test\nEnvironment"
+  node [shape=ellipse penwidth="1.0" fillcolor="#E0E0E0" fontcolor="#202020" fontname="Helvetica" fontsize=16]
+  edge [len=3]
+
+  Business -> "Stakeholder\nManagement"
+  Business -> "Scope\nMapping"
+  Business -> "Proposal\nSubmission"
+
+  "Stakeholder\nManagement" -> Teletalk
+  "Stakeholder\nManagement" -> DOER
+  "Stakeholder\nManagement" -> "SSL\nCommerce"
 
 
-    Design -> "UI/UX\nMock"
-    Design -> Database
-    Design -> API
+  Requirements -> Collection
+  Requirements -> Analysis
+  Requirements -> Documentation
+  Requirements -> Review
+
+  Documentation -> FRS [len=2]
 
 
-    Development -> Backend
-    Development -> "API\nEndpoints"
-    Development -> Frontend
-
-    Frontend -> "Registration\nWeb"
-    Frontend -> "Registration\nApp"
-    Frontend -> "Administration\nWeb"
+  Engineering -> "Production\nEnvironment"
+  Engineering -> "Dev\nEnvironment"
+  Engineering -> "Test\nEnvironment"
 
 
-    Testing -> "Functional\nTest"
-    Testing -> "Load\nTest"
-
-    "Functional\nTest" -> Automation
-
-
-    Deployment -> "CI/CD Pipeline"
-    Deployment -> "Observability\nand Monitoring"
+  Design -> "UI/UX\nMock"
+  Design -> Database
+  Design -> API
 
 
-    Integration -> Teletalk
-    Integration -> "Payment\nGateway"
+  Development -> Backend
+  Development -> "API\nEndpoints"
+  Development -> Frontend
 
-    Components -> "SMS\nGateway"
-    Components -> Chatbot
-    Components -> "Authentication\nAuthorization"
+  Frontend -> "Registration\nWeb" [len=2]
+  Frontend -> "Registration\nApp" [len=2]
+  Frontend -> "Administration\nWeb" [len=2]
 
 
-    Support -> "Operation\nSupport"
-    Support -> "Tech\nSupport"
+  Testing -> "Functional\nTest"
+  Testing -> "Load\nTest"
+
+  "Functional\nTest" -> Automation [len=2]
+
+
+  Deployment -> "CI/CD\nPipeline"
+  Deployment -> "Observability\nand Monitoring"
+
+
+  Integration -> "Teletalk\nIntegration"
+  Integration -> "Payment\nGateway"
+
+  Components -> "SMS\nGateway"
+  Components -> Chatbot
+  Components -> "Authentication\nAuthorization"
+
+
+  Support -> "Operation\nSupport"
+  Support -> "Tech\nSupport"
 
 }
