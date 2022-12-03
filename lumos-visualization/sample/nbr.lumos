@@ -1,0 +1,20 @@
+lumos NBR {
+  props [label='National Board of Revenue', template='org-nbr-default']
+
+  site DC {
+    props [label='NBR DC', template='site-nbr-default']
+
+    rack Network-01 {
+      props [label='Network Rack 01', template='rack-nbr-default', u=42, ]
+
+      equipment Cisco-2901 {
+        props [label='Cisco 2901', u=3-4, template='cisco-2901-default', ]
+      }
+
+      equipment Cisco-2911 {
+        props [label='Cisco 2911', u=7-8, template='cisco-2911-default', ]
+      }
+
+    }
+  }
+}
