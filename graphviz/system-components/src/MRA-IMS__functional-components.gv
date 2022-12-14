@@ -1,0 +1,57 @@
+digraph g {
+  size="11,8"
+  ratio=fill
+  center=true
+  # compound=true
+  dpi=96
+
+  # neato specific
+  mode=KK
+  # model=circuit
+  # model=subset
+
+
+  edge [penwidth="0.5" color="#202020" style="solid,"];
+  node [shape=ellipse penwidth="1.0" fillcolor="#E0E0E0" fontcolor="#202020" fontname="Helvetica" fontsize=16]
+
+
+  "MRA-IMS" [penwidth="2.0" style=filled fillcolor="#E8E8E8" fontcolor="#202020" fontname="Helvetica" fontsize=32]
+
+  "Accounts\nand\nFinance" [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  "Dispute\nManagement" [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  "Loan\nManagement" [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+
+  "Member\nManagement" [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  "Configuration\nManagement" [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  "Compliance\nand\nReporting" [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+  "MFI Staff\nManagement" [penwidth="2.0" style=filled fillcolor="#F0F0F0" fontcolor="#202020" fontname="Helvetica" fontsize=24]
+
+  edge [len=4]
+  "MRA-IMS" -> "Accounts\nand\nFinance"
+  "MRA-IMS" -> "Dispute\nManagement"
+  "MRA-IMS" -> "Loan\nManagement"
+  "MRA-IMS" -> "Member\nManagement"
+  "MRA-IMS" -> "Configuration\nManagement"
+  "MRA-IMS" -> "Compliance\nand\nReporting"
+  "MRA-IMS" -> "MFI Staff\nManagement"
+
+  node [shape=ellipse penwidth="1.0" fillcolor="#E0E0E0" fontcolor="#202020" fontname="Helvetica" fontsize=16]
+  edge [len=3]
+
+  "Accounts\nand\nFinance" -> "Entry and\nTransaction\nManagement"
+  "Accounts\nand\nFinance"-> "Voucher\nEntry"
+
+  "Dispute\nManagement" -> "Dispute\nResolution"
+  "Dispute\nManagement" -> "Complaint\nManagement"
+
+  "Loan\nManagement" -> "Loan\nApplication"
+  "Loan\nManagement" -> "Loan\nAssessment\nand\nProcessing"
+  "Loan\nManagement" -> "Loan\nDisbursement"
+  "Loan\nManagement" -> "Loan\nCollection"
+  "Loan\nManagement" -> "Loan\nCalculation"
+
+  "Member\nManagement" -> "Member\nRegistration"
+
+  "Configuration\nManagement" -> "Product\nConfiguration"
+
+}

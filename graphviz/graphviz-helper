@@ -3,14 +3,20 @@ dot -Kdot -Tpng -o../out/code-to-deployment.png code-to-deployment.gv
 dot -Kdot -Tpng -o../out/grp-deployment__all-stakeholders.png grp-deployment__all-stakeholders.gv
 dot -Kdot -Tpng -o../out/grp-deployment.png grp-deployment.gv
 
+GV=MRA-IMS__stakeholders
+GV=MRA-IMS__functional-components
+
 set FMT=png
 set ENGINE=neato
-dot -K%ENGINE% -T%FMT% -o./out/SAU-CAS__mindmap.%FMT% ./src/SAU-CAS__mindmap.gv
+set GV=MRA-IMS__functional-components
+dot -K%ENGINE% -T%FMT% -o./out/%GV%.%FMT% ./src/%GV%.gv
 
 
 FMT=png
 ENGINE=neato
-dot -K${ENGINE} -T${FMT} -o./out/SAU-CAS__mindmap.${FMT} ./src/SAU-CAS__mindmap.gv
+GV=MRA-IMS__functional-components
+dot -K${ENGINE} -T${FMT} -o./out/${GV}.${FMT} ./src/${GV}.gv
+
 
 
 dot
