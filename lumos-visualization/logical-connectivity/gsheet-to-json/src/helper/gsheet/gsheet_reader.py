@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
 '''
 '''
-# import pandas as pd
+import pandas as pd
 import pygsheets
 
 from helper.logger import *
-from helper.gsheet.gsheet_util import *
 
+ws_data_spec = {
+    'start-col': 'A', 'end-col': 'L', 'start-row': 2, 'numerize': False
+}
 
-def process_gsheet(gsheet, worksheet_title):
-    ws = gsheet.worksheet('title', worksheet_title)
+def process_gsheet(gsheet, worksheet_name):
+    ws = gsheet.worksheet('title', worksheet_name)
     if not ws:
-        error(f"no worksheet [{worksheet_title}]")
+        error(f"no worksheet [{worksheet_name}]")
         return None
 
-    items = ws.get_values(start='A3', end=f"L{ws.rows}", returnas='matrix', majdim='ROWS', include_tailing_empty=True, include_tailing_empty_rows=False, value_render='FORMULA')
-    toc_list = [toc for toc in toc_list if toc[2] == 'Yes' and toc[3] in [0, 1, 2, 3, 4, 5, 6]]
+    start = f"{ws_data_spec['start-col']}{ws_data_spec['start-row']}"
+    end = f"{ws_data_spec['end-col']}{ws.rows}"
 
-    section_index = 0
-    for toc in toc_list:
-        data['sections'].append(process_section(context=context, gsheet=gsheet, toc=toc, current_document_index=current_document_index, section_index=section_index, parent=parent))
-        section_index = section_index + 1
+    df = ws.get_as_df(has_header=True, index_colum=None, empty_value=None, numerize=ws_data_spec['numerize'], start=start, end=end)
+    print(df)
+    data = df.to_dict(orient='dict')
 
     return data

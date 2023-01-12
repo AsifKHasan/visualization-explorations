@@ -1,10 +1,10 @@
 # copy this file as config.yml and do not commit the copied file
 
 # if gsheet read times out how many seconds to wait before trying the next read
-gsheet-read-wait-seconds:   60
+gsheet-read-wait-seconds:   20
 
 # if gsheet read times out how many times the read should be tried in total
-gsheet-read-try-count:      5
+gsheet-read-try-count:      2
 
 dirs:
   # all outputs and temporary downloads go here

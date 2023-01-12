@@ -4,7 +4,7 @@
 
 :: parameters
 set DOCUMENT=%1
-set WORKSHEET=%1
+set WORKSHEET=%2
 
 :: json-from-gsheet
 pushd .\gsheet-to-json\src

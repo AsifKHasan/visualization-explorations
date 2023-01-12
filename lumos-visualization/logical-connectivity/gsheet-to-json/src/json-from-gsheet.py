@@ -30,7 +30,7 @@ class JsonFromGsheet(object):
 
 		# process the gsheet
 		self._CONFIG['files']['output-json'] = f"{self._CONFIG['dirs']['output-dir']}/{self._worksheet_name}.json"
-		self._data = self._gsheethelper.read_gsheet(gsheet_title=gsheet_title, worksheet_title=self._worksheet_name)
+		self._data = self._gsheethelper.read_gsheet(gsheet_name=self._gsheet_name, worksheet_name=self._worksheet_name)
 		self.save_json()
 
 		self.tear_down()
@@ -41,8 +41,9 @@ class JsonFromGsheet(object):
 		self._CONFIG = yaml.load(open(self._config_path, 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 		config_dir = self._config_path.parent
 
-		self._CONFIG['dirs']['output-dir'] = config_dir / self._CONFIG['dirs']['output-dir']
 		self._CONFIG['files']['google-cred'] = config_dir / self._CONFIG['files']['google-cred']
+		self._CONFIG['dirs']['output-dir'] = config_dir / self._CONFIG['dirs']['output-dir']
+		self._CONFIG['dirs']['output-dir'].mkdir(parents=True, exist_ok=True)
 
 		# gsheet-helper
 		self._gsheethelper = GsheetHelper()
@@ -64,8 +65,8 @@ if __name__ == '__main__':
 	# construct the argument parse and parse the arguments
 	ap = argparse.ArgumentParser()
 	ap.add_argument("-c", "--config", required=True, help="configuration yml path")
-	ap.add_argument("-g", "--gsheet", required=False, help="gsheet name to read from")
-	ap.add_argument("-w", "--worksheet", required=False, help="worksheet name to read from")
+	ap.add_argument("-g", "--gsheet", required=True, help="gsheet name to read from")
+	ap.add_argument("-w", "--worksheet", required=True, help="worksheet name to read from")
 	args = vars(ap.parse_args())
 
 	generator = JsonFromGsheet(config_path=args["config"], gsheet_name=args["gsheet"], worksheet_name=args["worksheet"])

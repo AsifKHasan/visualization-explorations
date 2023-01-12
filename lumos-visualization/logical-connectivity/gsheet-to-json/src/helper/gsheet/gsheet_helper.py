@@ -11,7 +11,6 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
 from helper.logger import *
-from helper.gsheet.gsheet_util import *
 from helper.gsheet.gsheet_reader import *
 
 class GsheetHelper(object):
@@ -47,41 +46,41 @@ class GsheetHelper(object):
         gauth = GoogleAuth()
         gauth.credentials = credentials
 
-        self._context['tmp-dir'] = config['dirs']['temp-dir']
-        self._context['index-worksheet'] = config['index-worksheet']
         self._context['gsheet-read-wait-seconds'] = config['gsheet-read-wait-seconds']
         self._context['gsheet-read-try-count'] = config['gsheet-read-try-count']
 
         self.current_document_index = -1
 
-        info(f"authorized  with Google")
+        info(f"authorized with Google")
 
 
     ''' read the gsheet
     '''
-    def read_gsheet(self, gsheet_title, worksheet_title):
+    def read_gsheet(self, gsheet_name, worksheet_name):
         wait_for = self._context['gsheet-read-wait-seconds']
         try_count = self._context['gsheet-read-try-count']
         gsheet = None
+        data = None
         for i in range(0, try_count):
             try:
-                info(f"opening gsheet : {gsheet_title}")
-                gsheet = self._context['_G'].open(gsheet_title)
-                info(f"opened  gsheet : {gsheet_title}")
+                info(f"opening gsheet : {gsheet_name}")
+                gsheet = self._context['_G'].open(gsheet_name)
+                info(f"opened  gsheet : {gsheet_name}")
 
-                # optimization - read the full gsheet
-                info(f"reading gsheet : [{gsheet_title}] worksheet : [{worksheet_title}]")
-                data = self.process_gsheet(gsheet=gsheet, worksheet_title=worksheet_title)
-                info(f"read    gsheet : [{gsheet_title}] worksheet : [{worksheet_title}]")
-                
                 break
 
-            except:
-                warn(f"gsheet {gsheet_title} read request (attempt {i}) failed, waiting for {wait_for} seconds before trying again")
+            except Exception as e:
+                print(e)
+                warn(f"gsheet {gsheet_name} read request (attempt {i}) failed, waiting for {wait_for} seconds before trying again")
                 time.sleep(float(wait_for))
 
         if gsheet is None:
             error('gsheet read request failed, quiting')
             sys.exit(1)
+
+        # process the worksheet
+        info(f"reading gsheet : [{gsheet_name}] worksheet : [{worksheet_name}]")
+        data = process_gsheet(gsheet=gsheet, worksheet_name=worksheet_name)
+        info(f"read    gsheet : [{gsheet_name}] worksheet : [{worksheet_name}]")
 
         return data
