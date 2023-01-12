@@ -1,0 +1,9 @@
+set DOCUMENT="NBR__logical-connectivity-data"
+set WORKSHEET="structure-bch"
+dot-from-gsheet.bat %DOCUMENT% %WORKSHEET%
+
+
+
+DOCUMENT="NBR__logical-connectivity-data"
+WORKSHEET="structure-bch"
+./dot-from-gsheet.sh ${DOCUMENT} ${WORKSHEET}
