@@ -22,53 +22,37 @@ def process_gsheet(gsheet, worksheet_name):
     end = f"{ws_data_spec['end-col']}{ws.rows}"
 
     df = ws.get_as_df(has_header=True, index_colum=None, empty_value=None, numerize=ws_data_spec['numerize'], start=start, end=end)
+    df.dropna(inplace=True)
     
     # TODO: just store for now
     # df.to_pickle('../../out/nbr.pickle')
-    grouped = df.groupby(['house', 'area', 'building', 'floor', 'room', 'rack', 'tag', 'name', 'make', 'model'])
 
-    # levels = len(grouped.index.levels)
-    # levels = 10
-    # dicts = [{} for i in range(levels)]
-    # last_index = None
-    # for index, value in grouped:
-    #     if not last_index:
-    #         last_index = index
+    d = defaultdict(dict)
+    for i, row in df.iterrows():
+        if not row.house in d:
+            d[row.house] = {}
 
-    #     for (ii,(i,j)) in enumerate(zip(index, last_index)):
-    #         if not i == j:
-    #             ii = levels - ii -1
-    #             dicts[:ii] =  [{} for _ in dicts[:ii]]
-    #             break
+        if not row.area in d[row.house]:
+            d[row.house][row.area] = {}
 
-    #     for i, key in enumerate(reversed(index)):
-    #         dicts[i][key] = value
-    #         value = dicts[i]
+        if not row.building in d[row.house][row.area]:
+            d[row.house][row.area][row.building] = {}
 
-    #     last_index = index
+        if not row.floor in d[row.house][row.area][row.building]:
+            d[row.house][row.area][row.building][row.floor] = {}
 
-    # result = json.dumps(dicts[-1])
+        if not row.room in d[row.house][row.area][row.building][row.floor]:
+            d[row.house][row.area][row.building][row.floor][row.room] = {}
 
-    # data = df.to_dict(orient='dict')
+        if not row.rack in d[row.house][row.area][row.building][row.floor][row.room]:
+            d[row.house][row.area][row.building][row.floor][row.room][row.rack] = {}
+        
+        if not row.tag in d[row.house][row.area][row.building][row.floor][row.room][row.rack]:
+            d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag] = []
+        
+        d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag].append(row.drop(['house', 'area', 'building', 'floor', 'room', 'rack', 'tag']).to_dict())
 
-    result = dict_from_enumerable(grouped.groups, 'port', 'house', 'area', 'building', 'floor', 'room', 'rack', 'tag', 'name', 'make', 'model')
+        # print(i, row.house)
 
-    return result
+    return dict(d)
 
-
-def dict_from_enumerable(enumerable, final_value, *groups):
-    d = defaultdict(lambda: defaultdict(dict))
-    group_count = len(groups)
-
-    for item in enumerable:
-        nested = d
-        item_result = final_value(item) if callable(final_value) else item.get(final_value)
-        for i, group in enumerate(groups, start=1):
-            group_val = str(group(item) if callable(group) else item.get(group))
-
-            if i == group_count:
-                nested[group_val] = item_result
-            else:
-                nested = nested[group_val]
-
-    return d
