@@ -9,7 +9,7 @@ from collections import defaultdict
 from helper.logger import *
 
 ws_data_spec = {
-    'start-col': 'A', 'end-col': 'L', 'start-row': 2, 'numerize': False
+    'start-col': 'A', 'end-col': 'M', 'start-row': 2, 'numerize': False
 }
 
 def process_gsheet(gsheet, worksheet_name):
@@ -23,6 +23,8 @@ def process_gsheet(gsheet, worksheet_name):
 
     df = ws.get_as_df(has_header=True, index_colum=None, empty_value=None, numerize=ws_data_spec['numerize'], start=start, end=end)
     df.dropna(inplace=True)
+    df = df.query('include == "Yes"')
+    df.drop(['include'], axis=1, inplace=True)
     
     # TODO: just store for now
     # df.to_pickle('../../out/nbr.pickle')
@@ -48,9 +50,9 @@ def process_gsheet(gsheet, worksheet_name):
             d[row.house][row.area][row.building][row.floor][row.room][row.rack] = {}
         
         if not row.tag in d[row.house][row.area][row.building][row.floor][row.room][row.rack]:
-            d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag] = []
+            d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag] = {'name': row['name'], 'make': row.make, 'model': row.model, 'ports': []}
         
-        d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag].append(row.drop(['house', 'area', 'building', 'floor', 'room', 'rack', 'tag']).to_dict())
+        d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag]['ports'].append(row.drop(['house', 'area', 'building', 'floor', 'room', 'rack', 'tag', 'name', 'make', 'model']).to_dict())
 
         # print(i, row.house)
 
