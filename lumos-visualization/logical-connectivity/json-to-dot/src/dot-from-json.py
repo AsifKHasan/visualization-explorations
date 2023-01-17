@@ -28,7 +28,7 @@ class DotFromJson(object):
 		self.load_json()
 
 		# dot-helper
-		self._CONFIG['files']['output-dot'] = f"{self._CONFIG['dirs']['output-dir']}/{self._json_name}.dot"
+		self._CONFIG['files']['output-dot'] = f"{self._CONFIG['dirs']['output-dir']}/{self._json_name}.gv"
 		dot_helper = DotHelper(self._CONFIG)
 		dot_helper.generate_and_save(self._data)
 		self.tear_down()
