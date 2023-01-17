@@ -31,6 +31,10 @@ fi
 # dot -> png
 pushd ./out
 
+FMT=png
+ENGINE=neato
+dot -K${ENGINE} -T${FMT} -o${WORKSHEET}.${FMT} ${WORKSHEET}.gv
+
 
 if [ ${?} -ne 0 ];  then
   popd && exit 1

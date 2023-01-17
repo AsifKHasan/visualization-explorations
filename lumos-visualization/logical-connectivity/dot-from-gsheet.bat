@@ -31,6 +31,11 @@ popd
 :: dot -> png
 pushd .\out
 
+set FMT=png
+set ENGINE=neato
+dot -K%ENGINE% -T%FMT% -o%WORKSHEET%.%FMT% %WORKSHEET%.gv
+
+
 if errorlevel 1 (
   popd
   exit /b %errorlevel%
