@@ -10,7 +10,7 @@ PYTHON=python3
 
 # json-from-gsheet
 pushd ./gsheet-to-json/src
-${PYTHON} json-from-gsheet.py --config "../conf/config.yml" --gsheet ${DOCUMENT} --worksheet ${WORKSHEET}
+# ${PYTHON} json-from-gsheet.py --config "../conf/config.yml" --gsheet ${DOCUMENT} --worksheet ${WORKSHEET}
 
 if [ ${?} -ne 0 ]; then
   popd && exit 1
@@ -32,7 +32,7 @@ fi
 pushd ./out
 
 FMT=png
-ENGINE=neato
+ENGINE=dot
 dot -K${ENGINE} -T${FMT} -o${WORKSHEET}.${FMT} ${WORKSHEET}.gv
 
 

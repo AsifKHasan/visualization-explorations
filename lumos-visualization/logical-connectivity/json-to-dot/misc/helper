@@ -8,3 +8,6 @@ WORKSHEET="structure-bch"
 
 dot-from-gsheet.bat "NBR__logical-connectivity-data" "structure-bch"
 dot-from-gsheet.bat "NBR__logical-connectivity-data" "structure-dch"
+
+./dot-from-gsheet.sh "NBR__logical-connectivity-data" "structure-bch"
+./dot-from-gsheet.sh "NBR__logical-connectivity-data" "structure-dch"
