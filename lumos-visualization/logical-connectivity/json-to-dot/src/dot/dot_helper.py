@@ -26,9 +26,9 @@ class DotHelper(object):
     def generate_and_save(self, structure):
 
         # work on only the first house
-        for house_key, house_data in structure.items():
-            dot_house = DotHouse(config=self._config)
-            self.dot_lines =  self.dot_lines + dot_house.house_to_dot(house_key=house_key, house_data=house_data)
+        for key, data in structure.items():
+            dot_house = DotHouse(config=self._config, key=key, data=data)
+            self.dot_lines =  self.dot_lines + dot_house.house_to_dot()
 
         # save the markdown document string in a file
         with open(self._config['files']['output-dot'], "w", encoding="utf-8") as f:

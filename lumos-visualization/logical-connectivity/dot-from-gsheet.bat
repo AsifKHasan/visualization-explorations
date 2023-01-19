@@ -8,7 +8,7 @@ set WORKSHEET=%2
 
 :: json-from-gsheet
 pushd .\gsheet-to-json\src
-.\json-from-gsheet.py --config "../conf/config.yml" --gsheet "%DOCUMENT%" --worksheet "%WORKSHEET%"
+@REM .\json-from-gsheet.py --config "../conf/config.yml" --gsheet "%DOCUMENT%" --worksheet "%WORKSHEET%"
 
 if errorlevel 1 (
   popd
@@ -32,7 +32,7 @@ popd
 pushd .\out
 
 set FMT=png
-set ENGINE=neato
+set ENGINE=dot
 dot -K%ENGINE% -T%FMT% -o%WORKSHEET%.%FMT% %WORKSHEET%.gv
 
 

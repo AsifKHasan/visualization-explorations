@@ -7,6 +7,23 @@ import re
 
 from helper.logger import *
 
+
+''' make a dot Node
+'''
+def make_a_property(prop_key, prop_value):
+    prop_str = f'{prop_key}="{prop_value}"; '
+
+    return prop_str
+
+
+''' make a dot Node
+'''
+def make_a_node(node_key, label):
+    node_str = f"{node_key} [ {make_a_property(prop_key='label', prop_value=label)} ]"
+
+    return node_str
+
+
 ''' wrap with BEGIN/END comments
 '''
 def wrap_with_comment(lines, object_type=None, object_id=None, comment_prefix_start='BEGIN', comment_prefix_stop='END  ', begin_suffix=None, indent_level=0):
@@ -41,15 +58,12 @@ def wrap_with_comment(lines, object_type=None, object_id=None, comment_prefix_st
 def indent_and_wrap(lines, wrap_keyword, object_name, wrap_start='{', wrap_stop='}', indent_level=1):
     output_lines = []
 
-    # convert object name to a valid identifier
-    obj_name = text_to_identifier(object_name)
-
     # subgraph's identifier must be prefixed with 'cluster_'
     if wrap_keyword == 'subgraph':
-        obj_name = f"cluster_{obj_name}"
+        object_name = f"cluster_{object_name}"
     
     # start wrap
-    output_lines.append(f"{wrap_keyword} {obj_name} {wrap_start}")
+    output_lines.append(f"{wrap_keyword} {object_name} {wrap_start}")
 
     # indent
     indent = "\t" * indent_level
