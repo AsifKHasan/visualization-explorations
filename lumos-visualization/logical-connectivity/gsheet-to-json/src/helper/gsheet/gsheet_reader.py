@@ -24,7 +24,7 @@ def process_gsheet(gsheet, worksheet_name):
     df = ws.get_as_df(has_header=True, index_colum=None, empty_value=None, numerize=ws_data_spec['numerize'], start=start, end=end)
     df.dropna(inplace=True)
     df = df.query('include == "Yes"')
-    df.drop(['include'], axis=1, inplace=True)
+    df = df.drop(['include'], axis=1)
     
     # TODO: just store for now
     # df.to_pickle('../../out/nbr.pickle')

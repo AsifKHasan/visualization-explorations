@@ -19,7 +19,9 @@ class DotBase(object):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         self._config = config
         self._name = key
-        self._key = text_to_identifier(key)
+
+        # add some random suffix to the key
+        self._key = text_to_identifier(key) + '_' + random_string()
         self._data = data
         self._lines = []
 
@@ -74,7 +76,7 @@ class DotHouse(DotBase):
             self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
             self._lines.append('')
 
-        # a house includes areas
+        # a house has areas
         self.append_children(class_type='Area')
 
         # wrap the dot code
@@ -106,7 +108,7 @@ class DotArea(DotBase):
             self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
             self._lines.append('')
 
-        # an area includes buildings
+        # an area has buildings
         self.append_children(class_type='Building')
 
         # wrap the dot code
@@ -138,7 +140,7 @@ class DotBuilding(DotBase):
             self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
             self._lines.append('')
 
-        # an building includes floors
+        # a building has floors
         self.append_children(class_type='Floor')
 
         # wrap the dot code
@@ -170,7 +172,7 @@ class DotFloor(DotBase):
             self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
             self._lines.append('')
 
-        # an floor includes rooms
+        # a floor has rooms
         self.append_children(class_type='Room')
 
         # wrap the dot code
@@ -202,7 +204,7 @@ class DotRoom(DotBase):
             self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
             self._lines.append('')
 
-        # a room includes racks
+        # a room has racks
         self.append_children(class_type='Rack')
 
         # wrap the dot code
@@ -234,7 +236,7 @@ class DotRack(DotBase):
             self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
             self._lines.append('')
 
-        # a rack includes equipments
+        # a rack has equipments
         self.append_children(class_type='Equipment')
 
         # wrap the dot code
@@ -265,7 +267,7 @@ class DotEquipment(DotBase):
         self._lines.append(node_str)
         self._lines.append('')
 
-        # an equipment includes ports
+        # an equipment has ports
         self.append_children(class_type='Port', work_data=self._data['ports'])
 
         return self._lines

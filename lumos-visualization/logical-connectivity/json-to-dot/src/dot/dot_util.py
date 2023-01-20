@@ -4,6 +4,8 @@
 various utilities for generating (GraphViz) dot code
 '''
 import re
+import random
+import string
 
 from helper.logger import *
 
@@ -86,3 +88,11 @@ def text_to_identifier(text):
     id = re.sub('^[^a-zA-Z_]+', '', id)
 
     return id
+
+
+
+''' get a random string
+'''
+def random_string(length=12):
+    letters = string.ascii_uppercase
+    return ''.join(random.choice(letters) for i in range(length))
