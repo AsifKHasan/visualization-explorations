@@ -1,0 +1,34 @@
+{
+    "House": {
+        "_comment": "graph properties"
+
+    },
+    "Area": {
+        "_comment": "subgraph properties for Area"
+
+    },
+    "Building": {
+        "_comment": "subgraph properties for Building"
+
+    },
+    "Floor": {
+        "_comment": "subgraph properties for Floor"
+
+    },
+    "Room": {
+        "_comment": "subgraph properties for Room"
+
+    },
+    "Rack": {
+        "_comment": "subgraph properties for Rack"
+
+    },
+    "Equipment": {
+        "_comment": "node properties for Equipment"
+
+    },
+    "Port": {
+        "_comment": "properties for Port"
+
+    }
+}

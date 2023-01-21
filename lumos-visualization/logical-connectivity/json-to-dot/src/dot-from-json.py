@@ -44,6 +44,27 @@ class DotFromJson(object):
 		if not 'files' in self._CONFIG:
 			self._CONFIG['files'] = {}
 
+		# there should be a theme_key.json in *themes* directory
+		self._CONFIG['theme']['theme-dir'] = Path(self._CONFIG['theme']['theme-dir']).resolve()
+		self._CONFIG['theme']['theme-path'] = self._CONFIG['theme']['theme-dir'] / f"{self._CONFIG['theme']['theme-name']}.json"
+		try:
+			info(f"using theme '{self._CONFIG['theme']['theme-name']}'")
+			with open(self._CONFIG['theme']['theme-path'], 'r') as f:
+				self._CONFIG['theme']['theme-data'] = json.load(f)
+
+		except Exception as e:
+			warn("theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Using 'default' theme")
+			try:
+				self._CONFIG['theme']['theme-name'] = 'default'
+				self._CONFIG['theme']['theme-path'] = self._CONFIG['theme']['theme-dir'] / f"{self._CONFIG['theme']['theme-name']}.json"
+				with open(self._CONFIG['theme']['theme-path'], 'r') as f:
+					self._CONFIG['theme']['theme-data'] = json.load(f)
+
+			except Exception as e:
+				error(f"theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Exiting...")
+				raise e
+		
+
 	def load_json(self):
 		with open(self._CONFIG['files']['input-json'], "r") as f:
 			self._data = json.load(f)

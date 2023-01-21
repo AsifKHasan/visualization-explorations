@@ -15,10 +15,11 @@ class DotBase(object):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         self._config = config
         self._name = key
+        self._theme = self._config['theme']['theme-data'][class_type]
 
         # add some random suffix to the key
         self._key = text_to_identifier(key) + '_' + random_string()
@@ -34,13 +35,13 @@ class DotBase(object):
         # if no work_data supplied, use the self._data
         if work_data is None:
             for key, data in self._data.items():
-                child_instance = child_class(config=self._config, key=key, data=data)
+                child_instance = child_class(config=self._config, class_type=class_type, key=key, data=data)
                 self._lines = self._lines + child_instance.to_dot()
 
         # else assume that the work_data is a list
         else:
             for data in work_data:
-                child_instance = child_class(config=self._config, key='', data=data)
+                child_instance = child_class(config=self._config, class_type=class_type, key='', data=data)
                 self._lines = self._lines + child_instance.to_dot()
 
 
@@ -59,9 +60,9 @@ class DotHouse(DotBase):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, key=key, data=data)
+        super().__init__(config=config, class_type=class_type, key=key, data=data)
 
 
     ''' generates the Dot code
@@ -92,9 +93,9 @@ class DotArea(DotBase):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, key=key, data=data)
+        super().__init__(config=config, class_type=class_type, key=key, data=data)
 
 
     ''' generates the Dot code
@@ -124,9 +125,9 @@ class DotBuilding(DotBase):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, key=key, data=data)
+        super().__init__(config=config, class_type=class_type, key=key, data=data)
 
 
     ''' generates the Dot code
@@ -156,9 +157,9 @@ class DotFloor(DotBase):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, key=key, data=data)
+        super().__init__(config=config, class_type=class_type, key=key, data=data)
 
 
     ''' generates the Dot code
@@ -188,9 +189,9 @@ class DotRoom(DotBase):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, key=key, data=data)
+        super().__init__(config=config, class_type=class_type, key=key, data=data)
 
 
     ''' generates the Dot code
@@ -206,7 +207,6 @@ class DotRoom(DotBase):
 
         # a room has racks
         self.append_children(class_type='Rack')
-
         # wrap the dot code
         self.wrap_and_close(as_a='subgraph')
 
@@ -220,9 +220,9 @@ class DotRack(DotBase):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, key=key, data=data)
+        super().__init__(config=config, class_type=class_type, key=key, data=data)
 
 
     ''' generates the Dot code
@@ -252,9 +252,9 @@ class DotEquipment(DotBase):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, key=key, data=data)
+        super().__init__(config=config, class_type=class_type, key=key, data=data)
 
 
     ''' generates the Dot code
@@ -280,9 +280,9 @@ class DotPort(DotBase):
 
     ''' constructor
     '''
-    def __init__(self, config, key, data):
+    def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, key=key, data=data)
+        super().__init__(config=config, class_type=class_type, key=key, data=data)
 
 
     ''' generates the Dot code

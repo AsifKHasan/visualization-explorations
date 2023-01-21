@@ -3,3 +3,8 @@
 dirs:
   # all outputs and temporary downloads go here
   output-dir:            "../../out"
+
+theme:
+  # all themes go here
+  theme-dir:            "../themes"
+  theme-name:           "default"

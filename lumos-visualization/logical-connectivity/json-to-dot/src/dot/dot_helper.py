@@ -27,7 +27,7 @@ class DotHelper(object):
 
         # work on only the first house
         for key, data in structure.items():
-            dot_house = DotHouse(config=self._config, key=key, data=data)
+            dot_house = DotHouse(config=self._config, class_type='House', key=key, data=data)
             self.dot_lines =  self.dot_lines + dot_house.house_to_dot()
 
         # save the markdown document string in a file
