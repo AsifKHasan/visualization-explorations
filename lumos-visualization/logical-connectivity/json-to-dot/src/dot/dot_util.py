@@ -10,10 +10,26 @@ import string
 from helper.logger import *
 
 
-''' make a dot Node
+''' make a property list
+'''
+def make_property_list(name, prop_dict):
+    prop_list = []
+    for k, v in prop_dict.items():
+        prop_list.append(make_a_property(prop_key=k, prop_value=v))
+
+    prop_str = '; '.join(prop_list)
+    prop_str = f'[ {prop_str} ]'
+
+    if not name is None:
+        prop_str = f'{name} {prop_str}'
+
+    return prop_str
+
+
+''' make a property
 '''
 def make_a_property(prop_key, prop_value):
-    prop_str = f'{prop_key}="{prop_value}"; '
+    prop_str = f'{prop_key}="{prop_value}"'
 
     return prop_str
 

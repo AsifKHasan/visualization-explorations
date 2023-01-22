@@ -1,34 +1,87 @@
 {
     "House": {
-        "_comment": "graph properties"
-
+        "graph": {
+            "compound": "true",
+            "rankdir": "TB",
+            "labelloc": "b",
+            "penwidth": "0.5",
+            "style": "dotted",
+            "color": "#B0B0B0",
+            "margin": "5"
+        },
+        "node": {
+            "labelloc": "b",
+            "style": "filled", 
+            "color": "#808080", 
+            "penwidth": "0.5", 
+            "fillcolor": "#E8E8E8",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "9",
+            "margin": "0.05,0.1"
+        },
+        "edge": {
+            "style": "invis"
+        }
     },
     "Area": {
-        "_comment": "subgraph properties for Area"
-
+        "graph": {
+            "compound": "true",
+            "rankdir": "TB",
+            "labelloc": "b",
+            "penwidth": "0.5",
+            "style": "dotted",
+            "color": "#B0B0B0",
+            "margin": "5"
+        }
     },
     "Building": {
-        "_comment": "subgraph properties for Building"
-
+        "graph": {
+            "compound": "true",
+            "rankdir": "TB",
+            "labelloc": "b",
+            "penwidth": "0.5",
+            "style": "dotted",
+            "color": "#B0B0B0",
+            "margin": "5"
+        }
     },
     "Floor": {
-        "_comment": "subgraph properties for Floor"
-
+        "graph": {
+            "compound": "true",
+            "rankdir": "TB",
+            "labelloc": "b",
+            "penwidth": "0.5",
+            "style": "dotted",
+            "color": "#B0B0B0",
+            "margin": "5"
+        }
     },
     "Room": {
-        "_comment": "subgraph properties for Room"
-
+        "graph": {
+            "compound": "true",
+            "rankdir": "TB",
+            "labelloc": "b",
+            "penwidth": "0.5",
+            "style": "dotted",
+            "color": "#B0B0B0",
+            "margin": "5"
+        }
     },
     "Rack": {
-        "_comment": "subgraph properties for Rack"
-
+        "graph": {
+            "compound": "true",
+            "rankdir": "TB",
+            "labelloc": "b",
+            "penwidth": "0.5",
+            "style": "dotted",
+            "color": "#B0B0B0",
+            "fillcolor": "#E8E8E8",
+            "margin": "5"
+        }
     },
     "Equipment": {
-        "_comment": "node properties for Equipment"
-
     },
     "Port": {
-        "_comment": "properties for Port"
-
     }
 }

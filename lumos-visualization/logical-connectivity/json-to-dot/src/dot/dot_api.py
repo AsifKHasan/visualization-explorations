@@ -72,9 +72,9 @@ class DotHouse(DotBase):
 
         # house attributes
         if self._name != '-':
-            self._lines.append(f"graph [ {make_a_property(prop_key='compound', prop_value='true')}]")
             self._lines.append(make_a_property(prop_key='label', prop_value=self._name))
-            self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
+            self._lines.append(make_property_list(name='graph', prop_dict=self._theme.get('graph', {})))
+            self._lines.append(make_property_list(name='node', prop_dict=self._theme.get('node', {})))
             self._lines.append('')
 
         # a house has areas
@@ -105,8 +105,8 @@ class DotArea(DotBase):
 
         # area attributes
         if self._name != '-':
+            self._lines.append(make_property_list(name='graph', prop_dict=self._theme.get('graph', {})))
             self._lines.append(make_a_property(prop_key='label', prop_value=self._name))
-            self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
             self._lines.append('')
 
         # an area has buildings
@@ -138,7 +138,7 @@ class DotBuilding(DotBase):
         # building attributes
         if self._name != '-':
             self._lines.append(make_a_property(prop_key='label', prop_value=self._name))
-            self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
+            self._lines.append(make_property_list(name='graph', prop_dict=self._theme.get('graph', {})))
             self._lines.append('')
 
         # a building has floors
@@ -170,7 +170,7 @@ class DotFloor(DotBase):
         # floor attributes
         if self._name != '-':
             self._lines.append(make_a_property(prop_key='label', prop_value=self._name))
-            self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
+            self._lines.append(make_property_list(name='graph', prop_dict=self._theme.get('graph', {})))
             self._lines.append('')
 
         # a floor has rooms
@@ -202,7 +202,7 @@ class DotRoom(DotBase):
         # floor attributes
         if self._name != '-':
             self._lines.append(make_a_property(prop_key='label', prop_value=self._name))
-            self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
+            self._lines.append(make_property_list(name='graph', prop_dict=self._theme.get('graph', {})))
             self._lines.append('')
 
         # a room has racks
@@ -233,7 +233,7 @@ class DotRack(DotBase):
         # rack attributes
         if self._name != '-':
             self._lines.append(make_a_property(prop_key='label', prop_value=self._name))
-            self._lines.append(make_a_property(prop_key='labelloc', prop_value='b'))
+            self._lines.append(make_property_list(name='graph', prop_dict=self._theme.get('graph', {})))
             self._lines.append('')
 
         # a rack has equipments
@@ -265,7 +265,7 @@ class DotEquipment(DotBase):
         # equipment node
         node_str = make_a_node(node_key=self._key, label=f'{self._data["name"]}\\n{self._data["make"]}\\n{self._data["model"]}')
         self._lines.append(node_str)
-        self._lines.append('')
+        # self._lines.append('')
 
         # an equipment has ports
         self.append_children(class_type='Port', work_data=self._data['ports'])
@@ -291,8 +291,8 @@ class DotPort(DotBase):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
         # port attributes
-        self._lines.append(f'# port : [{self._data["port"]}]')
-        self._lines.append(f'# link : [{self._data["link"]}]')
-        self._lines.append('')
+        # self._lines.append(f'# port : [{self._data["port"]}]')
+        # self._lines.append(f'# link : [{self._data["link"]}]')
+        # self._lines.append('')
 
         return self._lines
