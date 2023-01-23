@@ -9,7 +9,7 @@ from collections import defaultdict
 from helper.logger import *
 
 ws_data_spec = {
-    'start-col': 'A', 'end-col': 'M', 'start-row': 2, 'numerize': False
+    'start-col': 'A', 'end-col': 'N', 'start-row': 2, 'numerize': False
 }
 
 def process_gsheet(gsheet, worksheet_name):
@@ -50,9 +50,9 @@ def process_gsheet(gsheet, worksheet_name):
             d[row.house][row.area][row.building][row.floor][row.room][row.rack] = {}
         
         if not row.tag in d[row.house][row.area][row.building][row.floor][row.room][row.rack]:
-            d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag] = {'name': row['name'], 'make': row.make, 'model': row.model, 'ports': []}
+            d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag] = {'name': row['name'], 'type': row.type, 'make': row.make, 'model': row.model, 'ports': []}
         
-        d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag]['ports'].append(row.drop(['house', 'area', 'building', 'floor', 'room', 'rack', 'tag', 'name', 'make', 'model']).to_dict())
+        d[row.house][row.area][row.building][row.floor][row.room][row.rack][row.tag]['ports'].append(row.drop(['house', 'area', 'building', 'floor', 'room', 'rack', 'tag', 'name', 'type', 'make', 'model']).to_dict())
 
         # print(i, row.house)
 

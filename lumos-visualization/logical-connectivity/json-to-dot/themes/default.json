@@ -4,21 +4,26 @@
             "compound": "true",
             "rankdir": "TB",
             "labelloc": "b",
+            "labeljust": "l",
             "penwidth": "0.5",
-            "style": "dotted",
+            "style": "solid",
             "color": "#B0B0B0",
-            "margin": "5"
+            "bgcolor": "#FFFFFF",
+            "margin": "5",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "14"
         },
         "node": {
             "labelloc": "b",
             "style": "filled", 
-            "color": "#808080", 
+            "color": "#D0D0D0", 
             "penwidth": "0.5", 
-            "fillcolor": "#E8E8E8",
+            "bgcolor": "#E0E0E0",
             "fontcolor": "#202020",
             "fontname": "Helvetica",
-            "fontsize": "9",
-            "margin": "0.05,0.1"
+            "fontsize": "8",
+            "margin": "0.05,0.05"
         },
         "edge": {
             "style": "invis"
@@ -29,10 +34,15 @@
             "compound": "true",
             "rankdir": "TB",
             "labelloc": "b",
+            "labeljust": "l",
             "penwidth": "0.5",
             "style": "dotted",
             "color": "#B0B0B0",
-            "margin": "5"
+            "bgcolor": "#F0F0F0",
+            "margin": "5",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "13"
         }
     },
     "Building": {
@@ -40,47 +50,71 @@
             "compound": "true",
             "rankdir": "TB",
             "labelloc": "b",
+            "labeljust": "c",
             "penwidth": "0.5",
-            "style": "dotted",
+            "style": "solid",
             "color": "#B0B0B0",
-            "margin": "5"
-        }
+            "bgcolor": "#E8E8E8",
+            "margin": "5",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "12"
+        },
+        "wraplabel": true
     },
     "Floor": {
         "graph": {
             "compound": "true",
             "rankdir": "TB",
-            "labelloc": "b",
+            "labelloc": "t",
+            "labeljust": "c",
             "penwidth": "0.5",
-            "style": "dotted",
+            "style": "solid",
             "color": "#B0B0B0",
-            "margin": "5"
-        }
+            "bgcolor": "#FFFFFF",
+            "margin": "5",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "11"
+        },
+        "wraplabel": true
     },
     "Room": {
         "graph": {
             "compound": "true",
             "rankdir": "TB",
             "labelloc": "b",
+            "labeljust": "c",
             "penwidth": "0.5",
-            "style": "dotted",
+            "style": "solid",
             "color": "#B0B0B0",
-            "margin": "5"
-        }
+            "bgcolor": "#F0F0F0",
+            "margin": "5",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "10"
+        },
+        "wraplabel": true
     },
     "Rack": {
         "graph": {
             "compound": "true",
             "rankdir": "TB",
             "labelloc": "b",
+            "labeljust": "c",
             "penwidth": "0.5",
-            "style": "dotted",
+            "style": "solid",
             "color": "#B0B0B0",
-            "fillcolor": "#E8E8E8",
-            "margin": "5"
-        }
+            "bgcolor": "#E8E8E8",
+            "margin": "5",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "9"
+        },
+        "wraplabel": false
     },
     "Equipment": {
+        "wraplabel": true
     },
     "Port": {
     }

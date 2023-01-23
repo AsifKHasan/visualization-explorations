@@ -42,6 +42,14 @@ def make_a_node(node_key, label):
     return node_str
 
 
+''' make a dot Edge
+'''
+def make_en_edge(from_node, to_node, prop_dict):
+    edge_str = f"{from_node} -- {to_node} {make_property_list(None, prop_dict=prop_dict)}"
+
+    return edge_str
+
+
 ''' wrap with BEGIN/END comments
 '''
 def wrap_with_comment(lines, object_type=None, object_id=None, comment_prefix_start='BEGIN', comment_prefix_stop='END  ', begin_suffix=None, indent_level=0):
@@ -112,3 +120,13 @@ def text_to_identifier(text):
 def random_string(length=12):
     letters = string.ascii_uppercase
     return ''.join(random.choice(letters) for i in range(length))
+
+
+
+''' wrap a text for dot
+    remove spaces with \n
+'''
+def wrap_for_dot(text):
+    new_text = re.sub('\s+', r'\\n', text)
+
+    return new_text

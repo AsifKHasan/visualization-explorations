@@ -24,7 +24,18 @@ class DotBase(object):
         # add some random suffix to the key
         self._key = text_to_identifier(key) + '_' + random_string()
         self._data = data
+        self._children = {}
         self._lines = []
+
+
+
+    ''' pre process things
+    '''
+    def pre_process(self):
+        self._wraplabel = self._theme.get('wraplabel', False)
+        if self._wraplabel:
+            self._name = wrap_for_dot(text=self._name)
+
 
 
     ''' get the lines from children
@@ -36,6 +47,7 @@ class DotBase(object):
         if work_data is None:
             for key, data in self._data.items():
                 child_instance = child_class(config=self._config, class_type=class_type, key=key, data=data)
+                self._children[child_instance._key] = child_instance
                 self._lines = self._lines + child_instance.to_dot()
 
         # else assume that the work_data is a list
@@ -43,6 +55,19 @@ class DotBase(object):
             for data in work_data:
                 child_instance = child_class(config=self._config, class_type=class_type, key='', data=data)
                 self._lines = self._lines + child_instance.to_dot()
+
+
+    ''' connect children
+    '''
+    def connect_children(self, style='invis'):
+        keys = list(self._children.keys())
+        if len(keys) > 0:
+            self._lines.append('')
+
+        key_pairs = list(zip(keys, keys[1:]))
+        for pair in key_pairs:
+            edge_line = make_en_edge(from_node=pair[0], to_node=pair[1], prop_dict={'style': style})
+            self._lines.append(edge_line)
 
 
     ''' wrap and close
@@ -63,6 +88,7 @@ class DotHouse(DotBase):
     def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config=config, class_type=class_type, key=key, data=data)
+        self.pre_process()
 
 
     ''' generates the Dot code
@@ -96,6 +122,7 @@ class DotArea(DotBase):
     def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config=config, class_type=class_type, key=key, data=data)
+        self.pre_process()
 
 
     ''' generates the Dot code
@@ -128,6 +155,7 @@ class DotBuilding(DotBase):
     def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config=config, class_type=class_type, key=key, data=data)
+        self.pre_process()
 
 
     ''' generates the Dot code
@@ -160,6 +188,7 @@ class DotFloor(DotBase):
     def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config=config, class_type=class_type, key=key, data=data)
+        self.pre_process()
 
 
     ''' generates the Dot code
@@ -192,6 +221,7 @@ class DotRoom(DotBase):
     def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config=config, class_type=class_type, key=key, data=data)
+        self.pre_process()
 
 
     ''' generates the Dot code
@@ -223,6 +253,7 @@ class DotRack(DotBase):
     def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config=config, class_type=class_type, key=key, data=data)
+        self.pre_process()
 
 
     ''' generates the Dot code
@@ -238,6 +269,9 @@ class DotRack(DotBase):
 
         # a rack has equipments
         self.append_children(class_type='Equipment')
+
+        # Rack equipments to be connected (for TB ranking)
+        self.connect_children()
 
         # wrap the dot code
         self.wrap_and_close(as_a='subgraph')
@@ -255,6 +289,14 @@ class DotEquipment(DotBase):
     def __init__(self, config, class_type, key, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config=config, class_type=class_type, key=key, data=data)
+        self.pre_process()
+
+
+    ''' pre process
+    '''
+    def pre_process(self):
+        super().pre_process()
+        self._name = f'{self._data["name"]}\\n{self._data["make"]}\\n{self._data["model"]}'
 
 
     ''' generates the Dot code
@@ -263,7 +305,7 @@ class DotEquipment(DotBase):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
         # equipment node
-        node_str = make_a_node(node_key=self._key, label=f'{self._data["name"]}\\n{self._data["make"]}\\n{self._data["model"]}')
+        node_str = make_a_node(node_key=self._key, label=self._name)
         self._lines.append(node_str)
         # self._lines.append('')
 
