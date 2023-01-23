@@ -1,379 +1,592 @@
-graph BCH_OLBMNCZXYAEO {
+graph BCH_GOSJPHXZMSMC {
 	label="BCH"
-	graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-	node [ labelloc="b"; style="filled"; color="#808080"; penwidth="0.5"; fillcolor="#E8E8E8"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9"; margin="0.05,0.1" ]
-	edge [ style = invis; ]
+	graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="l"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#FFFFFF"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="14" ]
+	node [ labelloc="b"; style="filled"; color="#D0D0D0"; penwidth="0.5"; bgcolor="#E0E0E0"; fontcolor="#202020"; fontname="Helvetica"; fontsize="8"; margin="0.05,0.05" ]
 	
-	subgraph cluster_DataCenter_UNIGLINDMBQW {
-		graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+	subgraph cluster_DataCenter_EHBQZAXXKJUE {
+		graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="l"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; bgcolor="#F0F0F0"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="13" ]
 		label="Data Center"
 		
-		subgraph cluster_Rack01_ORSUSNNRKTME {
+		subgraph cluster_Rack01_IZDLDAMIYDXA {
 			label="Rack-01"
-			graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 			
-			CSP_XHMLGFOITDXQ [ label="Core Switch - Primary\nCISCO\nC9500-40X-A" ]
-			CSS_ITQCBEBBKZGT [ label="Core Switch - Secondary\nCISCO\nC9500-40X-A" ]
-		
-			{ CSP_XHMLGFOITDXQ -- CSS_ITQCBEBBKZGT }
+			CSP_KXJVOYCHOAHW [ label="Core Switch - Primary\nCISCO\nC9500-40X-A" ]
+			CSS_SDKXMAUVWTWC [ label="Core Switch - Secondary\nCISCO\nC9500-40X-A" ]
+			
+			CSP_KXJVOYCHOAHW -- CSS_SDKXMAUVWTWC [ style="invis" ]
 		}
 		
 	}
 	
-	subgraph cluster_CustomsCampusArea_PUIHMCGHZKTH {
-		graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+	subgraph cluster_CustomsCampusArea_RERKQYMCYBUI {
+		graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="l"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; bgcolor="#F0F0F0"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="13" ]
 		label="Customs Campus Area"
 		
-		subgraph cluster_BenapoleCustomsNewBuilding_KSNTQYRWZNJR {
-			label="Benapole Customs New Building"
-			graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+		subgraph cluster_BenapoleCustomsNewBuilding_NKXELOULJUYE {
+			label="Benapole\nCustoms\nNew\nBuilding"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
 			
-			subgraph cluster_GroundFloor_OCHJIWPNYDJB {
-				label="Ground Floor"
-				graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-
-				GroundFloor_OCHJIWPNYDJB [ label = "X", style = invis ];
+			subgraph cluster_GroundFloor_FKOJITFCKELL {
+				label="Ground\nFloor"
+				graph [ compound="true"; rankdir="TB"; labelloc="t"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#FFFFFF"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="11" ]
 				
-				subgraph cluster_Rack01_TNBOQYCFBEUQ {
+				subgraph cluster_Rack01_UMTIERBAJVKO {
 					label="Rack-01"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+					graph [ compound="true"; rankdir="TB"; labelloc="t"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 					
-					BCHSW001_FSEKHNOYGQPS [ label="SW-01\nCISCO\nC9200-24T-A" ]
+					BCHSW001_PDORLBCGFCGH [ label="SW-01\nCISCO\nC9200-24T-A" ]
+					
 				}
 				
-				subgraph cluster_Rack02_LGRGHDNPIAJX {
+				subgraph cluster_Rack02_DZLGVOLWVUZU {
 					label="Rack-02"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+					graph [ compound="true"; rankdir="TB"; labelloc="t"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 					
-					BCHSW002_PFRNQUQXUWII [ label="SW-01\nCISCO\n-" ]
-					_PGKMEWLULYMQ [ label="SW-02\nCISCO\n-" ]
+					BCHSW002_LCCMCKKJOLPG [ label="SW-01\nCISCO\n-" ]
+					_WHNGRSNMAHJA [ label="SW-02\nCISCO\n-" ]
+					
+					BCHSW002_LCCMCKKJOLPG -- _WHNGRSNMAHJA [ style="invis" ]
 				}
+
+				{ newrank="true"; rank="same"; BCHSW001_PDORLBCGFCGH -- BCHSW002_LCCMCKKJOLPG [ constraint="true"; style="invis"; ] }
+
+			}
+			
+			subgraph cluster_stFloor_XWXFSREZLIJD {
+				label="1st\nFloor"
+				graph [ compound="true"; rankdir="TB"; labelloc="t"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#FFFFFF"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="11" ]
 				
-				subgraph cluster_Rack03_OXOIJFGUUIZE {
+				subgraph cluster_Rack03_IGQLIWMMSHVS {
 					label="Rack-03"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+					graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 					
-					_JMWHNYZLKZLU [ label="SW-03\nCISCO\n-" ]
+					_EJQLHDHJQVIW [ label="SW-01\nCISCO\n-" ]
+					_NEJGQAVDFIMM [ label="SW-01\nCISCO\n-" ]
+					_SUKEMTLCCTKU [ label="SW-01\nCISCO\n-" ]
+					_UEMEKDAVPHCP [ label="SW-01\nCISCO\n-" ]
+					
+					_EJQLHDHJQVIW -- _NEJGQAVDFIMM [ style="invis" ]
+					_NEJGQAVDFIMM -- _SUKEMTLCCTKU [ style="invis" ]
+					_SUKEMTLCCTKU -- _UEMEKDAVPHCP [ style="invis" ]
 				}
 				
-				subgraph cluster_Rack04_VGRZFUFOCOZU {
+			}
+			
+			subgraph cluster_ndFloor_JIYKUCFTLQAA {
+				label="2nd\nFloor"
+				graph [ compound="true"; rankdir="TB"; labelloc="t"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#FFFFFF"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="11" ]
+				
+				subgraph cluster_Rack04_VRNGJGYYFWVN {
 					label="Rack-04"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+					graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 					
-					_FCSZNBECXRKP [ label="SW-04\nCISCO\n-" ]
+					_KIISJROUHAHR [ label="SW-01\nCISCO\n-" ]
+					_GCNHAJCSOVIE [ label="SW-01\nCISCO\n-" ]
+					_VZJULIJWDTOK [ label="SW-01\nCISCO\n-" ]
+					_EKURKXQLHKAI [ label="SW-01\nCISCO\n-" ]
+					_GTJPUPWYKEVA [ label="SW-02\nCISCO\n-" ]
+					_ICUJJYLVCOHG [ label="SW-02\nCISCO\n-" ]
+					
+					_KIISJROUHAHR -- _GCNHAJCSOVIE [ style="invis" ]
+					_GCNHAJCSOVIE -- _VZJULIJWDTOK [ style="invis" ]
+					_VZJULIJWDTOK -- _EKURKXQLHKAI [ style="invis" ]
+					_EKURKXQLHKAI -- _GTJPUPWYKEVA [ style="invis" ]
+					_GTJPUPWYKEVA -- _ICUJJYLVCOHG [ style="invis" ]
 				}
 				
-				subgraph cluster_Rack05_IFZVIFAMUORQ {
+			}
+			
+			subgraph cluster_rdFloor_DJEESMRCCIVC {
+				label="3rd\nFloor"
+				graph [ compound="true"; rankdir="TB"; labelloc="t"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#FFFFFF"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="11" ]
+				
+				subgraph cluster_Rack05_OHYBHHRIRLNR {
 					label="Rack-05"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+					graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 					
-					_HUFRAIFRDNDB [ label="SW-05\nCISCO\n-" ]
+					_HDAYJLGQHXEC [ label="SW-01\nCISCO\n-" ]
+					_DPVBONZAMWCC [ label="SW-01\nCISCO\n-" ]
+					_CUMXUPMYMJYA [ label="SW-01\nCISCO\n-" ]
+					_DLDAIZJIAWXD [ label="SW-02\nCISCO\n-" ]
+					_DGRKUVXAUQQS [ label="SW-02\nCISCO\n-" ]
+					
+					_HDAYJLGQHXEC -- _DPVBONZAMWCC [ style="invis" ]
+					_DPVBONZAMWCC -- _CUMXUPMYMJYA [ style="invis" ]
+					_CUMXUPMYMJYA -- _DLDAIZJIAWXD [ style="invis" ]
+					_DLDAIZJIAWXD -- _DGRKUVXAUQQS [ style="invis" ]
 				}
 				
-				subgraph cluster_Rack06_ANDYETHUAFSU {
+			}
+			
+			subgraph cluster_thFloor_ZFCGPIQXZFRA {
+				label="4th\nFloor"
+				graph [ compound="true"; rankdir="TB"; labelloc="t"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#FFFFFF"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="11" ]
+				
+				subgraph cluster_Rack06_FVEJZZANONAH {
 					label="Rack-06"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+					graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 					
-					_GGBODXZTUIOZ [ label="SW-06\nCISCO\n-" ]
+					_UBYCOCEGBAKU [ label="SW-01\nCISCO\n-" ]
+					_SYQVDREXYUHP [ label="SW-01\nCISCO\n-" ]
+					_PCDNMMNWLRQY [ label="SW-01\nCISCO\n-" ]
+					_FZMHXCUJOYMG [ label="SW-01\nCISCO\n-" ]
+					
+					_UBYCOCEGBAKU -- _SYQVDREXYUHP [ style="invis" ]
+					_SYQVDREXYUHP -- _PCDNMMNWLRQY [ style="invis" ]
+					_PCDNMMNWLRQY -- _FZMHXCUJOYMG [ style="invis" ]
 				}
 				
-				subgraph cluster_Rack07_XJYUFFPOBJEF {
+			}
+			
+			subgraph cluster_thFloor_FDXJYUQZTZXP {
+				label="5th\nFloor"
+				graph [ compound="true"; rankdir="TB"; labelloc="t"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#FFFFFF"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="11" ]
+				
+				subgraph cluster_Rack07_ERIBGJMLGPVQ {
 					label="Rack-07"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+					graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 					
-					_JLQMTAGNISSF [ label="SW-07\nCISCO\n-" ]
+					_JQHHJQLLFFPM [ label="SW-01\nCISCO\n-" ]
+					
 				}
 				
 			}
 			
-			subgraph cluster_stFloor_OAKXPLMFUUPK {
-				label="1st Floor"
-				graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-
-				stFloor_OAKXPLMFUUPK [ label = "X", style = invis ];
+		}
+		
+		subgraph cluster_Store_XFNGFFRKDTFV {
+			label="Store"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack25_JKCYYJWIQSRX {
+				label="Rack-25"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 				
-				subgraph cluster_Rack03_OZIYUPDKSASQ {
-					label="Rack-03"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_ZSMFYVEXKQKT [ label="SW-01\nCISCO\n-" ]
-					_DRVYVAKCVBTV [ label="SW-01\nCISCO\n-" ]
-					_NSVGBNLNCZNI [ label="SW-01\nCISCO\n-" ]
-					_DFBDKHGFXPSZ [ label="SW-01\nCISCO\n-" ]
-				}
+				_OIMSAGSZKTNV [ label="SW-01\nCISCO\n-" ]
 				
 			}
 			
-			subgraph cluster_ndFloor_RZNCYLLTLSAP {
-				label="2nd Floor"
-				graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+		}
+		
+		subgraph cluster_GuestHouse02_EDVKYERCIFQI {
+			label="Guest\nHouse-02"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack24_TETIOPYEJETE {
+				label="Rack-24"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 				
-				ndFloor_RZNCYLLTLSAP [ label = "X", style = invis ];
-				
-				subgraph cluster_Rack04_LEKOEDYSOPNK {
-					label="Rack-04"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_LFUCRCMEAKVD [ label="SW-01\nCISCO\n-" ]
-					_LTNGJWRNOQNC [ label="SW-01\nCISCO\n-" ]
-					_XJEUZTCSOZAC [ label="SW-01\nCISCO\n-" ]
-					_PRSFNHPUCCSV [ label="SW-01\nCISCO\n-" ]
-					_GMWCOPTVVRSG [ label="SW-02\nCISCO\n-" ]
-					_WJHNECVOMEPO [ label="SW-02\nCISCO\n-" ]
-				}
+				_YFDCTLHGKKBH [ label="SW-01\nCISCO\n-" ]
 				
 			}
 			
-			subgraph cluster_rdFloor_XJYHTTOCIJJS {
-				label="3rd Floor"
-				graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+			subgraph cluster_Rack23_USTCLZQYDRTU {
+				label="Rack-23"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 				
-				rdFloor_XJYHTTOCIJJS [ label = "X", style = invis ];
-
-				subgraph cluster_Rack05_VDJHNOCGNHBG {
-					label="Rack-05"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_FPSMQAUHNSJL [ label="SW-01\nCISCO\n-" ]
-					_XSMYMOMALMZT [ label="SW-01\nCISCO\n-" ]
-					_PLAKEFTXAMFT [ label="SW-01\nCISCO\n-" ]
-					_ZAZOJRIYIUFD [ label="SW-02\nCISCO\n-" ]
-					_UUDZZAAXJSFO [ label="SW-02\nCISCO\n-" ]
-				}
+				_PHIDXEVHXEVH [ label="SW-01\nCISCO\n-" ]
 				
 			}
 			
-			subgraph cluster_thFloor_PYHGHZCFBPTJ {
-				label="4th Floor"
-				graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+		}
+		
+		subgraph cluster_GuestHouse03_KSXGDYCXYBSF {
+			label="Guest\nHouse-03"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack24_WCZOEVDEXRAB {
+				label="Rack-24"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 				
-				thFloor_PYHGHZCFBPTJ [ label = "X", style = invis ];
-
-				subgraph cluster_Rack06_WVVJTYCWTJKM {
-					label="Rack-06"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_FPKWYZPRBAFV [ label="SW-01\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack07_CTKARNGOTHLU {
-					label="Rack-07"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_ETECDDPXDVAM [ label="SW-02\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack08_COZMIWGMJIMV {
-					label="Rack-08"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_PXPHOGNQBEFT [ label="SW-03\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack09_JWCHIBMAYPHI {
-					label="Rack-09"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_WUXIJEYJPCOX [ label="SW-04\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack10_JDVWJUAQZTRS {
-					label="Rack-10"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_XMIBWRYNMCGR [ label="SW-05\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack11_KMSMSHZPCOTR {
-					label="Rack-11"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_KVNCUMUFSTDP [ label="SW-06\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack12_GZCQYKIMTPAI {
-					label="Rack-12"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_ZULUEWAKOESA [ label="SW-07\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack13_PAHHKBRZRRBR {
-					label="Rack-13"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_RBTODXHKNFNY [ label="SW-08\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack14_WJPOAQDCHQGA {
-					label="Rack-14"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_PSUXPTFBBTYG [ label="SW-09\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack15_PTIYJPMSPJON {
-					label="Rack-15"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_PGVQIOZQTFZY [ label="SW-10\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack16_UDFKDBREXRGY {
-					label="Rack-16"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_CITIDMFKRSUE [ label="SW-11\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack17_WJTMUGKWYGSU {
-					label="Rack-17"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_XVEEOHDDWKIN [ label="SW-12\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack18_JXZQFYAWKHLA {
-					label="Rack-18"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_LMMIIQGLXVJL [ label="SW-13\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack19_QHDTCSUCJTTO {
-					label="Rack-19"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_JFRPAKQHMZNW [ label="SW-14\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack20_KHKUOVYJWHLR {
-					label="Rack-20"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_YDYFAWMDYYDF [ label="SW-15\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack21_OAKVJDCHVYQL {
-					label="Rack-21"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_PECWWFFBOXPA [ label="SW-16\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack22_ZWRIBVREQYHX {
-					label="Rack-22"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_TPLZFKAQWXOB [ label="SW-17\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack23_UZEGKUFGZCWI {
-					label="Rack-23"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_WHCXMHKHCWOG [ label="SW-18\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack24_UUODMQNDYXLT {
-					label="Rack-24"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_BSPHUKIRBSJA [ label="SW-19\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack25_VFOFYLAYTKNL {
-					label="Rack-25"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_NOSZHQJITMTV [ label="SW-20\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack26_JYIQZMOFQHUN {
-					label="Rack-26"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_BKJCMVIBSXEM [ label="SW-21\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack27_MLYRQPXTBOFE {
-					label="Rack-27"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_WVJRQBUCUDUA [ label="SW-22\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack28_BISGTQUQWFJT {
-					label="Rack-28"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_YSGDQPAKSVAG [ label="SW-23\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack29_SKQBLKWFMIDY {
-					label="Rack-29"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_PCFOOGGBMSEK [ label="SW-24\nCISCO\n-" ]
-				}
+				_KIDHSNXKCUAL [ label="SW-01\nCISCO\n-" ]
 				
 			}
 			
-			subgraph cluster_thFloor_NQBBCHPNVQJE {
-				label="5th Floor"
-				graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
+			subgraph cluster_Rack23_ALMEAWCIYPEP {
+				label="Rack-23"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
 				
-				thFloor_NQBBCHPNVQJE [ label = "X", style = invis ];
-
-				subgraph cluster_Rack07_MULXQUYNNUTC {
-					label="Rack-07"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_MBMGWIKPMQTD [ label="SW-01\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack08_SXQDOYYQANRO {
-					label="Rack-08"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_VLYOKGDTWSAA [ label="SW-02\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack09_REBKLGOMCUBF {
-					label="Rack-09"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_QYPHOCUWZOMJ [ label="SW-03\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack10_KIALRBNUGWHS {
-					label="Rack-10"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_FKPVXRRSAKLP [ label="SW-04\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack11_SOBGWWLUKIID {
-					label="Rack-11"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_HWGNSMGMNYEK [ label="SW-05\nCISCO\n-" ]
-				}
-				
-				subgraph cluster_Rack12_OTLOSQCEWQTS {
-					label="Rack-12"
-					graph [ compound="true"; rankdir="TB"; labelloc="b"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; margin="5" ]
-					
-					_CBIAKSWGWJYN [ label="SW-06\nCISCO\n-" ]
-				}
+				_EJWSYXKKLDAN [ label="SW-01\nCISCO\n-" ]
 				
 			}
 			
-			{ GroundFloor_OCHJIWPNYDJB -- stFloor_OAKXPLMFUUPK }
-			{ stFloor_OAKXPLMFUUPK -- ndFloor_RZNCYLLTLSAP }
-			{ ndFloor_RZNCYLLTLSAP -- rdFloor_XJYHTTOCIJJS }
-			{ rdFloor_XJYHTTOCIJJS -- thFloor_PYHGHZCFBPTJ }
-			{ thFloor_PYHGHZCFBPTJ -- thFloor_NQBBCHPNVQJE }
+		}
+		
+		subgraph cluster_GuestHouse04_PVEHPCLJVCCL {
+			label="Guest\nHouse-04"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack24_MNGDXHCRONJM {
+				label="Rack-24"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_PDCAFENDWNZZ [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+			subgraph cluster_Rack23_WRCLVBYUQVPT {
+				label="Rack-23"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_WZDIMJKHBWEB [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_GuestHouse05_TZIENVIRVBBD {
+			label="Guest\nHouse-05"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack24_HUEOZYTXJZSN {
+				label="Rack-24"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_VRISMXDXSMSS [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+			subgraph cluster_Rack23_INLMNDTPWGAI {
+				label="Rack-23"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_PSAINOYUOLGA [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_GuestHouse06_DWJZJDBGSCAN {
+			label="Guest\nHouse-06"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack24_IYNOPDZFZJAL {
+				label="Rack-24"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_MXWOJCJXNEVH [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+			subgraph cluster_Rack23_JXZEEJNBKWGY {
+				label="Rack-23"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_XXGRJYFISQFV [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_GuestHouse07_WTAIQNIUIDIQ {
+			label="Guest\nHouse-07"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack24_XWBKXZPOPNNS {
+				label="Rack-24"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_OIPWTVFTQTUX [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+			subgraph cluster_Rack23_IXKJAELCKICJ {
+				label="Rack-23"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_TSUGPCOSMHUY [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_GuestHouse08_SRYDNTTITYQE {
+			label="Guest\nHouse-08"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack24_BNXLUUXHKXGC {
+				label="Rack-24"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_YTSWWLETGQSQ [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+			subgraph cluster_Rack23_WJTESKVOMBDR {
+				label="Rack-23"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_OWIOMPGOITBT [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_GuestHouse09_DBCHJYJIWUQA {
+			label="Guest\nHouse-09"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack24_KZRPTTMTWMND {
+				label="Rack-24"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_NIBEEXPQWFDU [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_GuestHouse01_XOSPXDRUFYME {
+			label="Guest\nHouse-01"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack23_DKWFICAUBSJH {
+				label="Rack-23"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_RCBIUWXYIZCG [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_OldBuilding_MRSAHAPMLOOD {
+			label="Old\nBuilding"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack8_CFGCCEKYQBWD {
+				label="Rack-8"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_PQYHBVFYQPSX [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_JiniaHouse_SIUZYGTCWCOM {
+			label="Jinia\nHouse"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack13_CORXRCJJIORE {
+				label="Rack-13"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_MXTBAVKUGAGV [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_JCADCsBungalow_HSSUSSMJIHLS {
+			label="JC/ADC's\nBungalow"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack12_ECGSRUJKUCDL {
+				label="Rack-12"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_GGEAOKRUZSMT [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_CommissionersBungalow_VQKWFAYFMCAM {
+			label="Commissioner's\nBungalow"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack11_CKZDGEUAFHPU {
+				label="Rack-11"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_BMRYRDUPITNU [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_ClubHouse_ENFZLHNZBDOD {
+			label="Club\nHouse"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack10_VGVVXYBOJPXC {
+				label="Rack-10"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_ASUCKXGOISHN [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_ChemicalLab_BNSHGQNSWFUF {
+			label="Chemical\nLab"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack09_JSKVQUTGVANN {
+				label="Rack-09"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_KBNOKSRAFYMB [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+	}
+	
+	subgraph cluster_OutsideArea_JOJWBJENCXSW {
+		graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="l"; penwidth="0.5"; style="dotted"; color="#B0B0B0"; bgcolor="#F0F0F0"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="13" ]
+		label="Outside Area"
+		
+		subgraph cluster_MobileScanner_NLSTHPIGGJGO {
+			label="Mobile\nScanner"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack26_WJTOBLTDHJSM {
+				label="Rack-26"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_QTZTHEWHJKIP [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_Bashkol_SFFVDVFQIETT {
+			label="Bashkol"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack22_XXYQKJIXNAVP {
+				label="Rack-22"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_ZIBDISYOHVMO [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_RailStation_YROCULMNLUNJ {
+			label="Rail\nStation"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack21_MYPMLEIQYLIR {
+				label="Rack-21"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_QRFTHAUNPWPP [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_SonaliBank_QFJRXZTVKXJB {
+			label="Sonali\nBank"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack20_ZJUIFHHTXJXV {
+				label="Rack-20"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_QFOFJODYJTQI [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_CGCBuilding_KPPAGGWUHRWQ {
+			label="CGC\nBuilding"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack19_SEIXLNXQQQES {
+				label="Rack-19"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_VGGTABDACIPD [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_ICBBuilding_HLWPYSTVYQGI {
+			label="ICB\nBuilding"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack18_THOWYOIEVNJN {
+				label="Rack-18"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_OGGDLUIVGISY [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_ICBTong_PATSMUXYRRVL {
+			label="ICB\nTong"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack17_ULOMWLNIJSBY {
+				label="Rack-17"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_YFQYKSAWETIA [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_ExportTong_JJAIALNLPPAE {
+			label="Export\nTong"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack16_KIHOJFOCHPHW {
+				label="Rack-16"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_QGYGNWGMBFCY [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_CargoSection_IXUMQRXHMUSU {
+			label="Cargo\nSection"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack15_IESTJEIYMQVS {
+				label="Rack-15"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_RTNCRMKCPDLL [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+			subgraph cluster_Rack14_WGXTTEBJQVJX {
+				label="Rack-14"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_ROBJREAYIPYA [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
+		}
+		
+		subgraph cluster_DTMBuilding_YMTYBVCSMGZB {
+			label="DTM\nBuilding"
+			graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="12" ]
+			
+			subgraph cluster_Rack14_CYFEUNPOONYY {
+				label="Rack-14"
+				graph [ compound="true"; rankdir="TB"; labelloc="b"; labeljust="c"; penwidth="0.5"; style="solid"; color="#B0B0B0"; bgcolor="#E8E8E8"; margin="5"; fontcolor="#202020"; fontname="Helvetica"; fontsize="9" ]
+				
+				_IRTJAVACKRJK [ label="SW-01\nCISCO\n-" ]
+				
+			}
+			
 		}
 		
 	}

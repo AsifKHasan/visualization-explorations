@@ -50,35 +50,6 @@ def make_en_edge(from_node, to_node, prop_dict):
     return edge_str
 
 
-''' wrap with BEGIN/END comments
-'''
-def wrap_with_comment(lines, object_type=None, object_id=None, comment_prefix_start='BEGIN', comment_prefix_stop='END  ', begin_suffix=None, indent_level=0):
-    indent = "\t" * indent_level
-    output_lines =  list(map(lambda x: f"{indent}{x}", lines))
-
-    if object_type:
-        if object_id:
-            comment = f"{object_type}: [{object_id}]"
-
-        else:
-            comment = f"{object_type}"
-
-        # BEGIN comment
-        begin_comment = f"% {comment_prefix_start} {comment}"
-        if begin_suffix:
-            begin_comment = f"{begin_comment} {begin_suffix}"
-
-        output_lines = [begin_comment] + output_lines
-
-        # END comment
-        end_comment = f"% {comment_prefix_stop} {comment}"
-        output_lines.append(end_comment)
-
-
-    return output_lines
-
-
-
 ''' wrap (in start/stop) and indent dot lines
 '''
 def indent_and_wrap(lines, wrap_keyword, object_name, wrap_start='{', wrap_stop='}', indent_level=1):

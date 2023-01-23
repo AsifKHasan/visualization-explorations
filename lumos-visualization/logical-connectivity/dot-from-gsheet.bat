@@ -8,7 +8,7 @@ set WORKSHEET=%2
 
 :: json-from-gsheet
 pushd .\gsheet-to-json\src
-.\json-from-gsheet.py --config "../conf/config.yml" --gsheet "%DOCUMENT%" --worksheet "%WORKSHEET%"
+@REM .\json-from-gsheet.py --config "../conf/config.yml" --gsheet "%DOCUMENT%" --worksheet "%WORKSHEET%"
 
 if errorlevel 1 (
   popd
@@ -19,7 +19,7 @@ popd
 
 :: dot-from-json
 pushd .\json-to-dot\src
-.\dot-from-json.py --config "../conf/config.yml" --json "%WORKSHEET%"
+@REM .\dot-from-json.py --config "../conf/config.yml" --json "%WORKSHEET%"
 
 if errorlevel 1 (
   popd

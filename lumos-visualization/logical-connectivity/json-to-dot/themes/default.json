@@ -100,7 +100,7 @@
         "graph": {
             "compound": "true",
             "rankdir": "TB",
-            "labelloc": "b",
+            "labelloc": "t",
             "labeljust": "c",
             "penwidth": "0.5",
             "style": "solid",
