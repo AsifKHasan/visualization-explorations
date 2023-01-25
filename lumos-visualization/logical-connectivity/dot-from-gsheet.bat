@@ -19,7 +19,7 @@ popd
 
 :: dot-from-json
 pushd .\json-to-dot\src
-@REM .\dot-from-json.py --config "../conf/config.yml" --json "%WORKSHEET%"
+.\dot-from-json.py --config "../conf/config.yml" --json "%WORKSHEET%"
 
 if errorlevel 1 (
   popd
