@@ -1,0 +1,4 @@
+pysvg
+pysvg-py3
+colorama
+termcolor
