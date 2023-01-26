@@ -1,0 +1,14 @@
+# common
+argparse
+colorama
+httplib2
+lxml
+numpy
+oauth2client
+pandas
+PyDrive
+pygsheets
+PyYAML
+termcolor
+colorama
+yamllint

@@ -1,0 +1,77 @@
+{
+    "0": {
+        "graph": {
+            "size": "11,8",
+            "ratio": "fill",
+            "center": "true",
+            "dpi": "96",
+            "mode": "KK"
+        },
+        "node": {
+            "shape": "ellipse",
+            "style": "filled",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "32",
+            "fillcolor": "#E0E0E0",
+            "penwidth": "2.0"
+        },
+        "edge": {
+            "penwidth": "0.5",
+            "color": "#202020",
+            "style": "solid",
+            "len": "4"
+        }
+    },
+    "1": {
+        "node": {
+            "shape": "ellipse",
+            "style": "filled",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "24",
+            "fillcolor": "#E0E0E0",
+            "penwidth": "1.5"
+        },
+        "edge": {
+            "penwidth": "0.5",
+            "color": "#202020",
+            "style": "solid",
+            "len": "3"
+        }
+    },
+    "2": {
+        "node": {
+            "shape": "ellipse",
+            "style": "filled",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "16",
+            "fillcolor": "#F0F0F0",
+            "penwidth": "1.0"
+        },
+        "edge": {
+            "penwidth": "0.5",
+            "color": "#202020",
+            "style": "solid",
+            "len": "2"
+        }
+    },
+    "3": {
+        "node": {
+            "shape": "ellipse",
+            "style": "filled",
+            "fontcolor": "#202020",
+            "fontname": "Helvetica",
+            "fontsize": "12",
+            "fillcolor": "#F0F0F0",
+            "penwidth": "1.0"
+        },
+        "edge": {
+            "penwidth": "0.5",
+            "color": "#202020",
+            "style": "solid",
+            "len": "1"
+        }
+    }
+}

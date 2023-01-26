@@ -1,0 +1,72 @@
+label: CAS
+children:
+  - label: Business
+    children:
+    - label: Stakeholder Management
+      children:
+      - label: Teletalk
+      - label: DOER
+      - label: SSL Commerce
+
+    - label: Scope Mapping
+
+    - label: Proposal Submission
+
+  - label: Requirements
+    children:
+    - label: Collection
+    - label: Analysis
+    - label: Documentation
+      children:
+      - label: FRS
+    - label: Review
+
+  - label: Engineering
+    children:
+    - label: Production Environment
+    - label: Dev Environment
+    - label: Test Environment
+
+  - label: Design
+    children:
+    - label: UI/UX Mock
+    - label: Database
+    - label: API
+
+  - label: Development
+    children:
+    - label: Backend
+    - label: API Endpoints
+    - label: Frontend
+      children:
+      - label: Registration Web
+      - label: Registration App
+      - label: Administration Web
+
+  - label: Testing
+    children:
+    - label: Functional Test
+      children:
+      - label: Automation
+    - label: Load Test
+
+  - label: Deployment
+    children:
+    - label: CI/CD Pipeline
+    - label: Observability and Monitoring
+
+  - label: Integration
+    children:
+    - label: Teletalk Integration
+    - label: Payment Gateway
+
+  - label: Components
+    children:
+    - label: SMS Gateway
+    - label: Chatbot
+    - label: Authentication Authorization
+
+  - label: Support
+    children:
+    - label: Operation Support
+    - label: Tech Support
