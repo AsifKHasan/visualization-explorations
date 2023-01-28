@@ -1,15 +1,15 @@
 type: rack
 make: generic
 model: 42u
-template: default-02
+template: 42u-generic-rack-02
 equipments:
     -   position: 7-8
         type: swicth
         make: generic
         model: 12-port
-        template: ethernet-switch
+        template: 12-port-generic-switch
     -   position: 11-12
         type: swicth
         make: generic
         model: 48-port
-        template: network-switch
+        template: 48-port-generic-switch
