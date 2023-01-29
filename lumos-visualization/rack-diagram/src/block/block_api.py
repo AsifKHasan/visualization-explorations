@@ -2,8 +2,6 @@
 
 import importlib
 
-from pysvg.builders import *
-
 from svg.svg_util import *
 from helper.logger import *
 
@@ -64,18 +62,39 @@ class Rack(BlockBase):
     ''' given a starting u and ending u returns
         starting u, width, height (covering the u positions)
     '''
-    def top_y_width_height_from_u_position(self, u_position):
-        u_pos_list = u_position.split('-')
+    def rack_area_from_u_position(self, u_position):
+        u_pos_list = str(u_position).split('-')
         u1, u2 = int(u_pos_list[0]), int(u_pos_list[-1])
-        u_start, u_end = max(u1, u2), min(u1, u2)
+        u_top, u_bottom = max(u1, u2), min(u1, u2)
 
-        # u_w, u_h = None, None, None
-        u_w, u_h = 450, 44
+        # the rack area is top u's top left to bottom u's bottom right 
 
-        for u in range(u_start, u_end, -1):
-            group = self.group_from_u(u)
+        top_u_group = self.group_from_u(u=u_top)
+        bottom_u_group = self.group_from_u(u=u_bottom)
 
-        return u_start, u_w, u_h
+        # TODO: top u's (left_x, top_y) is group's translate's (x, y)
+        left_x = 0
+        top_y = 0
+
+        # TODO: bottom u's (right_x, bottom_y) is group's translate's (x, y) if it is there + inner rect's (x, y)
+        right_x = 0
+        bottom_y = 0
+
+        u_w = right_x - left_x
+        u_h = bottom_y - top_y
+
+        u_w, u_h = 0, 0
+
+        # HACK: for now just get width of the rects and add the height of the rects
+        for u in range(u_top, u_bottom-1, -1):
+            # get the u's group and its inner rect
+            u_group = self.group_from_u(u=u)
+            rect_id = '{}-{:0>2}'.format(self._svg_attrs['u-rect-prefix'], u)
+            u_rect = get_child_by_id(u_group, id=rect_id, element_type=Rect)
+            u_h = u_h + float(u_rect.get_height())
+            u_w = float(u_rect.get_width())
+
+        return u_top, u_w, u_h
 
 
     ''' generates the SVG object
@@ -86,12 +105,15 @@ class Rack(BlockBase):
 
         # iterate children
         for equipment_data in self._data['equipments']:
+            if equipment_data['hide']:
+                continue
+            
             # get the equipment svg
             equipment = Equipment(config=self._config, data=equipment_data)
             equipment_svg = equipment.to_svg()
 
             # get the height and width of the area to be covered by the equipment
-            u_start, equipment_w, equipment_h = self.top_y_width_height_from_u_position(u_position=equipment_data['position'])
+            u_start, equipment_w, equipment_h = self.rack_area_from_u_position(u_position=equipment_data['position'])
 
             # get the G where the equipment is to be embedded
             group = self.group_from_u(u=u_start)
@@ -100,11 +122,9 @@ class Rack(BlockBase):
             x_scale = (equipment_w/equipment._w)
             y_scale = (equipment_h/equipment._h)
 
-            # embed and scale
-            transformer = TransformBuilder()
-            transformer.setScaling(x=x_scale, y=y_scale)
-            equipment_svg.set_transform(transformer.getTransform())
-
+            # embed and scale, scaling to be done at parent group, not the equipment svg node
+            scale_group(group=group, x_scale=x_scale, y_scale=y_scale)
+            equipment_svg.set_viewBox(None)
             group.addElement(equipment_svg)
 
             message = f"equipment [{equipment._type}][{equipment._make}][{equipment._model}][{equipment._template}] covers position {equipment_data['position']} scaled at ({x_scale},{y_scale})"

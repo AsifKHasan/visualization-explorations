@@ -10,6 +10,8 @@ import string
 from os import path
 
 from pysvg.parser import *
+from pysvg.builders import *
+
 
 from helper.logger import *
 
@@ -38,3 +40,15 @@ def get_child_by_id(parent, id, element_type=None):
             return element
 
     return None
+
+
+'''
+'''
+def scale_group(group, x_scale, y_scale):
+    existing_transform = group.get_transform()
+
+    transformer = TransformBuilder()
+    transformer.setScaling(x=x_scale, y=y_scale)
+    scale_transform = transformer.getTransform()
+
+    group.set_transform(existing_transform + ' ' + scale_transform)

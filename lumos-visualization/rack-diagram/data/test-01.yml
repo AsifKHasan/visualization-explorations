@@ -8,8 +8,28 @@ equipments:
         make: generic
         model: 12-port
         template: 12-port-generic-switch
-    -   position: 36-35
+        hide: false
+    -   position: 37
         type: switch
         make: generic
         model: 48-port
         template: 48-port-generic-switch
+        hide: false
+    -   position: 35
+        type: server
+        make: dell
+        model: generic
+        template: dell-1u-generic-server
+        hide: false
+    -   position: 32
+        type: switch
+        make: d-link
+        model: generic
+        template: d-link-generic-12-port-switch
+        hide: false
+    -   position: 29
+        type: switch
+        make: dell
+        model: power-connect
+        template: dell-power-connect-3524P-switch
+        hide: false
