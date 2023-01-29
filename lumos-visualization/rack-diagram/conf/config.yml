@@ -19,11 +19,11 @@ svg-attrs:
           u: 42
           h: 1956
           w: 800
-          u-group-prefix: g-u-
-          r-group-prefix: rect-u-
+          u-group-prefix: g-u
+          r-group-prefix: rect-u
         42u-generic-rack-02:
           u: 42
           h: 1956
           w: 800
-          u-group-prefix: g-u-
-          r-group-prefix: rect-u-
+          u-group-prefix: g-u
+          r-group-prefix: rect-u

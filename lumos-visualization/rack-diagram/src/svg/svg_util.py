@@ -25,3 +25,16 @@ def open_svg_from_file(template_path):
     return parse(template_path)
 
 
+''' get a child by id
+'''
+def get_child_by_id(parent, id, element_type=None):
+    if element_type:
+        children = parent.getElementsByType(element_type)
+    else:
+        children = parent.getAllElementsOfHirarchy()
+
+    for element in children:
+        if element.get_id() == id:
+            return element
+
+    return None

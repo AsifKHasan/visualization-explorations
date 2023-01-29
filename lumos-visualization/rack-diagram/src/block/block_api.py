@@ -60,5 +60,7 @@ class Rack(BlockBase):
                 message = f"position [{u_str}] occuied by equipment [{equipment_type}][{equipment_make}][{equipment_mpdel}][{equipment_template}]"
                 debug(message)
 
+        my_group = get_child_by_id(parent=self._SVG, id='g-u-40', element_type=G)
+        print(my_group.getXML())
 
         return self._SVG

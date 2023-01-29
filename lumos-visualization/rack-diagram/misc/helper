@@ -8,10 +8,10 @@ from pysvg.parser import *
 
 svg_template_dir = 'D:/projects/asif@github/visualization-explorations/lumos-visualization/rack-diagram/conf/templates/svg'
 svg_output_dir = 'D:/projects/asif@github/visualization-explorations/lumos-visualization/rack-diagram/out'
-block_type = 'switch'
+block_type = 'rack'
 make = 'generic'
-model = '48-port'
-template = '48-port-generic-switch'
+model = '42u'
+template = '42u-generic-rack-02'
 
 # construct the paths
 svg_template_path = f"{svg_template_dir}/{block_type}/{make}/{model}/{template}.svg"
@@ -19,6 +19,8 @@ svg_output_path = f"{svg_output_dir}/{template}.svg"
 
 # open as an SVG object
 _SVG = parse(svg_template_path)
+
+my_group, _ = _SVG.getElementByID('g-u-40')
 
 # save the SVG in a file
 _SVG.save(svg_output_path, encoding="UTF-8")
