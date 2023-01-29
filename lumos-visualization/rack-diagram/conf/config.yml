@@ -10,3 +10,20 @@ theme:
   # all themes go here
   theme-dir:            "../themes"
   theme-name:           "default"
+
+svg-attrs:
+  rack:
+    generic:
+      42u:
+        42u-generic-rack-01:
+          u: 42
+          h: 1956
+          w: 800
+          u-group-prefix: g-u-
+          r-group-prefix: rect-u-
+        42u-generic-rack-02:
+          u: 42
+          h: 1956
+          w: 800
+          u-group-prefix: g-u-
+          r-group-prefix: rect-u-
