@@ -21,9 +21,36 @@ svg-attrs:
           w: 800
           u-group-prefix: g-u
           r-group-prefix: rect-u
+
         42u-generic-rack-02:
           u: 42
           h: 1956
           w: 800
           u-group-prefix: g-u
           r-group-prefix: rect-u
+
+  server:
+    dell:
+      generic:
+        dell-1u-generic-server:
+
+  switch:
+    d-link:
+      generic:
+        d-link-generic-12-port-switch:
+
+    dell:
+      power-connect:
+        dell-power-connect-3524P-switch:
+
+    generic:
+      12-port:
+        12-port-generic-switch:
+          h: 88
+          w: 408
+
+      48-port:
+        48-port-generic-switch:
+          h: 64
+          w: 684
+  

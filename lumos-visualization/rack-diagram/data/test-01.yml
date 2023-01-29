@@ -3,13 +3,13 @@ make: generic
 model: 42u
 template: 42u-generic-rack-02
 equipments:
-    -   position: 7-8
-        type: swicth
+    -   position: 40-39
+        type: switch
         make: generic
         model: 12-port
         template: 12-port-generic-switch
-    -   position: 11-12
-        type: swicth
+    -   position: 36-35
+        type: switch
         make: generic
         model: 48-port
         template: 48-port-generic-switch
