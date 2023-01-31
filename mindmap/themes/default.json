@@ -1,7 +1,7 @@
 {
     "0": {
         "graph": {
-            "size": "11,8",
+            "size": "11,8!",
             "ratio": "fill",
             "center": "true",
             "dpi": "96",
@@ -11,6 +11,7 @@
             "shape": "ellipse",
             "style": "filled",
             "fontcolor": "#202020",
+            "fontcolorsub": "#802020",
             "fontname": "Helvetica",
             "fontsize": "32",
             "fillcolor": "#E0E0E0",
@@ -28,6 +29,7 @@
             "shape": "ellipse",
             "style": "filled",
             "fontcolor": "#202020",
+            "fontcolorsub": "#802020",
             "fontname": "Helvetica",
             "fontsize": "24",
             "fillcolor": "#E0E0E0",
@@ -45,6 +47,7 @@
             "shape": "ellipse",
             "style": "filled",
             "fontcolor": "#202020",
+            "fontcolorsub": "#802020",
             "fontname": "Helvetica",
             "fontsize": "16",
             "fillcolor": "#F0F0F0",
@@ -62,6 +65,7 @@
             "shape": "ellipse",
             "style": "filled",
             "fontcolor": "#202020",
+            "fontcolorsub": "#802020",
             "fontname": "Helvetica",
             "fontsize": "12",
             "fillcolor": "#F0F0F0",

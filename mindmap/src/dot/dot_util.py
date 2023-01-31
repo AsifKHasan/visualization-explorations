@@ -12,54 +12,54 @@ from helper.logger import *
 
 ''' make a property list
 '''
-def make_property_list(name, prop_dict):
+def make_property_list(prop_dict):
     if prop_dict is None or prop_dict == {}:
-        return None
+        return ''
 
     prop_list = []
     for k, v in prop_dict.items():
         prop_list.append(make_a_property(prop_key=k, prop_value=v))
 
-    prop_str = '; '.join(prop_list)
-    prop_str = f'[ {prop_str} ]'
-
-    if not name is None:
-        prop_str = f'{name} {prop_str}'
+    prop_str = ' '.join(prop_list)
 
     return prop_str
+
 
 
 ''' make a property
 '''
-def make_a_property(prop_key, prop_value):
-    prop_str = f'{prop_key}="{prop_value}"'
+def make_a_property(prop_key, prop_value, quote=True):
+    if quote:
+        prop_str = f'{prop_key}="{prop_value}"'
+    else:
+        prop_str = f'{prop_key}={prop_value}'
 
     return prop_str
 
 
+
 ''' make a dot Node
 '''
-def make_a_node(id, label, prop_dict):
-    properies = {'label': label}
-    if prop_dict:
-        properies = {**properies, **prop_dict} 
-
-    node_str = f"{id} {make_property_list(name=None, prop_dict=properies)}"
+def make_a_node(id, label, sublabels, prop_dict):
+    label_str = make_a_property(prop_key='label', prop_value=table_from_label(label=label, sublabels=sublabels, prop_dict=prop_dict), quote=False)
+    node_str = f"{id} [ {label_str} {make_property_list(prop_dict=prop_dict)} ]"
 
     return node_str
+
 
 
 ''' make a dot Edge
 '''
 def make_en_edge(from_node, to_node, prop_dict):
-    prop_str = make_property_list(None, prop_dict=prop_dict)
+    prop_str = make_property_list(prop_dict=prop_dict)
 
     if prop_str:
-        edge_str = f"{from_node} -> {to_node} {prop_str}"
+        edge_str = f"{from_node} -> {to_node} [ {prop_str} ]"
     else:
         edge_str = f"{from_node} -> {to_node}"
 
     return edge_str
+
 
 
 ''' wrap (in start/stop) and indent dot lines
@@ -72,7 +72,7 @@ def indent_and_wrap(lines, wrap_keyword, object_name, wrap_start='{', wrap_stop=
         object_name = f"cluster_{object_name}"
     
     # start wrap
-    output_lines.append(f"{wrap_keyword} {object_name} {wrap_start}")
+    output_lines.append(f"{wrap_keyword}{object_name}{wrap_start}")
 
     # indent
     indent = "\t" * indent_level
@@ -106,10 +106,126 @@ def random_string(length=12):
 
 
 
-''' prep a text for dot
-    remove spaces with \n
+''' parse a list of text into strings
 '''
-def prep_for_dot(text):
-    new_text = re.sub('\s+', r'\\n', text)
+def split_text(text, delimeter=','):
+    parts = text.split(delimeter)
 
-    return new_text
+    # remove spaces
+    parts = list(map(lambda s: s.strip(), parts))
+
+    # we only need the first three parts
+    return parts[:3]
+
+
+
+''' output something like this
+    <<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+        <TR>
+            <TD CELLPADDING="2">
+                <FONT COLOR="#202020" FACE="Helvetica" POINT-SIZE="24">
+                    Business
+                </FONT>
+            </TD>
+        </TR>
+        <TR>
+            <TD>
+                <FONT COLOR="#a02020" FACE="Helvetica" POINT-SIZE="20">
+                    <U><I>Sharafat</I></U>
+                </FONT>
+            </TD>
+        </TR>
+        <TR>
+            <TD>
+                <FONT COLOR="#2020a0" POINT-SIZE="16">
+                    Apr 2023
+                </FONT>
+            </TD>
+        </TR>
+    </TABLE>>
+'''
+def table_from_label(label, sublabels, prop_dict):
+    text_lines = []
+
+    # the label, wrap in a FONT 
+    label_lines = []
+    label_lines.append(htmlize(label))
+    
+    font_props = {"COLOR": prop_dict['fontcolor'], "FACE": prop_dict['fontname'], "POINT-SIZE": prop_dict['fontsize']}
+    font_prop_str = make_property_list(prop_dict=font_props)
+    font_start = f"<FONT {font_prop_str}>"
+    font_end = '</FONT>'
+    label_lines = indent_and_wrap(label_lines, wrap_keyword='', object_name='', wrap_start=font_start, wrap_stop=font_end, indent_level=1)
+
+    # wrap in a TD
+    td_props = {"CELLPADDING": 2}
+    td_prop_str = make_property_list(prop_dict=td_props)
+    td_start = f"<TD {td_prop_str}>"
+    td_end = '</TD>'
+    label_lines = indent_and_wrap(label_lines, wrap_keyword='', object_name='', wrap_start=td_start, wrap_stop=td_end, indent_level=1)
+
+    # wrap in a TR
+    label_lines = indent_and_wrap(label_lines, wrap_keyword='', object_name='', wrap_start='<TR>', wrap_stop='</TR>', indent_level=1)
+
+
+    # sublabel 1, italic and wrap in a FONT
+    label1_lines = []
+    if len(sublabels) >= 1:
+        label1_lines.append(htmlize(sublabels[0]))
+        label1_lines = indent_and_wrap(label1_lines, wrap_keyword='', object_name='', wrap_start='<I>', wrap_stop='</I>', indent_level=1)
+        if len(sublabels) >= 2:
+            label1_lines = indent_and_wrap(label1_lines, wrap_keyword='', object_name='', wrap_start='<U>', wrap_stop='</U>', indent_level=1)
+        
+        font_props = {"COLOR": prop_dict['fontcolorsub'], "FACE": prop_dict['fontname'], "POINT-SIZE": int(prop_dict['fontsize']) * 0.9}
+        font_prop_str = make_property_list(prop_dict=font_props)
+        font_start = f"<FONT {font_prop_str}>"
+        font_end = '</FONT>'
+        label1_lines = indent_and_wrap(label1_lines, wrap_keyword='', object_name='', wrap_start=font_start, wrap_stop=font_end, indent_level=1)
+
+        # wrap in a TD
+        label1_lines = indent_and_wrap(label1_lines, wrap_keyword='', object_name='', wrap_start='<TD>', wrap_stop='</TD>', indent_level=1)
+
+        # wrap in a TR
+        label1_lines = indent_and_wrap(label1_lines, wrap_keyword='', object_name='', wrap_start='<TR>', wrap_stop='</TR>', indent_level=1)
+
+
+    # sublabel 1, italic and wrap in a FONT
+    label2_lines = []
+    if len(sublabels) >= 2:
+        label2_lines.append(htmlize(sublabels[1]))
+        label2_lines = indent_and_wrap(label2_lines, wrap_keyword='', object_name='', wrap_start='<I>', wrap_stop='</I>', indent_level=1)
+        
+        font_props = {"COLOR": prop_dict['fontcolor'], "FACE": prop_dict['fontname'], "POINT-SIZE": int(prop_dict['fontsize']) * 0.8}
+        font_prop_str = make_property_list(prop_dict=font_props)
+        font_start = f"<FONT {font_prop_str}>"
+        font_end = '</FONT>'
+        label2_lines = indent_and_wrap(label2_lines, wrap_keyword='', object_name='', wrap_start=font_start, wrap_stop=font_end, indent_level=1)
+
+        # wrap in a TD
+        label2_lines = indent_and_wrap(label2_lines, wrap_keyword='', object_name='', wrap_start='<TD>', wrap_stop='</TD>', indent_level=1)
+
+        # wrap in a TR
+        label2_lines = indent_and_wrap(label2_lines, wrap_keyword='', object_name='', wrap_start='<TR>', wrap_stop='</TR>', indent_level=1)
+
+
+    text_lines = label_lines + label1_lines + label2_lines
+
+    # wrap in a TABLE
+    table_props = {'BORDER': 0, 'CELLSPACING': 0, 'CELLPADDING': 0}
+    table_prop_str = make_property_list(prop_dict=table_props)
+    table_start = f"<<TABLE {table_prop_str}>"
+    table_end = '\t\t</TABLE>>'
+    text_lines = indent_and_wrap(text_lines, wrap_keyword='', object_name='', wrap_start=table_start, wrap_stop=table_end, indent_level=3)
+
+    text = '\n'.join(text_lines)
+    # print(text)
+
+    return text 
+
+
+''' htmlize a string
+'''
+def htmlize(text):
+    output = text.replace(r'\n', '<BR/>')
+
+    return output

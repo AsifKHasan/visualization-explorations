@@ -21,8 +21,10 @@ fi
 pushd ./out
 
 FMT=png
+# RENDERER=":cairo:cairo"
+RENDERER=":svg:core"
 ENGINE=neato
-dot -K${ENGINE} -T${FMT} -o${YML}.${FMT} ${YML}.gv
+dot -K${ENGINE} -T${FMT}${RENDERER} -o${YML}.${FMT} ${YML}.gv
 
 
 if [ ${?} -ne 0 ];  then

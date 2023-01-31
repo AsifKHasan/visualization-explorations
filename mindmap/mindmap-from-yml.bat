@@ -16,12 +16,14 @@ if errorlevel 1 (
 
 popd
 
-:: dot -> png
+:: dot -> FMT
 pushd .\out
 
-set FMT=png
+set FMT=svg
+set RENDERER=":cairo:cairo"
+@REM set RENDERER=":svg:core"
 set ENGINE=neato
-dot -K%ENGINE% -T%FMT% -o%YML%.%FMT% %YML%.gv
+dot -K%ENGINE% -T%FMT%%RENDERER% -o%YML%.%FMT% %YML%.gv
 
 
 if errorlevel 1 (

@@ -26,7 +26,9 @@ class DotObject(object):
         self._theme = self._config['theme']['theme-data'][str(self._level)]
         self._lines = []
 
-        self._label = prep_for_dot(text=self._data['label'])
+        self._labels = split_text(text=self._data['label'])
+        self._label = self._labels[0]
+        self._sublabels = self._labels[1:]
         self._id = text_to_identifier(text=self._label)
 
 
@@ -50,15 +52,16 @@ class DotObject(object):
 
         # set the attributes only if we are in a new level
         if self._level != self._config['previous-level']:
-            # print(self._label)
-            # self.append_content(content='')
-            self.append_content(content=make_property_list(name='graph', prop_dict=self._theme.get('graph', {})))
+            if 'graph' in self._theme:
+                self.append_content(content=f"graph [ {make_property_list(prop_dict=self._theme['graph'])} ]")
+
             self.append_content(content='')
+            
             self._config['previous-level'] = self._level
 
 
         # make the node
-        self.append_content(content=make_a_node(id=self._id, label=self._label, prop_dict=self._theme.get('node', {})))
+        self.append_content(content=make_a_node(id=self._id, label=self._label, sublabels=self._sublabels, prop_dict=self._theme.get('node', {})))
 
 
         # traverse children
@@ -72,6 +75,6 @@ class DotObject(object):
 
         # wrap as a digraph
         if self._level == 0:
-            self._lines = indent_and_wrap(self._lines, wrap_keyword='digraph', object_name='G')
+            self._lines = indent_and_wrap(self._lines, wrap_keyword='digraph ', object_name='G ')
 
         return self._lines

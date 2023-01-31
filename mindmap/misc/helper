@@ -1,0 +1,5 @@
+./mindmap-from-yml.sh "NBR-CA-MGT"
+mindmap-from-yml.bat "NBR-CA-MGT"
+
+./mindmap-from-yml.sh "SAU-CAS__mindmap"
+mindmap-from-yml.bat "SAU-CAS__mindmap"

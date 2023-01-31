@@ -1,0 +1,72 @@
+label: NBR-CA-MGT, Sharafat
+children:
+  - label: Business, Sharafat
+    children:
+    - label: Stakeholder\nManagement, Sharafat/Faiz
+      children:
+      - label: NBR Management, Sharafat
+      - label: Spectrum\nNBR Team, Sharafat
+
+    - label: Scope Mapping, Faiz, when?
+
+    - label: Monetization, Sharafat, Apr 2023
+
+  - label: Requirements, Faiz
+    children:
+    - label: Collection, Jumana, when?
+    - label: Analysis, who?
+    - label: Documentation, Jumana, when?
+      children:
+      - label: Review, who?, when?
+
+  - label: Engineering
+    children:
+    - label: Production\nEnvironment, who?, when?
+    - label: Dev Environment, who?, when?
+    - label: Test Environment, who?, when?
+
+  - label: Design
+    children:
+    - label: UI/UX Mock, Jumana, when?
+    - label: Database, who?
+      children:
+      - label: Relational, who?, when?
+      - label: Metrics Data, who?, when?
+    - label: API, who?, when?
+
+  - label: Development, Faiz
+    children:
+    - label: Backend, who?, when?
+    - label: API Endpoints, who?, when?
+    - label: Frontend, who?, when?
+      children:
+      - label: Static Web, who?, when?
+      - label: Dynamic Data, who?, when?
+      - label: Equipment\nVisualization, Hasib, when?
+
+  - label: Testing, who?, when?
+    children:
+    - label: Functional Test, who?, when?
+      children:
+      - label: Automation, who?, when?
+    - label: Load Test, who?, when?
+
+  - label: Deployment, who?, when?
+    children:
+    - label: CI/CD Pipeline, who?, when?
+    - label: Observability\nand Monitoring, who?, when?
+
+  - label: Integration, who?, when?
+    children:
+    - label: LUMOS\nIntegration, who?, when?
+    - label: Prometheus\nIntegration, who?, when?
+
+  - label: Components, who?
+    children:
+    - label: Authentication\nAuthorization, who?, when?
+    - label: Prometheus\nData Collector, Sanmoon, when?
+
+  - label: Support, who?
+    children:
+    - label: Operation Support, who
+    - label: Tech Support, who
