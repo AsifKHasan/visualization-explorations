@@ -1,0 +1,44 @@
+label: MRA-IMS\nFunctional\nComponents, BabuBhai
+children:
+  - label: Member/সদস্য
+    children:
+    - label: Admission
+    - label: Transfer
+    - label: Cancellation
+
+  - label: Product
+    children:
+    - label: Loan Product
+    - label: Savings Product
+
+  - label: Group/সমিতি
+    children:
+    - label: Members
+    - label: Leader
+    - label: Meeeting
+
+  - label: MFI
+    children:
+    - label: Staff
+    - label: Zone
+    - label: Branch
+      children:
+      - label: Accounting
+      - label: Reporting
+    - label: Consolidated\nAccounting
+    - label: MFI Admin
+    - label: MFI User
+    - label: Reports and\nAnalytics
+
+  - label: MRA
+    children:
+    - label: MRA Admin
+    - label: MRA User
+    - label: Industry Reports\nand Analytics
+    - label: Policy\nand Process
+      children:
+      - label: Definition
+      - label: Enforcement
+
+
+

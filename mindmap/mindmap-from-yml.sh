@@ -20,9 +20,9 @@ fi
 # dot -> png
 pushd ./out
 
-FMT=png
-# RENDERER=":cairo:cairo"
-RENDERER=":svg:core"
+FMT=svg
+RENDERER=":cairo:cairo"
+# RENDERER=":svg:core"
 ENGINE=neato
 dot -K${ENGINE} -T${FMT}${RENDERER} -o${YML}.${FMT} ${YML}.gv
 
