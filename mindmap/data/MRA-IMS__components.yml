@@ -1,44 +1,60 @@
 label: MRA-IMS\nFunctional\nComponents, BabuBhai
 children:
-  - label: Member/সদস্য
-    children:
-    - label: Admission
-    - label: Transfer
-    - label: Cancellation
+- label: Member/সদস্য
+  children:
+  - label: Admission
+  - label: Transfer
+  - label: Cancellation
 
-  - label: Product
+- label: Product
+  children:
+  - label: Loan Product
     children:
-    - label: Loan Product
-    - label: Savings Product
-
-  - label: Group/সমিতি
-    children:
-    - label: Members
-    - label: Leader
-    - label: Meeeting
-
-  - label: MFI
-    children:
-    - label: Staff
-    - label: Zone
-    - label: Branch
+    - label: Loan Application
+    - label: Loan Assessment\nand\nArocessing
+    - label: Loan Repayment\nScheduling
+    - label: Loan Disbursement
+    - label: Loan Repayment\nCollection
       children:
-      - label: Accounting
-      - label: Reporting
-    - label: Consolidated\nAccounting
-    - label: MFI Admin
-    - label: MFI User
-    - label: Reports and\nAnalytics
-
-  - label: MRA
+      - label: Samity Day\nManual\nCollection
+      - label: Samity Day\nElectronic\nCollection
+      - label: Special\nColeection
+  - label: Savings Product
     children:
-    - label: MRA Admin
-    - label: MRA User
-    - label: Industry Reports\nand Analytics
-    - label: Policy\nand Process
-      children:
-      - label: Definition
-      - label: Enforcement
+    - label: General Savings
+    - label: Voluntary Savings
+    - label: Monthly Savings
 
+- label: Group/সমিতি
+  children:
+  - label: Members
+  - label: Leader
+  - label: Meeeting
 
+- label: MFI
+  children:
+  - label: Staff
+  - label: Zone
+  - label: Branch
+    children:
+    - label: Accounting
+    - label: Reporting
+  - label: Consolidated\nAccounting
+  - label: MFI Admin
+  - label: MFI User
+  - label: Reports and\nAnalytics
+  - label: Collection\nDisbursement
+    children:
+    - label: Collection\nDisbursement\nSchedule
+    - label: Collection\nDisbursement\nPosting
+    - label: Collection\nDisbursement\nRecalculation
 
+- label: MRA
+  children:
+  - label: MRA Admin
+  - label: MRA User
+  - label: Industry Reports\nand Analytics
+  - label: Policy\nand Process
+    children:
+    - label: Definition
+    - label: Enforcement

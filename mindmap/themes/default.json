@@ -77,5 +77,23 @@
             "style": "solid",
             "len": "1"
         }
+    },
+    "4": {
+        "node": {
+            "shape": "ellipse",
+            "style": "filled",
+            "fontcolor": "#202020",
+            "fontcolorsub": "#802020",
+            "fontname": "Helvetica",
+            "fontsize": "10",
+            "fillcolor": "#F0F0F0",
+            "penwidth": "1.0"
+        },
+        "edge": {
+            "penwidth": "0.5",
+            "color": "#202020",
+            "style": "solid",
+            "len": "1"
+        }
     }
 }
