@@ -1,0 +1,69 @@
+label: MRA-IMS\nProject
+children:
+- label: Inception
+  children:
+  - label: NoA
+  - label: Contract
+  - label: Kick-off
+
+- label: Stakeholders
+  children:
+  - label: MRA Focal\nPoints
+  - label: Twenty (20)\nMFI's
+    children:
+    - label: MFI Focal\nPoints
+  - label: Microcredit\nDomain Experts
+
+- label: Teaming
+  children:
+  - label: Stakeholder\nLiaison
+    children:
+    - label: MRA
+    - label: MFI's
+  - label: Business Analyst
+  - label: Team Lead
+  - label: Team
+    children:
+    - label: Requirements Analysis
+      children:
+      - label: Business\nRequirements
+      - label: Technical\nRequirements
+    - label: Architecture\n& Design
+      children:
+      - label: UI/UX
+      - label: API
+      - label: Data
+      - label: Integration
+    - label: Quality\nAssurance
+    - label: Deployment &\nSoftware\nReliability
+    - label: Training\nSupport
+
+- label: Project\nManagement
+  children:
+  - label: Communication\n& Reporting
+  - label: Risk\nManagement
+  - label: People\nIssues
+  - label: Stakeholder\nManagement
+  - label: Development\nMethodology
+
+- label: Architecture
+  children:
+  - label: Technology\nStack
+  - label: Deployment\nArchitecture
+
+- label: Requirements
+  children:
+  - label: Collection
+  - label: Analysis
+  - label: Clarification
+  - label: Documentation
+    children:
+    - label: SRS
+    - label: Technical\nNotes
+
+- label: Design
+- label: Development
+- label: Testing
+- label: Deployment
+- label: Training\n& Rollout
+- label: Operations\n& Support

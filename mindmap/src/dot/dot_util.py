@@ -6,6 +6,7 @@ various utilities for generating (GraphViz) dot code
 import re
 import random
 import string
+import html
 
 from helper.logger import *
 
@@ -119,6 +120,16 @@ def split_text(text, delimeter=','):
 
 
 
+''' htmlize a string
+'''
+def htmlize(text):
+    output = html.escape(text, quote=True)
+    output = output.replace(r'\n', '<BR/>')
+
+    return output
+
+
+
 ''' output something like this
     <<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
         <TR>
@@ -221,11 +232,3 @@ def table_from_label(label, sublabels, prop_dict):
     # print(text)
 
     return text 
-
-
-''' htmlize a string
-'''
-def htmlize(text):
-    output = text.replace(r'\n', '<BR/>')
-
-    return output
