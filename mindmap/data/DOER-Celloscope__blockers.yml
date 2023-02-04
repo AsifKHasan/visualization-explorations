@@ -1,0 +1,29 @@
+label: Blockers for\nDOER-Celloscope's\ngrowth, Asif's note
+children:
+- label: Communication
+  children: 
+  - label: Among Board
+  - label: With 2nd-tier\nmanagement
+- label: Decision\nMaking
+  children: 
+  - label: Operational\nDecisions
+  - label: Strategic and\nPolicy Decisions
+- label: Personal\nTraits
+- label: Growth\nPath
+  children: 
+  - label: Business\nGrowth
+    children:
+    - label: Single man\ndependency
+    - label: No sales activity\nfor Celloscope
+    - label: Too few\nclients
+    - label: Limited\nrevenue streams
+  - label: Organizational\nGrowth
+  - label: Financial\nGrowth
+    children:
+    - label: IPO
+    - label: Stock Market\ninvestment
+    - label: Investment\nin land
+    - label: Fixed\nDeposit
+    - label: Currency\nreserve
+    - label: Business\nAcquisition
+
