@@ -1,29 +1,30 @@
 label: Blockers for\nDOER-Celloscope's\ngrowth, Asif's note
 children:
-- label: Communication
+- label: (1) Communication
   children: 
-  - label: Among Board
-  - label: With 2nd-tier\nmanagement
-- label: Decision\nMaking
+  - label: (1A) Among Board
+  - label: (1B) With 2nd-tier\nmanagement
+- label: (2) Decision\nMaking
   children: 
-  - label: Operational\nDecisions
-  - label: Strategic and\nPolicy Decisions
-- label: Personal\nTraits
-- label: Growth\nPath
+  - label: (2A) Operational\nDecisions
+  - label: (2B) Strategic and\nPolicy Decisions
+- label: (3) Personal\nTraits
+- label: (4) Growth\nPath
   children: 
-  - label: Business\nGrowth
+  - label: (4A) Business\nGrowth
     children:
-    - label: Single man\ndependency
-    - label: No sales activity\nfor Celloscope
-    - label: Too few\nclients
-    - label: Limited\nrevenue streams
-  - label: Organizational\nGrowth
-  - label: Financial\nGrowth
+    - label: (4A1) Single man\ndependency
+    - label: (4A2) No sales activity\nfor Celloscope
+    - label: (4A3) Too few\nclients
+    - label: (4A4) Limited\nrevenue streams
+  - label: (4B) Organizational\nGrowth
+  - label: (4C) Financial\nGrowth
     children:
-    - label: IPO
-    - label: Stock Market\ninvestment
-    - label: Investment\nin land
-    - label: Fixed\nDeposit
-    - label: Currency\nreserve
-    - label: Business\nAcquisition
+    - label: (4C1) IPO
+      style: "fillcolor: #F0F0F0"
+    - label: (4C2) Stock Market\ninvestment
+    - label: (4C3) Investment\nin land
+    - label: (4C4) Fixed\nDeposit
+    - label: (4C5) Currency\nreserve
+    - label: (4C6) Business\nAcquisition
 
