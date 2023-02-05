@@ -31,6 +31,9 @@ class DotObject(object):
         self._sublabels = self._labels[1:]
         self._id = text_to_identifier(text=self._label)
 
+        # the object may have a style attribute
+        self._style = text_to_dict(self._data.get('style', ''))
+
 
     ''' append single line or list of lines to _lines
     '''
@@ -61,7 +64,8 @@ class DotObject(object):
 
 
         # make the node
-        self.append_content(content=make_a_node(id=self._id, label=self._label, sublabels=self._sublabels, prop_dict=self._theme.get('node', {})))
+        prop_dict = {**self._theme.get('node', {}), **self._style}
+        self.append_content(content=make_a_node(id=self._id, label=self._label, sublabels=self._sublabels, prop_dict=prop_dict))
 
 
         # traverse children

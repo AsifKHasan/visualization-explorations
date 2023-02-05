@@ -130,6 +130,21 @@ def htmlize(text):
 
 
 
+''' text to dictionary
+    "fillcolor: #F0F0F0, fontcolor: #202020" is converted to {"fillcolor": "#F0F0F0", "fontcolor": "#202020"}
+'''
+def text_to_dict(text):
+    output_dict = {}
+    pairs = text.split(',')
+    for pair in pairs:
+        kv = pair.split(':')
+        if len(kv) == 2:
+            output_dict[kv[0].strip()] = kv[1].strip()
+            
+    return output_dict
+
+
+
 ''' output something like this
     <<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
         <TR>

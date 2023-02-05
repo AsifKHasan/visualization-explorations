@@ -21,7 +21,7 @@ children:
   - label: (4C) Financial\nGrowth
     children:
     - label: (4C1) IPO
-      style: "fillcolor: #F0F0F0"
+      style: "fillcolor: #ffe599"
     - label: (4C2) Stock Market\ninvestment
     - label: (4C3) Investment\nin land
     - label: (4C4) Fixed\nDeposit
