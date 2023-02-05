@@ -1,11 +1,13 @@
 {
     "0": {
         "graph": {
+            "overlap": false,
             "size": "11,8!",
             "ratio": "fill",
             "center": "true",
-            "dpi": "96",
-            "mode": "KK"
+            "dpi": "144",
+            "mode": "KK",
+            "model": "shortpath"
         },
         "node": {
             "shape": "ellipse",
@@ -13,7 +15,7 @@
             "fontcolor": "#202020",
             "fontcolorsub": "#802020",
             "fontname": "Calibri",
-            "fontsize": "24",
+            "fontsize": "32",
             "fillcolor": "#E0E0E0",
             "penwidth": "2.0"
         },
@@ -31,7 +33,7 @@
             "fontcolor": "#202020",
             "fontcolorsub": "#802020",
             "fontname": "Calibri",
-            "fontsize": "20",
+            "fontsize": "28",
             "fillcolor": "#E0E0E0",
             "penwidth": "1.5"
         },
@@ -49,7 +51,7 @@
             "fontcolor": "#202020",
             "fontcolorsub": "#802020",
             "fontname": "Calibri",
-            "fontsize": "18",
+            "fontsize": "20",
             "fillcolor": "#F0F0F0",
             "penwidth": "1.0"
         },
@@ -67,7 +69,7 @@
             "fontcolor": "#202020",
             "fontcolorsub": "#802020",
             "fontname": "Calibri",
-            "fontsize": "16",
+            "fontsize": "18",
             "fillcolor": "#F0F0F0",
             "penwidth": "1.0"
         },
@@ -85,7 +87,7 @@
             "fontcolor": "#202020",
             "fontcolorsub": "#802020",
             "fontname": "Calibri",
-            "fontsize": "14",
+            "fontsize": "16",
             "fillcolor": "#F0F0F0",
             "penwidth": "1.0"
         },
