@@ -17,10 +17,11 @@ else
   popd
 fi
 
-# dot -> png
+# dot -> {image}
 pushd ./out
 
 FMT=svg
+# FMT=png
 RENDERER=":cairo:cairo"
 # RENDERER=":svg:core"
 ENGINE=neato

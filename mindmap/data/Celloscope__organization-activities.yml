@@ -1,0 +1,33 @@
+label: Celloscope
+children:
+- label: (1) Business\nAcquisition
+  children:
+  - label: (1A) Corporate\nSales
+    style: "fillcolor: #f4cccc"
+  - label: (1B) Product and\nService Roadmap
+    style: "fillcolor: #f4cccc"
+  - label: (1C) Positioning\nand Branding
+    style: "fillcolor: #f4cccc"
+  - label: (1D) Presales\nand Bidding
+    style: "fillcolor: #ffe599"
+
+- label: (2) Internal\nOperations
+  children:
+  - label: (2A) Finance
+    style: "fillcolor: #f4cccc"
+  - label: (2B) Corporate\nAffairs
+    style: "fillcolor: #ffe599"
+  - label: (2C) Accounts
+    style: "fillcolor: #f4cccc"
+  - label: (2D) Admin
+    style: "fillcolor: #ffe599"
+  - label: (2E) HR
+  - label: (2F) Supply\nChain
+    style: "fillcolor: #f4cccc"
+
+- label: (3) Service\nDelivery
+  children:
+  - label: (3A) Technology
+  - label: (3B) Project\nManagement
+  - label: (3C) Human\nDevelopment
+    style: "fillcolor: #ffe599"

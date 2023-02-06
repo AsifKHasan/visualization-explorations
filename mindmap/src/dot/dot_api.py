@@ -34,6 +34,9 @@ class DotObject(object):
         # the object may have a style attribute
         self._style = text_to_dict(self._data.get('style', ''))
 
+        # whether to show children
+        self._show_children = self._data.get('show-children', True)
+
 
     ''' append single line or list of lines to _lines
     '''
@@ -69,12 +72,13 @@ class DotObject(object):
 
 
         # traverse children
-        for child in self._data.get('children', []):
-            child_object = DotObject(config=self._config, data=child, level=self._level+1)
-            self.append_content(content=child_object.to_dot())
+        if self._show_children:
+            for child in self._data.get('children', []):
+                child_object = DotObject(config=self._config, data=child, level=self._level+1)
+                self.append_content(content=child_object.to_dot())
 
-            # make the edges between parent and child
-            self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, prop_dict=self._theme.get('edge', {})))
+                # make the edges between parent and child
+                self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, prop_dict=self._theme.get('edge', {})))
 
 
         # wrap as a digraph
