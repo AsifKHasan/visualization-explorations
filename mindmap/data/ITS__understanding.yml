@@ -1,0 +1,90 @@
+label: ITS\nUnderstanding
+children:
+- label: Internal\nTeam
+  children:
+  - label: ForkanBhai, Lead
+  - label: Jakir, Coordinator\nRepo Owner
+  - label: Faheem, Monetizer
+  - label: Faiz, ?
+  - label: Jion, Tech &\nMarket Research
+  - label: Hasan, Tech &\nMarket Research
+  - label: Asif, ?
+
+- label: Key\nPeople
+  children:
+  - label: RHD\nPeople
+    children:
+    - label: Dr. Mamun
+    - label: Tanvir Siddiq
+    - label: AKM Fazlul Karim
+    - label: Sayeda Momotaz
+
+  - label: TRL\nUK\nPeople
+    children:
+    - label: Dr. Moinul Hossain, IUT
+
+  - label: ARI\nBUET\nPeople
+  - label: ADB\nPeople
+  - label: WB\nPeople
+  - label: JICA\nPeople
+  - label: Bangladesh\nPolice\nPeople
+
+- label: Consultants
+  children:
+  - label: TRL, Road Safety
+  - label: KEC, ITS Masterplan, ?
+  - label: WINTECH, ITS Masterplan, ?
+  - label: KOTY, ITS Masterplan, ?
+  - label: SOO SUNG, ITS Masterplan, ?
+
+- label: Funding
+  children:
+  - label: GoB
+  - label: World\nBank
+  - label: ADB
+  - label: KOICA
+
+- label: Competitors\nPartners
+  children:
+  - label: Musad, Partner to\nNDE in RHD
+  - label: VAAAN\nInfra, India (partner to UDC)
+  - label: UDC, Construction\nCompany (Toll)
+  - label: NDE, Construction\nCompany (Dhaka-Tangail\nN4 ITS)
+  - label: CNS, Toll
+  - label: Sigmind, Vehicle\nCounting, (Related to NDE?)
+  - label: Devcon, Vehicle\nCounting
+  - label: EKPAY, A2I, (potential\npartner?)
+
+- label: Projects
+  children:
+  - label: SASEC-1
+  - label: SASEC-2, USD 450m
+  - label: National Corridor\nRoad Safety, USD 600+m\nHW+SW BDT 120 Cr.
+  - label: BRTA Line3
+  - label: Rupsha Toll\n(ETC)
+  - label: Karnafuli\nTunnel
+
+- label: Solution
+  children:
+  - label: Accident\nAnalysis, Bangladesh\nPolice (IMAAP)
+  - label: VDS
+  - label: VMS
+  - label: ETC
+  - label: CCTV
+
+- label: Technology
+  children:
+  - label: Sensors/IoT
+  - label: AI/ML
+  - label: Data Science
+  - label: Data/Visualization
+  - label: Data\nCommunication
+
+- label: OEM's\nManufacturers
+  children:
+  - label: TRL (IMAAP/IRAP\n/IROADS)
+
+- label: Prospects
+  children:
+  - label: Jamuna\nBridge\nToll
+  - label: Rupsha\nBridge\nToll

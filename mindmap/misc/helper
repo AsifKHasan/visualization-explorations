@@ -4,6 +4,9 @@ mindmap-from-yml.bat "HR__active.network__summary"
 mindmap-from-yml.bat "NBR-CA-MGT"
 ./mindmap-from-yml.sh "NBR-CA-MGT"
 
+mindmap-from-yml.bat "ITS__understanding"
+./mindmap-from-yml.sh "ITS__understanding"
+
 mindmap-from-yml.bat "SAU-CAS__mindmap"
 ./mindmap-from-yml.sh "SAU-CAS__mindmap"
 
