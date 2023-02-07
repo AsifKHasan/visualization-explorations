@@ -31,11 +31,17 @@ class DotObject(object):
         self._sublabels = self._labels[1:]
         self._id = text_to_identifier(text=self._label)
 
+        # whether to show this
+        self._show = self._data.get('show', True)
+
         # the object may have a style attribute
         self._style = text_to_dict(self._data.get('style', ''))
 
         # whether to show children
         self._show_children = self._data.get('show-children', True)
+
+        # len of edge may be overridden
+        self._edge_len = self._data.get('len', 0)
 
 
     ''' append single line or list of lines to _lines
@@ -75,10 +81,21 @@ class DotObject(object):
         if self._show_children:
             for child in self._data.get('children', []):
                 child_object = DotObject(config=self._config, data=child, level=self._level+1)
+
+                # should we show it
+                if child_object._show == False:
+                    continue
+        
                 self.append_content(content=child_object.to_dot())
 
                 # make the edges between parent and child
-                self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, prop_dict=self._theme.get('edge', {})))
+                edge_props = self._theme.get('edge', {})
+
+                # len of edge may be overridden
+                if self._edge_len:
+                    edge_props['len'] = self._edge_len
+
+                self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, prop_dict=edge_props))
 
 
         # wrap as a digraph

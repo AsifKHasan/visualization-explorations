@@ -1,0 +1,49 @@
+label: Active Network, 33 people, 15.96 lacs
+children:
+- label: On-site people, 16 people (49%), 5.48 lacs (34%)
+  children:
+  - label: NBR, 8 people, 2.41 lacs (15%)
+    children:
+    - label: Miskatun Nahar\nMd. Tuhin Reza\nMd. Ferdous Mahmud\nMd. Anamul Haque\nMd. Ibrahim Ullah\nMd. Al-Shahariar\nMd. Nazmul Hossain\nSK. Maruf Hosen
+
+  - label: BCC, 2 people, 1.00 lacs (6%)
+    children:
+    - label: Md. Asgor Ali\nKazi Rakibur Rahman
+
+  - label: PHQ, 1 people, 0.20 lacs (1%)
+    children:
+    - label: Jyoti Basu Chakma
+    - label: PHQ Contractual obligation?, Revenue?, Duration/Term?
+      style: "fillcolor: #ffe599"
+
+  - label: DSHE, 1 people, 0.30 lacs (2%)
+    children:
+    - label: Md. Humayun Kabir
+    - label: DSHE Contractual obligation?, Revenue?, Duration/Term?
+      style: "fillcolor: #ffe599"
+
+  - label: RHD, 4 people, 1.57 lacs (10%)
+    children:
+    - label: Md. Saiful Islam Mia\nMohammad Ismail (Sepon)\nMd. Faisal-al-Jubaer\nSyed Nurul Alam
+    - label: RHD Contractual obligation?, Revenue?, Duration/Term?
+      style: "fillcolor: #ffe599"
+
+- label: Floating people, 17 people (51%), 10.48 lacs (66%)
+  children:
+  - label: Senior Level, 3 people (9%), 3.50 lacs (22%)
+    children:
+    - label: Ibrahim Ibna Md. Liaquat Ullah\nMd. Murshid Sarker\nShihan Zaman
+    - label: We are clearly unable to\ncreate enough value out of them
+      style: "fillcolor: #f4cccc"
+
+  - label: Mid Level, 6 people (18%), 3.63 lacs (23%)
+    children:
+    - label: Md. Abdullah Al Mamun\nMd. Murshadul Islam\nMohammad Saiful Islam\nMuhammad Myanuddin\nNur-E-Asma Tabassum\nMd. Ahsanur Rahman
+    - label: Graduate them to\npresales/PMO
+      style: "fillcolor: #ffe599"
+
+  - label: Field Level, 8 people (24%), 3.35 lacs (21%)
+    children:
+    - label: Karzon Chowdhury\nMD. Rezaul Islam\nMd. Saidur Rahman Shamim\nAirin Sultana\nAqib Asifur Rahman\nSonjoy Kumar\nTanmoy Chandra Dhar\nSamin Tawsib Tanjim
+    - label: Activities? Future?
+      style: "fillcolor: #ffe599"

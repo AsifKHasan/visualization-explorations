@@ -1,0 +1,34 @@
+label: Celloscope Sales
+children:
+- label: (1) Teaming
+  children:
+  - label: (1A) Team\nFormation
+  - label: (1B) Communication\nStrategy\n& Protocol
+  - label: (1C) Periodic\nReporting\n& Analytics
+  - label: (1D) Document\nRepository
+
+- label: (2) Pipeline
+  children:
+  - label: (2A) Lead\nManagement
+    children:
+    - label: (2A1) Lead\nGeneration
+    - label: (2A2) Prospect\nIdentification
+    - label: (2A2) Prospect\nMetrics\nManagement
+
+  - label: (2B) Prospect\nManagement
+    children:
+    - label: (2B1) Follow-up\n& Relationship\nManagement
+
+  - label: (3C) Revenue\nBudgeting
+
+- label: (3) Presales
+  children:
+  - label: (3A) Proposal\n& Bidding
+  - label: (3B) Value\nMaximiztion
+
+- label: (4) Client
+  children:
+  - label: (4A) Financial\n& Contract\n Negotiation
+  - label: (4B) Relationship\nManagement
+  - label: (4C) Lead&\nCoverage\nEnhancement
+  - label: (4D) Recovery\n& Closure
