@@ -21,6 +21,7 @@ class MindmapFromYml(object):
 		self._config_path = Path(config_path).resolve()
 		self._data = {}
 		self._yml_name = yml_name
+		self._yml_name_only = self._yml_name.split('/')[-1]
 
 
 	def run(self):
@@ -29,7 +30,7 @@ class MindmapFromYml(object):
 		self._data = yaml.load(open(self._CONFIG['files']['input-yml'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
 		# dot-helper
-		self._CONFIG['files']['output-dot'] = f"{self._CONFIG['dirs']['output-dir']}/{self._yml_name}.gv"
+		self._CONFIG['files']['output-dot'] = f"{self._CONFIG['dirs']['output-dir']}/{self._yml_name_only}.gv"
 		dot_helper = DotHelper(self._CONFIG)
 		dot_helper.generate_and_save(self._data)
 		self.tear_down()

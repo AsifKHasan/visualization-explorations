@@ -1,0 +1,3 @@
+mindmap-from-yml.bat "sscl/NBR/NBR-CA-MGT"
+
+./mindmap-from-yml.sh "sscl/NBR/NBR-CA-MGT"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# yml->dot->png pipeline
+# yml->dot->image pipeline
 
 # parameters
 YML=$1
@@ -17,7 +17,9 @@ else
   popd
 fi
 
-# dot -> {image}
+# dot -> FMT
+:: get the actual yml name without path prefix
+
 pushd ./out
 
 FMT=svg

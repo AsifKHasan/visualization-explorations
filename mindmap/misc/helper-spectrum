@@ -1,0 +1,19 @@
+mindmap-from-yml.bat "spectrum/HR/HR__active.network__summary"
+./mindmap-from-yml.sh "spectrum/HR/HR__active.network__summary"
+
+./mindmap-from-yml.sh "spectrum/ITS/ITS__understanding"
+
+
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-A-internal-team
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-B-key-people
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-C-consultants
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-D-funding
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-E-partners
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-F-competitors
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-G-projects
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-H-solution
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-I-technology
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-J-oem-manufacturers
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-K-prospects
+mindmap-from-yml.bat spectrum/ITS/ITS__understanding-L-risks-challenges
