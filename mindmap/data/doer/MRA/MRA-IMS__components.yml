@@ -11,14 +11,14 @@ children:
   - label: Loan Product
     children:
     - label: Loan Application
-    - label: Loan Assessment\nand\nArocessing
+    - label: Loan Assessment\nand\nProcessing
     - label: Loan Repayment\nScheduling
     - label: Loan Disbursement
     - label: Loan Repayment\nCollection
       children:
       - label: Samity Day\nManual\nCollection
       - label: Samity Day\nElectronic\nCollection
-      - label: Special\nColeection
+      - label: Special\nCollection
   - label: Savings Product
     children:
     - label: General Savings
@@ -28,8 +28,14 @@ children:
 - label: Group/সমিতি
   children:
   - label: Members
+    children:
+    - label: Loan\nProduct
+    - label: Savings\nProduct
+    - label: Change\nProject
   - label: Leader
-  - label: Meeeting
+  - label: Meeting
+  - label: Assigned\nField\nOfficer
+  - label: Re-Assign\nField\nOfficer
 
 - label: MFI
   children:
@@ -38,6 +44,10 @@ children:
   - label: Branch
     children:
     - label: Accounting
+      children:
+      - label: Voucher\nEntry
+      - label: Day-end\nProcessing
+      - label: Journal
     - label: Reporting
   - label: Consolidated\nAccounting
   - label: MFI Admin
@@ -58,3 +68,24 @@ children:
     children:
     - label: Definition
     - label: Enforcement
+- label: Settings
+  children:
+  - label: Define\nHoliday
+  - label: User Access
+    children:
+    - label: users
+      children:
+      - label: Role definition
+
+  - label: Accounting\nHeads
+    children:
+    - label: Create
+    - label: Update
+    - label: Delete
+    
+- label: Funding Authority
+  children: 
+  - label: PKSF
+  - label: commercial bank
+  - label: other donor agencies
+  - label: Projects

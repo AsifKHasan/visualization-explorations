@@ -18,9 +18,10 @@ else
 fi
 
 # dot -> FMT
-:: get the actual yml name without path prefix
+# get the actual yml name without path prefix
 IFS=$'/'; strarr=($YML); unset IFS;
 YML_NAME=${strarr[-1]}
+echo "prcessing ${YML_NAME}"
 
 pushd ./out
 
