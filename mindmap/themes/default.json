@@ -1,7 +1,7 @@
 {
     "0": {
         "graph": {
-            "overlap": false,
+            "overlap": "false",
             "size": "11,8!",
             "ratio": "fill",
             "center": "true",

@@ -1,6 +1,7 @@
+graph: "overlap: false"
 label: MRA-IMS\nFunctional\nComponents, BabuBhai
 children:
-- label: Member/সদস্য
+- label: Member
   children:
   - label: Admission
   - label: Transfer
@@ -8,30 +9,26 @@ children:
 
 - label: Product
   children:
-  - label: Loan Product
+  - label: Loan\nProduct
     children:
-    - label: Loan Application
-    - label: Loan Assessment\nand\nProcessing
-    - label: Loan Repayment\nScheduling
-    - label: Loan Disbursement
-    - label: Loan Repayment\nCollection
+    - label: Loan\nApplication
+    - label: Loan\nAssessment\nand\nProcessing
+    - label: Loan\nRepayment\nScheduling
+    - label: Loan\nDisbursement
+    - label: Loan\nRepayment\nCollection
       children:
       - label: Samity Day\nManual\nCollection
       - label: Samity Day\nElectronic\nCollection
       - label: Special\nCollection
-  - label: Savings Product
+  - label: Savings\nProduct
     children:
-    - label: General Savings
-    - label: Voluntary Savings
-    - label: Monthly Savings
+    - label: General\nSavings
+    - label: Voluntary\nSavings
+    - label: Monthly\nSavings
 
-- label: Group/সমিতি
+- label: Group
   children:
   - label: Members
-    children:
-    - label: Loan\nProduct
-    - label: Savings\nProduct
-    - label: Change\nProject
   - label: Leader
   - label: Meeting
   - label: Assigned\nField\nOfficer
@@ -61,21 +58,23 @@ children:
 
 - label: MRA
   children:
-  - label: MRA Admin
-  - label: MRA User
-  - label: Industry Reports\nand Analytics
+  - label: MRA\nAdmin
+  - label: MRA\nUser
+  - label: Industry\nReports and\nAnalytics
   - label: Policy\nand Process
     children:
     - label: Definition
     - label: Enforcement
+
 - label: Settings
+  show: false
   children:
   - label: Define\nHoliday
-  - label: User Access
+  - label: User\nAccess
     children:
-    - label: users
+    - label: Users
       children:
-      - label: Role definition
+      - label: Role\nDefinition
 
   - label: Accounting\nHeads
     children:
@@ -83,9 +82,9 @@ children:
     - label: Update
     - label: Delete
     
-- label: Funding Authority
+- label: Funding\nAuthority
   children: 
   - label: PKSF
-  - label: commercial bank
-  - label: other donor agencies
+  - label: Commercial\nBanks
+  - label: Donor\nAgencies
   - label: Projects

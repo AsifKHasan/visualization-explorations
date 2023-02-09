@@ -20,6 +20,10 @@ class DotObject(object):
         self._config = config
 
         self._data = data
+
+        # my have a graph attribute
+        self._graph = self._data.get('graph', '')
+
         self._level = level
         self._children = []
 
@@ -65,7 +69,8 @@ class DotObject(object):
         # set the attributes only if we are in a new level
         if self._level != self._config['previous-level']:
             if 'graph' in self._theme:
-                self.append_content(content=f"graph [ {make_property_list(prop_dict=self._theme['graph'])} ]")
+                graph_properties = {**self._theme['graph'], **text_to_dict(text=self._graph)}
+                self.append_content(content=f"graph [ {make_property_list(prop_dict=graph_properties)} ]")
 
             self.append_content(content='')
             
