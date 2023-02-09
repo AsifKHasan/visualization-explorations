@@ -1,4 +1,4 @@
-graph: "overlap: false"
+graph: "overlap: false, outputorder: nodesfirst"
 label: MRA-IMS\nFunctional\nComponents, BabuBhai
 children:
 - label: Member
