@@ -1,9 +1,7 @@
-./mindmap-from-yml.sh doer/DOER-Celloscope__blockers
-mindmap-from-yml.bat doer/DOER-Celloscope__blockers
-
 ./mindmap-from-yml.sh doer/MRA/MRA-IMS__components
 ./mindmap-from-yml.sh doer/MRA/MRA-IMS__project
-
+./mindmap-from-yml.sh doer/MRA/MRA-IMS__SRS-outline
 
 mindmap-from-yml.bat doer/MRA/MRA-IMS__components
 mindmap-from-yml.bat doer/MRA/MRA-IMS__project
+mindmap-from-yml.bat doer/MRA/MRA-IMS__SRS-outline

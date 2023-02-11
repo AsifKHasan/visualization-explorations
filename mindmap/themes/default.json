@@ -2,12 +2,15 @@
     "0": {
         "graph": {
             "overlap": "false",
+            "splines": "polyline",
             "size": "11,8!",
             "ratio": "fill",
             "center": "true",
             "dpi": "144",
             "mode": "KK",
-            "model": "shortpath"
+            "model": "shortpath",
+            "esep": "+30",
+            "sep": "+20"
         },
         "node": {
             "shape": "ellipse",

@@ -1,4 +1,4 @@
-graph: "overlap: false, outputorder: nodesfirst"
+graph: ""
 label: SRS, Software\nRequirements\nSpecification
 children:
 - label: (0) Executive\nSummary
@@ -27,15 +27,19 @@ children:
   children:
   - label: (2.1) Stakeholders
     children:
-    - label: Who will be\nusing the product?
-    - label: Are they a primary\nor secondary user?
-    - label: What is their role\nwithin their organization?
+    - label: Who will be using the product?
+      style: "shape: none"
+    - label: Are they a primary or secondary user?
+      style: "shape: none"
+    - label: What is their role within their organization?
+      style: "shape: none"
 
   - label: (2.2) Components
 
   - label: (2.3) User Needs
     children:
-    - label: What need does\the nproduct need\nto fulfill\nfor the users?   
+    - label: What need does the nproduct need to fulfill for the users?   
+      style: "shape: none"
 
   - label: (2.4) Assumptions\nand Dependencies
     children:

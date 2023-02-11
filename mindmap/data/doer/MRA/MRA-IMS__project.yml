@@ -1,12 +1,18 @@
+graph: ""
 label: MRA-IMS\nProject
 children:
-- label: Inception
+- label: (1) Inception
   children:
-  - label: NoA
-  - label: Contract
-  - label: Kick-off
+  - label: NoA, Wed Jan 18 2023
+    style: "fillcolor: #d9ead3"
+  - label: Contract, Tue Feb 14 2023
+    style: "fillcolor: #ffe599"
+  - label: Internal Kick-off, Sat Feb 11 2023
+    style: "fillcolor: #d9ead3"
+  - label: Project Kick-off, Wed Feb 15 2023
+    style: "fillcolor: #ffe599"
 
-- label: Stakeholders
+- label: (2) Stakeholders
   children:
   - label: MRA Focal\nPoints
   - label: Twenty (20)\nMFI's
@@ -14,7 +20,7 @@ children:
     - label: MFI Focal\nPoints
   - label: Microcredit\nDomain Experts
 
-- label: Teaming
+- label: (3) Teaming
   children:
   - label: Stakeholder\nLiaison
     children:
@@ -24,34 +30,60 @@ children:
   - label: Team Lead
   - label: Team
     children:
-    - label: Requirements Analysis
+    - label: Requirements\nAnalysis
       children:
       - label: Business\nRequirements
       - label: Technical\nRequirements
     - label: Architecture\n& Design
       children:
-      - label: UI/UX
-      - label: API
-      - label: Data
+      - label: UI/UX\nMock
+      - label: API\nSpecification
+      - label: Data\nSchema
       - label: Integration
-    - label: Quality\nAssurance
-    - label: Deployment &\nSoftware\nReliability
-    - label: Training\nSupport
+    - label: Development
+      children:
+      - label: Front-end
+      - label: Back-end
+      - label: API
 
-- label: Project\nManagement
+    - label: Quality\nAssurance
+      children:
+      - label: Functiona\nTesting
+      - label: Test\nAutomation
+
+    - label: Deployment &\nSoftware\nReliability
+      children:
+      - label: Application \nSecurity
+      - label: SRE\nEngineer
+
+    - label: Training\nSupport
+      children:
+      - label: Content\nDeveloper
+      - label: Trainer
+      - label: Support\nEngineer
+
+- label: (4) Project\nManagement
   children:
   - label: Communication\n& Reporting
+  - label: Tools&\nRepository
+    children:
+    - label: Skype
+    - label: Google\nDrive, MRA-IMS
+    - label: Mindmap, visualization-explorations/, mindmap
+    - label: BPMN, visualization-explorations/, bpmn-svg
+    - label: Documentation, doculaboration
+
   - label: Risk\nManagement
   - label: People\nIssues
   - label: Stakeholder\nManagement
   - label: Development\nMethodology
 
-- label: Architecture
+- label: (5) Architecture
   children:
   - label: Technology\nStack
   - label: Deployment\nArchitecture
 
-- label: Requirements
+- label: (6) Requirements
   children:
   - label: Collection
   - label: Analysis
@@ -59,11 +91,16 @@ children:
   - label: Documentation
     children:
     - label: SRS
+      children:
+      - label: Gsheet\nStructure, Sun Feb 12 2023, Asif
+      - label: Draft, Sat Feb 25 2023
+      - label: Management\nReview, Tue Feb 28 2023
+      - label: Final, Thu Mat 02 2023
     - label: Technical\nNotes
 
-- label: Design
-- label: Development
-- label: Testing
-- label: Deployment
-- label: Training\n& Rollout
-- label: Operations\n& Support
+- label: (7)\nDesign
+- label: (8)\nDevelopment
+- label: (9)\nTesting
+- label: (10)\nDeployment
+- label: (11)\nTraining\n& Rollout
+- label: (12)\nOperations\n& Support

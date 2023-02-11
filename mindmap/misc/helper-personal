@@ -1,2 +1,2 @@
-mindmap-from-yml.bat  personal/srs__outline
-./mindmap-from-yml.sh  personal/srs__outline
+./mindmap-from-yml.sh personal/DOER-Celloscope__blockers
+mindmap-from-yml.bat personal/DOER-Celloscope__blockers
