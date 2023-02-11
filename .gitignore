@@ -130,5 +130,6 @@ dmypy.json
 
 # custom
 out
-data/personal
+data/personal/*.yml
+personal/
 credential.json
