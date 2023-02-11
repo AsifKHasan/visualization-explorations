@@ -1,8 +1,28 @@
 #!/usr/bin/env bash
 # yml->dot->image pipeline
 
+# usage
+# ./mindmap-from-yml.sh YML [ENGINE] [FMT]
+
+# ENGINE may be one of following. "neato" is the default
+#   dot - hierarchical or layered drawings of directed graphs.
+#   neato - "spring model" layouts.
+#   fdp - Force-Directed Placement.
+#   sfdp - Scalable Force-Directed Placement.
+#   circo - circular layout.
+#   twopi - radial layout.
+#   nop - Pretty-print DOT graph file. Equivalent to nop1.
+#   nop2 - Pretty-print DOT graph file, assuming positions already known.
+#   osage - draws clustered graphs.
+#   patchwork - draws map of clustered graph using a squarified treemap layout. 
+
+# FMT may be one of jpg/png/pdf/svg. "svg" is the default
+
+
 # parameters
 YML=$1
+ENGINE=$2
+FMT=$3
 
 # set echo off
 PYTHON=python3
@@ -21,16 +41,26 @@ fi
 # get the actual yml name without path prefix
 IFS=$'/'; strarr=($YML); unset IFS;
 YML_NAME=${strarr[-1]}
-echo "prcessing ${YML_NAME}"
+
+# format
+if [ -z ${FMT} ]; then
+  FMT=svg
+  RENDERER=":cairo:cairo"
+elif [ ${FMT} == "svg" ]; then
+  RENDERER=":cairo:cairo"
+else
+  RENDERER=""
+fi
+
+# engine 
+if [ -z ${ENGINE} ]; then
+  ENGINE=neato
+fi
+
+echo "prcessing ${YML_NAME}: [FMT=${FMT}] [ENGINE=${ENGINE}]"
 
 pushd ./out
-
-FMT=svg
-# FMT=png
-RENDERER=":cairo:cairo"
-# RENDERER=":svg:core"
-ENGINE=neato
-dot -K${ENGINE} -T${FMT}${RENDERER} -o${YML_NAME}.${FMT} ${YML_NAME}.gv
+dot -K${ENGINE} -T${FMT}${RENDERER} -o${YML_NAME}.${ENGINE}.${FMT} ${YML_NAME}.gv
 
 
 if [ ${?} -ne 0 ];  then

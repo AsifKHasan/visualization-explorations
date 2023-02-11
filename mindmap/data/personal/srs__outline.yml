@@ -1,0 +1,60 @@
+graph: "overlap: false, outputorder: nodesfirst"
+label: SRS, Software\nRequirements\nSpecification
+children:
+- label: (0) Executive\nSummary
+
+- label: (1) Introduction
+  children:
+  - label: (1.1) Purpose
+    children:
+    - label: Objectives
+    - label: Goals 
+    - label: Benefits
+
+  - label: (1.2) Intended\nAudience\nand Use
+    children:
+    - label: External\nAudience
+    - label: Internal\nAudience
+
+  - label: (1.3) Product\nScope
+    children: 
+    - label: What\nis in?
+    - label: What\nis out?
+
+  - label: (1.4) Definitions\nand Acronyms
+
+- label: (2) Overall\nDescription
+  children:
+  - label: (2.1) Stakeholders
+    children:
+    - label: Who will be\nusing the product?
+    - label: Are they a primary\nor secondary user?
+    - label: What is their role\nwithin their organization?
+
+  - label: (2.2) Components
+
+  - label: (2.3) User Needs
+    children:
+    - label: What need does\the nproduct need\nto fulfill\nfor the users?   
+
+  - label: (2.4) Assumptions\nand Dependencies
+    children:
+    - label: Functional\nAssumptions/\nDependencies 
+    - label: Third-party\nAssumptions/\nDependencies 
+    - label: Technical\nAssumptions/\nDependencies 
+
+- label: (3) System\nFeatures and\nRequirements
+  children:
+  - label: (3.1) Functional\nRequirements
+  
+  - label: (3.2) External\nInterface\nRequirements
+  
+  - label: (3.3) System\nFeatures
+
+  - label: (3.4) Nonfunctional\nRequirements
+    children:
+    - label: Performance\nRequirements
+    - label: Safety\nRequirements
+    - label: Security\nRequirements
+    - label: Usability\nRequirements
+    - label: Scalability\nRequirements
