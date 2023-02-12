@@ -1,9 +1,28 @@
 :: yml->dot->image pipeline
 
+:: usage
+:: mindmap-from-yml.bat YML [ENGINE] [FMT]
+
+:: ENGINE may be one of following. "neato" is the default
+::   dot        - hierarchical or layered drawings of directed graphs.
+::   neato      - "spring model" layouts.
+::   fdp        - Force-Directed Placement.
+::   sfdp       - Scalable Force-Directed Placement.
+::   circo      - circular layout.
+::   twopi      - radial layout.
+::   nop        - Pretty-print DOT graph file. Equivalent to nop1.
+::   nop2       - Pretty-print DOT graph file, assuming positions already known.
+::   osage      - draws clustered graphs.
+::   patchwork  - draws map of clustered graph using a squarified treemap layout. 
+
+:: FMT may be one of jpg/png/pdf/svg. "svg" is the default
+
 @echo off
 
 :: parameters
 set YML=%~1
+set ENGINE=%~2
+set FMT=%~3
 
 :: yml-to-mindmap
 pushd .\src
@@ -27,16 +46,25 @@ for /F "tokens=1* delims=/" %%A in ( "%token_string%" ) do (
   goto find_last_loop
 )
 
-echo processing %YML_NAME%
+:: format
+if "%FMT%"=="" (
+  set FMT=svg
+  set RENDERER=":cairo:cairo"
+) else if "%FMT%"=="svg" (
+  set RENDERER=":cairo:cairo"
+) else (
+  set RENDERER=""
+)
+
+:: engine 
+if "%ENGINE%"=="" (
+  set ENGINE=neato
+)
+
+echo processing %YML_NAME% : [FMT=%FMT%] [ENGINE=%ENGINE%]
 
 pushd .\out
-
-set FMT=svg
-set RENDERER=":cairo:cairo"
-@REM set RENDERER=":svg:core"
-set ENGINE=neato
-dot -K%ENGINE% -T%FMT%%RENDERER% -o%YML_NAME%.%FMT% %YML_NAME%.gv
-
+dot -K%ENGINE% -T%FMT%%RENDERER% -o%YML_NAME%.%ENGINE%.%FMT% %YML_NAME%.gv
 
 if errorlevel 1 (
   popd

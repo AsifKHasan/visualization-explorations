@@ -5,19 +5,18 @@
 # ./mindmap-from-yml.sh YML [ENGINE] [FMT]
 
 # ENGINE may be one of following. "neato" is the default
-#   dot - hierarchical or layered drawings of directed graphs.
-#   neato - "spring model" layouts.
-#   fdp - Force-Directed Placement.
-#   sfdp - Scalable Force-Directed Placement.
-#   circo - circular layout.
-#   twopi - radial layout.
-#   nop - Pretty-print DOT graph file. Equivalent to nop1.
-#   nop2 - Pretty-print DOT graph file, assuming positions already known.
-#   osage - draws clustered graphs.
+#   dot       - hierarchical or layered drawings of directed graphs.
+#   neato     - "spring model" layouts.
+#   fdp       - Force-Directed Placement.
+#   sfdp      - Scalable Force-Directed Placement.
+#   circo     - circular layout.
+#   twopi     - radial layout.
+#   nop       - Pretty-print DOT graph file. Equivalent to nop1.
+#   nop2      - Pretty-print DOT graph file, assuming positions already known.
+#   osage     - draws clustered graphs.
 #   patchwork - draws map of clustered graph using a squarified treemap layout. 
 
 # FMT may be one of jpg/png/pdf/svg. "svg" is the default
-
 
 # parameters
 YML=$1
