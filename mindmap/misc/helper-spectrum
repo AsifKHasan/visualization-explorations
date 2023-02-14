@@ -1,5 +1,6 @@
-mindmap-from-yml.bat spectrum/HR/HR__active.network__summary
+# 
 ./mindmap-from-yml.sh spectrum/HR/HR__active.network__summary
+mindmap-from-yml.bat spectrum/HR/HR__active.network__summary
 
 ./mindmap-from-yml.sh spectrum/ITS/ITS__understanding
 ./mindmap-from-yml.sh spectrum/ITS/ITS__understanding-A-internal-team
