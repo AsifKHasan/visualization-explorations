@@ -1,0 +1,27 @@
+digraph BPMN {
+  splines=ortho;
+  rankdir=LR;
+  node[shape=rectangle style="rounded,filled" color="lightgoldenrodyellow" ]
+  start[shape=circle color=palegreen1]
+  end[shape=doublecircle color=orangered]
+  join, join2[shape=diamond label="" style="filled" fillcolor=orange]
+  wait, delay[shape=circle color="lightgoldenrod1"]
+  start -> announce
+  announce -> delay
+  announce -> moderate
+  moderate -> join2
+  delay -> email
+  email->join2
+  check_cal[label="check\ncalendar"]
+  announce -> check_cal
+  conf_call[label="conference\ncall"]
+  check_cal -> conf_call
+  conf_call -> wait[label=yes]
+  moderate_conf[label="moderate \nconference call"]
+  wait -> moderate_conf
+  moderate_conf -> join
+  conf_call -> join[label=no]
+  join->join2
+  join2->evaluate
+  evaluate->end
+}
