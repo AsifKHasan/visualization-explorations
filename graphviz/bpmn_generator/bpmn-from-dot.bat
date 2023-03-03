@@ -1,7 +1,7 @@
 :: yml->dot->image pipeline
 
 :: usage
-:: mindmap-from-yml.bat YML [ENGINE] [FMT]
+:: mindmap-from-yml.bat DOT [ENGINE] [FMT]
 
 :: ENGINE may be one of following. "neato" is the default
 ::   dot        - hierarchical or layered drawings of directed graphs.
@@ -20,28 +20,17 @@
 @echo off
 
 :: parameters
-set YML=%~1
+set DOT=%~1
 set ENGINE=%~2
 set FMT=%~3
 
-:: yml-to-mindmap
-pushd .\src
-.\yml-to-mindmap.py --config "../conf/config.yml" --yml "%YML%"
-
-if errorlevel 1 (
-  popd
-  exit /b %errorlevel%
-)
-
-popd
-
 :: dot -> FMT
 :: get the actual yml name without path prefix
-set token_string=%YML%
+set token_string=%DOT%
 
 :find_last_loop
 for /F "tokens=1* delims=/" %%A in ( "%token_string%" ) do (
-  set YML_NAME=%%A
+  set DOT_NAME=%%A
   set token_string=%%B
   goto find_last_loop
 )
@@ -58,13 +47,13 @@ if "%FMT%"=="" (
 
 :: engine 
 if "%ENGINE%"=="" (
-  set ENGINE=neato
+  set ENGINE="dot"
 )
 
-echo processing %YML_NAME% : [FMT=%FMT%] [ENGINE=%ENGINE%]
+echo processing %DOT_NAME% : [FMT=%FMT%] [ENGINE=%ENGINE%]
 
 pushd .\out
-dot -K%ENGINE% -T%FMT%%RENDERER% -o%YML_NAME%.%ENGINE%.%FMT% %YML_NAME%.gv
+dot -K%ENGINE% -T%FMT%%RENDERER% -o%DOT_NAME%.%ENGINE%.%FMT% ..\data\%DOT_NAME%.gv
 
 if errorlevel 1 (
   popd

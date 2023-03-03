@@ -1,0 +1,109 @@
+digraph pizza_orders {
+    splines=ortho;
+    clusterrank=local;
+    compound=true;
+    ratio=auto;
+    ranksep="0.5 equally";
+    nodesep=1.0;
+    esep="+30";
+    sep="+20";
+
+    node [ fixedsize=false; style="rounded, filled"; fillcolor="#F8F8F8"; color="#000000"; penwidth="0.5"; fontname="Helvetica"; fontsize="12pt"; margin="0.20,0.20";]
+
+    subgraph cluster_customer {
+        label="Pizza Customer";
+        graph [ style="filled"; color="#000000"; penwidth="1"; fillcolor="#F0F0F0"; fontname="Helvetica"; fontcolor="#202020"; fontsize="16pt"; margin="10,10"; ]
+
+        subgraph cluster_pizza_customer {
+            label="Customer";
+            graph [ style="filled"; color="#000000"; penwidth="0.5"; fillcolor="#FFFFFF"; fontname="Helvetica"; fontcolor="#202020"; fontsize="14pt"; margin="30,20"; ]
+
+            hungry                              [ shape="circle"; label="Hungry"; ]
+            goto_pizza_shop		                [ shape="rectangle"; label="Goto pizza shop"; ]
+            select_pizza                        [ shape="rectangle"; label="Select Pizza"; ]
+            order_pizza                         [ shape="rectangle"; label="Order Pizza"; ]
+            on_order                            [ shape="diamond"; label="Ordered"; ]
+            pizza_received                      [ shape="Mdiamond"; label=""; ]
+            timer_45_mins                       [ shape="Mdiamond"; label="45 Minutes"; ] 
+            ask_for_pizza                       [ shape="rectangle"; label="Ask for Pizza"; ]
+            eat_pizza                           [ shape="rectangle"; label="Eat Pizza"; ]
+            pay_for_pizza                       [ shape="rectangle"; label="Pay for Pizza"; ]
+            hunger_satisfied                    [ shape="doublecircle"; label="Hunger\nSatisfied"; ]
+
+            hungry                          -> goto_pizza_shop                 [ xlabel=""; ]
+            goto_pizza_shop                 -> select_pizza                    [ xlabel=""; ]
+            select_pizza                    -> order_pizza                     [ xlabel=""; ]
+            order_pizza                     -> on_order                        [ xlabel=""; ]
+            on_order                        -> pizza_received                  [ xlabel=""; ]
+            pizza_received                  -> pay_for_pizza                   [ xlabel=""; ]
+            pay_for_pizza                   -> eat_pizza                       [ xlabel=""; ]
+            eat_pizza                       -> hunger_satisfied                [ xlabel=""; ]
+            on_order                        -> timer_45_mins                   [ xlabel=""; ]
+            timer_45_mins                   -> ask_for_pizza                   [ xlabel=""; ]
+            ask_for_pizza                   -> on_order                        [ xlabel=""; ]
+        }
+    }
+
+    subgraph cluster_pizza_store {
+        label="Pizza Store";
+        graph [ style="filled"; color="#000000"; penwidth="1"; fillcolor="#F0F0F0"; fontname="Helvetica"; fontcolor="#202020"; fontsize="16pt"; margin="10,10"; ]
+
+        subgraph cluster_receptionist {
+            label="Receptionist";
+            graph [ style="filled"; color="#000000"; penwidth="0.5"; fillcolor="#FFFFFF"; fontname="Helvetica"; fontcolor="#202020"; fontsize="14pt"; margin="30,20"; ]
+
+            order_received                      [ shape="Mdiamond"; label="Order Received"; ]
+            on_order_received                   [ shape="diamond"; label="+"; ]
+            where_is_pizza                      [ shape="Mdiamond"; label="Where is Pizza?"; ]
+            deal_with_customer                  [ shape="rectangle"; label="Deal with Customer"; ]
+
+            order_received                  -> on_order_received               [ xlabel=""; ]
+            on_order_received               -> where_is_pizza                  [ xlabel=""; ]
+            where_is_pizza                  -> deal_with_customer              [ xlabel=""; ]
+            deal_with_customer              -> where_is_pizza                  [ xlabel=""; ]
+            on_order_received               -> deal_with_customer              [ xlabel=""; ]
+        }
+
+        subgraph cluster_cook {
+            label="Pizza Cook";
+            graph [ style="filled"; color="#000000"; penwidth="0.5"; fillcolor="#FFFFFF"; fontname="Helvetica"; fontcolor="#202020"; fontsize="14pt"; margin="30,20"; ]
+
+            bake_pizza                          [ shape="rectangle"; label="Bake Pizza"; ]
+        }
+
+        subgraph cluster_delivery_person {
+            label="Delivery Person";
+            graph [ style="filled"; color="#000000"; penwidth="0.5"; fillcolor="#FFFFFF"; fontname="Helvetica"; fontcolor="#202020"; fontsize="14pt"; margin="30,20"; ]
+
+            deliver_pizza                       [ shape="rectangle"; label="Deliver Pizza"; ]
+            collect_payment                     [ shape="rectangle"; label="Collect Payment"; ]
+            end_terminate                       [ shape="doublecircle"; label=""; ]
+
+            deliver_pizza                   -> collect_payment                 [ xlabel=""; ]
+            collect_payment                 -> end_terminate                   [ xlabel=""; ]
+
+        }
+
+        // { rank=same; receptionist; order_received; }
+        // { rank=same; cook; bake_pizza; }
+        // { rank=same; delivery_person; deliver_pizza; }
+
+        on_order_received               -> bake_pizza                      [ xlabel=""; constraint=false; ]
+        bake_pizza                      -> deliver_pizza                   [ xlabel=""; constraint=false; ]
+        where_is_pizza                  -> deliver_pizza                   [ xlabel=""; constraint=false; ]
+    }
+
+    // { rank=same; customer; pizza_customer; hungry; }
+
+    // customer -> pizza_customer      [ constraint=true; color="invis"; ]
+    // pizza_customer -> hungry        [ constraint=true; color="invis"; ]
+
+    order_pizza                     -> bake_pizza                      [ xlabel="";  constraint=false; ]
+    order_pizza                     -> order_received                  [ xlabel="pizza order";  constraint=false; ]
+    ask_for_pizza                   -> where_is_pizza                  [ xlabel="";  constraint=false; ]
+    pay_for_pizza                   -> collect_payment                 [ xlabel="money";  constraint=false; ]
+    deal_with_customer              -> ask_for_pizza                   [ xlabel="";  constraint=false; ]
+    deliver_pizza                   -> pizza_received                  [ xlabel="pizza";  constraint=false; ]
+    collect_payment                 -> pay_for_pizza                   [ xlabel="receipt";  constraint=false; ]
+    hunger_satisfied                -> end_terminate                   [ xlabel="";  constraint=false; ]
+}

@@ -1,8 +1,9 @@
 digraph BPMN {
-  splines=ortho;
+  // splines=ortho;
   rankdir=LR;
 
   node            [ shape="rectangle"; style="rounded, filled"; color="lightgoldenrodyellow"; ]
+
   start           [ shape="circle"; color="palegreen1"; ]
   end             [ shape="doublecircle"; color="orangered"; ]
   join            [ shape="diamond"; label="" style="filled"; fillcolor="orange"; ]
