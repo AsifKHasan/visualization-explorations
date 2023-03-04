@@ -1,8 +1,8 @@
 digraph pizza_orders {
-    splines=ortho;
     clusterrank=local;
+    splines=ortho;
     compound=true;
-    ratio=auto;
+    // ratio=auto;
     ranksep="0.5 equally";
     nodesep=1.0;
     esep="+30";
