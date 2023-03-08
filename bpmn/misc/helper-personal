@@ -1,0 +1,2 @@
+./bpmn-from-yml.sh personal/pizza-order
+bpmn-from-yml.bat personal/pizza-order
