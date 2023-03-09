@@ -25,7 +25,7 @@ svg-attrs:
         42u-generic-rack-02:
           u: 42
           h: 1956
-          w: 800
+          w: 570
           u-group-prefix: g-u
           u-rect-prefix: rect-u
 
@@ -33,7 +33,7 @@ svg-attrs:
         15u-generic-rack-02:
           u: 42
           h: 1956
-          w: 800
+          w: 570
           u-group-prefix: g-u
           u-rect-prefix: rect-u
 

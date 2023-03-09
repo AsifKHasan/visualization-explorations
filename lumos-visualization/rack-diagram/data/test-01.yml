@@ -3,31 +3,31 @@ make: generic
 model: 15u
 template: 15u-generic-rack-02
 equipments:
-    -   position: 40-39
+    -   position: 15-14
         type: switch
         make: generic
         model: 12-port
         template: 12-port-generic-switch
         hide: false
-    -   position: 37
+    -   position: 11
         type: switch
         make: generic
         model: 48-port
         template: 48-port-generic-switch
         hide: false
-    -   position: 35
+    -   position: 9
         type: server
         make: dell
         model: generic
         template: dell-1u-generic-server
         hide: false
-    -   position: 32
+    -   position: 6
         type: switch
         make: d-link
         model: generic
         template: d-link-generic-12-port-switch
         hide: false
-    -   position: 29
+    -   position: 1
         type: switch
         make: dell
         model: power-connect

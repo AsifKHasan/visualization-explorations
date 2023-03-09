@@ -1,0 +1,74 @@
+theme:        default
+bpmn:         Pizza Order Process Modeling
+hide-label:   false
+
+# top level bpmn may contain elements directly
+elements:
+
+# top level bpmn may contain pools
+pools:
+- pool:         Customer
+  hide-label:   false
+
+  # a pool may contain elements directly
+  elements:
+  - start:                  Hungry for Pizza
+    edges:
+    - sequence:             Goto Pizza Shop
+
+  - task: 		              Goto Pizza Shop
+    edges:
+    - sequence:             Select a Pizza
+
+  - task:                   Select a Pizza
+    edges:
+    - sequence:             Order a Pizza
+
+  - task:                   Order a Pizza
+    edges:
+    - sequence:             Ordered
+
+  - event-based:            Ordered
+    edges:
+    - sequence:             60 Minutes
+    - sequence:             Pizza Received
+
+  - timer:                  60 Minutes
+    edges:
+    - sequence:             Ask for the Pizza
+
+  - task:                   Ask for the Pizza
+    edges:
+
+  - throw-message:          Pizza Received
+    edges:
+    - sequence:             Pay for the Pizza
+
+  - task:                   Pay for the Pizza
+    edges:
+    - sequence:             Eat the Pizza
+
+  - task:                   Eat the Pizza
+    edges:
+    - sequence:             Hunger Satisfied
+
+  - end:                    Hunger Satisfied
+
+- pool:         Pizza Store
+  hide-label:   false
+
+  lanes:
+  - lane:         Receptionist
+    hide-label:   false
+
+    elements:
+
+  - lane:         Pizza Cook
+    hide-label:   false
+
+    elements:
+
+  - lane:         Delivery Person
+    hide-label:   false
+
+    elements:
