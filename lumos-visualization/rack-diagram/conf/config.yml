@@ -29,6 +29,14 @@ svg-attrs:
           u-group-prefix: g-u
           u-rect-prefix: rect-u
 
+      15u:
+        15u-generic-rack-02:
+          u: 42
+          h: 1956
+          w: 800
+          u-group-prefix: g-u
+          u-rect-prefix: rect-u
+
   server:
     dell:
       generic:

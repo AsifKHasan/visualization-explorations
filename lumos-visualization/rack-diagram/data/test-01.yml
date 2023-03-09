@@ -1,7 +1,7 @@
 type: rack
 make: generic
-model: 42u
-template: 42u-generic-rack-02
+model: 15u
+template: 15u-generic-rack-02
 equipments:
     -   position: 40-39
         type: switch
