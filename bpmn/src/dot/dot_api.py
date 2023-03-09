@@ -9,43 +9,39 @@ from helper.logger import *
 #   Dot objects wrappers
 #   ----------------------------------------------------------------------------------------------------------------
 
-''' Dot graph object
+''' Dot base object
 '''
 class DotObject(object):
+    ''' constructor
+    '''
+    def __init__(self, config, data):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+        self._config = config
+        self._data = data
+        self._lines = []
+        self._hide_label = self._data.get('hide-label', False)
+        self._class = None
+        self._label = None
+        self._id = None
+
+
+
+''' Dot graph object
+'''
+class GraphObject(DotObject):
 
     ''' constructor
     '''
-    def __init__(self, config, data, level=0):
+    def __init__(self, config, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        self._config = config
+        super().__init__(config, data)
 
-        self._data = data
+        self._class = 'graph'
+        self._theme = self._config['theme']['theme-data'][self._class]
 
-        # my have a graph attribute
-        self._graph = self._data.get('graph', '')
+        self._label = self._data.get('bpmn')
+        self._id = f"{self._class}_{text_to_identifier(text=self._label)}"
 
-        self._level = level
-        self._children = []
-
-        self._theme = self._config['theme']['theme-data'][str(self._level)]
-        self._lines = []
-
-        self._labels = split_text(text=self._data['label'])
-        self._label = self._labels[0]
-        self._sublabels = self._labels[1:]
-        self._id = text_to_identifier(text=self._label)
-
-        # whether to show this
-        self._show = self._data.get('show', True)
-
-        # the object may have a style attribute
-        self._style = text_to_dict(self._data.get('style', ''))
-
-        # whether to show children
-        self._show_children = self._data.get('show-children', True)
-
-        # len of edge may be overridden
-        self._edge_len = self._data.get('len', 0)
 
 
     ''' append single line or list of lines to _lines
@@ -61,50 +57,40 @@ class DotObject(object):
             self._lines = self._lines + content
 
 
-    ''' generates the Dot code
+    ''' generates the dot code
     '''
     def to_dot(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+        if not self._hide_label:
+            self._lines.append(make_a_property(prop_key='label', prop_value=self._label))
+            self._lines.append('')
 
-        # set the attributes only if we are in a new level
-        if self._level != self._config['previous-level']:
-            if 'graph' in self._theme:
-                graph_properties = {**self._theme['graph'], **text_to_dict(text=self._graph)}
-                self.append_content(content=f"graph [ {make_property_list(prop_dict=graph_properties)} ]")
+        # graph attributes
+        self._lines = self._lines + make_property_lines(self._theme['attributes'])
+        self._lines.append('')
 
-            self.append_content(content='')
-            
-            self._config['previous-level'] = self._level
+        # node properties
+        self._lines.append(f"node [ {make_property_list(self._theme['node'])} ]")
 
+        # edge properties
+        self._lines.append(f"edge [ {make_property_list(self._theme['edge'])} ]")
 
-        # make the node
-        prop_dict = {**self._theme.get('node', {}), **self._style}
-        self.append_content(content=make_a_node(id=self._id, label=self._label, sublabels=self._sublabels, prop_dict=prop_dict))
+        # elements
+        if self._data['elements']:
+            for node in self._data['elements']:
+                pass
 
+        # pools
+        if self._data['pools']:
+            for node in self._data['pools']:
+                pass
 
-        # traverse children
-        if self._show_children:
-            for child in self._data.get('children', []):
-                child_object = DotObject(config=self._config, data=child, level=self._level+1)
-
-                # should we show it
-                if child_object._show == False:
-                    continue
-        
-                self.append_content(content=child_object.to_dot())
-
-                # make the edges between parent and child
-                edge_props = self._theme.get('edge', {})
-
-                # len of edge may be overridden
-                if self._edge_len:
-                    edge_props['len'] = self._edge_len
-
-                self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, prop_dict=edge_props))
-
+        # edges
+        if self._data['edges']:
+            for node in self._data['edges']:
+                pass
 
         # wrap as a digraph
-        if self._level == 0:
-            self._lines = indent_and_wrap(self._lines, wrap_keyword='digraph ', object_name='G ')
+        self._lines = indent_and_wrap(self._lines, wrap_keyword='digraph ', object_name=self._id)
 
         return self._lines

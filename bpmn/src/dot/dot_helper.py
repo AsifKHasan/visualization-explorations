@@ -7,7 +7,7 @@ import time
 import yaml
 import datetime
 
-from dot.dot_api import DotObject
+from dot.dot_api import GraphObject
 from dot.dot_util import *
 from helper.logger import *
 
@@ -18,14 +18,13 @@ class DotHelper(object):
     def __init__(self, config):
         self._config = config
         self.dot_lines = []
-        self._config['previous-level'] = -1
 
 
     ''' generate and save the dot
     '''
     def generate_and_save(self, structure):
         # work on the data
-        dot_object = DotObject(config=self._config, data=structure)
+        dot_object = GraphObject(config=self._config, data=structure)
         self.dot_lines =  self.dot_lines + dot_object.to_dot()
 
         # save the markdown document string in a file

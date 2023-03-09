@@ -11,6 +11,19 @@ import html
 from helper.logger import *
 
 
+''' make property lines
+'''
+def make_property_lines(prop_dict):
+    if prop_dict is None or prop_dict == {}:
+        return []
+
+    prop_lines = []
+    for k, v in prop_dict.items():
+        prop_lines.append(make_a_property(prop_key=k, prop_value=v))
+
+    return prop_lines
+
+
 ''' make a property list
 '''
 def make_property_list(prop_dict):

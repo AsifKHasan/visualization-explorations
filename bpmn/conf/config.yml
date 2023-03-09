@@ -9,4 +9,3 @@ dirs:
 theme:
   # all themes go here
   theme-dir:            "../themes"
-  theme-name:           "default"
