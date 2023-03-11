@@ -22,7 +22,6 @@ class DotObject(object):
         self._hide_label = self._data.get('hide-label', False)
         self._class = None
         self._label = None
-        self._id = None
 
 
 
@@ -77,6 +76,7 @@ class GraphObject(DotObject):
 
         # elements
         if self._data['elements']:
+            self._lines.append('')
             self._lines.append(f"# {self._class} nodes")
             for node in self._data['elements']:
                 for k, v in node.items():
@@ -117,7 +117,8 @@ class NodeObject(DotObject):
         self._theme = self._config['theme']['theme-data'][self._class]
 
         self._type = self._data['type']
-        self._value = self._data['value']
+        self._label = self._data['value']
+        self._id = text_to_identifier(text=self._label)
 
 
     ''' generates the dot code
@@ -129,7 +130,7 @@ class NodeObject(DotObject):
             shape = self._theme['shapes'][self._type]
             if shape != 'x':
                 prop_dict = {'shape': shape}
-                self._lines.append(make_a_node(id=id, label=self._value, prop_dict=prop_dict))
+                self._lines.append(make_a_node(id=self._id, label=self._label, prop_dict=prop_dict))
             else:
                 warn(f"no shape defined for {self._class} type {self._type}")
 

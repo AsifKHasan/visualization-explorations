@@ -10,7 +10,7 @@ graph:
         sep:            "+20"
 
     node:
-        fixedsize:      "true"
+        fixedsize:      "false"
         style:          "rounded, filled"
         fillcolor:      "#FFFFFF"
         color:          "#000000"

@@ -4,8 +4,6 @@ hide-label:                  false
 
 # top level bpmn may contain elements directly
 elements:
-- start:                   Hungry for Pizza
-- task:                    Goto Pizza Shop
 
 # top level bpmn may contain edges directly
 edges:
