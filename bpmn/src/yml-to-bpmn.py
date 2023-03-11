@@ -58,16 +58,14 @@ class BpmnFromYml(object):
 		self._CONFIG['theme']['theme-path'] = self._CONFIG['theme']['theme-dir'] / f"{self._CONFIG['theme']['theme-name']}.yml"
 		try:
 			info(f"using theme '{self._CONFIG['theme']['theme-name']}'")
-			with open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8') as f:
-				self._CONFIG['theme']['theme-data'] = yaml.load(f, Loader=yaml.FullLoader)
+			self._CONFIG['theme']['theme-data'] = yaml.load(open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
 		except Exception as e:
-			warn("theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Using 'default' theme")
+			warn(f"theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Using 'default' theme")
 			try:
 				self._CONFIG['theme']['theme-name'] = 'default'
 				self._CONFIG['theme']['theme-path'] = self._CONFIG['theme']['theme-dir'] / f"{self._CONFIG['theme']['theme-name']}.yml"
-				with open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8') as f:
-					self._CONFIG['theme']['theme-data'] = yaml.load(f, Loader=yaml.FullLoader)
+				self._CONFIG['theme']['theme-data'] = yaml.load(open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
 			except Exception as e:
 				error(f"theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Exiting...")

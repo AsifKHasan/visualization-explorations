@@ -38,6 +38,7 @@ pool:
         margin:          "10,10"    
 
 lane:
+    graph:
         style:          "filled"
         color:          "#D0D0D0"
         penwidth:       "0.5"
@@ -45,4 +46,130 @@ lane:
         fontname:       "Helvetica"
         fontcolor:      "#202020"
         fontsize:       "14pt"
-        margin:         "30,20"    
+        margin:         "30,20"
+
+node:
+    shapes:
+        # start events
+        start:                                  circle
+        start-compensation:                     x
+        start-conditional:                      x
+        start-conditional-non:                  x
+        start-error:                            x
+        start-escalation:                       x
+        start-escalation-non:                   x
+        start-message:                          x
+        start-message-non:                      x
+        start-multiple:                         x
+        start-multiple-non:                     x
+        start-parallel-multiple:                x
+        start-parallel-multiple-non:            x
+        start-signal:                           x
+        start-signal-non:                       x
+        start-timer:                            x
+        start-timer-non:                        x
+
+        # end events
+        end:                                    doublecircle
+        end-cancel:                             x
+        end-compensation:                       x
+        end-error:                              x
+        end-escalation:                         x
+        end-message:                            x
+        end-multiple:                           x
+        end-signal:                             x
+        end-terminate:                          doublecircle
+
+        # intermediate events
+        intermediate:                           x
+        catch-cancel:                           x
+        catch-compensation:                     x
+        throw-compensation:                     x
+        catch-error:                            x
+        catch-escalation:                       x
+        catch-escalation-non:                   x
+        throw-escalation:                       x
+        catch-link:                             x
+        throw-link:                             x
+        catch-message:                          x
+        catch-message-non:                      x
+        throw-message:                          x
+        catch-multiple:                         x
+        catch-multiple-non:                     x
+        throw-multiple:                         x
+        catch-parallel-multiple:                x
+        catch-parallel-multiple-non:            x
+        catch-signal:                           x
+        catch-signal-non:                       x
+        throw-signal:                           x
+        conditional:                            x
+        conditional-non:                        x
+        timer:                                  x
+        timer-non:                              x
+
+        # task activities
+        task:                                   rectangle
+        business-rule-task:
+        manual-task:                            x
+        receive-task:                           x
+        script-task:                            x
+        send-task:                              x
+        service-task:                           x
+        user-task:                              x
+
+        # call activities
+        call:                                   x
+        business-rule-call:                     x
+        manual-call:                            x
+        script-call:                            x
+        user-call:                              x
+
+        # subprocess activities
+        process:                                x
+        adhoc:                                  x
+        transaction:                            x
+
+        # event subprocess activities
+        event:                                  x
+        event-compensation:                     x
+        event-conditional:                      x
+        event-conditional-non:                  x
+        event-error:                            x
+        event-escalation:                       x
+        event-escalation-non:                   x
+        event-message:                          x
+        event-message-non:                      x
+        event-multiple:                         x
+        event-multiple-non:                     x
+        event-parallel-multiple:                x
+        event-parallel-multiple-non:            x
+        event-signal:                           x
+        event-signal-non:                       x
+        event-timer:                            x
+        event-timer-non:                        x
+
+        # gateways
+        exclusive:                              x
+        inclusive:                              x
+        parallel:                               x
+        complex:                                x
+        event-based:                            x
+        event-based-start:                      x
+        event-based-parallel-start:             x
+
+        # data
+        data:                                   x
+        data-collection:                        x
+        data-input:                             x
+        data-input-collection:                  x
+        data-output:                            x
+        data-output-collection:                 x
+        data-store:                             x
+
+edge:
+    shapes:
+        sequence:                               x
+        message:                                x
+        association:                            x
+        directed-association:                   x
+        bidirectional-association:              x

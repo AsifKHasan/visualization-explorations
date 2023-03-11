@@ -4,16 +4,18 @@ hide-label:                  false
 
 # top level bpmn may contain elements directly
 elements:
+- start:                   Hungry for Pizza
+- task:                    Goto Pizza Shop
 
 # top level bpmn may contain edges directly
 edges:
-- message:                   Order a Pizza -> Order Received [label="pizza order";]
-- message:                   Ask for the Pizza -> Where is Pizza?
-- message:                   Pay for the Pizza -> Collect Payment [label="money";]
-- message:                   Deal with Customer -> Ask for the Pizza
-- message:                   Deliver Pizza -> Pizza Received [label="pizza";]
-- message:                   Collect Payment -> Pay for the Pizza [label="receipt";]
-- message:                   Hunger Satisfied --> Terminate
+- message:                   Order a Pizza        -> Order Received [label="pizza order";]
+- message:                   Ask for the Pizza    -> Where is Pizza?
+- message:                   Pay for the Pizza    -> Collect Payment [label="money";]
+- message:                   Deal with Customer   -> Ask for the Pizza
+- message:                   Deliver Pizza        -> Pizza Received [label="pizza";]
+- message:                   Collect Payment      -> Pay for the Pizza [label="receipt";]
+- message:                   Hunger Satisfied     -> Terminate
 
 # top level bpmn may contain pools
 pools:
@@ -35,16 +37,16 @@ pools:
   - end:                     Hunger Satisfied
 
   edges:
-  - sequence:                Hungry for Pizza -> Goto Pizza Shop
-  - sequence:                Goto Pizza Shop -> Select a Pizza
-  - sequence:                Select a Pizza -> Order a Pizza
-  - sequence:                Order a Pizza -> Order a Pizza
-  - sequence:                Ordered -> 60 Minutes
-  - sequence:                60 Minutes -> Ask for the Pizza
-  - sequence:                Ordered -> Pizza Received
-  - sequence:                Pizza Received -> Pay for the Pizza
-  - sequence:                Pay for the Pizza -> Eat the Pizza
-  - sequence:                Eat the Pizza -> Hunger Satisfied
+  - sequence:                Hungry for Pizza     -> Goto Pizza Shop
+  - sequence:                Goto Pizza Shop      -> Select a Pizza
+  - sequence:                Select a Pizza       -> Order a Pizza
+  - sequence:                Order a Pizza        -> Order a Pizza
+  - sequence:                Ordered              -> 60 Minutes
+  - sequence:                60 Minutes           -> Ask for the Pizza
+  - sequence:                Ordered              -> Pizza Received
+  - sequence:                Pizza Received       -> Pay for the Pizza
+  - sequence:                Pay for the Pizza    -> Eat the Pizza
+  - sequence:                Eat the Pizza        -> Hunger Satisfied
 
 - pool:                      Pizza Store
   hide-label:                false
@@ -60,10 +62,10 @@ pools:
     - task:                  Deal with Customer
 
     edges:
-    - sequence:              Order Received -> On Order Received
-    - sequence:              On Order Received -> Where is Pizza?
-    - sequence:              Where is Pizza? -> Deal with Customer
-    - sequence:              Deal with Customer -> Where is Pizza?
+    - sequence:              Order Received       -> On Order Received
+    - sequence:              On Order Received    -> Where is Pizza?
+    - sequence:              Where is Pizza?      -> Deal with Customer
+    - sequence:              Deal with Customer   -> Where is Pizza?
     
   - lane:                    Pizza Cook
     hide-label:              false
@@ -82,11 +84,11 @@ pools:
     - end-terminate:         Terminate
 
     edges:
-    - sequence:              Deliver Pizza -> Collect Payment
-    - sequence:              Collect Payment -> Terminate
+    - sequence:              Deliver Pizza        -> Collect Payment
+    - sequence:              Collect Payment      -> Terminate
 
   elements:
 
   edges:
-  - sequence:                On Order Received -> Bake Pizza
-  - sequence:                Bake Pizza -> Deliver Pizza
+  - sequence:                On Order Received    -> Bake Pizza
+  - sequence:                Bake Pizza           -> Deliver Pizza

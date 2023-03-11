@@ -34,7 +34,7 @@ def make_property_list(prop_dict):
     for k, v in prop_dict.items():
         prop_list.append(make_a_property(prop_key=k, prop_value=v))
 
-    prop_str = ' '.join(prop_list)
+    prop_str = '; '.join(prop_list)
 
     return prop_str
 
@@ -54,8 +54,9 @@ def make_a_property(prop_key, prop_value, quote=True):
 
 ''' make a dot Node
 '''
-def make_a_node(id, label, sublabels, prop_dict):
-    label_str = make_a_property(prop_key='label', prop_value=table_from_label(label=label, sublabels=sublabels, prop_dict=prop_dict), quote=False)
+def make_a_node(id, label, prop_dict):
+    # label_str = make_a_property(prop_key='label', prop_value=table_from_label(label=label, sublabels=sublabels, prop_dict=prop_dict), quote=False)
+    label_str = make_a_property(prop_key='label', prop_value=label)
     node_str = f"{id} [ {label_str} {make_property_list(prop_dict=prop_dict)} ]"
 
     return node_str
@@ -78,7 +79,7 @@ def make_en_edge(from_node, to_node, prop_dict):
 
 ''' wrap (in start/stop) and indent dot lines
 '''
-def indent_and_wrap(lines, wrap_keyword, object_name, wrap_start='{', wrap_stop='}', indent_level=1):
+def indent_and_wrap(lines, wrap_keyword, object_name, wrap_start=' {', wrap_stop='}', indent_level=1):
     output_lines = []
 
     # subgraph's identifier must be prefixed with 'cluster_'
