@@ -7,12 +7,12 @@ elements:
 
 # top level bpmn may contain edges directly
 edges:
-- message:                   Order a Pizza        -> Order Received [label="pizza order";]
+- message:                   Order a Pizza        -> Order Received
 - message:                   Ask for the Pizza    -> Where is Pizza?
-- message:                   Pay for the Pizza    -> Collect Payment [label="money";]
+- message:                   Pay for the Pizza    -> Collect Payment          [ label='money'; ]
 - message:                   Deal with Customer   -> Ask for the Pizza
-- message:                   Deliver Pizza        -> Pizza Received [label="pizza";]
-- message:                   Collect Payment      -> Pay for the Pizza [label="receipt";]
+- message:                   Deliver Pizza        -> Pizza Received           [ label='pizza'; ]
+- message:                   Collect Payment      -> Pay for the Pizza        [ label='receipt'; ]
 - message:                   Hunger Satisfied     -> Terminate
 
 # top level bpmn may contain pools

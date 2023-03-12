@@ -7,9 +7,15 @@ import re
 import random
 import string
 import html
+import textwrap
 
 from helper.logger import *
 
+PROPS_TO_QUOTE = [
+    'fontsize',
+    'label',
+    'xlabel'
+]
 
 ''' make property lines
 '''
@@ -42,7 +48,16 @@ def make_property_list(prop_dict):
 
 ''' make a property
 '''
-def make_a_property(prop_key, prop_value, quote=True):
+def make_a_property(prop_key, prop_value):
+    if isinstance(prop_value, str):
+        check = r" ,+#\\"
+        quote = any(elem in prop_value for elem in check)
+    else:
+        quote = False
+
+    if prop_key in PROPS_TO_QUOTE:
+        quote = True
+
     if quote:
         prop_str = f'{prop_key}="{prop_value}"'
     else:
@@ -57,7 +72,7 @@ def make_a_property(prop_key, prop_value, quote=True):
 def make_a_node(id, label, prop_dict):
     # label_str = make_a_property(prop_key='label', prop_value=table_from_label(label=label, sublabels=sublabels, prop_dict=prop_dict), quote=False)
     label_str = make_a_property(prop_key='label', prop_value=label)
-    node_str = f"{id} [ {label_str} {make_property_list(prop_dict=prop_dict)} ]"
+    node_str = f"{id.ljust(30)} [ {label_str}; {make_property_list(prop_dict=prop_dict)}; ]"
 
     return node_str
 
@@ -65,13 +80,13 @@ def make_a_node(id, label, prop_dict):
 
 ''' make a dot Edge
 '''
-def make_en_edge(from_node, to_node, prop_dict):
+def make_an_edge(from_node, to_node, prop_dict):
     prop_str = make_property_list(prop_dict=prop_dict)
 
     if prop_str:
-        edge_str = f"{from_node} -> {to_node} [ {prop_str} ]"
+        edge_str = f"{from_node.ljust(30)} -> {to_node.ljust(30)} [ {prop_str}; ]"
     else:
-        edge_str = f"{from_node} -> {to_node}"
+        edge_str = f"{from_node.ljust(30)} -> {to_node}"
 
     return edge_str
 
@@ -103,14 +118,28 @@ def indent_and_wrap(lines, wrap_keyword, object_name, wrap_start=' {', wrap_stop
 ''' convert a text to a valid Dot identifier
 '''
 def text_to_identifier(text):
+    # Replace SPACE with _
+    id = re.sub('[ ]+', '_', text)
+
     # Remove invalid characters
-    id = re.sub('[^0-9a-zA-Z_]', '', text)
+    id = re.sub('[^0-9a-zA-Z_]', '', id)
 
     # Remove leading characters until we find a letter or underscore
     id = re.sub('^[^a-zA-Z_]+', '', id)
 
+    # replace uppercase with a lowercase
+    # s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', id)
+    # id = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    id = id.lower()
+
     return id
 
+
+''' wrap text by \n literal
+'''
+def wrap_text(text, width=50):
+    lines = textwrap.wrap(text=text, width=width, break_long_words=False)
+    return '\\n'.join(lines)
 
 
 ''' get a random string
@@ -118,19 +147,6 @@ def text_to_identifier(text):
 def random_string(length=12):
     letters = string.ascii_uppercase
     return ''.join(random.choice(letters) for i in range(length))
-
-
-
-''' parse a list of text into strings
-'''
-def split_text(text, delimeter=','):
-    parts = text.split(delimeter)
-
-    # remove spaces
-    parts = list(map(lambda s: s.strip(), parts))
-
-    # we only need the first three parts
-    return parts[:3]
 
 
 
@@ -154,6 +170,21 @@ def text_to_dict(text):
         kv = pair.split(':')
         if len(kv) == 2:
             output_dict[kv[0].strip()] = kv[1].strip()
+            
+    return output_dict
+
+
+
+''' props to dictionary
+    "fillcolor: #F0F0F0, fontcolor: #202020" is converted to {"fillcolor": "#F0F0F0", "fontcolor": "#202020"}
+'''
+def props_to_dict(text):
+    output_dict = {}
+    pairs = text.split(';')
+    for pair in pairs:
+        kv = pair.split('=')
+        if len(kv) == 2:
+            output_dict[kv[0].strip()] = kv[1].strip().strip('"').strip("'")
             
     return output_dict
 

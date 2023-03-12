@@ -1,11 +1,11 @@
 graph:
     attributes:
-        clusterrank:    "local"
-        splines:        "ortho"
+        clusterrank:    local
+        splines:        ortho
         compound:       "true"
-        # ratio:        "auto"
-        ranksep:        "0.5 equally"
-        nodesep:        "1.0"
+        # ratio:        auto
+        ranksep:        0.5 equally
+        nodesep:        1.0
         esep:           "+30"
         sep:            "+20"
 
@@ -16,7 +16,7 @@ graph:
         color:          "#000000"
         penwidth:       "0.5"
         fontname:       "Arial"
-        fontsize:       "10pt"
+        fontsize:       10pt
         margin:         "0.20,0.20"
     
     edge:
@@ -58,7 +58,7 @@ node:
         start-error:                            x
         start-escalation:                       x
         start-escalation-non:                   x
-        start-message:                          x
+        start-message:                          Mdiamond
         start-message-non:                      x
         start-multiple:                         x
         start-multiple-non:                     x
@@ -93,7 +93,7 @@ node:
         throw-link:                             x
         catch-message:                          x
         catch-message-non:                      x
-        throw-message:                          x
+        throw-message:                          doublecircle
         catch-multiple:                         x
         catch-multiple-non:                     x
         throw-multiple:                         x
@@ -104,7 +104,7 @@ node:
         throw-signal:                           x
         conditional:                            x
         conditional-non:                        x
-        timer:                                  x
+        timer:                                  doublecircle
         timer-non:                              x
 
         # task activities
@@ -151,9 +151,9 @@ node:
         # gateways
         exclusive:                              x
         inclusive:                              x
-        parallel:                               x
+        parallel:                               diamond
         complex:                                x
-        event-based:                            x
+        event-based:                            diamond
         event-based-start:                      x
         event-based-parallel-start:             x
 
@@ -168,8 +168,8 @@ node:
 
 edge:
     shapes:
-        sequence:                               x
-        message:                                x
+        sequence:                               ''
+        message:                                ''
         association:                            x
         directed-association:                   x
         bidirectional-association:              x
