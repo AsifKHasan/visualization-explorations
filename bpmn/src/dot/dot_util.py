@@ -13,6 +13,12 @@ from helper.logger import *
 
 PROPS_TO_QUOTE = [
     'fontsize',
+    'fontname',
+    'penwidth',
+    'margin',
+    'style',
+    'shape',
+    'width',
     'label',
     'xlabel'
 ]
@@ -25,7 +31,7 @@ def make_property_lines(prop_dict):
 
     prop_lines = []
     for k, v in prop_dict.items():
-        prop_lines.append(make_a_property(prop_key=k, prop_value=v))
+        prop_lines.append(make_a_property(prop_key=k, prop_value=v) + ';')
 
     return prop_lines
 
@@ -125,7 +131,10 @@ def text_to_identifier(text):
     id = re.sub('[^0-9a-zA-Z_]', '', id)
 
     # Remove leading characters until we find a letter or underscore
-    id = re.sub('^[^a-zA-Z_]+', '', id)
+    # id = re.sub('^[^a-zA-Z_]+', '', id)
+
+    # prepoend an underscore if the first char is a digit
+    id = re.sub('^([0-9])', r'_\1', id)
 
     # replace uppercase with a lowercase
     # s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', id)

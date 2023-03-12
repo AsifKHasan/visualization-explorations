@@ -1,30 +1,33 @@
 graph:
     attributes:
-        clusterrank:    local
-        splines:        ortho
+        clusterrank:    "local"
+        splines:        "ortho"
         compound:       "true"
-        # ratio:        auto
-        ranksep:        0.5 equally
-        nodesep:        1.0
+        ratio:          "auto"
+        concentrate:    "false"
+        ranksep:        "0.5 equally"
+        nodesep:        "1.0"
         esep:           "+30"
         sep:            "+20"
 
     node:
-        fixedsize:      "false"
-        style:          "rounded, filled"
+        fixedsize:      "true"
+        style:          "filled"
         fillcolor:      "#FFFFFF"
         color:          "#000000"
         penwidth:       "0.5"
-        fontname:       "Arial"
-        fontsize:       10pt
+        fontname:       "Noto Sans"
+        fontsize:       "10pt"
         margin:         "0.20,0.20"
+        width:          "1.5in"
     
     edge:
         fillcolor:      "#F8F8F8"
         color:          "#202020"
         penwidth:       "0.5"
-        fontname:       "Helvetica"
+        fontname:       "Noto Sans"
         fontsize:       "8pt"
+        style:          "solid"
 
 pool:
     graph:
@@ -32,10 +35,10 @@ pool:
         color:          "#D0D0D0"
         penwidth:       "0.5"
         fillcolor:      "#FFFFFF"
-        fontname:       "Helvetica"
+        fontname:       "Arial"
         fontcolor:      "#202020"
         fontsize:       "16pt"
-        margin:          "10,10"    
+        margin:         "10,10"    
 
 lane:
     graph:
@@ -43,133 +46,134 @@ lane:
         color:          "#D0D0D0"
         penwidth:       "0.5"
         fillcolor:      "#F8F8F8"
-        fontname:       "Helvetica"
+        fontname:       "Arial"
         fontcolor:      "#202020"
         fontsize:       "14pt"
         margin:         "30,20"
 
 node:
+    wrap-at:                                    12
     shapes:
         # start events
-        start:                                  circle
-        start-compensation:                     x
-        start-conditional:                      x
-        start-conditional-non:                  x
-        start-error:                            x
-        start-escalation:                       x
-        start-escalation-non:                   x
-        start-message:                          Mdiamond
-        start-message-non:                      x
-        start-multiple:                         x
-        start-multiple-non:                     x
-        start-parallel-multiple:                x
-        start-parallel-multiple-non:            x
-        start-signal:                           x
-        start-signal-non:                       x
-        start-timer:                            x
-        start-timer-non:                        x
+        start:                                  shape='circle'; width='0.75in';
+        start-compensation:                     ''
+        start-conditional:                      ''
+        start-conditional-non:                  ''
+        start-error:                            ''
+        start-escalation:                       ''
+        start-escalation-non:                   ''
+        start-message:                          shape='Mdiamond'; width='1.5in';
+        start-message-non:                      ''
+        start-multiple:                         ''
+        start-multiple-non:                     ''
+        start-parallel-multiple:                ''
+        start-parallel-multiple-non:            ''
+        start-signal:                           ''
+        start-signal-non:                       ''
+        start-timer:                            ''
+        start-timer-non:                        ''
 
         # end events
-        end:                                    doublecircle
-        end-cancel:                             x
-        end-compensation:                       x
-        end-error:                              x
-        end-escalation:                         x
-        end-message:                            x
-        end-multiple:                           x
-        end-signal:                             x
-        end-terminate:                          doublecircle
+        end:                                    shape='doublecircle'; width='0.75in';
+        end-cancel:                             ''
+        end-compensation:                       ''
+        end-error:                              ''
+        end-escalation:                         ''
+        end-message:                            ''
+        end-multiple:                           ''
+        end-signal:                             ''
+        end-terminate:                          shape='doublecircle'; width='0.75in';
 
         # intermediate events
-        intermediate:                           x
-        catch-cancel:                           x
-        catch-compensation:                     x
-        throw-compensation:                     x
-        catch-error:                            x
-        catch-escalation:                       x
-        catch-escalation-non:                   x
-        throw-escalation:                       x
-        catch-link:                             x
-        throw-link:                             x
-        catch-message:                          x
-        catch-message-non:                      x
-        throw-message:                          doublecircle
-        catch-multiple:                         x
-        catch-multiple-non:                     x
-        throw-multiple:                         x
-        catch-parallel-multiple:                x
-        catch-parallel-multiple-non:            x
-        catch-signal:                           x
-        catch-signal-non:                       x
-        throw-signal:                           x
-        conditional:                            x
-        conditional-non:                        x
-        timer:                                  doublecircle
-        timer-non:                              x
+        intermediate:                           ''
+        catch-cancel:                           ''
+        catch-compensation:                     ''
+        throw-compensation:                     ''
+        catch-error:                            ''
+        catch-escalation:                       ''
+        catch-escalation-non:                   ''
+        throw-escalation:                       ''
+        catch-link:                             ''
+        throw-link:                             ''
+        catch-message:                          ''
+        catch-message-non:                      ''
+        throw-message:                          shape='doublecircle'; width='0.75in';
+        catch-multiple:                         ''
+        catch-multiple-non:                     ''
+        throw-multiple:                         ''
+        catch-parallel-multiple:                ''
+        catch-parallel-multiple-non:            ''
+        catch-signal:                           ''
+        catch-signal-non:                       ''
+        throw-signal:                           ''
+        conditional:                            ''
+        conditional-non:                        ''
+        timer:                                  shape='doublecircle'; width='0.75in';
+        timer-non:                              ''
 
         # task activities
-        task:                                   rectangle
-        business-rule-task:
-        manual-task:                            x
-        receive-task:                           x
-        script-task:                            x
-        send-task:                              x
-        service-task:                           x
-        user-task:                              x
+        task:                                   shape='rectangle'; style='rounded, filled';
+        business-rule-task:                     ''
+        manual-task:                            ''
+        receive-task:                           ''
+        script-task:                            ''
+        send-task:                              ''
+        service-task:                           ''
+        user-task:                              ''
 
         # call activities
-        call:                                   x
-        business-rule-call:                     x
-        manual-call:                            x
-        script-call:                            x
-        user-call:                              x
+        call:                                   ''
+        business-rule-call:                     ''
+        manual-call:                            ''
+        script-call:                            ''
+        user-call:                              ''
 
         # subprocess activities
-        process:                                x
-        adhoc:                                  x
-        transaction:                            x
+        process:                                ''
+        adhoc:                                  ''
+        transaction:                            ''
 
         # event subprocess activities
-        event:                                  x
-        event-compensation:                     x
-        event-conditional:                      x
-        event-conditional-non:                  x
-        event-error:                            x
-        event-escalation:                       x
-        event-escalation-non:                   x
-        event-message:                          x
-        event-message-non:                      x
-        event-multiple:                         x
-        event-multiple-non:                     x
-        event-parallel-multiple:                x
-        event-parallel-multiple-non:            x
-        event-signal:                           x
-        event-signal-non:                       x
-        event-timer:                            x
-        event-timer-non:                        x
+        event:                                  ''
+        event-compensation:                     ''
+        event-conditional:                      ''
+        event-conditional-non:                  ''
+        event-error:                            ''
+        event-escalation:                       ''
+        event-escalation-non:                   ''
+        event-message:                          ''
+        event-message-non:                      ''
+        event-multiple:                         ''
+        event-multiple-non:                     ''
+        event-parallel-multiple:                ''
+        event-parallel-multiple-non:            ''
+        event-signal:                           ''
+        event-signal-non:                       ''
+        event-timer:                            ''
+        event-timer-non:                        ''
 
         # gateways
-        exclusive:                              x
-        inclusive:                              x
-        parallel:                               diamond
-        complex:                                x
-        event-based:                            diamond
-        event-based-start:                      x
-        event-based-parallel-start:             x
+        exclusive:                              ''
+        inclusive:                              ''
+        parallel:                               shape='diamond'; width='1.5in';
+        complex:                                ''
+        event-based:                            shape='diamond'; width='1.5in';
+        event-based-start:                      ''
+        event-based-parallel-start:             ''
 
         # data
-        data:                                   x
-        data-collection:                        x
-        data-input:                             x
-        data-input-collection:                  x
-        data-output:                            x
-        data-output-collection:                 x
-        data-store:                             x
+        data:                                   ''
+        data-collection:                        ''
+        data-input:                             ''
+        data-input-collection:                  ''
+        data-output:                            ''
+        data-output-collection:                 ''
+        data-store:                             ''
 
 edge:
     shapes:
         sequence:                               ''
-        message:                                ''
-        association:                            x
-        directed-association:                   x
-        bidirectional-association:              x
+        message:                                style=dashed;
+        association:                            ''
+        directed-association:                   ''
+        bidirectional-association:              ''

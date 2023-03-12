@@ -9,7 +9,26 @@ from helper.logger import *
 #   Dot objects wrappers
 #   ----------------------------------------------------------------------------------------------------------------
 
+NODE_PROPS = {}
+EDGE_PROPS = {}
+
 NODE_DICT = {}
+
+
+''' parse node properties
+'''
+def parse_node_props(node_props):
+    for k, v in node_props.items():
+        prop_dict = props_to_dict(text=v)
+        NODE_PROPS[k] = prop_dict
+
+
+''' parse edge properties
+'''
+def parse_edge_props(edge_props):
+    for k, v in edge_props.items():
+        prop_dict = props_to_dict(text=v)
+        EDGE_PROPS[k] = prop_dict
 
 
 ''' if the nodes are in different subgraphs
@@ -119,6 +138,8 @@ class DotObject(object):
             for node in self._data['elements']:
                 for k, v in node.items():
                     node_object = NodeObject(config=self._config, data={'type': k, 'value': v}, parent_pool=parent_pool, parent_lane=parent_lane)
+                    node_object.parse_node()
+
                     if not node_object._id in NODE_DICT:
                         debug(f"adding node [{node_object._id}] {node_object._label}")
                         NODE_DICT[node_object._id] = node_object
@@ -137,6 +158,13 @@ class DotObject(object):
                 for k, v in edge.items():
                     edge_object = EdgeObject(config=self._config, data={'type': k, 'value': v})
                     self.append_content(content=edge_object.to_dot())
+
+
+    ''' process label
+    '''
+    def process_label(self):
+        if not self._hide_label:
+            self.append_content(content=make_a_property(prop_key='label', prop_value=wrap_text(text=self._label)) + ';')
 
 
 
@@ -161,8 +189,9 @@ class PoolObject(DotObject):
     '''
     def to_dot(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        if not self._hide_label:
-            self.append_content(content=make_a_property(prop_key='label', prop_value=wrap_text(text=self._label)))
+
+        # label
+        self.process_label()
 
         # graph properties
         self.append_content(content=f"graph [ {make_property_list(self._theme['graph'])}; ]")
@@ -212,8 +241,9 @@ class LaneObject(DotObject):
     '''
     def to_dot(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        if not self._hide_label:
-            self.append_content(content=make_a_property(prop_key='label', prop_value=wrap_text(text=self._label)))
+
+        # label
+        self.process_label()
 
         # graph properties
         self.append_content(content=f"graph [ {make_property_list(self._theme['graph'])}; ]")
@@ -249,12 +279,19 @@ class GraphObject(DotObject):
         self._id = f"{self._class}_{text_to_identifier(text=self._label)}"
 
 
+
+
     ''' generates the dot code
     '''
     def to_dot(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        if not self._hide_label:
-            self.append_content(content=make_a_property(prop_key='label', prop_value=wrap_text(text=self._label)))
+
+        # parse node and edge properties
+        parse_node_props(node_props=self._config['theme']['theme-data']['node']['shapes'])
+        parse_edge_props(edge_props=self._config['theme']['theme-data']['edge']['shapes'])
+
+        # label
+        self.process_label()
 
         # graph attributes
         self.append_content(content=make_property_lines(self._theme['attributes']))
@@ -302,11 +339,32 @@ class NodeObject(DotObject):
         self._theme = self._config['theme']['theme-data'][self._class]
 
         self._type = self._data['type']
-        self._label = self._data['value']
-        self._id = text_to_identifier(text=self._label)
+        self._value = self._data['value']
+
+        self._prop_dict = {}
+
+        self._wrap_at = self._theme.get('wrap-at', 10)
 
         self._parent_pool = parent_pool
         self._parent_lane = parent_lane
+
+
+    ''' parse node
+        Pay for the Pizza        [ width='1.5in'; ]
+    '''
+    def parse_node(self):
+        # see if there are properties enclosed inside []
+        node_str = self._value
+        m = re.search(r"\[(.+)\]", self._value)
+        if m:
+            prop_str = m.group(1)
+            self._prop_dict = props_to_dict(text=prop_str)
+
+            node_str = self._value[:m.start(0)]
+
+        # get the label and id
+        self._label = node_str.strip()
+        self._id = text_to_identifier(text=self._label)
 
 
     ''' generates the dot code
@@ -314,16 +372,12 @@ class NodeObject(DotObject):
     '''
     def to_dot(self):
         # get the shape
-        if self._type in self._theme['shapes']:
-            shape = self._theme['shapes'][self._type]
-            if shape != 'x':
-                prop_dict = {'shape': shape}
-                self.append_content(content=make_a_node(id=self._id, label=wrap_text(text=self._label, width=10), prop_dict=prop_dict))
-            else:
-                warn(f"no shape defined for {self._class} type {self._type}")
+        if self._type in NODE_PROPS:
+            self._prop_dict = {**NODE_PROPS[self._type], **self._prop_dict}
+            self.append_content(content=make_a_node(id=self._id, label=wrap_text(text=self._label, width=self._wrap_at), prop_dict=self._prop_dict))
 
         else:
-            warn(f"no shape found for {self._class} type {self._type}")
+            warn(f"no shape defined for {self._class} type {self._type}")
 
         return self._lines
 
@@ -383,15 +437,12 @@ class EdgeObject(DotObject):
     '''
     def to_dot(self):
         # get the shape
-        if self._type in self._theme['shapes']:
-            shape = self._theme['shapes'][self._type]
-            if shape != 'x':
-                self.parse_edge()
-                self.append_content(content=make_an_edge(from_node=self._from_node, to_node=self._to_node, prop_dict=self._prop_dict))
-            else:
-                warn(f"no properties defined for {self._class} type {self._type}")
+        if self._type in EDGE_PROPS:
+            self.parse_edge()
+            self._prop_dict = {**EDGE_PROPS[self._type], **self._prop_dict}
+            self.append_content(content=make_an_edge(from_node=self._from_node, to_node=self._to_node, prop_dict=self._prop_dict))
 
         else:
-            warn(f"no properties found for {self._class} type {self._type}")
+            warn(f"no properties defined for {self._class} type {self._type}")
 
         return self._lines
