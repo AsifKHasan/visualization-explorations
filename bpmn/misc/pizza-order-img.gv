@@ -1,0 +1,136 @@
+digraph graph_pizza_order_process_modeling {
+	clusterrank=local;
+	splines=ortho;
+	compound=true;
+	ratio=auto;
+	concentrate=false;
+	ranksep=0.5;
+	nodesep=1.0;
+	esep="+30";
+	sep="+20";
+	
+	node [ fixedsize=true; style="filled"; fillcolor="#FFFFFF"; color="#000000"; penwidth="0.5"; fontname="Noto Sans"; fontsize="10pt"; margin="0.20,0.20"; width="1.5in"; ]
+	edge [ fillcolor="#606060"; color="#202020"; penwidth="0.5"; fontname="Noto Sans"; fontsize="8pt"; style="solid"; ]
+	
+	# pool collection
+	subgraph cluster_customer {
+		label="Customer";
+		graph [ style="filled"; color="#D0D0D0"; penwidth="0.5"; fillcolor="#FFFFFF"; fontname="Arial"; fontcolor="#202020"; fontsize="16pt"; margin="10,10"; ]
+		
+		# lane collection
+		subgraph cluster_pizza_customer {
+			label="Pizza Customer";
+			graph [ style="filled"; color="#D0D0D0"; penwidth="0.5"; fillcolor="#F8F8F8"; fontname="Arial"; fontcolor="#202020"; fontsize="14pt"; margin="30,20"; ]
+			
+			# lane nodes
+			hungry_for_pizza               [ label=<<TABLE BORDER="0" COLOR="black" CELLSPACING="0" CELLPADDING="0">
+														<TR>
+															<TD PORT="t" COLSPAN="5" VALIGN="BOTTOM"><FONT COLOR="#202020" POINT-SIZE="10">Hungry for Pizza</FONT>
+															</TD>
+														</TR>
+														<TR>
+															<TD WIDTH="30"></TD>
+															<TD PORT="l" WIDTH="1"></TD>
+															<TD PORT="b"><IMG SRC="./bpmn/start.png"/></TD>
+															<TD PORT="r" WIDTH="1"></TD>
+															<TD WIDTH="30"></TD>
+														</TR>
+													</TABLE>>; shape="none"; ]
+			goto_pizza_shop                [ label="Goto Pizza\nShop"; shape="rectangle"; style="rounded, filled"; ]
+			select_a_pizza                 [ label="Select a\nPizza"; shape="rectangle"; style="rounded, filled"; ]
+			order_a_pizza                  [ label="Order a\nPizza"; shape="rectangle"; style="rounded, filled"; ]
+			ordered                        [ label="Ordered"; shape="diamond"; width="1.5in"; ]
+			_60_minutes                    [ label="60 Minutes"; shape="doublecircle"; width="0.75in"; ]
+			ask_for_the_pizza              [ label="Ask for the\nPizza"; shape="rectangle"; style="rounded, filled"; ]
+			pizza_received                 [ label="Pizza\nReceived"; shape="doublecircle"; width="0.75in"; ]
+			pay_for_the_pizza              [ label="Pay for the\nPizza"; shape="rectangle"; style="rounded, filled"; ]
+			eat_the_pizza                  [ label="Eat the\nPizza"; shape="rectangle"; style="rounded, filled"; ]
+			hunger_satisfied               [ label=<<TABLE BORDER="0" COLOR="black" CELLSPACING="0" CELLPADDING="0">
+														<TR>
+															<TD PORT="t" COLSPAN="5" VALIGN="BOTTOM"><FONT COLOR="#202020" POINT-SIZE="10">Hunger Satisfied</FONT>
+															</TD>
+														</TR>
+														<TR>
+															<TD WIDTH="30"></TD>
+															<TD PORT="l" WIDTH="1"></TD>
+															<TD PORT="b"><IMG SRC="./bpmn/end.png"/></TD>
+															<TD PORT="r" WIDTH="1"></TD>
+															<TD WIDTH="30"></TD>
+														</TR>
+													</TABLE>>; shape="none"; ]
+			
+			# lane edges
+			hungry_for_pizza:b               -> goto_pizza_shop                [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			goto_pizza_shop                -> select_a_pizza                 [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			select_a_pizza                 -> order_a_pizza                  [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			order_a_pizza                  -> ordered                        [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			ordered                        -> _60_minutes                    [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			_60_minutes                    -> ask_for_the_pizza              [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			ordered                        -> pizza_received                 [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			pizza_received                 -> pay_for_the_pizza              [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			pay_for_the_pizza              -> eat_the_pizza                  [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			eat_the_pizza                  -> hunger_satisfied:t             [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+		}
+		
+	}
+	
+	subgraph cluster_pizza_store {
+		label="Pizza Store";
+		graph [ style="filled"; color="#D0D0D0"; penwidth="0.5"; fillcolor="#FFFFFF"; fontname="Arial"; fontcolor="#202020"; fontsize="16pt"; margin="10,10"; ]
+		
+		# lane collection
+		subgraph cluster_receptionist {
+			label="Receptionist";
+			graph [ style="filled"; color="#D0D0D0"; penwidth="0.5"; fillcolor="#F8F8F8"; fontname="Arial"; fontcolor="#202020"; fontsize="14pt"; margin="30,20"; ]
+			
+			# lane nodes
+			order_received                 [ label="Order\nReceived"; shape="circle"; width="0.75in"; ]
+			on_order_received              [ label="On Order\nReceived"; shape="diamond"; width="1.5in"; ]
+			where_is_pizza                 [ label="Where is\nPizza?"; shape="doublecircle"; width="0.75in"; ]
+			deal_with_customer             [ label="Deal with\nCustomer"; shape="rectangle"; style="rounded, filled"; ]
+			
+			# lane edges
+			order_received                 -> on_order_received              [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			on_order_received              -> where_is_pizza                 [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			where_is_pizza                 -> deal_with_customer             [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			deal_with_customer             -> where_is_pizza                 [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+		}
+		
+		subgraph cluster_pizza_cook {
+			label="Pizza Cook";
+			graph [ style="filled"; color="#D0D0D0"; penwidth="0.5"; fillcolor="#F8F8F8"; fontname="Arial"; fontcolor="#202020"; fontsize="14pt"; margin="30,20"; ]
+			
+			# lane nodes
+			bake_pizza                     [ label="Bake Pizza"; shape="rectangle"; style="rounded, filled"; ]
+		}
+		
+		subgraph cluster_delivery_person {
+			label="Delivery Person";
+			graph [ style="filled"; color="#D0D0D0"; penwidth="0.5"; fillcolor="#F8F8F8"; fontname="Arial"; fontcolor="#202020"; fontsize="14pt"; margin="30,20"; ]
+			
+			# lane nodes
+			deliver_pizza                  [ label="Deliver\nPizza"; shape="rectangle"; style="rounded, filled"; ]
+			collect_payment                [ label="Collect\nPayment"; shape="rectangle"; style="rounded, filled"; ]
+			terminate                      [ label="Terminate"; shape="circle"; penwidth="5.0"; width="0.75in"; ]
+			
+			# lane edges
+			deliver_pizza                  -> collect_payment                [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+			collect_payment                -> terminate                      [ style="solid, filled"; arrowhead=normal; xlabel=""; ]
+		}
+		
+		
+		# pool edges
+		on_order_received              -> bake_pizza                     [ style="solid, filled"; arrowhead=normal; xlabel=""; constraint=false; ]
+		bake_pizza                     -> deliver_pizza                  [ style="solid, filled"; arrowhead=normal; xlabel=""; constraint=false; ]
+	}
+	
+	
+	# graph edges
+	order_a_pizza                  -> order_received                 [ style="dashed"; arrowhead=empty; xlabel=""; constraint=false; ]
+	ask_for_the_pizza              -> where_is_pizza                 [ style="dashed"; arrowhead=empty; xlabel=""; constraint=false; ]
+	pay_for_the_pizza              -> collect_payment                [ style="dashed"; arrowhead=empty; xlabel="money"; constraint=false; ]
+	deal_with_customer             -> ask_for_the_pizza              [ style="dashed"; arrowhead=empty; xlabel=""; constraint=false; ]
+	deliver_pizza                  -> pizza_received                 [ style="dashed"; arrowhead=empty; xlabel="pizza"; constraint=false; ]
+	collect_payment                -> pay_for_the_pizza              [ style="dashed"; arrowhead=empty; xlabel="receipt"; constraint=false; ]
+	hunger_satisfied:b               -> terminate                      [ style="dashed"; arrowhead=empty; xlabel=""; constraint=false; ]
+}

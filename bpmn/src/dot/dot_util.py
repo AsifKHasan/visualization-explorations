@@ -20,6 +20,7 @@ PROPS_TO_QUOTE = [
     'shape',
     'width',
     'label',
+    'image',
     'xlabel'
 ]
 

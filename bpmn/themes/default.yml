@@ -5,10 +5,11 @@ graph:
         compound:       "true"
         ratio:          "auto"
         concentrate:    "false"
-        ranksep:        "0.5 equally"
+        ranksep:        "0.5"
         nodesep:        "1.0"
-        esep:           "+30"
-        sep:            "+20"
+        minlen:          "0"
+        # esep:           "+30"
+        # sep:            "+20"
 
     node:
         fixedsize:      "true"
@@ -22,7 +23,7 @@ graph:
         width:          "1.5in"
     
     edge:
-        # fillcolor:      "#F8F8F8"
+        fillcolor:      "#606060"
         color:          "#202020"
         penwidth:       "0.5"
         fontname:       "Noto Sans"
@@ -55,61 +56,61 @@ node:
     wrap-at:                                    12
     shapes:
         # start events
-        start:                                  shape='circle'; width='0.75in';
-        start-compensation:                     shape='circle'; width='0.75in';
-        start-conditional:                      shape='circle'; width='0.75in';
-        start-conditional-non:                  shape='circle'; width='0.75in';
-        start-error:                            shape='circle'; width='0.75in';
-        start-escalation:                       shape='circle'; width='0.75in';
-        start-escalation-non:                   shape='circle'; width='0.75in';
-        start-message:                          shape='circle'; width='0.75in';
-        start-message-non:                      shape='circle'; width='0.75in';
-        start-multiple:                         shape='circle'; width='0.75in';
-        start-multiple-non:                     shape='circle'; width='0.75in';
-        start-parallel-multiple:                shape='circle'; width='0.75in';
-        start-parallel-multiple-non:            shape='circle'; width='0.75in';
-        start-signal:                           shape='circle'; width='0.75in';
-        start-signal-non:                       shape='circle'; width='0.75in';
-        start-timer:                            shape='circle'; width='0.75in';
-        start-timer-non:                        shape='circle'; width='0.75in';
+        start:                                  shape='circle'; width='0.5in'; 
+        start-compensation:                     shape='circle'; width='0.5in'; image="./bpmn/start-compensation.png";
+        start-conditional:                      shape='circle'; width='0.5in'; image="./bpmn/start-conditional.png";
+        start-conditional-non:                  shape='circle'; width='0.5in'; image="./bpmn/start-conditional-non.png";
+        start-error:                            shape='circle'; width='0.5in'; image="./bpmn/start-error.png";
+        start-escalation:                       shape='circle'; width='0.5in'; image="./bpmn/start-escalation.png";
+        start-escalation-non:                   shape='circle'; width='0.5in'; image="./bpmn/start-escalation-non.png";
+        start-message:                          shape='circle'; width='0.5in'; image="./bpmn/start-message.png";
+        start-message-non:                      shape='circle'; width='0.5in'; image="./bpmn/start-message-non.png";
+        start-multiple:                         shape='circle'; width='0.5in'; image="./bpmn/start-multiple.png";
+        start-multiple-non:                     shape='circle'; width='0.5in'; image="./bpmn/start-multiple-non.png";
+        start-parallel-multiple:                shape='circle'; width='0.5in'; image="./bpmn/start-parallel-multiple.png";
+        start-parallel-multiple-non:            shape='circle'; width='0.5in'; image="./bpmn/start-parallel-multiple-non.png";
+        start-signal:                           shape='circle'; width='0.5in'; image="./bpmn/start-signal.png";
+        start-signal-non:                       shape='circle'; width='0.5in'; image="./bpmn/start-signal-non.png";
+        start-timer:                            shape='circle'; width='0.5in'; image="./bpmn/start-timer.png";
+        start-timer-non:                        shape='circle'; width='0.5in'; image="./bpmn/start-timer-non.png";
 
         # end events
-        end:                                    shape='circle'; penwidth='5.0'; width='0.75in';
-        end-cancel:                             shape='circle'; penwidth='5.0'; width='0.75in';
-        end-compensation:                       shape='circle'; penwidth='5.0'; width='0.75in';
-        end-error:                              shape='circle'; penwidth='5.0'; width='0.75in';
-        end-escalation:                         shape='circle'; penwidth='5.0'; width='0.75in';
-        end-message:                            shape='circle'; penwidth='5.0'; width='0.75in';
-        end-multiple:                           shape='circle'; penwidth='5.0'; width='0.75in';
-        end-signal:                             shape='circle'; penwidth='5.0'; width='0.75in';
-        end-terminate:                          shape='circle'; penwidth='5.0'; width='0.75in';
+        end:                                    shape='circle'; penwidth='5.0'; width='0.5in'; 
+        end-cancel:                             shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-cancel.png";
+        end-compensation:                       shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-compensation.png";
+        end-error:                              shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-error.png";
+        end-escalation:                         shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-escalation.png";
+        end-message:                            shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-message.png";
+        end-multiple:                           shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-multiple.png";
+        end-signal:                             shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-signal.png";
+        end-terminate:                          shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-terminate.png";
 
         # intermediate events
-        intermediate:                           shape='doublecircle'; width='0.75in';
-        catch-cancel:                           shape='doublecircle'; width='0.75in';
-        catch-compensation:                     shape='doublecircle'; width='0.75in';
-        throw-compensation:                     shape='doublecircle'; width='0.75in';
-        catch-error:                            shape='doublecircle'; width='0.75in';
-        catch-escalation:                       shape='doublecircle'; width='0.75in';
-        catch-escalation-non:                   shape='doublecircle'; width='0.75in';
-        throw-escalation:                       shape='doublecircle'; width='0.75in';
-        catch-link:                             shape='doublecircle'; width='0.75in';
-        throw-link:                             shape='doublecircle'; width='0.75in';
-        catch-message:                          shape='doublecircle'; width='0.75in';
-        catch-message-non:                      shape='doublecircle'; width='0.75in';
-        throw-message:                          shape='doublecircle'; width='0.75in';
-        catch-multiple:                         shape='doublecircle'; width='0.75in';
-        catch-multiple-non:                     shape='doublecircle'; width='0.75in';
-        throw-multiple:                         shape='doublecircle'; width='0.75in';
-        catch-parallel-multiple:                shape='doublecircle'; width='0.75in';
-        catch-parallel-multiple-non:            shape='doublecircle'; width='0.75in';
-        catch-signal:                           shape='doublecircle'; width='0.75in';
-        catch-signal-non:                       shape='doublecircle'; width='0.75in';
-        throw-signal:                           shape='doublecircle'; width='0.75in';
-        conditional:                            shape='doublecircle'; width='0.75in';
-        conditional-non:                        shape='doublecircle'; width='0.75in';
-        timer:                                  shape='doublecircle'; width='0.75in';
-        timer-non:                              shape='doublecircle'; width='0.75in';
+        intermediate:                           shape='doublecircle'; width='0.5in'; image="./bpmn/intermediate.png";
+        catch-cancel:                           shape='doublecircle'; width='0.5in'; image="./bpmn/catch-cancel.png";
+        catch-compensation:                     shape='doublecircle'; width='0.5in'; image="./bpmn/catch-compensation.png";
+        throw-compensation:                     shape='doublecircle'; width='0.5in'; image="./bpmn/throw-compensation.png";
+        catch-error:                            shape='doublecircle'; width='0.5in'; image="./bpmn/catch-error.png";
+        catch-escalation:                       shape='doublecircle'; width='0.5in'; image="./bpmn/catch-escalation.png";
+        catch-escalation-non:                   shape='doublecircle'; width='0.5in'; image="./bpmn/catch-escalation-non.png";
+        throw-escalation:                       shape='doublecircle'; width='0.5in'; image="./bpmn/throw-escalation.png";
+        catch-link:                             shape='doublecircle'; width='0.5in'; image="./bpmn/catch-link.png";
+        throw-link:                             shape='doublecircle'; width='0.5in'; image="./bpmn/throw-link.png";
+        catch-message:                          shape='doublecircle'; width='0.5in'; image="./bpmn/catch-message.png";
+        catch-message-non:                      shape='doublecircle'; width='0.5in'; image="./bpmn/catch-message-non.png";
+        throw-message:                          shape='doublecircle'; width='0.5in'; image="./bpmn/throw-message.png";
+        catch-multiple:                         shape='doublecircle'; width='0.5in'; image="./bpmn/catch-multiple.png";
+        catch-multiple-non:                     shape='doublecircle'; width='0.5in'; image="./bpmn/catch-multiple-non.png";
+        throw-multiple:                         shape='doublecircle'; width='0.5in'; image="./bpmn/throw-multiple.png";
+        catch-parallel-multiple:                shape='doublecircle'; width='0.5in'; image="./bpmn/catch-parallel-multiple.png";
+        catch-parallel-multiple-non:            shape='doublecircle'; width='0.5in'; image="./bpmn/catch-parallel-multiple-non.png";
+        catch-signal:                           shape='doublecircle'; width='0.5in'; image="./bpmn/catch-signal.png";
+        catch-signal-non:                       shape='doublecircle'; width='0.5in'; image="./bpmn/catch-signal-non.png";
+        throw-signal:                           shape='doublecircle'; width='0.5in'; image="./bpmn/throw-signal.png";
+        conditional:                            shape='doublecircle'; width='0.5in'; image="./bpmn/conditional.png";
+        conditional-non:                        shape='doublecircle'; width='0.5in'; image="./bpmn/conditional-non.png";
+        timer:                                  shape='doublecircle'; width='0.5in'; image="./bpmn/timer.png";
+        timer-non:                              shape='doublecircle'; width='0.5in'; image="./bpmn/timer-non.png";
 
         # task activities
         task:                                   shape='rectangle'; style='rounded, filled';
@@ -131,7 +132,7 @@ node:
         # subprocess activities
         process:                                shape='rectangle'; style='rounded, filled';
         adhoc:                                  shape='rectangle'; style='rounded, filled';
-        transaction:                            shape='doubleoctagon'; style='rounded, filled';
+        transaction:                            shape='rectangle'; style='rounded, filled';
 
         # event subprocess activities
         event:                                  shape='rectangle'; style='dotted, filled';
@@ -153,22 +154,22 @@ node:
         event-timer-non:                        shape='rectangle'; style='dotted, filled';
 
         # gateways
-        exclusive:                              shape='diamond'; width='1.5in';
-        inclusive:                              shape='diamond'; width='1.5in';
-        parallel:                               shape='diamond'; width='1.5in';
-        complex:                                shape='diamond'; width='1.5in';
-        event-based:                            shape='diamond'; width='1.5in';
-        event-based-start:                      shape='diamond'; width='1.5in';
-        event-based-parallel-start:             shape='diamond'; width='1.5in';
+        exclusive:                              shape='diamond'; width='0.5in'; image="./bpmn/exclusive.png";
+        inclusive:                              shape='diamond'; width='0.5in'; image="./bpmn/inclusive.png";
+        parallel:                               shape='diamond'; width='0.5in'; image="./bpmn/parallel.png";
+        complex:                                shape='diamond'; width='0.5in'; image="./bpmn/complex.png";
+        event-based:                            shape='diamond'; width='0.5in'; image="./bpmn/event-based.png";
+        event-based-start:                      shape='diamond'; width='0.5in'; image="./bpmn/event-based-start.png";
+        event-based-parallel-start:             shape='diamond'; width='0.5in'; image="./bpmn/event-based-parallel-start.png";
 
         # data
-        data:                                   shape='note'; width='1.5in';
-        data-collection:                        shape='note'; width='1.5in';
-        data-input:                             shape='note'; width='1.5in';
-        data-input-collection:                  shape='note'; width='1.5in';
-        data-output:                            shape='note'; width='1.5in';
-        data-output-collection:                 shape='note'; width='1.5in';
-        data-store:                             shape='cylinder'; width='1.5in';
+        data:                                   shape='note'; style='filled';
+        data-collection:                        shape='note'; style='filled';
+        data-input:                             shape='note'; style='filled';
+        data-input-collection:                  shape='note'; style='filled';
+        data-output:                            shape='note'; style='filled';
+        data-output-collection:                 shape='note'; style='filled';
+        data-store:                             shape='cylinder'; style='filled';
 
 edge:
     shapes:
