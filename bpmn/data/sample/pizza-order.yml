@@ -32,6 +32,7 @@ pools:
 
     elements:
     - start:                   Hungry for Pizza         
+    - start:                   Hungry   
     - task:                    Goto Pizza Shop          
     - task:                    Select a Pizza           
     - task:                    Order a Pizza            
@@ -44,7 +45,8 @@ pools:
     - end:                     Hunger Satisfied         
 
     edges:
-    - sequence:                Hungry for Pizza         -> Goto Pizza Shop
+    - sequence:                Hungry for Pizza         -> Hungry
+    - sequence:                Hungry                   -> Goto Pizza Shop
     - sequence:                Goto Pizza Shop          -> Select a Pizza
     - sequence:                Select a Pizza           -> Order a Pizza
     - sequence:                Order a Pizza            -> Ordered
