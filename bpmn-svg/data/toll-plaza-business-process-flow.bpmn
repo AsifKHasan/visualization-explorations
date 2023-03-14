@@ -1,0 +1,122 @@
+graph toll_plaza_business_process_flow {
+    label = "Business Process flow"
+    _ [hide_labels="false";]
+
+    lane Toll_Plaza_Management_System{
+        label = "Toll Plaza Management System"
+        _ []
+
+        pool vehicle {
+            label = "Vehicle and Driver"
+            _ []  
+
+        start                           start_00                          [label="Start"; label_pos="";]
+        serviceTask                     vehicle_approach                  [label="The vehicle approaches and triggers the loop coil for vehicle detector";]
+        manualTask                      pay_toll_fee                      [label="Pay Toll Fee Manually";move_x=357]
+        serviceTask                     vehicle_passes                    [label="Vehicle passes through and triggers the loop coil for LB closing";move_x=120]
+        serviceTask                     lb_close                          [label="LB Close and initiate next transaction";]
+        end                             end1                              [label="End";]    
+
+        start_00                        --> vehicle_approach
+        go_to_application               --> click_to_request
+        vehicle_passes                  --> lb_close
+        lb_close                        --> end1
+
+        vehicle_approach                ... pay_toll_fee                  [label="";]
+        pay_toll_fee                    ... vehicle_passes                [label="";]
+        }     
+
+        pool toll {
+            label = "TOLL POS"
+            _ []   
+                  
+        serviceTask                    rfid_reader                        [label="RFID reader detects VRN";]
+        exclusive                      can_read_success                   [label="Can Read success?";]
+        task                           anpr_number_plate                  [label="ANPR Number Plate and OCR vehicle No";]
+        exclusive                      is_successful                      [label="Is successful?";]
+        serviceTask                    display_vehicle_no                 [label="Display Vehicle No, Vehicle Class and Toll Fee";move_x=157]
+       
+        rfid_reader                     --> can_read_success              
+        can_read_success                --> anpr_number_plate             [label="No";]         
+        anpr_number_plate               --> is_successful
+
+        is_successful                   ... display_vehicle_no
+
+        }
+
+        pool operator {
+            label = "TOLL Operator"
+            _ []   
+                  
+        serviceTask                    manually_enter                     [label="Manually Enter Part of the Vehicle No";move_x=524]
+        serviceTask                    receives_toll                      [label="Receives toll and initiates LB open";move_x=223]
+       
+        }
+
+        pool central_control_server {
+                label = "Central Control Server"
+                _ [move_x=2;]
+        
+        manualTask                      resolve_vehicle_no                  [label="Resolve vehicle No and Class";]
+        exclusive                       is_available                        [label="Is vehicle No available in store or via ANPR?";move_x=142]
+        userTask                        log_entry_record                    [label="Log Entry Record and Return Vehicle No and Class";move_x=240]
+        task                            report_service                      [label="Report service";]
+        userTask                        record_anomality                    [label="Record anomality";move_x=442]
+        dataStore                       store_vehicle_no                    [label="Store Vehicle No vs RFID Mapping store";]
+                                            
+        
+        resolve_vehicle_no              --> is_available 
+        is_available                    --> log_entry_record               	[label="Yes";]
+
+        log_entry_record                ... store_vehicle_no
+        is_available                    --> store_vehicle_no                [label="No";]  
+
+        } 
+
+        pool brta {
+            label = "BRTA server"
+            _ []   
+                  
+        serviceTask                    response                           [label="Response with Actual Vehicle No and Class";move_x=874]
+        
+        }
+
+        pool supervisor {
+            label = "Supervisor/Auditor"
+            _ []   
+                  
+        serviceTask                    reconciliation                     [label="Check Daily/Weekly Reconciliation Report for collected toll entry vs Automatic vehicle classifier/counter";]
+        serviceTask                    anomality_found                    [label="Anomality found";]
+        serviceTask                    report_anomality                   [label="Report Anomality to central server";]
+
+        reconciliation                 --> anomality_found
+        anomality_found                --> report_anomality
+       
+        }
+
+        pool headquarter {
+            label = "RHD Headquarter"
+            _ []   
+                  
+        serviceTask                    check_reports                      [label="Check Classified Reports, Vehicle and operator Logs";]
+        serviceTask                    anomality_report                   [label="Check Anomality Report";move_x=274]
+       
+        }
+            can_read_success            --> resolve_vehicle_no            [label="Yes";]
+            is_successful               --> resolve_vehicle_no            [label="Yes";]
+            is_successful               --> manually_enter                [label="No";]
+            manually_enter              --> resolve_vehicle_no
+            log_entry_record            --> display_vehicle_no
+            vehicle_approach            --> rfid_reader
+            is_available                --> response
+            response                    --> log_entry_record
+            response                    --> display_vehicle_no
+            display_vehicle_no          ~~> pay_toll_fee
+            vehicle_passes              ~~> receives_toll
+            report_anomality            ~~>  record_anomality
+            anomality_report            --> record_anomality
+            check_reports               --> report_service
+            reconciliation              --> report_service
+                            
+   }
+}

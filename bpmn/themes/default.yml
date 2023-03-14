@@ -75,15 +75,15 @@ node:
         start-timer-non:                        shape='circle'; width='0.5in'; image="./bpmn/start-timer-non.png";
 
         # end events
-        end:                                    shape='circle'; penwidth='5.0'; width='0.5in'; 
-        end-cancel:                             shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-cancel.png";
-        end-compensation:                       shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-compensation.png";
-        end-error:                              shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-error.png";
-        end-escalation:                         shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-escalation.png";
-        end-message:                            shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-message.png";
-        end-multiple:                           shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-multiple.png";
-        end-signal:                             shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-signal.png";
-        end-terminate:                          shape='circle'; penwidth='5.0'; width='0.5in'; image="./bpmn/end-terminate.png";
+        end:                                    shape='circle'; penwidth='3.0'; width='0.5in'; 
+        end-cancel:                             shape='circle'; penwidth='3.0'; width='0.5in'; image="./bpmn/end-cancel.png";
+        end-compensation:                       shape='circle'; penwidth='3.0'; width='0.5in'; image="./bpmn/end-compensation.png";
+        end-error:                              shape='circle'; penwidth='3.0'; width='0.5in'; image="./bpmn/end-error.png";
+        end-escalation:                         shape='circle'; penwidth='3.0'; width='0.5in'; image="./bpmn/end-escalation.png";
+        end-message:                            shape='circle'; penwidth='3.0'; width='0.5in'; image="./bpmn/end-message.png";
+        end-multiple:                           shape='circle'; penwidth='3.0'; width='0.5in'; image="./bpmn/end-multiple.png";
+        end-signal:                             shape='circle'; penwidth='3.0'; width='0.5in'; image="./bpmn/end-signal.png";
+        end-terminate:                          shape='circle'; penwidth='3.0'; width='0.5in'; image="./bpmn/end-terminate.png";
 
         # intermediate events
         intermediate:                           shape='doublecircle'; width='0.5in'; image="./bpmn/intermediate.png";
