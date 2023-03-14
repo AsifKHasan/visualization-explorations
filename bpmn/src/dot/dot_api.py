@@ -374,7 +374,13 @@ class NodeObject(DotObject):
         # get the shape
         if self._type in NODE_PROPS:
             self._prop_dict = {**NODE_PROPS[self._type], **self._prop_dict}
-            self.append_content(content=make_a_node(id=self._id, label=wrap_text(text=self._label, width=self._wrap_at), prop_dict=self._prop_dict))
+            # if the property shape is circle, doublecircle or diamond, we need an xlabel
+            if 'shape' in self._prop_dict and self._prop_dict['shape'] in ['circle', 'doublecircle', 'diamond']:
+                xlabel = True
+            else:
+                xlabel = False
+
+            self.append_content(content=make_a_node(id=self._id, label=wrap_text(text=self._label, width=self._wrap_at), prop_dict=self._prop_dict, xlabel=xlabel))
 
         else:
             warn(f"no shape defined for {self._class} type {self._type}")

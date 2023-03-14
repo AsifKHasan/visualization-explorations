@@ -76,9 +76,14 @@ def make_a_property(prop_key, prop_value):
 
 ''' make a dot Node
 '''
-def make_a_node(id, label, prop_dict):
+def make_a_node(id, label, prop_dict, xlabel=False):
     # label_str = make_a_property(prop_key='label', prop_value=table_from_label(label=label, sublabels=sublabels, prop_dict=prop_dict), quote=False)
-    label_str = make_a_property(prop_key='label', prop_value=label)
+    if xlabel:
+        label_str = make_a_property(prop_key='xlabel', prop_value=label)
+        prop_dict['label'] = ""
+    else:
+        label_str = make_a_property(prop_key='label', prop_value=label)
+    
     node_str = f"{id.ljust(30)} [ {label_str}; {make_property_list(prop_dict=prop_dict)}; ]"
 
     return node_str

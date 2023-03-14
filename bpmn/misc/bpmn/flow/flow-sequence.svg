@@ -1,0 +1,27 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  version="1.1"
+  x="0"
+  y="0"
+  height="50"
+  width="140">
+  <rect height="50" width="140" rx="5" ry="5" style="fill:none; stroke-width:2; stroke:#A0A0A0; "  />
+  <path
+    d="
+    M   4, 14
+    L 128, 14
+    L 128,  8
+    L 136, 16
+    L 128, 24
+    L 128, 18
+    L   4, 18
+    z"
+    style="fill:202020; stroke-width:1; stroke:#202020; "  />
+  <text style="text-anchor:middle; dominant-baseline:middle;
+              font-family:arial; font-size:16; font-weight:bold;
+              fill:#202020; stroke:#000000; stroke-width:0; writing-mode:horizontal-tb; ">
+    <tspan x="50%" y="70%" dy="0em">
+      Sequence Flow</tspan>
+  </text>
+</svg>
