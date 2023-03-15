@@ -1,0 +1,2 @@
+./ganttchart-from-yml.sh sample/scott-development
+ganttchart-from-yml.bat sample/scott-development

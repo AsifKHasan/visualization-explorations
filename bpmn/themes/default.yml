@@ -7,7 +7,6 @@ graph:
         concentrate:    "false"
         ranksep:        "0.5"
         nodesep:        "1.0"
-        minlen:          "0"
         forcelabels:     "true"
 
     node:

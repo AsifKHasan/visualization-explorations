@@ -1,0 +1,168 @@
+digraph graph_scott_development {
+	rankdir=LR
+	splines=ortho;
+	ratio=auto;
+	concentrate=false;
+	ranksep=0.02;
+	nodesep=0.02;
+	
+	node [ fixedsize=true; style="filled"; fillcolor="#FFFFFF"; color="#000000"; penwidth="0.5"; fontname="Noto Sans"; fontsize="10pt"; margin="0.05,0.05"; width="1.5in"; ]
+	edge [ fillcolor="#606060"; color="#202020"; penwidth="0.5"; fontname="Noto Sans"; fontsize="8pt"; style="invis"; ]
+
+
+	# row 0
+	head_hash						[ label=<<B>#</B>>; shape="underline"; width="0.6in"; height="0.4in"; fontsize="10pt"; ]
+	head_task						[ label=<<B>Task</B>>; shape="underline"; width="3.0in"; height="0.4in"; fontsize="10pt"; ]
+	head_duration					[ label=<<B>Duration</B>>; shape="underline"; width="0.8in"; height="0.4in"; fontsize="10pt"; ]
+	head_start						[ label=<<B>Start</B>>; shape="underline"; width="0.8in"; height="0.4in"; fontsize="10pt"; ]
+	head_end						[ label=<<B>End</B>>; shape="underline"; width="0.8in"; height="0.4in"; fontsize="10pt"; ]
+
+	head_w01						[ label=<W01>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w02						[ label=<W02>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w03						[ label=<W03>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w04						[ label=<W04>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w05						[ label=<W05>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w06						[ label=<W06>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w07						[ label=<W07>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w08						[ label=<W08>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w09						[ label=<W09>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w10						[ label=<W10>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w11						[ label=<W11>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w12						[ label=<W12>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w13						[ label=<W13>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w14						[ label=<W14>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w15						[ label=<W15>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w16						[ label=<W16>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w17						[ label=<W17>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w18						[ label=<W18>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w19						[ label=<W19>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w20						[ label=<W20>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w21						[ label=<W21>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w22						[ label=<W22>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w23						[ label=<W23>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w24						[ label=<W24>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w25						[ label=<W25>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+	head_w26						[ label=<W26>; shape="underline"; width="0.3in"; height="0.4in"; fontsize="9pt"; ]
+
+	# row 1
+	a								[ label="A\l"; shape="none"; width="0.6in"; height="0.4in"; fontsize="12pt"; ]
+	a_task							[ label="Toll Operation System\l"; shape="none"; width="3.0in"; height="0.4in"; fontsize="12pt"; ]
+	a_duration						[ label="22"; shape="none"; width="0.6in"; height="0.4in"; fontsize="12pt"; ]
+	a_start							[ label="1"; shape="none"; width="0.6in"; height="0.4in"; fontsize="12pt"; ]
+	a_end							[ label="22"; shape="none"; width="0.6in"; height="0.4in"; fontsize="12pt"; ]
+	a_task_start					[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="12pt"; ]
+	a_task_end						[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="12pt"; ]
+
+	# row 2
+	a1								[ label="A1"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a1_task							[ label="    Web Frontend\l"; shape="none"; width="3.0in"; height="0.3in"; fontsize="10pt"; ]
+	a1_duration						[ label="12"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a1_start						[ label="1"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a1_end							[ label="12"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a1_task_start					[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="10pt"; ]
+	a1_task_end						[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="10pt"; ]
+
+	# row 3
+	a2								[ label="A2"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a2_task							[ label="    System Backend\l"; shape="none"; width="3.0in"; height="0.3in"; fontsize="10pt"; ]
+	a2_duration						[ label="12"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a2_start						[ label="1"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a2_end							[ label="12"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a2_task_start					[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="10pt"; ]
+	a2_task_end						[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="10pt"; ]
+
+	# row 4
+	a3								[ label="A3"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a3_task							[ label="    App for RHD (MIS and Analytics)\l"; shape="none"; width="3.0in"; height="0.3in"; fontsize="10pt"; ]
+	a3_duration						[ label="18"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a3_start						[ label="5"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a3_end							[ label="22"; shape="none"; width="0.6in"; height="0.3in"; fontsize="10pt"; ]
+	a3_task_start					[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="10pt"; ]
+	a3_task_end						[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="10pt"; ]
+
+	# row 5
+	a3_1							[ label="A3.1\r"; shape="none"; width="0.6in"; height="0.25in"; fontsize="8pt"; ]
+	a3_1_task						[ label="        Android App\l"; shape="none"; width="3.0in"; height="0.25in"; fontsize="8pt"; ]
+	a3_1_duration					[ label="18"; shape="none"; width="0.6in"; height="0.25in"; fontsize="8pt"; ]
+	a3_1_start						[ label="5"; shape="none"; width="0.6in"; height="0.25in"; fontsize="8pt"; ]
+	a3_1_end						[ label="22"; shape="none"; width="0.6in"; height="0.25in"; fontsize="8pt"; ]
+	a3_1_task_start					[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="8pt"; ]
+	a3_1_task_end					[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="8pt"; ]
+
+	# row 6
+	a3_2							[ label="A3.2\r"; shape="none"; width="0.6in"; height="0.25in"; fontsize="8pt"; ]
+	a3_2_task						[ label="        iOS App\l"; shape="none"; width="3.0in"; height="0.25in"; fontsize="8pt"; ]
+	a3_2_duration					[ label="18"; shape="none"; width="0.6in"; height="0.25in"; fontsize="8pt"; ]
+	a3_2_start						[ label="5"; shape="none"; width="0.6in"; height="0.25in"; fontsize="8pt"; ]
+	a3_2_end						[ label="22"; shape="none"; width="0.6in"; height="0.25in"; fontsize="8pt"; ]
+	a3_2_task_start					[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="8pt"; ]
+	a3_2_task_end					[ label=""; shape="circle"; width="0.05in"; height="0.05in"; fontsize="8pt"; ]
+
+	# row 0 edges
+	head_hash -> head_task -> head_duration -> head_start -> head_end -> head_w01
+	head_w01 -> head_w02 -> head_w03 -> head_w04 -> head_w05 -> head_w06 -> head_w07 -> head_w08 -> head_w09 -> head_w10 -> head_w11
+	head_w11 -> head_w12 -> head_w13 -> head_w14 -> head_w15 -> head_w16 -> head_w17 -> head_w18 -> head_w19 -> head_w20 -> head_w21
+	head_w21 -> head_w22 -> head_w23 -> head_w24 -> head_w25 -> head_w26
+
+	# row 1 edges
+	a -> a_task -> a_duration -> a_start -> a_end
+	a_end -> a_task_start
+	a_task_start -> a_task_end	[ style="solid, filled"; arrowhead="none"; penwidth="6"; color="#808080"; ]
+
+	# row 2 edges
+	a1 -> a1_task -> a1_duration -> a1_start -> a1_end
+	a1_end -> a1_task_start
+	a1_task_start -> a1_task_end	[ style="solid, filled"; arrowhead="none"; penwidth="4"; color="#A0A0A0"; ]
+
+	# row 3 edges
+	a2 -> a2_task -> a2_duration -> a2_start -> a2_end
+	a2_end -> a2_task_start
+	a2_task_start -> a2_task_end	[ style="solid, filled"; arrowhead="none"; penwidth="4"; color="#A0A0A0"; ]
+
+	# row 4 edges
+	a3 -> a3_task -> a3_duration -> a3_start -> a3_end
+	a3_end -> a3_task_start [minlen=5; ]
+	a3_task_start -> a3_task_end	[ style="solid, filled"; arrowhead="none"; penwidth="4"; color="#A0A0A0"; ]
+
+	# row 5 edges
+	a3_1 -> a3_1_task -> a3_1_duration -> a3_1_start -> a3_1_end
+	a3_1_end -> a3_1_task_start [minlen=5; ]
+	a3_1_task_start -> a3_1_task_end	[ style="solid, filled"; arrowhead="none"; penwidth="2"; color="#C0C0C0"; ]
+
+	# row 6 edges
+	a3_2 -> a3_2_task -> a3_2_duration -> a3_2_start -> a3_2_end
+	a3_2_end -> a3_2_task_start [minlen=5; ]
+	a3_2_task_start -> a3_2_task_end	[ style="solid, filled"; arrowhead="none"; penwidth="2"; color="#C0C0C0"; ]
+
+	# row 1 column edges
+	{rank=same head_w01 -> a_task_start [ constraint=false; ]}
+	{rank=same head_w22 -> a_task_end [ constraint=false; ]}
+	
+	# row 2 column edges
+	{rank=same head_w01 -> a1_task_start [ constraint=false; ]}
+	{rank=same head_w12 -> a1_task_end [ constraint=false; ]}
+
+	# row 3 column edges
+	{rank=same head_w01 -> a2_task_start [ constraint=false; ]}
+	{rank=same head_w12 -> a2_task_end [ constraint=false; ]}
+
+	# row 4 column edges
+	{rank=same head_w05 -> a3_task_start [ constraint=false; ]}
+	{rank=same head_w22 -> a3_task_end [ constraint=false; ]}
+
+	# row 5 column edges
+	{rank=same head_w05 -> a3_1_task_start [ constraint=false; ]}
+	{rank=same head_w22 -> a3_1_task_end [ constraint=false; ]}
+
+	# row 6 column edges
+	{rank=same head_w05 -> a3_2_task_start [ constraint=false; ]}
+	{rank=same head_w22 -> a3_2_task_end [ constraint=false; ]}
+
+
+	# column 0 edges
+	head_hash -> a -> a1 -> a2 -> a3 -> a3_1 -> a3_2		[ constraint=false; ]
+
+
+	# task dependencies
+	a1_task_end -> a2_task_start [ style="solid"; arrowsize="0.5"; constraint=false; ]
+}
