@@ -1,0 +1,46 @@
+graph:
+    attributes:
+        splines:        "line"
+        ranksep:        "0.02"
+        nodesep:        "0.02"
+
+    node:
+        fillcolor:      "#FFFFFF"
+        color:          "#000000"
+        fixedsize:      "true"
+        margin:         "0.05,0.05"
+        width:          "1.5in"
+        style:          "filled"
+        penwidth:       "0.5"
+        fontsize:       "10pt"
+        fontname:       "Noto Sans"
+    
+    edge:
+        fillcolor:      "#606060"
+        color:          "#202020"
+        penwidth:       "0.5"
+        style:          "invis"
+        constraint:     "false"
+        fontsize:       "8pt"
+        fontname:       "Noto Sans"
+
+headers:
+    -   column:         "hash"
+        label:          "#"
+        style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+    -   column:         "text"
+        label:          "Task"
+        style:          "width="3.0in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+    -   column:         "time"
+        label:          "Weeks"
+        style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+    -   column:         "strt"
+        label:          "Start"
+        style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+    -   column:         "endt"
+        label:          "End"
+        style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+
+units:
+    label-format:       "w{}"
+    style:              "width="0.3in"; height="0.3in"; fontsize="9pt"; shape="underline";"

@@ -1,101 +1,59 @@
-theme:                       default
-bpmn:                        Pizza Order Process Modeling
-hide-label:                  true
-
-# top level bpmn may contain elements directly
-elements:
-
-# top level bpmn may contain edges directly
-edges:
-- message:                   Order a Pizza        -> Order Received
-- message:                   Ask for the Pizza    -> Where is Pizza?
-- message:                   Pay for the Pizza    -> Collect Payment          [ label='money'; ]
-- message:                   Deal with Customer   -> Ask for the Pizza
-- message:                   Deliver Pizza        -> Pizza Received           [ label='pizza'; ]
-- message:                   Collect Payment      -> Pay for the Pizza        [ label='receipt'; ]
-- message:                   Hunger Satisfied     -> Terminate
-
-# top level bpmn may contain pools
-pools:
-- pool:                      Customer
-  hide-label:                false
-
-  # a pool may contain elements directly
-  elements:
-
-  # a pool may contain edges directly
-  edges:
-
-  lanes:
-  - lane:                    Pizza Customer
-    hide-label:              false
-
-    elements:
-    - start:                   Hungry for Pizza         
-    - task:                    Goto Pizza Shop          
-    - task:                    Select a Pizza           
-    - task:                    Order a Pizza            
-    - event-based:             Ordered                  
-    - timer:                   60 Minutes               
-    - task:                    Ask for the Pizza        
-    - throw-message:           Pizza Received           
-    - task:                    Pay for the Pizza        
-    - task:                    Eat the Pizza            
-    - end:                     Hunger Satisfied         
-
-    edges:
-    - sequence:                Hungry for Pizza         -> Goto Pizza Shop
-    - sequence:                Goto Pizza Shop          -> Select a Pizza
-    - sequence:                Select a Pizza           -> Order a Pizza
-    - sequence:                Order a Pizza            -> Ordered
-    - sequence:                Ordered                  -> 60 Minutes
-    - sequence:                60 Minutes               -> Ask for the Pizza
-    - sequence:                Ordered                  -> Pizza Received
-    - sequence:                Pizza Received           -> Pay for the Pizza
-    - sequence:                Pay for the Pizza        -> Eat the Pizza
-    - sequence:                Eat the Pizza            -> Hunger Satisfied
-
-- pool:                      Pizza Store
-  hide-label:                false
-
-  lanes:
-  - lane:                    Receptionist
-    hide-label:              false
-
-    elements:
-    - start-message:         Order Received             
-    - parallel:              On Order Received          
-    - throw-message:         Where is Pizza?            
-    - task:                  Deal with Customer
-
-    edges:
-    - sequence:              Order Received             -> On Order Received
-    - sequence:              On Order Received          -> Where is Pizza?
-    - sequence:              Where is Pizza?            -> Deal with Customer
-    - sequence:              Deal with Customer         -> Where is Pizza?
+theme:        task-week-default
+time:         26
+hierachy:
+  - hash:     "A"
+    text:     "Toll Operation System"
+    time:     22
+    strt:     1
+    endt:     22
     
-  - lane:                    Pizza Cook
-    hide-label:              false
+    hierachy:
+    - hash:     "A1"
+      text:     "Web Frontend"
+      time:     12
+      strt:     1
+      endt:     12
 
-    elements:
-    - task:                  Bake Pizza
+    - hash:     "A2"
+      text:     "System Backend"
+      time:     12
+      strt:     1
+      endt:     12
+    
+    - hash:     "A3"
+      text:     "App for RHD (MIS and Analytics)"
+      time:     18
+      strt:     5
+      endt:     22
+    
+      hierachy:
+      - hash:     "A3.1"
+        text:     "Android App"
+        time:     18
+        strt:     5
+        endt:     22
+    
+      - hash:     "A3.2"
+        text:     "iOS App"
+        time:     18
+        strt:     5
+        endt:     22
 
-    edges:
-
-  - lane:                    Delivery Person
-    hide-label:              false
-
-    elements:
-    - task:                  Deliver Pizza
-    - task:                  Collect Payment
-    - end-terminate:         Terminate                  
-
-    edges:
-    - sequence:              Deliver Pizza              -> Collect Payment
-    - sequence:              Collect Payment            -> Terminate
-
-  elements:
-
-  edges:
-  - sequence:                On Order Received          -> Bake Pizza
-  - sequence:                Bake Pizza                 -> Deliver Pizza
+  - hash:     "B"
+    text:     "Reporting and Analytics"
+    time:     18
+    strt:     7
+    endt:     24
+    
+    hierachy:
+    - hash:     "B1"
+      text:     "Operational Reporting"
+      time:     8
+      strt:     7
+      endt:     14
+    
+    - hash:     "B2"
+      text:     "MIS and Analytics for RHD"
+      time:     18
+      strt:     7
+      endt:     24

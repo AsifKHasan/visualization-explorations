@@ -42,3 +42,6 @@ If everything goes well you should be able to get two files under ```out``` dire
 The best way to open the ```svg``` is through a browser.
 
 # ganttchart yml notes
+- time unit may be Year/Quarter/Month/Week/Day/Hour
+- only three levels of hierachies are supported now
+
