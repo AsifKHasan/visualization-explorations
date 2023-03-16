@@ -1,13 +1,13 @@
 theme:        task-week-default
-time:         26
-hierachy:
+times:        26
+items:
   - hash:     "A"
     text:     "Toll Operation System"
     time:     22
     strt:     1
     endt:     22
     
-    hierachy:
+    items:
     - hash:     "A1"
       text:     "Web Frontend"
       time:     12
@@ -26,7 +26,7 @@ hierachy:
       strt:     5
       endt:     22
     
-      hierachy:
+      items:
       - hash:     "A3.1"
         text:     "Android App"
         time:     18
@@ -45,7 +45,7 @@ hierachy:
     strt:     7
     endt:     24
     
-    hierachy:
+    items:
     - hash:     "B1"
       text:     "Operational Reporting"
       time:     8

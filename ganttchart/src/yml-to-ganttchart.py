@@ -14,7 +14,7 @@ from dot.dot_util import *
 from helper.logger import *
 
 
-class BpmnFromYml(object):
+class GanttchartFromYml(object):
 
 	def __init__(self, config_path, yml_name=None):
 		self.start_time = int(round(time.time() * 1000))
@@ -63,7 +63,7 @@ class BpmnFromYml(object):
 		except Exception as e:
 			warn(f"theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Using 'default' theme")
 			try:
-				self._CONFIG['theme']['theme-name'] = 'default'
+				self._CONFIG['theme']['theme-name'] = 'task-week-default'
 				self._CONFIG['theme']['theme-path'] = self._CONFIG['theme']['theme-dir'] / f"{self._CONFIG['theme']['theme-name']}.yml"
 				self._CONFIG['theme']['theme-data'] = yaml.load(open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
@@ -84,5 +84,5 @@ if __name__ == '__main__':
 	ap.add_argument("-y", "--yml", required=True, help="yml file name to generate dot from")
 	args = vars(ap.parse_args())
 
-	generator = BpmnFromYml(config_path=args["config"], yml_name=args["yml"])
+	generator = GanttchartFromYml(config_path=args["config"], yml_name=args["yml"])
 	generator.run()

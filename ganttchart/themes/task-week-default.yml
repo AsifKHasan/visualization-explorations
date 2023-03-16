@@ -28,19 +28,23 @@ headers:
     -   column:         "hash"
         label:          "#"
         style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+
     -   column:         "text"
         label:          "Task"
         style:          "width="3.0in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+
     -   column:         "time"
         label:          "Weeks"
         style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+
     -   column:         "strt"
         label:          "Start"
         style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+
     -   column:         "endt"
         label:          "End"
         style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
 
-units:
+time:
     label-format:       "w{}"
     style:              "width="0.3in"; height="0.3in"; fontsize="9pt"; shape="underline";"
