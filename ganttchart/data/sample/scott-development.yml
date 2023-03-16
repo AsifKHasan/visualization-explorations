@@ -1,59 +1,215 @@
 theme:        task-week-default
 times:        26
 items:
-  - hash:     "A"
-    text:     "Toll Operation System"
+  - hash:     A
+    text:     Toll Operation System
     time:     22
     strt:     1
     endt:     22
-    
+
     items:
-    - hash:     "A1"
-      text:     "Web Frontend"
+    - hash:     A1
+      text:     Web Frontend
       time:     12
       strt:     1
       endt:     12
 
-    - hash:     "A2"
-      text:     "System Backend"
+    - hash:     A2
+      text:     System Backend
       time:     12
       strt:     1
       endt:     12
     
-    - hash:     "A3"
-      text:     "App for RHD (MIS and Analytics)"
+    - hash:     A3
+      text:     App for RHD (MIS and Analytics)
       time:     18
       strt:     5
       endt:     22
     
       items:
-      - hash:     "A3.1"
-        text:     "Android App"
+      - hash:     A3.a
+        text:     Android App
         time:     18
         strt:     5
         endt:     22
     
-      - hash:     "A3.2"
-        text:     "iOS App"
+      - hash:     A3.b
+        text:     iOS App
         time:     18
         strt:     5
         endt:     22
 
-  - hash:     "B"
-    text:     "Reporting and Analytics"
+  - hash:     B
+    text:     Reporting and Analytics
     time:     18
     strt:     7
     endt:     24
     
     items:
-    - hash:     "B1"
-      text:     "Operational Reporting"
+    - hash:     B1
+      text:     Operational Reporting
       time:     8
       strt:     7
       endt:     14
     
-    - hash:     "B2"
-      text:     "MIS and Analytics for RHD"
+    - hash:     B2
+      text:     MIS and Analytics for RHD
       time:     18
       strt:     7
       endt:     24
+
+  - hash:     C
+    text:     AI/ML Components
+    time:     24
+    strt:     4
+    endt:     17
+
+    items:
+    - hash:     C1
+      text:     Number Plate Reading and Classification
+      time:     24
+      strt:     4
+      endt:     17
+
+      items:
+      - hash:     C1.a
+        text:     Image Collection, cleanup - ~100K
+        time:     6
+        strt:     4
+        endt:     17
+
+      - hash:     C1.b
+        text:     Data/Image labelling
+        time:     6
+        strt:     4
+        endt:     17
+
+      - hash:     C1.c
+        text:     Model, Environment Prep (4 iterations)
+        time:     8
+        strt:     4
+        endt:     17
+
+      - hash:     C1.d
+        text:     Train and Tune (4 iterations)
+        time:     8
+        strt:     4
+        endt:     17
+
+      - hash:     C1.e
+        text:     Test and benchmark (4 iterations)
+        time:     4
+        strt:     4
+        endt:     17
+
+    - hash:     C2
+      text:     Vehicle Classification from Image
+      time:     26
+      strt:     4
+      endt:     17
+
+      items:
+      - hash:     C2.a
+        text:     Camera positioning trial
+        time:     4
+        strt:     4
+        endt:     17
+
+      - hash:     C2.b
+        text:     Image Collection, cleanup - ~100K
+        time:     6
+        strt:     4
+        endt:     17
+
+      - hash:     C2.c
+        text:     Data/Image labelling
+        time:     6
+        strt:     4
+        endt:     17
+
+      - hash:     C2.d
+        text:     Model, Environment Prep (4 iterations)
+        time:     8
+        strt:     4
+        endt:     17
+
+      - hash:     C2.e
+        text:     Train and Tune (4 iterations)
+        time:     8
+        strt:     4
+        endt:     17
+
+      - hash:     C2.f
+        text:     Test and benchmark (4 iterations)
+        time:     4
+        strt:     4
+        endt:     17
+
+  - hash:     D
+    text:     Integrations
+    time:     24
+    strt:     4
+    endt:     17
+
+    items:
+    - hash:     D1
+      text:     External Systems Integration
+      time:     20
+      strt:     4
+      endt:     17
+
+      items:
+      - hash:     D1.a
+        text:     EKPAY
+        time:     12
+        strt:     4
+        endt:     17
+
+      - hash:     D1.b
+        text:     BRTA
+        time:     8
+        strt:     4
+        endt:     17
+
+      - hash:     D1.c
+        text:     EC
+        time:     4
+        strt:     4
+        endt:     17
+
+    - hash:     D2
+      text:     Device and Equipment Integration
+      time:     12
+      strt:     4
+      endt:     17
+
+      items:
+      - hash:     D2.a
+        text:     Camera
+        time:     4
+        strt:     4
+        endt:     17
+
+      - hash:     D2.b
+        text:     Printer
+        time:     1
+        strt:     4
+        endt:     17
+
+      - hash:     D2.c
+        text:     Loop Coil
+        time:     8
+        strt:     4
+        endt:     17
+
+      - hash:     D2.d
+        text:     Boom Barrier
+        time:     8
+        strt:     4
+        endt:     17
+
+      - hash:     D2.e
+        text:     RFID
+        time:     8
+        strt:     4
+        endt:     17

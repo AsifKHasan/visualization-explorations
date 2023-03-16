@@ -19,10 +19,27 @@ PROPS_TO_QUOTE = [
     'style',
     'shape',
     'width',
+    'height',
     'label',
     'image',
     'xlabel'
 ]
+
+
+''' append single line or list of lines to _lines
+'''
+def append_content(lines, content):
+    if content is None:
+        return
+
+    if isinstance(content, str):
+        lines.append(content)
+
+    elif isinstance(content, list):
+        lines = lines + content
+
+    return lines
+
 
 ''' make property lines
 '''
@@ -39,13 +56,14 @@ def make_property_lines(prop_dict):
 
 ''' make a property list
 '''
-def make_property_list(prop_dict):
+def make_property_list(prop_dict, properties_excluded=[]):
     if prop_dict is None or prop_dict == {}:
         return ''
 
     prop_list = []
     for k, v in prop_dict.items():
-        prop_list.append(make_a_property(prop_key=k, prop_value=v))
+        if not k in properties_excluded:
+            prop_list.append(make_a_property(prop_key=k, prop_value=v))
 
     prop_str = '; '.join(prop_list)
 
@@ -76,7 +94,7 @@ def make_a_property(prop_key, prop_value):
 
 ''' make a dot Node
 '''
-def make_a_node(id, label, prop_dict, xlabel=False):
+def make_a_node(id, label, prop_dict, xlabel=False, properties_excluded=[]):
     # label_str = make_a_property(prop_key='label', prop_value=table_from_label(label=label, sublabels=sublabels, prop_dict=prop_dict), quote=False)
     if xlabel:
         label_str = make_a_property(prop_key='xlabel', prop_value=label)
@@ -84,7 +102,7 @@ def make_a_node(id, label, prop_dict, xlabel=False):
     else:
         label_str = make_a_property(prop_key='label', prop_value=label)
     
-    node_str = f"{id.ljust(30)} [ {label_str}; {make_property_list(prop_dict=prop_dict)}; ]"
+    node_str = f"{id} [ {label_str}; {make_property_list(prop_dict=prop_dict, properties_excluded=properties_excluded)}; ]"
 
     return node_str
 
@@ -96,9 +114,9 @@ def make_an_edge(from_node, to_node, prop_dict):
     prop_str = make_property_list(prop_dict=prop_dict)
 
     if prop_str:
-        edge_str = f"{from_node.ljust(30)} -> {to_node.ljust(30)} [ {prop_str}; ]"
+        edge_str = f"{from_node} -> {to_node} [ {prop_str}; ]"
     else:
-        edge_str = f"{from_node.ljust(30)} -> {to_node}"
+        edge_str = f"{from_node} -> {to_node}"
 
     return edge_str
 
@@ -191,7 +209,7 @@ def text_to_dict(text):
 
 
 ''' props to dictionary
-    "fillcolor: #F0F0F0, fontcolor: #202020" is converted to {"fillcolor": "#F0F0F0", "fontcolor": "#202020"}
+    "fillcolor=#F0F0F0, fontcolor: #202020" is converted to {"fillcolor": "#F0F0F0", "fontcolor": "#202020"}
 '''
 def props_to_dict(text):
     output_dict = {}

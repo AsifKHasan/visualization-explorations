@@ -14,7 +14,7 @@ graph:
         penwidth:       "0.5"
         fontsize:       "10pt"
         fontname:       "Noto Sans"
-    
+
     edge:
         fillcolor:      "#606060"
         color:          "#202020"
@@ -25,26 +25,51 @@ graph:
         fontname:       "Noto Sans"
 
 headers:
-    -   column:         "hash"
+    -   column:         hash
         label:          "#"
-        style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+        style:          width=0.60in; height=0.30in; fontsize=11pt; fontname=FreeSans; shape=underline;
+        row-styles:
+            L0:         width=0.60in; height=0.40in; fontsize=12pt; shape="none"; label="{}\l";
+            L1:         width=0.60in; height=0.30in; fontsize=10pt; shape="none"; label="{}";
+            L2:         width=0.60in; height=0.25in; fontsize=08pt; shape="none"; label="{}\r";
 
-    -   column:         "text"
-        label:          "Task"
-        style:          "width="3.0in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+    -   column:         text
+        label:          Task
+        style:          width=3.00in; height=0.30in; fontsize=11pt; fontname=FreeSans; shape=underline;
+        row-styles:
+            L0:         width=3.00in; height=0.40in; fontsize=12pt; shape="none"; label="{}\l";
+            L1:         width=3.00in; height=0.30in; fontsize=10pt; shape="none"; label="    {}\l";
+            L2:         width=3.00in; height=0.25in; fontsize=08pt; shape="none"; label="        {}\l";
 
-    -   column:         "time"
-        label:          "Weeks"
-        style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+    -   column:         time
+        label:          Weeks
+        style:          width=0.60in; height=0.30in; fontsize=11pt; fontname=FreeSans; shape=underline;
+        row-styles:
+            L0:         width=0.60in; height=0.40in; fontsize=12pt; shape="none"; label="{}";
+            L1:         width=0.60in; height=0.30in; fontsize=10pt; shape="none"; label="{}";
+            L2:         width=0.60in; height=0.25in; fontsize=08pt; shape="none"; label="{}";
 
-    -   column:         "strt"
-        label:          "Start"
-        style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+    -   column:         strt
+        label:          Start
+        style:          width=0.6in; height=0.3in; fontsize=11pt; fontname=FreeSans; shape=underline;
+        row-styles:
+            L0:         width=0.60in; height=0.40in; fontsize=12pt; shape="none"; label="{}";
+            L1:         width=0.60in; height=0.30in; fontsize=10pt; shape="none"; label="{}";
+            L2:         width=0.60in; height=0.25in; fontsize=08pt; shape="none"; label="{}";
 
-    -   column:         "endt"
-        label:          "End"
-        style:          "width="0.6in"; height="0.3in"; fontsize="10pt"; shape="underline";"
+    -   column:         endt
+        label:          End
+        style:          width=0.6in; height=0.3in; fontsize=11pt; fontname=FreeSans; shape=underline;
+        row-styles:
+            L0:         width=0.60in; height=0.40in; fontsize=12pt; shape="none"; label="{}";
+            L1:         width=0.60in; height=0.30in; fontsize=10pt; shape="none"; label="{}";
+            L2:         width=0.60in; height=0.25in; fontsize=08pt; shape="none"; label="{}";
 
-time:
-    label-format:       "w{}"
-    style:              "width="0.3in"; height="0.3in"; fontsize="9pt"; shape="underline";"
+time-headers:
+    label-format:       w{:02}
+    style:              width=0.3in; height=0.3in; fontsize=9pt; fontname=FreeSans; shape=underline;
+    row-style:          width=0.3in; height=0.00in; shape=none;
+    edge-styles:
+        L0:             style=solid; headclip=false; tailclip=false; arrowsize=0.1; arrowhead=none; arrowtail=none; dir=both; penwidth=10; color=#808080;
+        L1:             style=solid; headclip=false; tailclip=false; arrowsize=0.1; arrowhead=none; arrowtail=none; dir=both; penwidth=8; color=#808080;
+        L2:             style=solid; headclip=false; tailclip=false; arrowsize=0.1; arrowhead=none; arrowtail=none; dir=both; penwidth=6; color=#808080;

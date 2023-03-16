@@ -13,7 +13,7 @@ set FMT=%~2
 
 :: yml-to-ganttchart
 pushd .\src
-@REM .\yml-to-ganttchart.py --config "../conf/config.yml" --yml "%YML%"
+.\yml-to-ganttchart.py --config "../conf/config.yml" --yml "%YML%"
 
 if errorlevel 1 (
   popd

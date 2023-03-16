@@ -30,7 +30,7 @@ class GanttchartFromYml(object):
 		self._data = yaml.load(open(self._CONFIG['files']['input-yml'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
 		# load theme
-		self._CONFIG['theme']['theme-name'] = self._data.get('theme', 'default')
+		self._CONFIG['theme']['theme-name'] = self._data.get('theme', 'task-week-default')
 		self.load_theme()
 
 		# dot-helper
@@ -61,7 +61,7 @@ class GanttchartFromYml(object):
 			self._CONFIG['theme']['theme-data'] = yaml.load(open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
 		except Exception as e:
-			warn(f"theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Using 'default' theme")
+			warn(f"theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Using 'task-week-default' theme")
 			try:
 				self._CONFIG['theme']['theme-name'] = 'task-week-default'
 				self._CONFIG['theme']['theme-path'] = self._CONFIG['theme']['theme-dir'] / f"{self._CONFIG['theme']['theme-name']}.yml"

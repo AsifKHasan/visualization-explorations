@@ -141,7 +141,7 @@ digraph graph_scott_development {
 	_03_w23						[ width="0.3in"; height="0.00in"; label=""; shape="none"; ]
 	_03_w24						[ width="0.3in"; height="0.00in"; label=""; shape="none"; ]
 	_03_w25						[ width="0.3in"; height="0.00in"; label=""; shape="none"; ]
-	_03_w26						[ width="0.3in"; height="0.00in"; label=""; shape="none"; ]
+	_03_w26 					[ width="0.3in"; height="0.00in"; label=""; shape="none"; ]
 
 	# row 4
 	_04							[ width="0.6in"; height="0.3in"; fontsize="10pt"; shape="none"; label="A3"; ]
