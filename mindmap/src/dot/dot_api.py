@@ -31,7 +31,7 @@ class DotObject(object):
         self._lines = []
 
         self._labels = split_text(text=self._data['label'])
-        self._label = self._labels[0]
+        self._label = wrap_text(text=self._labels[0])
         self._sublabels = self._labels[1:]
         self._id = text_to_identifier(text=self._label)
 
@@ -83,24 +83,26 @@ class DotObject(object):
 
 
         # traverse children
-        if self._show_children:
-            for child in self._data.get('children', []):
-                child_object = DotObject(config=self._config, data=child, level=self._level+1)
+        if self._show_children and 'children' in self._data:
+            children = self._data.get('children')
+            if children:
+                for child in children:
+                    child_object = DotObject(config=self._config, data=child, level=self._level+1)
 
-                # should we show it
-                if child_object._show == False:
-                    continue
-        
-                self.append_content(content=child_object.to_dot())
+                    # should we show it
+                    if child_object._show == False:
+                        continue
+            
+                    self.append_content(content=child_object.to_dot())
 
-                # make the edges between parent and child
-                edge_props = self._theme.get('edge', {})
+                    # make the edges between parent and child
+                    edge_props = self._theme.get('edge', {})
 
-                # len of edge may be overridden
-                if self._edge_len:
-                    edge_props['len'] = self._edge_len
+                    # len of edge may be overridden
+                    if self._edge_len:
+                        edge_props['len'] = self._edge_len
 
-                self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, prop_dict=edge_props))
+                    self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, prop_dict=edge_props))
 
 
         # wrap as a digraph

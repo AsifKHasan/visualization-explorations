@@ -1,0 +1,44 @@
+graph:        "overlap: false, outputorder: nodesfirst"
+label:        Aministration, Jamal [Nabil], Apr 22 2023
+children:
+- label:      Manage User, Tanvir Mallick [Jamal], Apr 20 2023
+  children:
+  - label:        View All User, Tanvir Mallick [Jamal], Apr 03 2023
+  - label:        Add New User, Tanvir Mallick [Jamal], Apr 07 2023
+  - label:        View User Detail, Tanvir Mallick [Jamal], Apr 10 2023
+  - label:        Edit User, Tanvir Mallick [Jamal], Apr 01 2023
+  - label:        Delete User, Tanvir Mallick [Jamal], Apr 13 2023
+  - label:        Search User, Tanvir Mallick [Jamal], Apr 19 2023
+
+- label:      Deactivate User
+  children:
+
+- label:      Reactivate User
+  children:
+
+- label:      Manage Profile
+  children:
+
+- label:      Manage User Role
+  children:
+  - label:        View All User Role
+  - label:        Assign Menu Access
+  - label:        Edit Menu Access
+  - label:        Remove Menu Access
+
+- label:      Change Password
+  children:
+
+- label:      Reset Password
+  children:
+
+- label:      User Audit Trail/ User Activity Log User Activity History
+  children:
+
+- label:      Notifications
+  children:
+
+- label:      Managing Data
+  children:
+  
+

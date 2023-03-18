@@ -1,3 +1,6 @@
+edge-head-label-format: "w{}"
+edge-tail-label-format: "w{}"
+edge-label-format: "w{}"
 graph:
     attributes:
         splines:        "line"
@@ -21,8 +24,11 @@ graph:
         penwidth:       "0.5"
         style:          "invis"
         constraint:     "false"
-        fontsize:       "8pt"
+        fontsize:       "6pt"
         fontname:       "Noto Sans"
+        labeldistance:  "20"
+        labelfloat:     "true"
+        tail_lp:        "100,100"
 
 headers:
     -   column:         hash
@@ -66,10 +72,15 @@ headers:
             L2:         width=0.60in; height=0.25in; fontsize=08pt; shape="none"; label="{}";
 
 time-headers:
-    label-format:       w{:02}
-    style:              width=0.3in; height=0.3in; fontsize=9pt; fontname=FreeSans; shape=underline;
-    row-style:          width=0.3in; height=0.00in; shape=none;
+    actual-headers:
+        label-format:       w{:02}
+        style:              width=0.30in; height=0.30in; fontsize=9pt; fontname=FreeSans; shape=underline;
+        row-style:          width=0.30in; height=0.02in; shape=none;
+    padding-headers:
+        label-format:       ""
+        style:              width=0.10in; height=0.30in; fontsize=9pt; fontname=FreeSans; shape=none;
+        row-style:          width=0.10in; height=0.02in; shape=none;
     edge-styles:
-        L0:             style=solid; headclip=false; tailclip=false; arrowsize=0.1; arrowhead=none; arrowtail=none; dir=both; penwidth=10; color=#808080;
-        L1:             style=solid; headclip=false; tailclip=false; arrowsize=0.1; arrowhead=none; arrowtail=none; dir=both; penwidth=8; color=#808080;
-        L2:             style=solid; headclip=false; tailclip=false; arrowsize=0.1; arrowhead=none; arrowtail=none; dir=both; penwidth=6; color=#808080;
+        L0:             style=solid; headclip=false; tailclip=true; arrowsize=0.0; arrowhead=point; arrowtail=none; dir=none; penwidth=10; color=#808080;
+        L1:             style=solid; headclip=false; tailclip=true; arrowsize=0.0; arrowhead=point; arrowtail=none; dir=none; penwidth=8; color=#808080;
+        L2:             style=solid; headclip=false; tailclip=true; arrowsize=0.0; arrowhead=point; arrowtail=none; dir=none; penwidth=6; color=#808080;

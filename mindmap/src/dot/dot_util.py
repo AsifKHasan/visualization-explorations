@@ -7,6 +7,7 @@ import re
 import random
 import string
 import html
+import textwrap
 
 from helper.logger import *
 
@@ -96,6 +97,14 @@ def text_to_identifier(text):
     id = re.sub('^[^a-zA-Z_]+', '', id)
 
     return id
+
+
+
+''' wrap text by \n literal
+'''
+def wrap_text(text, width=12):
+    lines = textwrap.wrap(text=text, width=width, break_long_words=False)
+    return '\\n'.join(lines)
 
 
 

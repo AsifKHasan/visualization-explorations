@@ -43,5 +43,5 @@ The best way to open the ```svg``` is through a browser.
 
 # ganttchart yml notes
 - time unit may be Year/Quarter/Month/Week/Day/Hour
-- only three levels of hierachies are supported now
+- only *three* levels of hierachies are supported now
 

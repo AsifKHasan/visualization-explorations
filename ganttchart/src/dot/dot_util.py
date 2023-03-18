@@ -21,6 +21,8 @@ PROPS_TO_QUOTE = [
     'width',
     'height',
     'label',
+    'headlabel',
+    'taillabel',
     'image',
     'xlabel'
 ]
@@ -110,13 +112,13 @@ def make_a_node(id, label, prop_dict, xlabel=False, properties_excluded=[]):
 
 ''' make a dot Edge
 '''
-def make_an_edge(from_node, to_node, prop_dict):
+def make_an_edge(head_node, tail_node, prop_dict):
     prop_str = make_property_list(prop_dict=prop_dict)
 
     if prop_str:
-        edge_str = f"{from_node} -> {to_node} [ {prop_str}; ]"
+        edge_str = f"{head_node} -> {tail_node} [ {prop_str}; ]"
     else:
-        edge_str = f"{from_node} -> {to_node}"
+        edge_str = f"{head_node} -> {tail_node}"
 
     return edge_str
 
