@@ -45,12 +45,12 @@ def append_content(lines, content):
 
 ''' make property lines
 '''
-def make_property_lines(prop_dict):
-    if prop_dict is None or prop_dict == {}:
+def make_property_lines(props):
+    if props is None or props == {}:
         return []
 
     prop_lines = []
-    for k, v in prop_dict.items():
+    for k, v in props.items():
         prop_lines.append(make_a_property(prop_key=k, prop_value=v) + ';')
 
     return prop_lines
@@ -58,12 +58,12 @@ def make_property_lines(prop_dict):
 
 ''' make a property list
 '''
-def make_property_list(prop_dict, properties_excluded=[]):
-    if prop_dict is None or prop_dict == {}:
+def make_property_list(props, properties_excluded=[]):
+    if props is None or props == {}:
         return ''
 
     prop_list = []
-    for k, v in prop_dict.items():
+    for k, v in props.items():
         if not k in properties_excluded:
             prop_list.append(make_a_property(prop_key=k, prop_value=v))
 
@@ -96,15 +96,15 @@ def make_a_property(prop_key, prop_value):
 
 ''' make a dot Node
 '''
-def make_a_node(id, label, prop_dict, xlabel=False, properties_excluded=[]):
-    # label_str = make_a_property(prop_key='label', prop_value=table_from_label(label=label, sublabels=sublabels, prop_dict=prop_dict), quote=False)
+def make_a_node(id, label, props, xlabel=False, properties_excluded=['label']):
+    # label_str = make_a_property(prop_key='label', prop_value=table_from_label(label=label, sublabels=sublabels, props=props), quote=False)
     if xlabel:
         label_str = make_a_property(prop_key='xlabel', prop_value=label)
-        prop_dict['label'] = ""
+        props['label'] = ""
     else:
         label_str = make_a_property(prop_key='label', prop_value=label)
     
-    node_str = f"{id} [ {label_str}; {make_property_list(prop_dict=prop_dict, properties_excluded=properties_excluded)}; ]"
+    node_str = f"{id} [ {label_str}; {make_property_list(props=props, properties_excluded=properties_excluded)}; ]"
 
     return node_str
 
@@ -112,13 +112,13 @@ def make_a_node(id, label, prop_dict, xlabel=False, properties_excluded=[]):
 
 ''' make a dot Edge
 '''
-def make_an_edge(head_node, tail_node, prop_dict):
-    prop_str = make_property_list(prop_dict=prop_dict)
+def make_an_edge(head_node, tail_node, props):
+    prop_str = make_property_list(props=props)
 
     if prop_str:
-        edge_str = f"{head_node} -> {tail_node} [ {prop_str}; ]"
+        edge_str = f"{tail_node} -> {head_node} [ {prop_str}; ]"
     else:
-        edge_str = f"{head_node} -> {tail_node}"
+        edge_str = f"{tail_node} -> {head_node}"
 
     return edge_str
 
@@ -250,22 +250,22 @@ def props_to_dict(text):
         </TR>
     </TABLE>>
 '''
-def table_from_label(label, sublabels, prop_dict):
+def table_from_label(label, sublabels, props):
     text_lines = []
 
     # the label, wrap in a FONT 
     label_lines = []
     label_lines.append(htmlize(label))
     
-    font_props = {"COLOR": prop_dict['fontcolor'], "FACE": prop_dict['fontname'], "POINT-SIZE": prop_dict['fontsize']}
-    font_prop_str = make_property_list(prop_dict=font_props)
+    font_props = {"COLOR": props['fontcolor'], "FACE": props['fontname'], "POINT-SIZE": props['fontsize']}
+    font_prop_str = make_property_list(props=font_props)
     font_start = f"<FONT {font_prop_str}>"
     font_end = '</FONT>'
     label_lines = indent_and_wrap(label_lines, wrap_keyword='', object_name='', wrap_start=font_start, wrap_stop=font_end, indent_level=1)
 
     # wrap in a TD
     td_props = {"CELLPADDING": 2}
-    td_prop_str = make_property_list(prop_dict=td_props)
+    td_prop_str = make_property_list(props=td_props)
     td_start = f"<TD {td_prop_str}>"
     td_end = '</TD>'
     label_lines = indent_and_wrap(label_lines, wrap_keyword='', object_name='', wrap_start=td_start, wrap_stop=td_end, indent_level=1)
@@ -282,8 +282,8 @@ def table_from_label(label, sublabels, prop_dict):
         if len(sublabels) >= 2:
             label1_lines = indent_and_wrap(label1_lines, wrap_keyword='', object_name='', wrap_start='<U>', wrap_stop='</U>', indent_level=1)
         
-        font_props = {"COLOR": prop_dict['fontcolorsub'], "FACE": prop_dict['fontname'], "POINT-SIZE": int(prop_dict['fontsize']) * 0.9}
-        font_prop_str = make_property_list(prop_dict=font_props)
+        font_props = {"COLOR": props['fontcolorsub'], "FACE": props['fontname'], "POINT-SIZE": int(props['fontsize']) * 0.9}
+        font_prop_str = make_property_list(props=font_props)
         font_start = f"<FONT {font_prop_str}>"
         font_end = '</FONT>'
         label1_lines = indent_and_wrap(label1_lines, wrap_keyword='', object_name='', wrap_start=font_start, wrap_stop=font_end, indent_level=1)
@@ -301,8 +301,8 @@ def table_from_label(label, sublabels, prop_dict):
         label2_lines.append(htmlize(sublabels[1]))
         label2_lines = indent_and_wrap(label2_lines, wrap_keyword='', object_name='', wrap_start='<I>', wrap_stop='</I>', indent_level=1)
         
-        font_props = {"COLOR": prop_dict['fontcolor'], "FACE": prop_dict['fontname'], "POINT-SIZE": int(prop_dict['fontsize']) * 0.8}
-        font_prop_str = make_property_list(prop_dict=font_props)
+        font_props = {"COLOR": props['fontcolor'], "FACE": props['fontname'], "POINT-SIZE": int(props['fontsize']) * 0.8}
+        font_prop_str = make_property_list(props=font_props)
         font_start = f"<FONT {font_prop_str}>"
         font_end = '</FONT>'
         label2_lines = indent_and_wrap(label2_lines, wrap_keyword='', object_name='', wrap_start=font_start, wrap_stop=font_end, indent_level=1)
@@ -318,7 +318,7 @@ def table_from_label(label, sublabels, prop_dict):
 
     # wrap in a TABLE
     table_props = {'BORDER': 0, 'CELLSPACING': 0, 'CELLPADDING': 0}
-    table_prop_str = make_property_list(prop_dict=table_props)
+    table_prop_str = make_property_list(props=table_props)
     table_start = f"<<TABLE {table_prop_str}>"
     table_end = '\t\t</TABLE>>'
     text_lines = indent_and_wrap(text_lines, wrap_keyword='', object_name='', wrap_start=table_start, wrap_stop=table_end, indent_level=3)

@@ -70,7 +70,7 @@ class DotObject(object):
         if self._level != self._config['previous-level']:
             if 'graph' in self._theme:
                 graph_properties = {**self._theme['graph'], **text_to_dict(text=self._graph)}
-                self.append_content(content=f"graph [ {make_property_list(prop_dict=graph_properties)} ]")
+                self.append_content(content=f"graph [ {make_property_list(props=graph_properties)} ]")
 
             self.append_content(content='')
             
@@ -78,8 +78,8 @@ class DotObject(object):
 
 
         # make the node
-        prop_dict = {**self._theme.get('node', {}), **self._style}
-        self.append_content(content=make_a_node(id=self._id, label=self._label, sublabels=self._sublabels, prop_dict=prop_dict))
+        props = {**self._theme.get('node', {}), **self._style}
+        self.append_content(content=make_a_node(id=self._id, label=self._label, sublabels=self._sublabels, props=props))
 
 
         # traverse children
@@ -102,7 +102,7 @@ class DotObject(object):
                     if self._edge_len:
                         edge_props['len'] = self._edge_len
 
-                    self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, prop_dict=edge_props))
+                    self.append_content(content=make_en_edge(from_node=self._id, to_node=child_object._id, props=edge_props))
 
 
         # wrap as a digraph

@@ -120,8 +120,7 @@ class GraphObject(object):
 
         for k, v in self._headers.items():
             id = f"_{self._current_row:03}_{k}"
-            self._lines = append_content(lines=self._lines, content=make_a_node(id=id, label=v['label'], prop_dict=v['style']))
-            nodes.append(id)
+            nodes.append({'id':id, 'label': v['label'], 'props': v['style']})
 
         self._lines = append_content(lines=self._lines, content='')
 
@@ -136,22 +135,22 @@ class GraphObject(object):
         t = 0
         id = f"_{self._current_row:03}_{t:02}"
         label = padding_time_header_prefix.format(t)
-        self._lines = append_content(lines=self._lines, content=make_a_node(id=id, label=label, prop_dict=padding_time_header_style))
-        nodes.append(id)
+        nodes.append({'id':id, 'label': label, 'props': padding_time_header_style})
 
         # actual headers
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
             label = actual_time_header_prefix.format(t)
-            self._lines = append_content(lines=self._lines, content=make_a_node(id=id, label=label, prop_dict=actual_time_header_style))
-            nodes.append(id)
+            nodes.append({'id':id, 'label': label, 'props': actual_time_header_style})
 
         # trailing padding header
         t = self._time_count + 1
         id = f"_{self._current_row:03}_{t:02}"
         label = padding_time_header_prefix.format(t)
-        self._lines = append_content(lines=self._lines, content=make_a_node(id=id, label=label, prop_dict=padding_time_header_style))
-        nodes.append(id)
+        nodes.append({'id':id, 'label': label, 'props': padding_time_header_style})
+
+        for node in nodes:
+            self._lines = append_content(lines=self._lines, content=make_a_node(id=node['id'], label=node['label'], props=node['props']))
 
         # put nodes in same rank
         self.same_rank(nodes=nodes)
@@ -183,9 +182,10 @@ class GraphObject(object):
                 id = f"_{self._current_row:03}_{k}"
                 style = self._headers[k]['row-styles'][f"L{level}"]
                 label = style['label'].format(v)
-                self._lines = append_content(lines=self._lines, content=make_a_node(id=id, label=label, prop_dict=style, properties_excluded=['label']))
-                nodes.append(id)
+                nodes.append({'id':id, 'label': label, 'props': style})
     
+        time_node_strt = len(nodes)
+
         # the time nodes
         actual_time_node_style = props_to_dict(text=self._theme['time-headers']['actual-headers']['row-style'])
         padding_time_node_style = props_to_dict(text=self._theme['time-headers']['padding-headers']['row-style'])
@@ -194,53 +194,57 @@ class GraphObject(object):
         t = 0
         id = f"_{self._current_row:03}_{t:02}"
         label = ''
-        nodes.append()
-        self._lines = append_content(lines=self._lines, content=make_a_node(id=id, label=label, prop_dict=padding_time_node_style))
-        nodes.append(id)
+        nodes.append({'id':id, 'label': label, 'props': padding_time_node_style})
 
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
             label = ''
-            self._lines = append_content(lines=self._lines, content=make_a_node(id=id, label=label, prop_dict=actual_time_node_style))
-            nodes.append(id)
+            nodes.append({'id':id, 'label': label, 'props': actual_time_node_style})
 
         # trailing padding time
         t = self._time_count + 1
         id = f"_{self._current_row:03}_{t:02}"
         label = ''
-        self._lines = append_content(lines=self._lines, content=make_a_node(id=id, label=label, prop_dict=padding_time_node_style))
-        nodes.append(id)
+        nodes.append({'id':id, 'label': label, 'props': padding_time_node_style})
+
+
+        # shape the time nodes so that they fill the time line
+        self._lines = append_content(lines=self._lines, content='')
+        self._lines = append_content(lines=self._lines, content=f"# time line(s) row {self._current_row}")
+
+        # actual headers
+        for span in data['span']:
+
+            span_strt = span['strt']
+            span_endt = span['endt']
+
+            tail_node = nodes[time_node_strt + span_strt]
+            props = props_to_dict(text=self._theme['time-headers']['node-styles'][f"L{data['levl']}"]['tail'])
+            tail_node['label'] = props['label'].format(span_strt)
+            tail_node['props'] = props
+
+            head_node = nodes[time_node_strt + span_endt]
+            props = props_to_dict(text=self._theme['time-headers']['node-styles'][f"L{data['levl']}"]['head'])
+            head_node['label'] = props['label'].format(span_endt)
+            head_node['props'] = props
+
+            for pos in range(span_strt+1, span_endt):
+                node = nodes[time_node_strt + pos]
+                props = props_to_dict(text=self._theme['time-headers']['node-styles'][f"L{data['levl']}"]['edge'])
+                node['label'] = ''
+                node['props'] = props
+
+
+            # self._lines = append_content(lines=self._lines, content=make_an_edge(head_node=head_node['id'], tail_node=tail_node['id'], props=edge_style))
+
+
+        # generate the nodes
+        for node in nodes:
+            self._lines = append_content(lines=self._lines, content=make_a_node(id=node['id'], label=node['label'], props=node['props']))
 
         # put nodes in same rank
         self.same_rank(nodes=nodes)
 
-        # the edges for time
-        self._lines = append_content(lines=self._lines, content='')
-        self._lines = append_content(lines=self._lines, content=f"# time edge for row {self._current_row}")
-
-        # actual headers
-        for span in data['span']:
-            head_label = self._theme['edge-head-label-format'].format(span['endt'])
-            tail_label = self._theme['edge-tail-label-format'].format(span['strt'])
-            edge_label = self._theme['edge-label-format'].format(span['strt'])
-
-            span_strt = span['strt'] - 1
-            span_endt = span['endt']
-
-            edge_style = props_to_dict(text=self._theme['time-headers']['edge-styles'][f"L{level}"])
-
-            if span_endt - span_strt < 2:
-                head_label = ''
-                tail_label = ''
-            else:
-                edge_label = ''
-
-
-            head_node = f"_{self._current_row:03}_{span_strt:02}"
-            tail_node = f"_{self._current_row:03}_{span_endt:02}"
-            # label_props = {'headlabel': head_label, 'taillabel': tail_label, 'label': edge_label}
-            label_props = {}
-            self._lines = append_content(lines=self._lines, content=make_an_edge(head_node=head_node, tail_node=tail_node, prop_dict={**edge_style, **label_props}))
 
         # process children if any
         if 'items' in data:
@@ -266,4 +270,5 @@ class GraphObject(object):
     def same_rank(self, nodes):
         self._lines = append_content(lines=self._lines, content='')
         self._lines = append_content(lines=self._lines, content=f"# put nodes of rows in same rank")
-        self._lines = append_content(lines=self._lines, content=f"{{ rank=same; {' -> '.join(nodes)} }}")
+        node_ids =  [n['id'] for n in nodes]
+        self._lines = append_content(lines=self._lines, content=f"{{ rank=same; {' -> '.join(node_ids)} }}")
