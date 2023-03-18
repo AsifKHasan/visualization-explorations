@@ -25,6 +25,42 @@ class GraphObject(object):
         self._current_row = 0
 
 
+    '''
+    '''
+    def parse_theme(self):
+        # fixed nodes
+        self._header_nodes = {}
+
+        common_header_props = props_to_dict(text=self._theme['node-spec']['header-style'])
+
+        row_common_styles = {}
+        for level, level_data in self._theme['node-spec']['row-styles'].items():
+            row_common_styles[level] = props_to_dict(text=level_data)
+
+        for header in self._theme['node-spec']['fixed-nodes']:
+            props = {**common_header_props, **props_to_dict(text=header['header-style'])}
+            self._header_nodes[header['column']] = {'label': header['label'], 'header-style': props, 'row-styles': {}}
+
+            common_row_props = props_to_dict(text=header['row-style'])
+            for k, v in header['row-styles'].items():
+                props = {**row_common_styles[k], **common_row_props, **props_to_dict(text=v)}
+                self._header_nodes[header['column']]['row-styles'][k] = props
+
+        # time nodes
+        self._time_nodes = self._theme['node-spec']['time-nodes']
+        self._time_nodes['header-style'] = {**common_header_props, **props_to_dict(text=self._time_nodes['header-style'])}
+        self._time_nodes['row-style'] = props_to_dict(text=self._time_nodes['row-style'])
+
+        # iterate over types
+        for level, level_data in self._time_nodes['levels'].items():
+            level_props = props_to_dict(text=level_data['style'])
+            self._time_nodes['levels'][level]['style'] = level_props
+            # iterate over types
+            for ntype, ntype_data in level_data['types'].items():
+                type_props = {**self._time_nodes['row-style'], **level_props, **props_to_dict(text=ntype_data)}
+                self._time_nodes['levels'][level]['types'][ntype] = type_props
+
+
     ''' parse the data
     '''
     def parse_data(self):
@@ -75,6 +111,9 @@ class GraphObject(object):
     def to_dot(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
+        # parse the theme
+        self.parse_theme()
+
         # parse the data
         self.parse_data()
 
@@ -111,46 +150,26 @@ class GraphObject(object):
         self._lines = append_content(lines=self._lines, content='# row 0 - header')
         nodes = []
 
-        self._headers = {}
-        for header in self._theme['headers']:
-            self._headers[header['column']] = {'label': header['label'], 'style': props_to_dict(text=header['style'])}
-            self._headers[header['column']]['row-styles'] = {}
-            for k, v in header['row-styles'].items():
-                self._headers[header['column']]['row-styles'][k] = props_to_dict(text=v)
-
-        for k, v in self._headers.items():
+        for k, v in self._header_nodes.items():
             id = f"_{self._current_row:03}_{k}"
-            nodes.append({'id':id, 'label': v['label'], 'props': v['style']})
+            nodes.append({'id':id, 'label': v['label'], 'props': v['header-style']})
 
         self._lines = append_content(lines=self._lines, content='')
 
         # now the time headers
-        actual_time_header_prefix = self._theme['time-headers']['actual-headers']['label-format']
-        actual_time_header_style = props_to_dict(text=self._theme['time-headers']['actual-headers']['style'])
+        time_header_prefix = self._time_nodes['header-label']
+        time_header_props = self._time_nodes['header-style']
 
-        padding_time_header_prefix = self._theme['time-headers']['padding-headers']['label-format']
-        padding_time_header_style = props_to_dict(text=self._theme['time-headers']['padding-headers']['style'])
-
-        # leading padding header
-        t = 0
-        id = f"_{self._current_row:03}_{t:02}"
-        label = padding_time_header_prefix.format(t)
-        nodes.append({'id':id, 'label': label, 'props': padding_time_header_style})
-
-        # actual headers
+        # add a blank 00 time node 
+        nodes.append({})
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
-            label = actual_time_header_prefix.format(t)
-            nodes.append({'id':id, 'label': label, 'props': actual_time_header_style})
-
-        # trailing padding header
-        t = self._time_count + 1
-        id = f"_{self._current_row:03}_{t:02}"
-        label = padding_time_header_prefix.format(t)
-        nodes.append({'id':id, 'label': label, 'props': padding_time_header_style})
+            label = time_header_prefix.format(t)
+            nodes.append({'id': id, 'label': label, 'props': time_header_props})
 
         for node in nodes:
-            self._lines = append_content(lines=self._lines, content=make_a_node(id=node['id'], label=node['label'], props=node['props']))
+            if node:
+                self._lines = append_content(lines=self._lines, content=make_a_node(id=node['id'], label=node['label'], props=node['props']))
 
         # put nodes in same rank
         self.same_rank(nodes=nodes)
@@ -178,34 +197,24 @@ class GraphObject(object):
 
         # the data nodes
         for k, v in data.items():
-            if k in self._headers:
+            if k in self._header_nodes:
+                column = self._header_nodes[k]
                 id = f"_{self._current_row:03}_{k}"
-                style = self._headers[k]['row-styles'][f"L{level}"]
-                label = style['label'].format(v)
-                nodes.append({'id':id, 'label': label, 'props': style})
+                # header_props = column['header-style']
+                props = column['row-styles'][f"L{level}"]
+                # props = {**header_props, **props}
+                label = props['label'].format(v)
+                nodes.append({'id':id, 'label': label, 'props': props})
     
         time_node_strt = len(nodes)
 
         # the time nodes
-        actual_time_node_style = props_to_dict(text=self._theme['time-headers']['actual-headers']['row-style'])
-        padding_time_node_style = props_to_dict(text=self._theme['time-headers']['padding-headers']['row-style'])
-
-        # leading padding time
-        t = 0
-        id = f"_{self._current_row:03}_{t:02}"
-        label = ''
-        nodes.append({'id':id, 'label': label, 'props': padding_time_node_style})
-
+        # add a blank 00 time node 
+        nodes.append({})
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
             label = ''
-            nodes.append({'id':id, 'label': label, 'props': actual_time_node_style})
-
-        # trailing padding time
-        t = self._time_count + 1
-        id = f"_{self._current_row:03}_{t:02}"
-        label = ''
-        nodes.append({'id':id, 'label': label, 'props': padding_time_node_style})
+            nodes.append({'id':id, 'label': label, 'props': self._time_nodes['row-style']})
 
 
         # shape the time nodes so that they fill the time line
@@ -214,23 +223,22 @@ class GraphObject(object):
 
         # actual headers
         for span in data['span']:
-
             span_strt = span['strt']
             span_endt = span['endt']
 
             tail_node = nodes[time_node_strt + span_strt]
-            props = props_to_dict(text=self._theme['time-headers']['node-styles'][f"L{data['levl']}"]['tail'])
+            props = self._time_nodes['levels'][f"L{data['levl']}"]['types']['tail']
             tail_node['label'] = props['label'].format(span_strt)
             tail_node['props'] = props
 
             head_node = nodes[time_node_strt + span_endt]
-            props = props_to_dict(text=self._theme['time-headers']['node-styles'][f"L{data['levl']}"]['head'])
+            props = self._time_nodes['levels'][f"L{data['levl']}"]['types']['head']
             head_node['label'] = props['label'].format(span_endt)
             head_node['props'] = props
 
             for pos in range(span_strt+1, span_endt):
                 node = nodes[time_node_strt + pos]
-                props = props_to_dict(text=self._theme['time-headers']['node-styles'][f"L{data['levl']}"]['edge'])
+                props = self._time_nodes['levels'][f"L{data['levl']}"]['types']['edge']
                 node['label'] = ''
                 node['props'] = props
 
@@ -240,7 +248,8 @@ class GraphObject(object):
 
         # generate the nodes
         for node in nodes:
-            self._lines = append_content(lines=self._lines, content=make_a_node(id=node['id'], label=node['label'], props=node['props']))
+            if node:
+                self._lines = append_content(lines=self._lines, content=make_a_node(id=node['id'], label=node['label'], props=node['props']))
 
         # put nodes in same rank
         self.same_rank(nodes=nodes)
@@ -270,5 +279,5 @@ class GraphObject(object):
     def same_rank(self, nodes):
         self._lines = append_content(lines=self._lines, content='')
         self._lines = append_content(lines=self._lines, content=f"# put nodes of rows in same rank")
-        node_ids =  [n['id'] for n in nodes]
+        node_ids =  [n['id'] for n in nodes if 'id' in n]
         self._lines = append_content(lines=self._lines, content=f"{{ rank=same; {' -> '.join(node_ids)} }}")

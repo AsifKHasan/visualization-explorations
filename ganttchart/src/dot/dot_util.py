@@ -104,7 +104,7 @@ def make_a_node(id, label, props, xlabel=False, properties_excluded=['label']):
     else:
         label_str = make_a_property(prop_key='label', prop_value=label)
     
-    node_str = f"{id} [ {label_str}; {make_property_list(props=props, properties_excluded=properties_excluded)}; ]"
+    node_str = f"{id.ljust(20)} [ {make_property_list(props=props, properties_excluded=properties_excluded)}; {label_str}; ]"
 
     return node_str
 
