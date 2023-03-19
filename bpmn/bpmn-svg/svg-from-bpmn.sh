@@ -2,7 +2,7 @@
 # bpmn->yml->svg image pipeline
 
 # usage
-# ./bpmn-to-svg.sh YML
+# ./svg-from-bpmn.sh YML
 
 # parameters
 YML=$1

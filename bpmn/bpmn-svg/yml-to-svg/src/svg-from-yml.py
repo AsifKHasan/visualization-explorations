@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
 
-import os
-import sys
 import time
-import json
 import yaml
-import datetime
 import argparse
 from pathlib import Path
 
-from dot.dot_helper import DotHelper
-from dot.dot_util import *
+from svg.svg_helper import SvgHelper
+from svg.svg_util import *
 from helper.logger import *
 
 
-class BpmnFromYml(object):
+class SvgFromYml(object):
 
 	def __init__(self, config_path, yml_name=None):
 		self.start_time = int(round(time.time() * 1000))
@@ -33,10 +29,10 @@ class BpmnFromYml(object):
 		self._CONFIG['theme']['theme-name'] = self._data.get('theme', 'default')
 		self.load_theme()
 
-		# dot-helper
-		self._CONFIG['files']['output-dot'] = f"{self._CONFIG['dirs']['output-dir']}/{self._yml_name_only}.gv"
-		dot_helper = DotHelper(self._CONFIG)
-		dot_helper.generate_and_save(self._data)
+		# svg-helper
+		self._CONFIG['files']['output-svg'] = f"{self._CONFIG['dirs']['output-dir']}/{self._yml_name_only}.svg"
+		svg_helper = SvgHelper(self._CONFIG)
+		svg_helper.generate_and_save(self._data)
 		self.tear_down()
 
 
@@ -81,8 +77,8 @@ if __name__ == '__main__':
 	# construct the argument parse and parse the arguments
 	ap = argparse.ArgumentParser()
 	ap.add_argument("-c", "--config", required=True, help="configuration yml path")
-	ap.add_argument("-y", "--yml", required=True, help="yml file name to generate dot from")
+	ap.add_argument("-y", "--yml", required=True, help="yml file name to generate svg from")
 	args = vars(ap.parse_args())
 
-	generator = BpmnFromYml(config_path=args["config"], yml_name=args["yml"])
+	generator = SvgFromYml(config_path=args["config"], yml_name=args["yml"])
 	generator.run()
