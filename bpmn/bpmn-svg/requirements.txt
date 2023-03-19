@@ -1,0 +1,10 @@
+# common
+argparse
+PyYAML
+yamllint
+pysvg
+pysvg-py3
+funcparserlib
+colorama
+termcolor
+Pillow

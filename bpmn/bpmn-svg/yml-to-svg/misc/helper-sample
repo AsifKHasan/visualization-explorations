@@ -1,0 +1,2 @@
+./svg-from-bpmn.sh sample/pizza-order
+svg-from-bpmn.bat sample/pizza-order
