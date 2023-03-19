@@ -1,4 +1,6 @@
-# 
+./mindmap-from-yml.sh spectrum/SCOTT/SCOTT__functional-features
+mindmap-from-yml.bat spectrum/SCOTT/SCOTT__functional-features circo svg
+
 ./mindmap-from-yml.sh spectrum/HR/HR__active.network__summary
 mindmap-from-yml.bat spectrum/HR/HR__active.network__summary
 

@@ -1,0 +1,45 @@
+graph:        "overlap: false"
+label:        SCOTT Functional Features
+children:
+- label:      A. Toll Plaza Operations
+  children:
+    - label:  A1. Operator Toll Collection
+      children:
+        - label: A1.01 Time & Lane-constrained Login, Hasib, 2 days
+        - label: A1.02 Dispay Session Countdown Timer
+        - label: A1.03 Auto & Manual-logout
+        - label: A1.04 Opertor & System Activity Logger
+        - label: A1.05 Display Vehicle Snapshot
+        - label: A1.06 Operator Initiated Vehicle Snapshot
+        - label: A1.07 Display Vehicle LPN
+        - label: A1.08 Input Vehicle LPN
+        - label: A1.09 Display Vehicle Class
+        - label: A1.10 Select Vehicle Class
+    - label: A3. Toll Both Device Switch
+- label:      B. Toll Plaza Management
+  children:
+    - label: B1. Lane Management
+    - label: B2. Operator Management
+    - label: B3. Cashbox Management
+    - label: B4. Roster Management
+    - label: B5. Accounting Module
+    - label: B6. Reconciliation Module
+    - label: B7. Shift Management
+    - label: B8. Reporting and Analytics 
+- label:      C. Device Integration
+  children:
+   - label: C1. Boom Barrier
+   - label: C2. Laser Sensor
+   - label: C3. Printer
+   - label: C4. RFID Reader 
+   - label: C5. ANPR Camera 
+   - label: C6. Classification Cameras
+   - label: C7. Loop Coil 
+   - label: C8. Integrated Control Box
+- label:      D. External Integration
+  children:
+   - label: D1. BRTA API
+   - label: D2. Payment Gateway
+   - label: D3. Unified Toll Management System (RHD)
+
+
