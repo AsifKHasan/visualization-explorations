@@ -26,76 +26,66 @@ graph:
 
 node-spec:
     header-style:       height=0.30in; fontsize=11pt; fontname=FreeSans; shape=rectangle; fontcolor=#000000; fillcolor=#B0B0B0; color=#B0B0B0; penwidth=0.75;
+
     row-styles:
         L0:             height=0.20in; fontcolor=#005249; fontsize=12pt;
         L1:             height=0.16in; fontcolor=#4E0550; fontsize=10pt;
         L2:             height=0.12in; fontcolor=#CA6641; fontsize=08pt;
+
     fixed-nodes:
-        -   column:         hash
+        hash:
             label:          "#"
             header-style:   width=0.60in;
             row-style:      width=0.60in; shape=none;
-            row-styles:
+            level-styles:
                 L0:         label="{}\l";
                 L1:         label="{}";
                 L2:         label="{}\r";
 
-        -   column:         text
+        text:
             label:          Task
             header-style:   width=3.00in;
             row-style:      width=3.00in; shape=none;
-            row-styles:
+            level-styles:
                 L0:         label="{}\l";
                 L1:         label="    {}\l";
                 L2:         label="        {}\l";
 
-        -   column:         time
+        time:
             label:          Weeks
             header-style:   width=0.60in;
-            row-style:      width=0.60in; shape=none;
-            row-styles:
-                L0:         label="{}";
-                L1:         label="{}";
-                L2:         label="{}";
+            level-style:    width=0.60in; shape=none; label="{}";
 
-        -   column:         strt
+        strt:
             label:          Start
             header-style:   width=0.60in;
-            row-style:      width=0.6in; shape=none;
-            row-styles:
-                L0:         label="{}";
-                L1:         label="{}";
-                L2:         label="{}";
+            level-style:    width=0.6in; shape=none; label="{}";
 
-        -   column:         endt
+        endt:
             label:          End
             header-style:   width=0.60in;
-            row-style:      width=0.6in; shape=none;
-            row-styles:
-                L0:         label="{}";
-                L1:         label="{}";
-                L2:         label="{}";
+            level-style:    width=0.6in; shape=none; label="{}";
 
     time-nodes:
-        header-label:       w{:02}
-        header-style:       width=0.30in; fontsize=9pt;
-        row-style:          width=0.30in; height=0.02in; style="solid, filled"; fontcolor=#FFFFFF; shape=none; fontname=FreeSans; penwidth=0.75; label="";
-        levels:
-            L0:             
-                style:      height=0.20in; fillcolor=#005249; color=#005249; shape=rectangle; fontsize=10pt;
-                types:
-                    edge:       height=0.12in; label="";
-                    tail:       label="{}"
-                    head:       label="{}
-            L1:             
-                style:      height=0.16in; fillcolor=#4E0550; color=#4E0550; shape=rectangle; fontsize=9pt;
-                types:
-                    edge:       height=0.08in; label=""
-                    tail:       label="{}
-                    head:       label="{}
-            L2:             
-                style:      height=0.12in; fillcolor=#CA6641; color=#CA6641; shape=rectangle; fontsize=8pt;
-                types:
-                    edge:       height=0.04in; label=""
-                    tail:       label="{}
-                    head:       label="{}
+        head-row:
+            label:          w{:02}
+            style:          width=0.30in; fontsize=9pt;
+        
+        data-row:
+            base-style:     width=0.30in; height=0.02in; style="solid, filled"; fontcolor=#FFFFFF; shape=none; fontname=FreeSans; penwidth=0.75; label="";
+
+            type-styles:         
+                edge:       shape=rectangle;
+                tail:       shape=rectangle; label="{}";
+                head:       shape=rectangle; label="{}";
+                
+            level-styles:
+                L0:             
+                    style:      height=0.20in; fillcolor=#005249; color=#005249; fontsize=10pt;
+                    edge:       height=0.12in;
+                L1:             
+                    style:      height=0.16in; fillcolor=#4E0550; color=#4E0550; fontsize=9pt;
+                    edge:       height=0.08in;
+                L2:             
+                    style:      height=0.12in; fillcolor=#CA6641; color=#CA6641; fontsize=8pt;
+                    edge:       height=0.04in;

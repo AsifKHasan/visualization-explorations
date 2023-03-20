@@ -1,45 +1,66 @@
-graph:        "overlap: false"
-label:        SCOTT Functional Features
+graph:              "overlap: false"
+label:              SCOTT Functional Features
 children:
-- label:      A. Toll Plaza Operations
-  children:
-    - label:  A1. Operator Toll Collection
-      children:
-        - label: A1.01 Time & Lane-constrained Login, Hasib, 2 days
-        - label: A1.02 Dispay Session Countdown Timer
-        - label: A1.03 Auto & Manual-logout
-        - label: A1.04 Opertor & System Activity Logger
-        - label: A1.05 Display Vehicle Snapshot
-        - label: A1.06 Operator Initiated Vehicle Snapshot
-        - label: A1.07 Display Vehicle LPN
-        - label: A1.08 Input Vehicle LPN
-        - label: A1.09 Display Vehicle Class
-        - label: A1.10 Select Vehicle Class
-    - label: A3. Toll Both Device Switch
-- label:      B. Toll Plaza Management
-  children:
-    - label: B1. Lane Management
-    - label: B2. Operator Management
-    - label: B3. Cashbox Management
-    - label: B4. Roster Management
-    - label: B5. Accounting Module
-    - label: B6. Reconciliation Module
-    - label: B7. Shift Management
-    - label: B8. Reporting and Analytics 
-- label:      C. Device Integration
-  children:
-   - label: C1. Boom Barrier
-   - label: C2. Laser Sensor
-   - label: C3. Printer
-   - label: C4. RFID Reader 
-   - label: C5. ANPR Camera 
-   - label: C6. Classification Cameras
-   - label: C7. Loop Coil 
-   - label: C8. Integrated Control Box
-- label:      D. External Integration
-  children:
-   - label: D1. BRTA API
-   - label: D2. Payment Gateway
-   - label: D3. Unified Toll Management System (RHD)
+  - label:          A. Toll Plaza Operations
+    children:
+      - label:        A1. Operator Toll Collection
+        children:
+          - label:      A1.01 Time & Lane-constrained Login, Hasib, 5 days
+          - label:      A1.02 Display Session Countdown Timer, Hasib, 4 days
+          - label:      A1.03 Auto & Manual-logout, Hasib, 5 days
+          - label:      A1.04 Operator & System Activity Logger, Nahin, 5 days
+          - label:      A1.05 Display Vehicle Snapshot, Nahin, 5 days
+          - label:      A1.06 Operator Initiated Vehicle Snapshot, Nahin, 2 days
+          - label:      A1.07 Display Vehicle LPN, Nahin, 2 days
+          - label:      A1.08 Input Vehicle LPN, Nahin, 2 days
+          - label:      A1.09 Display Vehicle Class, Nahin, 2 days
+          - label:      A1.10 Select Vehicle Class, Nahin, 2 days
+          - label:      A1.11 Pass Through Vehicle, Nahin, 4 days
+          
+      - label:        A2. Toll Both Device Switch
 
+  - label:          B. Toll Plaza Management
+    children:
+      - label:        B1. Lane Management, Hasib, 3 days
+      - label:        B2. Operator Management, Nahin, 7 days
+      - label:        B3. Cashbox Management, Hasib, 5 days
+      - label:        B4. Roster/Calendar Management, Hasib, 15 days
+      - label:        B5. Account Management
+        children:
+          - label:      B5.01 Cash Reconciliation, Nahin, 7 days
+          - label:      B5.02 Expense Account, Nahin, 5 days
+          - label:      B5.03 Bank Deposit, Farhan, 5 days
+          - label:      B5.04 Petty Cash, Farhan, 5 days
+          - label:      B5.05 Cash In/Out, Farhan, 5 days
 
+      - label:        B6. Shift Management
+        children:
+          - label:      B6.01 Shift Definition, Hasib, 5 days
+          - label:      B6.02 Shift Assignment, Hasib, 5 days
+          - label:      B6.03 Shift Scheduling, Hasib, 15 days
+
+      - label:        B7. Reporting and Analytics, Nahin, 25 days
+      - label:        B8. User Management
+        children:
+          - label:      B8.01 User Registration, Farhan, 10 days
+          - label:      B8.02 User Login/Logout, Farhan, 5 days
+
+      - label:        B9. Device Inventory, Farhan, 15 days
+      - label:        B10. Dashboard, Farhan, 15 days
+
+  - label:          C. Device Integration
+    children:
+      - label:        C1. Boom Barrier
+      - label:        C2. Laser Sensor
+      - label:        C3. Printer
+      - label:        C4. RFID Reader
+      - label:        C5. ANPR Camera
+      - label:        C6. Classification Cameras
+      - label:        C7. Loop Coil
+      - label:        C8. Integrated Control Box
+
+  - label:          D. External Integration
+    children:
+      - label:        D1. BRTA API, Nahin, 5 days
+      - label:        D2. Payment Gateway, Hasib, 10 days
+      - label:        D3. Unified Toll Management System (RHD), Farhan, 10 days

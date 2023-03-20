@@ -1,12 +1,13 @@
 theme:        task-week-default
-start:        "2023-04-02"
 items:
   - hash:     A
     text:     Toll Operation System
+    span:     1-22
 
     items:
     - hash:     A1
       text:     Web Frontend
+      span:     1-12
 
     - hash:     A2
       text:     System Backend
@@ -27,6 +28,7 @@ items:
 
   - hash:     B
     text:     Reporting and Analytics
+    span:     7-24
     
     items:
     - hash:     B1
@@ -39,10 +41,12 @@ items:
 
   - hash:     C
     text:     AI/ML Components
+    span:     1-26
 
     items:
     - hash:     C1
       text:     Number Plate Reading and Classification
+      span:     3-26
 
       items:
       - hash:     C1.a
@@ -67,6 +71,7 @@ items:
 
     - hash:     C2
       text:     Vehicle Classification from Image
+      span:     1-26
 
       items:
       - hash:     C2.a
@@ -95,10 +100,12 @@ items:
 
   - hash:     D
     text:     Integrations
+    span:     5-24
 
     items:
     - hash:     D1
       text:     External Systems Integration
+      span:     5-24
 
       items:
       - hash:     D1.a
@@ -115,6 +122,7 @@ items:
 
     - hash:     D2
       text:     Device and Equipment Integration
+      span:     1-12
 
       items:
       - hash:     D2.a
