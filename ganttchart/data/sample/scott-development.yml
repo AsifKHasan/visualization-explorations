@@ -14,7 +14,6 @@ items:
     
     - hash:     A3
       text:     App for RHD (MIS and Analytics)
-      span:     5-22
     
       items:
       - hash:     A3.a

@@ -54,17 +54,17 @@ node-spec:
         time:
             label:          Weeks
             header-style:   width=0.60in;
-            level-style:    width=0.60in; shape=none; label="{}";
+            row-style:      width=0.60in; shape=none; label="{}";
 
         strt:
             label:          Start
             header-style:   width=0.60in;
-            level-style:    width=0.6in; shape=none; label="{}";
+            row-style:      width=0.6in; shape=none; label="{}";
 
         endt:
             label:          End
             header-style:   width=0.60in;
-            level-style:    width=0.6in; shape=none; label="{}";
+            row-style:      width=0.6in; shape=none; label="{}";
 
     time-nodes:
         head-row:

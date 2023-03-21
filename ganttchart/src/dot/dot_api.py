@@ -11,6 +11,71 @@ from helper.logger import *
 
 RANK_NODES = []
 
+''' item object
+'''
+class Item(object):
+    ''' constructor
+    '''
+    def __init__(self, data, level):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+
+        self._data = data
+        self._levl = level
+        self._time = 0
+        self._strt = 1000
+        self._endt = 0
+        self._spans = []
+        self._items = []
+
+
+    def process(self):
+        # we may not have span for parent items
+        if not 'hash' in self._data:
+            warn(f"item has no value for [hash]")
+            self._hash = 'NA'
+        else:
+            self._hash = self._data['hash']
+
+        if not 'text' in self._data:
+            warn(f"item has no value for [text]")
+            self._text = 'MISSSING'
+        else:
+            self._text = self._data['text']
+
+
+        if 'span' in self._data:
+            # we have span, we need time, spans (list of strt, endt)
+            span_text = self._data['span']
+
+            # spans are list (separated by ,) of number pairs (separated by -)
+            span_list = span_text.split(',')
+            for a_span in span_list:
+                pair = a_span.split('-')
+                strt, endt = int(pair[0]), int(pair[1])
+                self._spans.append({'strt': strt, 'endt': endt})
+                self._strt = min(self._strt, strt)
+                self._endt = max(self._endt, endt)
+                self._time = self._time + endt - strt + 1
+
+            # print(f"{data['hash']} [time={data['time']}, strt={data['strt']}, endt={data['endt']}]")
+
+        else:
+            if 'items' in self._data:
+                debug(f"[{self._data['hash']}] [{self._data['text']}] does not have any span. Calculating time, start, end from children")
+            else:
+                warn(f"[{self._data['hash']}] [{self._data['text']}] does not have any span and there is no child. Can not calculate time, start, end")
+
+        # process children if any
+        if 'items' in self._data:
+            for child_data in self._data['items']:
+                child = Item(data=child_data, level=self._levl + 1)
+                child.process()
+
+        self._data['span'] = self._time
+        self._data['strt'] = self._strt
+        self._data['endt'] = self._endt
+
+
 ''' Dot base object
 '''
 class GraphObject(object):
@@ -23,6 +88,8 @@ class GraphObject(object):
         self._theme = self._config['theme']['theme-data']
         self._lines = []
         self._current_row = 0
+        self._items = []
+
 
 
     '''
@@ -31,7 +98,10 @@ class GraphObject(object):
         # fixed nodes
         self._theme['node-spec']['header-style'] = props_to_dict(text=self._theme['node-spec']['header-style'])
 
+        # how many levels we have defined?
+        levels_defined = []
         for level, level_data in self._theme['node-spec']['row-styles'].items():
+            levels_defined.append(level)
             self._theme['node-spec']['row-styles'][level] = props_to_dict(text=level_data)
 
         fixed_nodes = self._theme['node-spec']['fixed-nodes']
@@ -53,7 +123,11 @@ class GraphObject(object):
                     column_data['level-styles'][level] = {**fixed_nodes[column]['row-style'], **props_to_dict(text=column_data['level-styles'][level])}
             else:
                 # TODO warn
-                pass
+                column_data['level-styles'] = {}
+                for level in levels_defined:
+                    column_data['level-styles'][level] = {**self._theme['node-spec']['row-styles'][level], **fixed_nodes[column]['row-style']}
+
+
 
         # time nodes
         time_nodes = self._theme['node-spec']['time-nodes']
@@ -94,43 +168,13 @@ class GraphObject(object):
     def parse_data(self):
         self._time_count = 0
 
-        for item in self._data['items']:
-            self.parse_item(data=item, level=0)
-            self._time_count = max(self._time_count, item['time'])
+        for item_data in self._data['items']:
+            item = Item(data=item_data, level=0)
+            item.process()
+            self._items.append(item)
+            self._time_count = max(self._time_count, item._time)
 
-        self._data['time'] = self._time_count
-
-
-    ''' parse the data items
-
-    '''
-    def parse_item(self, data, level):
-        # we have span, we need time, spans (list of strt, endt)
-        span_text = data['span']
-        span_list = span_text.split(',')
-        data['levl'] = level
-        data['span'] = []
-        time_span = 0
-        min_strt = 1000
-        max_endt = 0
-        for a_span in span_list:
-            pair = a_span.split('-')
-            strt, endt = int(pair[0]), int(pair[1])
-            min_strt = min(min_strt, strt)
-            max_endt = max(max_endt, endt)
-            data['span'].append({'strt': strt, 'endt': endt})
-            time_span = time_span + endt - strt + 1
-
-            # process children if any
-            if 'items' in data:
-                for child in data['items']:
-                    self.parse_item(data=child, level=level + 1)
-
-        data['time'] = time_span
-        data['strt'] = min_strt
-        data['endt'] = max_endt
-
-        # print(f"{data['hash']} [time={data['time']}, strt={data['strt']}, endt={data['endt']}]")
+        # self._data['time'] = self._time_count
 
 
 
@@ -156,10 +200,10 @@ class GraphObject(object):
         self._lines = append_content(lines=self._lines, content=f"edge [ {make_property_list(self._theme['graph']['edge'])}; ]")
 
         # generate the header row
-        self.header_row()
+        self.process_header_row()
 
         # generate the data rows
-        self.process_rows()
+        self.process_data_rows()
 
         # rank rows
         self.rank_rows()
@@ -172,28 +216,24 @@ class GraphObject(object):
     
     ''' the header row - 0
     '''
-    def header_row(self):
+    def process_header_row(self):
         # the columns are to be found in theme['headers']
         self._lines = append_content(lines=self._lines, content='')
         self._lines = append_content(lines=self._lines, content='# row 0 - header')
         nodes = []
 
-        for k, v in self._fixed_nodes.items():
+        for k, v in self._theme['node-spec']['fixed-nodes'].items():
             id = f"_{self._current_row:03}_{k}"
             nodes.append({'id':id, 'label': v['label'], 'props': v['header-style']})
 
         self._lines = append_content(lines=self._lines, content='')
 
-        # now the time headers
-        time_header_prefix = time_nodes['header-label']
-        time_header_props = time_nodes['header-style']
-
         # add a blank 00 time node 
         nodes.append({})
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
-            label = time_header_prefix.format(t)
-            nodes.append({'id': id, 'label': label, 'props': time_header_props})
+            label = self._theme['node-spec']['time-nodes']['head-row']['label'].format(t)
+            nodes.append({'id': id, 'label': label, 'props': self._theme['node-spec']['time-nodes']['head-row']['style']})
 
         for node in nodes:
             if node:
@@ -205,18 +245,18 @@ class GraphObject(object):
 
     ''' data row - 1.....
     '''
-    def process_rows(self):
+    def process_data_rows(self):
         self._lines = append_content(lines=self._lines, content='')
 
-        for item in self._data['items']:
+        for item in self._items:
             self._current_row = self._current_row + 1
-            self.process_data_row(data=item)
+            self.process_data_row(item=item)
 
 
     ''' process a data row
     '''
-    def process_data_row(self, data):
-        level = data['levl']
+    def process_data_row(self, item):
+        level = item._levl
 
         self._lines = append_content(lines=self._lines, content='')
         self._lines = append_content(lines=self._lines, content=f"# row {self._current_row}")
@@ -224,13 +264,11 @@ class GraphObject(object):
 
 
         # the data nodes
-        for k, v in data.items():
-            if k in self._fixed_nodes:
-                column = self._fixed_nodes[k]
+        for k, v in item._data.items():
+            if k in self._theme['node-spec']['fixed-nodes']:
+                column = self._theme['node-spec']['fixed-nodes'][k]
                 id = f"_{self._current_row:03}_{k}"
-                # header_props = column['header-style']
-                props = column['row-styles'][f"L{level}"]
-                # props = {**header_props, **props}
+                props = column['level-styles'][f"L{level}"]
                 label = props['label'].format(v)
                 nodes.append({'id':id, 'label': label, 'props': props})
     
@@ -242,7 +280,7 @@ class GraphObject(object):
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
             label = ''
-            nodes.append({'id':id, 'label': label, 'props': time_nodes['row-style']})
+            nodes.append({'id':id, 'label': label, 'props': self._theme['node-spec']['time-nodes']['row-style']})
 
 
         # shape the time nodes so that they fill the time line
@@ -250,23 +288,23 @@ class GraphObject(object):
         self._lines = append_content(lines=self._lines, content=f"# time line(s) row {self._current_row}")
 
         # actual headers
-        for span in data['span']:
+        for span in item._spans:
             span_strt = span['strt']
             span_endt = span['endt']
 
             tail_node = nodes[time_node_strt + span_strt]
-            props = time_nodes['levels'][f"L{data['levl']}"]['types']['tail']
+            props = self._theme['node-spec']['time-nodes']['levels'][f"L{item._levl}"]['types']['tail']
             tail_node['label'] = props['label'].format(span_strt)
             tail_node['props'] = props
 
             head_node = nodes[time_node_strt + span_endt]
-            props = time_nodes['levels'][f"L{data['levl']}"]['types']['head']
+            props = self._theme['node-spec']['time-nodes']['levels'][f"L{item._levl}"]['types']['head']
             head_node['label'] = props['label'].format(span_endt)
             head_node['props'] = props
 
             for pos in range(span_strt+1, span_endt):
                 node = nodes[time_node_strt + pos]
-                props = time_nodes['levels'][f"L{data['levl']}"]['types']['edge']
+                props = self._theme['node-spec']['time-nodes']['levels'][f"L{item._levl}"]['types']['edge']
                 node['label'] = ''
                 node['props'] = props
 
@@ -284,10 +322,9 @@ class GraphObject(object):
 
 
         # process children if any
-        if 'items' in data:
-            for item in data['items']:
-                self._current_row = self._current_row + 1
-                self.process_data_row(data=item)
+        for child_item in item._items:
+            self._current_row = self._current_row + 1
+            self.process_data_row(item=child_item)
 
 
 
