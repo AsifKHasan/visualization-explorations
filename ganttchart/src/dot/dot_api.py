@@ -128,7 +128,6 @@ class GraphObject(object):
                     column_data['level-styles'][level] = {**self._theme['node-spec']['row-styles'][level], **fixed_nodes[column]['row-style']}
 
 
-
         # time nodes
         time_nodes = self._theme['node-spec']['time-nodes']
         time_nodes['head-row']['style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=time_nodes['head-row']['style'])}
