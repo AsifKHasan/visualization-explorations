@@ -102,7 +102,7 @@ node-spec:
             style:          width=0.30in; fontsize=9pt;
 
             # (Optional) - style for holidays
-            holiday-style:  fillcolor=#B0B0B0; shape=rectangle; 
+            holiday-style:  fillcolor=#B0B0B0; shape=rectangle; penwidth=0; 
         
         # used only for time data nodes
         data-row:

@@ -42,7 +42,6 @@ holiday-list:
     "2023-12-16":   Victory Day
     "2023-12-25":   Christmas Day
 
-
 # (Mandatory) - actual item (row) hierarchy. KEYs should be defined in theme as KEYs under [node-spec]:[fixed-nodes]:[]
 items:
 - hash:             A.

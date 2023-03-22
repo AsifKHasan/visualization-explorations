@@ -9,11 +9,52 @@ from helper.logger import *
 #   ----------------------------------------------------------------------------------------------------------------
 #   Dot objects wrappers
 #   ----------------------------------------------------------------------------------------------------------------
-HOLIDAYS = {}
 RANK_NODES = []
 POOL_LIST = []
 MAX_TIME = 1000
 MIN_TIME = 0
+
+THEME = None
+DATA = None
+CONSIDER_HOLIDAYS = None
+START_DATE = None
+
+
+''' is a day a holiday
+'''
+def is_holiday(day_number):
+    global START_DATE
+
+    if CONSIDER_HOLIDAYS == False:
+        return False
+
+    the_date = START_DATE + timedelta(days=day_number)
+
+    # if the week-day is a holiday
+    week_day = the_date.strftime('%a')
+    if week_day in DATA['holiday-list']['weekdays']:
+        date_str = the_date.strftime('%Y-%m-%d')
+        return True
+
+    # if this is a listed holiday
+    date_str = the_date.strftime('%Y-%m-%d')
+    if date_str in DATA['holiday-list']['dates']:
+        return True
+
+    return False
+
+
+''' adjust for holidays
+'''
+def adjust_for_holidays(strt, endt):
+    new_strt = strt
+    new_endt = endt
+
+    # TODO: 
+
+    return new_strt, new_endt
+
+
 
 ''' item object
 '''
@@ -23,7 +64,7 @@ class Item(object):
     def __init__(self, data, level):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
-        self._data = data
+        self._item_data = data
         self._levl = level
         self._time = 0
         self._strt = MAX_TIME
@@ -33,26 +74,28 @@ class Item(object):
 
 
     def process(self):
-        self._hide = self._data.get('hide', False)
-        self._hide_children = self._data.get('hide-children', False)
+        global CONSIDER_HOLIDAYS
+
+        self._hide = self._item_data.get('hide', False)
+        self._hide_children = self._item_data.get('hide-children', False)
 
         # we may not have span for parent items
-        if not 'hash' in self._data:
+        if not 'hash' in self._item_data:
             warn(f"item has no value for [hash]")
             self._hash = 'NA'
         else:
-            self._hash = self._data['hash']
+            self._hash = self._item_data['hash']
 
-        if not 'text' in self._data:
+        if not 'text' in self._item_data:
             warn(f"item has no value for [text]")
             self._text = 'MISSSING'
         else:
-            self._text = self._data['text']
+            self._text = self._item_data['text']
 
 
-        if 'span' in self._data:
+        if 'span' in self._item_data:
             # we have span, we need time, spans (list of strt, endt)
-            span_text = str(self._data['span'])
+            span_text = str(self._item_data['span'])
 
             # spans are list (separated by ,) of number pairs (separated by -)
             span_list = span_text.split(',')
@@ -62,28 +105,34 @@ class Item(object):
                     warn(f"span [{a_span}] is invalid for [{self._hash} {self._text}]")
                 else:
                     strt, endt = int(pair[0]), int(pair[1])
+                    # adjust for holidays
+                    if CONSIDER_HOLIDAYS:
+                        strt, endt = adjust_for_holidays(strt=strt, endt=endt)
+
                     self._spans.append({'strt': strt, 'endt': endt})
                     self._strt = min(self._strt, strt)
                     self._endt = max(self._endt, endt)
+
+
                     self._time = self._time + endt - strt + 1
 
 
         else:
-            if 'items' in self._data:
-                debug(f"[{self._data['hash']}] [{self._data['text']}] does not have any span. Calculating time, start, end from children")
+            if 'items' in self._item_data:
+                debug(f"[{self._item_data['hash']}] [{self._item_data['text']}] does not have any span. Calculating time, start, end from children")
             else:
-                warn(f"[{self._data['hash']}] [{self._data['text']}] does not have any span and there is no child. Can not calculate time, start, end")
+                warn(f"[{self._item_data['hash']}] [{self._item_data['text']}] does not have any span and there is no child. Can not calculate time, start, end")
 
         # if the item has a pool, append to pool list
-        if 'pool' in self._data:
-            if self._data['pool'] != '':
-                if self._data['pool'] not in POOL_LIST:
-                    POOL_LIST.append(self._data['pool'])
+        if 'pool' in self._item_data:
+            if self._item_data['pool'] != '':
+                if self._item_data['pool'] not in POOL_LIST:
+                    POOL_LIST.append(self._item_data['pool'])
 
 
         # process children if any
-        if 'items' in self._data:
-            for child_data in self._data['items']:
+        if 'items' in self._item_data:
+            for child_data in self._item_data['items']:
                 child = Item(data=child_data, level=self._levl + 1)
                 child.process()
                 self._strt = min(self._strt, child._strt)
@@ -97,9 +146,9 @@ class Item(object):
             self._spans.append({'strt': self._strt, 'endt': self._endt})
 
 
-        self._data['time'] = self._time
-        self._data['strt'] = self._strt
-        self._data['endt'] = self._endt
+        self._item_data['time'] = self._time
+        self._item_data['strt'] = self._strt
+        self._item_data['endt'] = self._endt
 
 
 
@@ -110,9 +159,14 @@ class GraphObject(object):
     '''
     def __init__(self, config, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        self._config = config
-        self._data = data
-        self._theme = self._config['theme']['theme-data']
+        global THEME
+        global DATA
+        global CONSIDER_HOLIDAYS
+        global START_DATE
+
+        # self._config = config
+        DATA = data
+        THEME = config['theme']['theme-data']
         self._lines = []
         self._current_row = 0
         self._items = []
@@ -123,41 +177,41 @@ class GraphObject(object):
     '''
     def parse_theme(self):
         # fixed nodes
-        self._theme['node-spec']['header-style'] = props_to_dict(text=self._theme['node-spec']['header-style'])
+        THEME['node-spec']['header-style'] = props_to_dict(text=THEME['node-spec']['header-style'])
 
         # how many levels we have defined?
         levels_defined = []
-        for level, level_data in self._theme['node-spec']['row-styles'].items():
+        for level, level_data in THEME['node-spec']['row-styles'].items():
             levels_defined.append(level)
-            self._theme['node-spec']['row-styles'][level] = props_to_dict(text=level_data)
+            THEME['node-spec']['row-styles'][level] = props_to_dict(text=level_data)
 
         # fixed node columns
-        fixed_nodes = self._theme['node-spec']['fixed-nodes']
+        fixed_nodes = THEME['node-spec']['fixed-nodes']
         for column, column_data in fixed_nodes['columns'].items():
             if 'header-style' in column_data:
-                column_data['header-style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=column_data['header-style'])}
+                column_data['header-style'] = {**THEME['node-spec']['header-style'], **props_to_dict(text=column_data['header-style'])}
             else:
-                # TODO warn
-                column_data['header-style'] = self._theme['node-spec']['header-style']
+                # TODO: warn
+                column_data['header-style'] = THEME['node-spec']['header-style']
 
             if 'row-style' in column_data:
-                column_data['row-style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=column_data['row-style'])}
+                column_data['row-style'] = {**THEME['node-spec']['header-style'], **props_to_dict(text=column_data['row-style'])}
             else:
-                # TODO warn
-                column_data['row-style'] = self._theme['node-spec']['header-style']
+                # TODO: warn
+                column_data['row-style'] = THEME['node-spec']['header-style']
 
             if 'level-styles' in column_data:
                 for level in levels_defined:
                     if level in column_data['level-styles']:
-                        column_data['level-styles'][level] = {**column_data['row-style'], **self._theme['node-spec']['row-styles'][level], **props_to_dict(text=column_data['level-styles'][level])}
+                        column_data['level-styles'][level] = {**column_data['row-style'], **THEME['node-spec']['row-styles'][level], **props_to_dict(text=column_data['level-styles'][level])}
                     else:
-                        column_data['level-styles'][level] = {**column_data['row-style'], **self._theme['node-spec']['row-styles'][level]}
+                        column_data['level-styles'][level] = {**column_data['row-style'], **THEME['node-spec']['row-styles'][level]}
 
             else:
-                # TODO warn
+                # TODO: warn
                 column_data['level-styles'] = {}
                 for level in levels_defined:
-                    column_data['level-styles'][level] = {**column_data['row-style'], **self._theme['node-spec']['row-styles'][level]}
+                    column_data['level-styles'][level] = {**column_data['row-style'], **THEME['node-spec']['row-styles'][level]}
 
         # pool-spec
         if 'pool-spec' in fixed_nodes and fixed_nodes['pool-spec']:
@@ -173,17 +227,17 @@ class GraphObject(object):
 
             else:
                 warn(f"[empty-pool] in [fixed-nodes][pool-spec] not defined in theme, disabling [pool-scheme]")
-                self._pool_scheme = false
+                self._pool_scheme = False
 
         else:
             warn(f"[fixed-nodes][pool-spec] not defined in theme, disabling [pool-scheme]")
-            self._pool_scheme = false
+            self._pool_scheme = False
 
 
 
         # time nodes
-        time_nodes = self._theme['node-spec']['time-nodes']
-        time_nodes['head-row']['style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=time_nodes['head-row']['style'])}
+        time_nodes = THEME['node-spec']['time-nodes']
+        time_nodes['head-row']['style'] = {**THEME['node-spec']['header-style'], **props_to_dict(text=time_nodes['head-row']['style'])}
         time_nodes['head-row']['holiday-style'] = props_to_dict(text=time_nodes['head-row']['holiday-style'])
 
         # time node has data-rows
@@ -227,87 +281,66 @@ class GraphObject(object):
 
             else:
                 warn(f"[empty-pool] in [time-nodes][pool-spec] not defined in theme, disabling [pool-scheme]")
-                self._pool_scheme = false
+                self._pool_scheme = False
 
         else:
             warn(f"[time-nodes][pool-spec] not defined in theme, disabling [pool-scheme]")
-            self._pool_scheme = false
+            self._pool_scheme = False
 
 
 
     ''' parse the data
     '''
     def parse_data(self):
+        global START_DATE
+    
         self._time_count = 0
 
-        self._show_pools = self._data.get('show-pools', [])
-        self._pool_scheme = self._data.get('pool-scheme', False)
-        self._consider_holidays = self._data.get('consider-holidays', False)
+        self._show_pools = DATA.get('show-pools', [])
+        self._pool_scheme = DATA.get('pool-scheme', False)
 
-        for item_data in self._data['items']:
+        CONSIDER_HOLIDAYS = DATA.get('consider-holidays', False)
+        START_DATE = DATA.get('start-date', None)
+
+        for item_data in DATA['items']:
             item = Item(data=item_data, level=0)
             item.process()
             self._items.append(item)
             self._time_count = max(self._time_count, item._time)
 
-        # self._data['time'] = self._time_count
         # get start date if any
-        self._start_date = self._data.get('start-date', None)
-        if self._start_date:
+        if START_DATE:
             try:
-                self._start_date = date.fromisoformat(self._start_date) - timedelta(days=1)
-                debug(f"[start-date] is [{self._start_date.strftime('%a, %b %d, %Y')}]")
+                START_DATE = date.fromisoformat(START_DATE) - timedelta(days=1)
+                debug(f"[start-date] is [{START_DATE.strftime('%a, %b %d, %Y')}]")
             except:
-                warn("[start-date] is invalid, ignoring ...")
-                self._start_date = None
-                self._consider_holidays = False
+                warn(f"[start-date] is invalid, ignoring ...")
+                START_DATE = None
+                CONSIDER_HOLIDAYS = False
+        else:
+            warn(f"[start-date] is missing, ignoring ...")
+            CONSIDER_HOLIDAYS = False
 
-        if self._consider_holidays:
-            if 'holiday-list' in self._data:
-                if 'weekdays' not in self._data['holiday-list'] or not self._data['holiday-list']['weekdays']:
-                    self._data['holiday-list']['weekdays'] = []
 
-                else:
-                    debug(f"found {self._data['holiday-list']['weekdays']} as holidays")
-
-                if 'dates' not in self._data['holiday-list'] or not self._data['holiday-list']['dates']:
-                    self._data['holiday-list']['dates'] = {}
+        if CONSIDER_HOLIDAYS:
+            if 'holiday-list' in DATA:
+                if 'weekdays' not in DATA['holiday-list'] or not DATA['holiday-list']['weekdays']:
+                    DATA['holiday-list']['weekdays'] = []
 
                 else:
-                    debug(f"found {len(self._data['holiday-list']['dates'].keys())} listed holiday(s)")
-                    for k, v in self._data['holiday-list']['dates'].items():
+                    debug(f"found {DATA['holiday-list']['weekdays']} as holidays")
+
+                if 'dates' not in DATA['holiday-list'] or not DATA['holiday-list']['dates']:
+                    DATA['holiday-list']['dates'] = {}
+
+                else:
+                    debug(f"found {len(DATA['holiday-list']['dates'].keys())} listed holiday(s)")
+                    for k, v in DATA['holiday-list']['dates'].items():
                         debug(f"  [{k}] [{v}]")
 
             else:
                 warn("[holiday-list] is not defined, will not consider holidays ...")
-                self._consider_holidays = False
-
-
-
-    ''' create holidays
-    '''
-    def is_holiday(self, day_number):
-        if self._consider_holidays == False:
-            return False
-
-        if self._start_date is None:
-            return False
-
-        the_date = self._start_date + timedelta(days=day_number)
-
-        # if the week-day is a holiday
-        week_day = the_date.strftime('%a')
-        if week_day in self._data['holiday-list']['weekdays']:
-            date_str = the_date.strftime('%Y-%m-%d')
-            return True
-
-        # if this is a listed holiday
-        date_str = the_date.strftime('%Y-%m-%d')
-        if date_str in self._data['holiday-list']['dates']:
-            return True
-
-        return False
-        
+                CONSIDER_HOLIDAYS = False
 
 
 
@@ -323,14 +356,14 @@ class GraphObject(object):
         self.parse_data()
 
         # graph attributes
-        self._lines = append_content(lines=self._lines, content=make_property_lines(self._theme['graph']['attributes']))
+        self._lines = append_content(lines=self._lines, content=make_property_lines(THEME['graph']['attributes']))
         self._lines = append_content(lines=self._lines, content='')
 
         # node properties
-        self._lines = append_content(lines=self._lines, content=f"node [ {make_property_list(self._theme['graph']['node'])}; ]")
+        self._lines = append_content(lines=self._lines, content=f"node [ {make_property_list(THEME['graph']['node'])}; ]")
 
         # edge properties
-        self._lines = append_content(lines=self._lines, content=f"edge [ {make_property_list(self._theme['graph']['edge'])}; ]")
+        self._lines = append_content(lines=self._lines, content=f"edge [ {make_property_list(THEME['graph']['edge'])}; ]")
 
         # generate the header row
         self.process_header_row()
@@ -358,7 +391,7 @@ class GraphObject(object):
         
         nodes = []
 
-        for k, v in self._theme['node-spec']['fixed-nodes']['columns'].items():
+        for k, v in THEME['node-spec']['fixed-nodes']['columns'].items():
             id = f"_{self._current_row:03}_{k}"
             props = v['header-style']
             if 'label' in props:
@@ -374,12 +407,12 @@ class GraphObject(object):
         nodes.append({})
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
-            label = self._theme['node-spec']['time-nodes']['head-row']['label'].format(t)
-            props = self._theme['node-spec']['time-nodes']['head-row']['style']
+            label = THEME['node-spec']['time-nodes']['head-row']['label'].format(t)
+            props = THEME['node-spec']['time-nodes']['head-row']['style']
 
             # this could be a holiday
-            if self.is_holiday(day_number=t):
-                props = {**props, **self._theme['node-spec']['time-nodes']['head-row']['holiday-style']}
+            if is_holiday(day_number=t):
+                props = {**props, **THEME['node-spec']['time-nodes']['head-row']['holiday-style']}
 
             nodes.append({'id': id, 'label': label, 'props': props})
 
@@ -415,13 +448,13 @@ class GraphObject(object):
 
         nodes = []
         # the fixed nodes
-        for k in self._theme['node-spec']['fixed-nodes']['columns'].keys():
-            column = self._theme['node-spec']['fixed-nodes']['columns'][k]
+        for k in THEME['node-spec']['fixed-nodes']['columns'].keys():
+            column = THEME['node-spec']['fixed-nodes']['columns'][k]
             props = column['level-styles'][f"L{item._levl}"]
             id = f"_{self._current_row:03}_{k}"
 
-            if k in item._data:
-                label = props['label'].format(item._data[k])
+            if k in item._item_data:
+                label = props['label'].format(item._item_data[k])
             else:
                 # the key was not found in data, we need an empty node
                 label = ''
@@ -435,8 +468,8 @@ class GraphObject(object):
 
 
         # if the item is not in show-pools list, do not do anything
-        if 'pool' in item._data:
-            if self._show_pools and len(self._show_pools) > 0 and not item._data['pool'] in self._show_pools:
+        if 'pool' in item._item_data:
+            if self._show_pools and len(self._show_pools) > 0 and not item._item_data['pool'] in self._show_pools:
                 return
 
         time_node_strt = len(nodes)
@@ -446,7 +479,7 @@ class GraphObject(object):
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
             label = ''
-            nodes.append({'type': 'time-node', 'id':id, 'label': label, 'props': self._theme['node-spec']['time-nodes']['data-row']['base-style']})
+            nodes.append({'type': 'time-node', 'id':id, 'label': label, 'props': THEME['node-spec']['time-nodes']['data-row']['base-style'], 'day-number': t})
 
 
         # shape the time nodes so that they fill the time line
@@ -461,37 +494,37 @@ class GraphObject(object):
 
             if span_strt != MAX_TIME and span_endt != MIN_TIME:
                 tail_node = nodes[time_node_strt + span_strt]
-                props = self._theme['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['tail']
+                props = THEME['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['tail']
                 tail_node['label'] = props['label'].format(span_strt)
                 tail_node['props'] = props
 
                 head_node = nodes[time_node_strt + span_endt]
-                props = self._theme['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['head']
+                props = THEME['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['head']
                 head_node['label'] = props['label'].format(span_endt)
                 head_node['props'] = props
 
                 for pos in range(span_strt+1, span_endt):
                     node = nodes[time_node_strt + pos]
-                    props = self._theme['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['edge']
+                    props = THEME['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['edge']
                     node['label'] = ''
                     node['props'] = props
 
 
-        # at this point apply the pool specific styles
+        # apply pool specific styles
         if self._pool_scheme:
             # we select a pool style based on pool and apply to each node props
             if 'pool' not in item._data or item._data['pool'] is None or item._data['pool'] == '':
-                pool_props_fixed = self._theme['node-spec']['fixed-nodes']['pool-spec']['empty-pool']
-                pool_props_time = self._theme['node-spec']['time-nodes']['pool-spec']['empty-pool']
+                pool_props_fixed = THEME['node-spec']['fixed-nodes']['pool-spec']['empty-pool']
+                pool_props_time = THEME['node-spec']['time-nodes']['pool-spec']['empty-pool']
             else:
                 # find the index of the pool in POOL_LIST
                 index = POOL_LIST.index(item._data['pool'])
 
-                index_fixed = index % len(self._theme['node-spec']['fixed-nodes']['pool-spec']['pool-styles'])
-                pool_props_fixed = self._theme['node-spec']['fixed-nodes']['pool-spec']['pool-styles'][index_fixed]
+                index_fixed = index % len(THEME['node-spec']['fixed-nodes']['pool-spec']['pool-styles'])
+                pool_props_fixed = THEME['node-spec']['fixed-nodes']['pool-spec']['pool-styles'][index_fixed]
 
-                index_time = index % len(self._theme['node-spec']['time-nodes']['pool-spec']['pool-styles'])
-                pool_props_time = self._theme['node-spec']['time-nodes']['pool-spec']['pool-styles'][index_time]
+                index_time = index % len(THEME['node-spec']['time-nodes']['pool-spec']['pool-styles'])
+                pool_props_time = THEME['node-spec']['time-nodes']['pool-spec']['pool-styles'][index_time]
 
             for node in nodes:
                 if node:
@@ -506,6 +539,15 @@ class GraphObject(object):
 
         else:
             pass
+
+
+        # apply holiday styles
+        props_holiday = THEME['node-spec']['time-nodes']['head-row']['holiday-style']
+        for node in nodes:
+            if node:
+                if node['type'] == 'time-node':
+                    if is_holiday(day_number=node['day-number']):
+                        node['props'] = {**node['props'], **props_holiday}
 
 
         # generate the nodes
