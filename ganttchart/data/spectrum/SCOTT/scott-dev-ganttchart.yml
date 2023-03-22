@@ -1,146 +1,226 @@
-theme:        task-week-default
+# (Mandatory)       - use task theme where time is in weeks
+theme:              task-day-default
+
+# (Optional)        - show only the pools listed. If the list is empty, show all pools
+show-pools:
+
+# (Optional)        - whether to override styling by pool value, default is false
+pool-scheme:        false
+
+# (Optional)        - for dating the times, required if we want to take holidays into account when time scale is in days
+start-date:         "2023-04-02"
+
+# (Optional)        - whether to consider holidays. Default is false. Note it is meaningful only if [start-date] is valid
+consider-holidays:  true
+
+# (Optional)        - these days are holidays. Valid only when [consider-holidays] is true. dates must be yyyy-mm-dd format
+holiday-list:
+  weekdays:
+  - Fri
+  - Sat
+
+  dates:
+    "2023-02-21":   Shaheed Day
+    "2023-03-08":   Shab e-Barat
+    "2023-03-17":   Sheikh Mujibur Rahman's Birthday
+    "2023-03-26":   Independence Day
+    "2023-04-14":   Pohela Boishakh
+    "2023-04-19":   Laylat al-Qadr
+    "2023-04-21":   Jumatul Bidah, Eid ul-Fitr
+    "2023-04-22":   Eid ul-Fitr
+    "2023-04-23":   Eid ul-Fitr
+    "2023-05-01":   May Day
+    "2023-05-05":   Buddha Purnima
+    "2023-06-28":   Eid ul-Adha
+    "2023-06-29":   Eid ul-Adha
+    "2023-06-30":   Eid ul-Adha
+    "2023-07-29":   Ashura
+    "2023-08-15":   National Mourning Day
+    "2023-09-06":   Shuba Janmashtami
+    "2023-09-28":   Eid-e-Milad un-Nabi
+    "2023-10-24":   Vijaya Dashami
+    "2023-12-16":   Victory Day
+    "2023-12-25":   Christmas Day
+
+
+# (Mandatory) - actual item (row) hierarchy. KEYs should be defined in theme as KEYs under [node-spec]:[fixed-nodes]:[]
 items:
-  - hash:     A
-    text:     Toll Operation System
-    span:     1-22
-
+- hash:             A.
+  text:             Toll Plaza Operations
+  # (Optional) - hide=true hides the item and all its children, default is false
+  hide:             false
+  items:
+  - hash:             A1.
+    text:             Operator Toll Collection
+    # (Optional) - hide-children=true hides child items (if any) and all nested children, default is false
+    hide-children:    false
     items:
-    - hash:     A1
-      text:     Web Frontend
-      span:     1-12
+    - hash:             A1.01
+      text:             Time & Lane-constrained Login
+      pool:             Hasib
+      span:             1-5
+    - hash:             A1.02
+      text:             Display Session Countdown Timer
+      pool:             Hasib
+      span:             1-4
+    - hash:             A1.03
+      text:             Auto & Manual-logout
+      pool:             Hasib
+      span:             1-5
+    - hash:             A1.04
+      text:             Operator & System Activity Logger
+      pool:             Nahin
+      span:             1-5
+    - hash:             A1.05
+      text:             Display Vehicle Snapshot
+      pool:             Nahin
+      span:             1-5
+    - hash:             A1.06
+      text:             Operator Initiated Vehicle Snapshot
+      pool:             Nahin
+      span:             1-2
+    - hash:             A1.07
+      text:             Display Vehicle LPN
+      pool:             Nahin
+      span:             1-2
+    - hash:             A1.08
+      text:             Input Vehicle LPN
+      pool:             Nahin
+      span:             1-2
+    - hash:             A1.09
+      text:             Display Vehicle Class
+      pool:             Nahin
+      span:             1-2
+    - hash:             A1.10
+      text:             Select Vehicle Class
+      pool:             Nahin
+      span:             1-2
+    - hash:             A1.11
+      text:             Pass Through Vehicle
+      pool:             Nahin
+      span:             1-4
+        
+  - hash:             A2.
+    text:             Toll Both Device Switch
 
-    - hash:     A2
-      text:     System Backend
-      span:     1-12
-    
-    - hash:     A3
-      text:     App for RHD (MIS and Analytics)
-      span:     5-22
-    
-      items:
-      - hash:     A3.a
-        text:     Android App
-        span:     5-22
-    
-      - hash:     A3.b
-        text:     iOS App
-        span:     5-22
-
-  - hash:     B
-    text:     Reporting and Analytics
-    span:     7-24
-    
+- hash:             B.
+  text:             Toll Plaza Management
+  items:
+  - hash:             B1.
+    text:             Lane Management
+    pool:             Hasib
+    span:             1-3
+  - hash:             B2.
+    text:             Operator Management
+    pool:             Nahin
+    span:             1-7
+  - hash:             B3.
+    text:             Cashbox Management
+    pool:             Hasib
+    span:             1-5
+  - hash:             B4.
+    text:             Roster/Calendar Management
+    pool:             Hasib
+    span:             1-15
+  - hash:             B5.
+    text:             Account Management
+    hide-children:    false
     items:
-    - hash:     B1
-      text:     Operational Reporting
-      span:     7-14
+    - hash:             B5.01
+      text:             Cash Reconciliation
+      pool:             Nahin
+      span:             1-7
+    - hash:             B5.02
+      text:             Expense Account
+      pool:             Nahin
+      span:             1-5
+    - hash:             B5.03
+      text:             Bank Deposit
+      pool:             Farhan
+      span:             1-5
+    - hash:             B5.04
+      text:             Petty Cash
+      pool:             Farhan
+      span:             1-5
+    - hash:             B5.05
+      text:             Cash In/Out
+      pool:             Farhan
+      span:             1-5
+
+  - hash:             B6.
+    text:             Shift Management
+    items:
+    - hash:             B6.01
+      text:             Shift Definition
+      pool:             Hasib
+      span:             1-5
+    - hash:             B6.02
+      text:             Shift Assignment
+      pool:             Hasib
+      span:             1-5
+    - hash:             B6.03
+      text:             Shift Scheduling
+      pool:             Hasib
+      span:             1-15
+
+  - hash:             B7.
+    text:             Reporting and Analytics
+    pool:             Nahin
+    span:             1-25
+
+  - hash:             B8.
+    text:             User Management
+    items:
+    - hash:             B8.01
+      text:             User Registration
+      pool:             Farhan
+      span:             1-10
+    - hash:             B8.02
+      text:             User Login/Logout
+      pool:             Farhan
+      span:             1-5
     
-    - hash:     B2
-      text:     MIS and Analytics for RHD
-      span:     7-24
+  - hash:             B9.
+    text:             Device Inventory
+    pool:             Farhan
+    span:             1-15
+  - hash:             B10.
+    text:             Dashboard
+    pool:             Farhan
+    span:             1-15
 
-  - hash:     C
-    text:     AI/ML Components
-    span:     1-26
+- hash:             C.
+  text:             Device Integration
+  items:
+  - hash:             C1.
+    text:             Boom Barrier
+  - hash:             C2.
+    text:             Laser Sensor
+  - hash:             C3.
+    text:             Printer
+  - hash:             C4.
+    text:             RFID Reader
+  - hash:             C5.
+    text:             ANPR Camera
+  - hash:             C6.
+    text:             Classification Cameras
+  - hash:             C7.
+    text:             Loop Coil
+  - hash:             C8.
+    text:             Integrated Control Box
 
-    items:
-    - hash:     C1
-      text:     Number Plate Reading and Classification
-      span:     3-26
-
-      items:
-      - hash:     C1.a
-        text:     Image Collection, cleanup - ~100K
-        span:     3-8
-
-      - hash:     C1.b
-        text:     Data/Image labelling
-        span:     5-10
-
-      - hash:     C1.c
-        text:     Model, Environment Prep (4 iterations)
-        span:     7-8, 12-13, 17-18, 22-23
-
-      - hash:     C1.d
-        text:     Train and Tune (4 iterations)
-        span:     9-10, 14-15, 19-20, 24-25
-
-      - hash:     C1.e
-        text:     Test and benchmark (4 iterations)
-        span:     11-11, 16-16, 21-21, 26-26
-
-    - hash:     C2
-      text:     Vehicle Classification from Image
-      span:     1-26
-
-      items:
-      - hash:     C2.a
-        text:     Camera positioning trial
-        span:     1-4
-
-      - hash:     C2.b
-        text:     Image Collection, cleanup - ~100K
-        span:     3-8
-
-      - hash:     C2.c
-        text:     Data/Image labelling
-        span:     5-10
-
-      - hash:     C2.d
-        text:     Model, Environment Prep (4 iterations)
-        span:     7-8, 12-13, 17-18, 22-23
-
-      - hash:     C2.e
-        text:     Train and Tune (4 iterations)
-        span:     9-10, 14-15, 19-20, 24-25
-
-      - hash:     C2.f
-        text:     Test and benchmark (4 iterations)
-        span:     11-11, 16-16, 21-21, 26-26
-
-  - hash:     D
-    text:     Integrations
-    span:     5-24
-
-    items:
-    - hash:     D1
-      text:     External Systems Integration
-      span:     5-24
-
-      items:
-      - hash:     D1.a
-        text:     EKPAY
-        span:     5-16
-
-      - hash:     D1.b
-        text:     BRTA
-        span:     17-24
-
-      - hash:     D1.c
-        text:     EC
-        span:     21-24
-
-    - hash:     D2
-      text:     Device and Equipment Integration
-      span:     1-12
-
-      items:
-      - hash:     D2.a
-        text:     Camera
-        span:     1-4
-
-      - hash:     D2.b
-        text:     Printer
-        span:     2-2
-
-      - hash:     D2.c
-        text:     Loop Coil
-        span:     3-10
-
-      - hash:     D2.d
-        text:     Boom Barrier
-        span:     3-10
-
-      - hash:     D2.e
-        text:     RFID
-        span:     5-12
+- hash:             D.
+  text:             External Integration
+  items:
+  - hash:             D1.
+    text:             BRTA API
+    pool:             Nahin
+    span:             1-5
+  - hash:             D2.
+    text:             Payment Gateway
+    pool:             Hasib
+    span:             1-10
+  - hash:             D3.
+    text:             Unified Toll Management System (RHD)
+    pool:             Farhan
+    span:             1-10

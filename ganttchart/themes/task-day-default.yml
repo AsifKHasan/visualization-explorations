@@ -66,7 +66,7 @@ node-spec:
 
             # (Mandatory) time KEY must not be used in data yml, it is implicitly used by the code
             time:
-                label:          Weeks
+                label:          Days
                 header-style:   width=0.60in;
                 row-style:      width=0.60in; shape=none; label="{}";
 
@@ -98,13 +98,19 @@ node-spec:
     time-nodes:
         # used only for time header nodes
         head-row:
-            label:          w{:02}
+            label:          "{}"
             style:          width=0.30in; fontsize=9pt;
+
+            # (Optional) - style for holidays
+            holiday-style:  fillcolor=#B0B0B0; shape=rectangle; 
         
         # used only for time data nodes
         data-row:
             # common styles for time data nodes
             base-style:     width=0.30in; height=0.02in; style="solid, filled"; fontcolor=#FFFFFF; shape=none; fontname=FreeSans; penwidth=0.75; label="";
+            
+            # (Optional) - style for holidays
+            holiday-style:  fillcolor=#808080;
 
             # style overrides for time data nodes based on whether the node type is a head, tail or edge node
             type-styles:         
