@@ -57,7 +57,6 @@ class Item(object):
                 self._endt = max(self._endt, endt)
                 self._time = self._time + endt - strt + 1
 
-            # print(f"{data['hash']} [time={data['time']}, strt={data['strt']}, endt={data['endt']}]")
 
         else:
             if 'items' in self._data:
@@ -70,10 +69,21 @@ class Item(object):
             for child_data in self._data['items']:
                 child = Item(data=child_data, level=self._levl + 1)
                 child.process()
+                self._strt = min(self._strt, child._strt)
+                self._endt = max(self._endt, child._endt)
+                self._items.append(child)
 
-        self._data['span'] = self._time
+            self._time = self._endt - self._strt + 1
+
+            # we ignore the spans and calculate the spans based on children
+            self._spans = []
+            self._spans.append({'strt': self._strt, 'endt': self._endt})
+
+
+        self._data['time'] = self._time
         self._data['strt'] = self._strt
         self._data['endt'] = self._endt
+
 
 
 ''' Dot base object
@@ -104,34 +114,38 @@ class GraphObject(object):
             levels_defined.append(level)
             self._theme['node-spec']['row-styles'][level] = props_to_dict(text=level_data)
 
+        # fixed nodes
         fixed_nodes = self._theme['node-spec']['fixed-nodes']
         for column, column_data in fixed_nodes.items():
-            if 'header-style' in fixed_nodes[column]:
-                fixed_nodes[column]['header-style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=fixed_nodes[column]['header-style'])}
+            if 'header-style' in column_data:
+                column_data['header-style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=column_data['header-style'])}
             else:
                 # TODO warn
-                fixed_nodes[column]['header-style'] = self._theme['node-spec']['header-style']
+                column_data['header-style'] = self._theme['node-spec']['header-style']
 
-            if 'row-style' in fixed_nodes[column]:
-                fixed_nodes[column]['row-style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=fixed_nodes[column]['row-style'])}
+            if 'row-style' in column_data:
+                column_data['row-style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=column_data['row-style'])}
             else:
                 # TODO warn
-                fixed_nodes[column]['row-style'] = self._theme['node-spec']['header-style']
+                column_data['row-style'] = self._theme['node-spec']['header-style']
 
             if 'level-styles' in column_data:
-                for level, level_data in column_data['level-styles'].items():
-                    column_data['level-styles'][level] = {**fixed_nodes[column]['row-style'], **props_to_dict(text=column_data['level-styles'][level])}
+                for level in levels_defined:
+                    if level in column_data['level-styles']:
+                        column_data['level-styles'][level] = {**column_data['row-style'], **self._theme['node-spec']['row-styles'][level], **props_to_dict(text=column_data['level-styles'][level])}
+                    else:
+                        column_data['level-styles'][level] = {**column_data['row-style'], **self._theme['node-spec']['row-styles'][level]}
+
             else:
                 # TODO warn
                 column_data['level-styles'] = {}
                 for level in levels_defined:
-                    column_data['level-styles'][level] = {**self._theme['node-spec']['row-styles'][level], **fixed_nodes[column]['row-style']}
+                    column_data['level-styles'][level] = {**column_data['row-style'], **self._theme['node-spec']['row-styles'][level]}
 
 
         # time nodes
         time_nodes = self._theme['node-spec']['time-nodes']
         time_nodes['head-row']['style'] = {**self._theme['node-spec']['header-style'], **props_to_dict(text=time_nodes['head-row']['style'])}
-
 
         # time node has data-rows
         time_nodes['data-row']['base-style'] = props_to_dict(text=time_nodes['data-row']['base-style'])
@@ -139,26 +153,25 @@ class GraphObject(object):
         # data rows have node types edge/head/tail
         for ntype in ['edge', 'tail', 'head']:
             if ntype in time_nodes['data-row']['type-styles']:
-                time_nodes['data-row']['type-styles'][ntype] = {**time_nodes['data-row']['base-style'], **props_to_dict(text=time_nodes['data-row']['type-styles'][ntype])}
+                time_nodes['data-row']['type-styles'][ntype] = props_to_dict(text=time_nodes['data-row']['type-styles'][ntype])
 
             else:
-                warn(f"no [{ntype}] style defined for time nodes, using the base style")
-                time_nodes['data-row']['type-styles'][ntype] = time_nodes['data-row']['base-style']
+                warn(f"no [{ntype}] default style defined for time nodes")
+                time_nodes['data-row']['type-styles'][ntype] = {}
 
 
         # data-rows may differ by levels
         for level, level_data in time_nodes['data-row']['level-styles'].items():
-            level_props = props_to_dict(text=level_data['style'])
-            time_nodes['data-row']['level-styles'][level]['style'] = level_props
+            time_nodes['data-row']['level-styles'][level]['style'] = {**time_nodes['data-row']['base-style'], **props_to_dict(text=level_data['style'])}
 
             # iterate over types
             for ntype in ['edge', 'tail', 'head']:
                 if ntype in level_data:
-                    time_nodes['data-row']['level-styles'][level][ntype] = {**level_props, **props_to_dict(time_nodes['data-row']['level-styles'][level][ntype])}
+                    time_nodes['data-row']['level-styles'][level][ntype] = {**time_nodes['data-row']['level-styles'][level]['style'], **time_nodes['data-row']['type-styles'][ntype], **props_to_dict(time_nodes['data-row']['level-styles'][level][ntype])}
 
                 else:
                     warn(f"no [{ntype}] style defined for level [{level}] time nodes, using the base style")
-                    time_nodes['data-row']['level-styles'][level][ntype] = level_props
+                    time_nodes['data-row']['level-styles'][level][ntype] = {**time_nodes['data-row']['level-styles'][level]['style'], **time_nodes['data-row']['type-styles'][ntype]}
 
 
 
@@ -255,31 +268,27 @@ class GraphObject(object):
     ''' process a data row
     '''
     def process_data_row(self, item):
-        level = item._levl
-
         self._lines = append_content(lines=self._lines, content='')
         self._lines = append_content(lines=self._lines, content=f"# row {self._current_row}")
         nodes = []
 
-
-        # the data nodes
+        # the fixed nodes
         for k, v in item._data.items():
             if k in self._theme['node-spec']['fixed-nodes']:
                 column = self._theme['node-spec']['fixed-nodes'][k]
+                props = column['level-styles'][f"L{item._levl}"]
                 id = f"_{self._current_row:03}_{k}"
-                props = column['level-styles'][f"L{level}"]
                 label = props['label'].format(v)
                 nodes.append({'id':id, 'label': label, 'props': props})
     
         time_node_strt = len(nodes)
 
         # the time nodes
-        # add a blank 00 time node 
         nodes.append({})
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
             label = ''
-            nodes.append({'id':id, 'label': label, 'props': self._theme['node-spec']['time-nodes']['row-style']})
+            nodes.append({'id':id, 'label': label, 'props': self._theme['node-spec']['time-nodes']['data-row']['base-style']})
 
 
         # shape the time nodes so that they fill the time line
@@ -292,23 +301,20 @@ class GraphObject(object):
             span_endt = span['endt']
 
             tail_node = nodes[time_node_strt + span_strt]
-            props = self._theme['node-spec']['time-nodes']['levels'][f"L{item._levl}"]['types']['tail']
+            props = self._theme['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['tail']
             tail_node['label'] = props['label'].format(span_strt)
             tail_node['props'] = props
 
             head_node = nodes[time_node_strt + span_endt]
-            props = self._theme['node-spec']['time-nodes']['levels'][f"L{item._levl}"]['types']['head']
+            props = self._theme['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['head']
             head_node['label'] = props['label'].format(span_endt)
             head_node['props'] = props
 
             for pos in range(span_strt+1, span_endt):
                 node = nodes[time_node_strt + pos]
-                props = self._theme['node-spec']['time-nodes']['levels'][f"L{item._levl}"]['types']['edge']
+                props = self._theme['node-spec']['time-nodes']['data-row']['level-styles'][f"L{item._levl}"]['edge']
                 node['label'] = ''
                 node['props'] = props
-
-
-            # self._lines = append_content(lines=self._lines, content=make_an_edge(head_node=head_node['id'], tail_node=tail_node['id'], props=edge_style))
 
 
         # generate the nodes

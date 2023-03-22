@@ -28,9 +28,9 @@ node-spec:
     header-style:       height=0.30in; fontsize=11pt; fontname=FreeSans; shape=rectangle; fontcolor=#000000; fillcolor=#B0B0B0; color=#B0B0B0; penwidth=0.75;
 
     row-styles:
-        L0:             height=0.20in; fontcolor=#005249; fontsize=12pt;
-        L1:             height=0.16in; fontcolor=#4E0550; fontsize=10pt;
-        L2:             height=0.12in; fontcolor=#CA6641; fontsize=08pt;
+        L0:             height=0.20in; fontcolor=#005249; fontsize=12pt; fillcolor=#FFFFFF; 
+        L1:             height=0.16in; fontcolor=#4E0550; fontsize=10pt; fillcolor=#FFFFFF; 
+        L2:             height=0.12in; fontcolor=#CA6641; fontsize=08pt; fillcolor=#FFFFFF; 
 
     fixed-nodes:
         hash:
