@@ -1,6 +1,9 @@
 # (Mandatory)       - use task theme where time is in weeks
 theme:              task-day-default
 
+# (Mandatory)       - view can be day/week/month/year. There is no default
+view:               day
+
 # (Optional)        - show only the pools listed. If the list is empty, show all pools
 show-pools:
 
@@ -104,6 +107,7 @@ items:
 
 - hash:             B.
   text:             Toll Plaza Management
+  hide:             false
   items:
   - hash:             B1.
     text:             Lane Management
@@ -190,6 +194,7 @@ items:
 
 - hash:             C.
   text:             Device Integration
+  hide:             false
   items:
   - hash:             C1.
     text:             Boom Barrier
@@ -210,6 +215,7 @@ items:
 
 - hash:             D.
   text:             External Integration
+  hide:             false
   items:
   - hash:             D1.
     text:             BRTA API

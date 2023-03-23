@@ -58,12 +58,6 @@ node-spec:
                     L1:         label="    {}\l";
                     L2:         label="        {}\l";
 
-            # (Optional) - another data column
-            pool:
-                label:          Who
-                header-style:   width=1.00in;
-                row-style:      width=1.00in; shape=none; label="{};
-
             # (Mandatory) time KEY must not be used in data yml, it is implicitly used by the code
             time:
                 label:          Weeks

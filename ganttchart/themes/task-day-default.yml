@@ -27,7 +27,7 @@ graph:
 # (Mandatory) - all node specific configurations
 node-spec:
     # (Mandatory) - header node specific styles
-    header-style:       height=0.30in; fontsize=11pt; fontname=FreeSans; shape=underline; fontcolor=#000000; fillcolor=#FFFFFF; color=#B0B0B0; penwidth=0.75;
+    header-style:       height=0.80in; fontsize=11pt; fontname=FreeSans; shape=underline; fontcolor=#000000; fillcolor=#FFFFFF; color=#B0B0B0; penwidth=0.75;
 
     # (Mandatory) - data (row) node specific styles
     row-styles:

@@ -16,40 +16,55 @@ MIN_TIME = 0
 
 THEME = None
 DATA = None
+VIEW = None
 CONSIDER_HOLIDAYS = None
 START_DATE = None
+
+
+''' weekday in short format
+'''
+def long_date(day_number):
+    global START_DATE
+
+    the_date = START_DATE + timedelta(days=day_number)
+    if START_DATE:
+        return the_date.strftime('%a')[0], the_date.strftime('%b'), the_date.strftime('%d'), the_date.strftime('%y')
+    else:
+        return ''
+
 
 
 ''' is a day a holiday
 '''
 def is_holiday(day_number):
     global START_DATE
+    global CONSIDER_HOLIDAYS
 
     if CONSIDER_HOLIDAYS == False:
         return False
 
     the_date = START_DATE + timedelta(days=day_number)
+    date_str = the_date.strftime('%Y-%m-%d')
 
     # if the week-day is a holiday
     week_day = the_date.strftime('%a')
     if week_day in DATA['holiday-list']['weekdays']:
-        date_str = the_date.strftime('%Y-%m-%d')
         return True
 
     # if this is a listed holiday
-    date_str = the_date.strftime('%Y-%m-%d')
     if date_str in DATA['holiday-list']['dates']:
         return True
 
     return False
 
 
+
 ''' get the next working day
 '''
 def next_workday(day_number):
-    
+    next_work_day = day_number
     while True:
-        next_work_day = day_number + 1
+        next_work_day = next_work_day + 1
         if not is_holiday(day_number=next_work_day):
             return next_work_day
 
@@ -268,11 +283,17 @@ class GraphObject(object):
         # time nodes
         time_nodes = THEME['node-spec']['time-nodes']
         time_nodes['head-row']['style'] = {**THEME['node-spec']['header-style'], **props_to_dict(text=time_nodes['head-row']['style'])}
-        time_nodes['head-row']['holiday-style'] = props_to_dict(text=time_nodes['head-row']['holiday-style'])
+        if 'holiday-style' in time_nodes['head-row'] and time_nodes['head-row']['holiday-style'] is not None:
+            time_nodes['head-row']['holiday-style'] = props_to_dict(text=time_nodes['head-row']['holiday-style'])
+        else:
+            time_nodes['head-row']['holiday-style'] = {}
 
         # time node has data-rows
         time_nodes['data-row']['base-style'] = props_to_dict(text=time_nodes['data-row']['base-style'])
-        time_nodes['data-row']['holiday-style'] = props_to_dict(text=time_nodes['data-row']['holiday-style'])
+        if 'holiday-style' in time_nodes['data-row'] and time_nodes['data-row']['holiday-style'] is not None:
+            time_nodes['data-row']['holiday-style'] = props_to_dict(text=time_nodes['data-row']['holiday-style'])
+        else:
+            time_nodes['data-row']['holiday-style'] = {}
 
         # data rows have node types edge/head/tail
         for ntype in ['edge', 'tail', 'head']:
@@ -322,6 +343,7 @@ class GraphObject(object):
     ''' parse the data
     '''
     def parse_data(self):
+        global VIEW
         global START_DATE
         global CONSIDER_HOLIDAYS
     
@@ -330,6 +352,7 @@ class GraphObject(object):
         self._show_pools = DATA.get('show-pools', [])
         self._pool_scheme = DATA.get('pool-scheme', False)
 
+        VIEW = DATA.get('view')
         CONSIDER_HOLIDAYS = DATA.get('consider-holidays', False)
         START_DATE = DATA.get('start-date', None)
 
@@ -439,7 +462,13 @@ class GraphObject(object):
         nodes.append({})
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
-            label = THEME['node-spec']['time-nodes']['head-row']['label'].format(t)
+
+            if VIEW == 'day' and START_DATE:
+                short_weekday, mmm, dd, yyyy = long_date(day_number=t)
+                label = THEME['node-spec']['time-nodes']['head-row']['label'].format(f"{mmm}\\n{dd}\\n'{yyyy}\\n{short_weekday}\\n{t}")
+            else:
+                label = THEME['node-spec']['time-nodes']['head-row']['label'].format(t)
+            
             props = THEME['node-spec']['time-nodes']['head-row']['style']
 
             # this could be a holiday
@@ -545,12 +574,12 @@ class GraphObject(object):
         # apply pool specific styles
         if self._pool_scheme:
             # we select a pool style based on pool and apply to each node props
-            if 'pool' not in item._data or item._data['pool'] is None or item._data['pool'] == '':
+            if 'pool' not in item._item_data or item._item_data['pool'] is None or item._item_data['pool'] == '':
                 pool_props_fixed = THEME['node-spec']['fixed-nodes']['pool-spec']['empty-pool']
                 pool_props_time = THEME['node-spec']['time-nodes']['pool-spec']['empty-pool']
             else:
                 # find the index of the pool in POOL_LIST
-                index = POOL_LIST.index(item._data['pool'])
+                index = POOL_LIST.index(item._item_data['pool'])
 
                 index_fixed = index % len(THEME['node-spec']['fixed-nodes']['pool-spec']['pool-styles'])
                 pool_props_fixed = THEME['node-spec']['fixed-nodes']['pool-spec']['pool-styles'][index_fixed]
