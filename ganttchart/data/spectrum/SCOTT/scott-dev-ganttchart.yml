@@ -5,7 +5,7 @@ theme:              task-day-default
 view:               day
 
 # (Optional)        - show only the pools listed. If the list is empty, show all pools
-show-pools:
+visible-pools:
 
 # (Optional)        - whether to override styling by pool value, default is false
 pool-scheme:        false
@@ -64,11 +64,11 @@ items:
     - hash:             A1.02
       text:             Display Session Countdown Timer
       pool:             Hasib
-      span:             1-4
+      span:             6-10
     - hash:             A1.03
       text:             Auto & Manual-logout
       pool:             Hasib
-      span:             1-5
+      span:             11-15
     - hash:             A1.04
       text:             Operator & System Activity Logger
       pool:             Nahin
@@ -76,31 +76,31 @@ items:
     - hash:             A1.05
       text:             Display Vehicle Snapshot
       pool:             Nahin
-      span:             1-5
+      span:             6-10
     - hash:             A1.06
       text:             Operator Initiated Vehicle Snapshot
       pool:             Nahin
-      span:             1-2
+      span:             11-12
     - hash:             A1.07
       text:             Display Vehicle LPN
       pool:             Nahin
-      span:             1-2
+      span:             13-14
     - hash:             A1.08
       text:             Input Vehicle LPN
       pool:             Nahin
-      span:             1-2
+      span:             15-16
     - hash:             A1.09
       text:             Display Vehicle Class
       pool:             Nahin
-      span:             1-2
+      span:             17-18
     - hash:             A1.10
       text:             Select Vehicle Class
       pool:             Nahin
-      span:             1-2
+      span:             19-20
     - hash:             A1.11
       text:             Pass Through Vehicle
       pool:             Nahin
-      span:             1-4
+      span:             21-24
         
   - hash:             A2.
     text:             Toll Both Device Switch
@@ -112,19 +112,19 @@ items:
   - hash:             B1.
     text:             Lane Management
     pool:             Hasib
-    span:             1-3
+    span:             16-18
   - hash:             B2.
     text:             Operator Management
     pool:             Nahin
-    span:             1-7
+    span:             25-33
   - hash:             B3.
     text:             Cashbox Management
     pool:             Hasib
-    span:             1-5
+    span:             19-23
   - hash:             B4.
     text:             Roster/Calendar Management
     pool:             Hasib
-    span:             1-15
+    span:             24-38
   - hash:             B5.
     text:             Account Management
     hide-children:    false
@@ -132,11 +132,11 @@ items:
     - hash:             B5.01
       text:             Cash Reconciliation
       pool:             Nahin
-      span:             1-7
+      span:             34-40
     - hash:             B5.02
       text:             Expense Account
       pool:             Nahin
-      span:             1-5
+      span:             41-45
     - hash:             B5.03
       text:             Bank Deposit
       pool:             Farhan
@@ -144,11 +144,11 @@ items:
     - hash:             B5.04
       text:             Petty Cash
       pool:             Farhan
-      span:             1-5
+      span:             6-10
     - hash:             B5.05
       text:             Cash In/Out
       pool:             Farhan
-      span:             1-5
+      span:             11-15
 
   - hash:             B6.
     text:             Shift Management
@@ -156,20 +156,20 @@ items:
     - hash:             B6.01
       text:             Shift Definition
       pool:             Hasib
-      span:             1-5
+      span:             39-43
     - hash:             B6.02
       text:             Shift Assignment
       pool:             Hasib
-      span:             1-5
+      span:             44-48
     - hash:             B6.03
       text:             Shift Scheduling
       pool:             Hasib
-      span:             1-15
+      span:             49-63
 
   - hash:             B7.
     text:             Reporting and Analytics
     pool:             Nahin
-    span:             1-25
+    span:             46-70
 
   - hash:             B8.
     text:             User Management
@@ -177,20 +177,20 @@ items:
     - hash:             B8.01
       text:             User Registration
       pool:             Farhan
-      span:             1-10
+      span:             16-25
     - hash:             B8.02
       text:             User Login/Logout
       pool:             Farhan
-      span:             1-5
+      span:             26-30
     
   - hash:             B9.
     text:             Device Inventory
     pool:             Farhan
-    span:             1-15
+    span:             31-45
   - hash:             B10.
     text:             Dashboard
     pool:             Farhan
-    span:             1-15
+    span:             46-50
 
 - hash:             C.
   text:             Device Integration
@@ -220,11 +220,11 @@ items:
   - hash:             D1.
     text:             BRTA API
     pool:             Nahin
-    span:             1-5
+    span:             71-75
   - hash:             D2.
     text:             Payment Gateway
     pool:             Hasib
-    span:             1-10
+    span:             64-73
   - hash:             D3.
     text:             Unified Toll Management System (RHD)
     pool:             Farhan

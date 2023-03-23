@@ -349,7 +349,7 @@ class GraphObject(object):
     
         self._time_count = 0
 
-        self._show_pools = DATA.get('show-pools', [])
+        self._visible_pools = DATA.get('visible-pools', [])
         self._pool_scheme = DATA.get('pool-scheme', False)
 
         VIEW = DATA.get('view')
@@ -528,9 +528,9 @@ class GraphObject(object):
             nodes.append({'type': 'fixed-node', 'id': id, 'label': label, 'props': props})
 
 
-        # if the item is not in show-pools list, do not do anything
+        # if the item is not in visible-pools list, do not do anything
         if 'pool' in item._item_data:
-            if self._show_pools and len(self._show_pools) > 0 and not item._item_data['pool'] in self._show_pools:
+            if self._visible_pools and len(self._visible_pools) > 0 and not item._item_data['pool'] in self._visible_pools:
                 return
 
         time_node_strt = len(nodes)
