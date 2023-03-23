@@ -44,13 +44,42 @@ def is_holiday(day_number):
     return False
 
 
+''' get the next working day
+'''
+def next_workday(day_number):
+    
+    while True:
+        next_work_day = day_number + 1
+        if not is_holiday(day_number=next_work_day):
+            return next_work_day
+
+
+
 ''' adjust for holidays
 '''
 def adjust_for_holidays(strt, endt):
     new_strt = strt
     new_endt = endt
 
-    # TODO: 
+    diff = endt - strt
+
+    # strt day must not be a holiday
+    if is_holiday(day_number=new_strt):
+        new_strt = next_workday(day_number=new_strt)
+        new_endt = new_strt + diff
+
+    # we are assured that now the start is not on a holiday, we should validate the subsequent says sequentially
+    current_day = new_strt + 1
+    while current_day <= new_endt:
+
+        if is_holiday(day_number=current_day):
+            new_current_day = next_workday(day_number=current_day)
+            days_added = (new_current_day - current_day)
+            new_endt = new_endt + days_added
+            current_day = current_day + days_added
+
+        else:
+            current_day = current_day + 1
 
     return new_strt, new_endt
 
@@ -71,6 +100,7 @@ class Item(object):
         self._endt = MIN_TIME
         self._spans = []
         self._items = []
+
 
 
     def process(self):
@@ -293,6 +323,7 @@ class GraphObject(object):
     '''
     def parse_data(self):
         global START_DATE
+        global CONSIDER_HOLIDAYS
     
         self._time_count = 0
 
@@ -301,12 +332,6 @@ class GraphObject(object):
 
         CONSIDER_HOLIDAYS = DATA.get('consider-holidays', False)
         START_DATE = DATA.get('start-date', None)
-
-        for item_data in DATA['items']:
-            item = Item(data=item_data, level=0)
-            item.process()
-            self._items.append(item)
-            self._time_count = max(self._time_count, item._time)
 
         # get start date if any
         if START_DATE:
@@ -341,6 +366,13 @@ class GraphObject(object):
             else:
                 warn("[holiday-list] is not defined, will not consider holidays ...")
                 CONSIDER_HOLIDAYS = False
+
+
+        for item_data in DATA['items']:
+            item = Item(data=item_data, level=0)
+            item.process()
+            self._items.append(item)
+            self._time_count = max(self._time_count, item._time)
 
 
 
