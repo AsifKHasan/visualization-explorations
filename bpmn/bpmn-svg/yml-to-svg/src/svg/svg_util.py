@@ -57,6 +57,10 @@ class SvgGroup(object):
         return new_group
 
 
+''' draws a text inside a rectamgular area
+'''
+def a_text():
+
 
 ''' draws a rectangle
 '''
