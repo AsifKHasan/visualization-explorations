@@ -27,11 +27,11 @@ class SvgFromYml(object):
 
 		# load theme
 		self._CONFIG['theme']['theme-name'] = self._data.get('theme', 'default')
-		self.load_theme()
+		theme = self.load_theme()
 
 		# bpmn-helper
 		self._CONFIG['files']['output-svg'] = f"{self._CONFIG['dirs']['output-dir']}/{self._yml_name_only}.svg"
-		bpmn_helper = BpmnHelper(self._CONFIG)
+		bpmn_helper = BpmnHelper(config=self._CONFIG, theme=self._theme)
 		bpmn_helper.generate_and_save(bpmn_data=self._data)
 		self.tear_down()
 
@@ -54,14 +54,14 @@ class SvgFromYml(object):
 		self._CONFIG['theme']['theme-path'] = self._CONFIG['theme']['theme-dir'] / f"{self._CONFIG['theme']['theme-name']}.yml"
 		try:
 			info(f"using theme '{self._CONFIG['theme']['theme-name']}'")
-			self._CONFIG['theme']['theme-data'] = yaml.load(open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
+			self._theme = yaml.load(open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
 		except Exception as e:
 			warn(f"theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Using 'default' theme")
 			try:
 				self._CONFIG['theme']['theme-name'] = 'default'
 				self._CONFIG['theme']['theme-path'] = self._CONFIG['theme']['theme-dir'] / f"{self._CONFIG['theme']['theme-name']}.yml"
-				self._CONFIG['theme']['theme-data'] = yaml.load(open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
+				self._theme = yaml.load(open(self._CONFIG['theme']['theme-path'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
 			except Exception as e:
 				error(f"theme {self._CONFIG['theme']['theme-name']} not found or not a theme at path [{self._CONFIG['theme']['theme-path']}]. Exiting...")

@@ -1,7 +1,11 @@
+#!/usr/bin/env python3
 import time
 from datetime import datetime
 from termcolor import colored
 import colorama
+
+''' logging utils
+'''
 
 colorama.init()
 

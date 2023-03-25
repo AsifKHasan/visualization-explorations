@@ -1,0 +1,93 @@
+graph pizza_orders {
+    label = "Pizza Order Process Modeling"
+    _ [hide_labels="false";]
+
+    lane customer {
+        label = "Customer"
+        _ []
+
+        pool pizza_customer {
+            label = "Pizza Customer"
+            _ []
+
+            start                           hungry                              [label="Hungry";]
+            task 		                        goto_pizza_shop		                  [label="Goto pizza shop";]
+            task                            select_pizza                        [label="আমি";]
+            task                            order_pizza                         [label="";]
+            eventBased                      on_order                            [label="Ordered"; label_pos="bottom";]
+            throwMessage                    pizza_received                      [label="";]
+            timer                           timer_45_mins                       [label="45 Minutes";]
+            task                            ask_for_pizza                       [label="";]
+            task                            eat_pizza                           [label="";]
+            task                            pay_for_pizza                       [label="";]
+            end                             hunger_satisfied                    [label="Hunger Satisfied";]
+
+            hungry                          --> goto_pizza_shop                 [label="";]
+            goto_pizza_shop                 --> select_pizza                    [label="";]
+            select_pizza                    --> order_pizza                     [label="";]
+            order_pizza                     --> on_order                        [label="";]
+            on_order                        --> pizza_received                  [label="";]
+            pizza_received                  --> pay_for_pizza                   [label="";]
+            pay_for_pizza                   --> eat_pizza                       [label="";]
+            eat_pizza                       --> hunger_satisfied                [label="";]
+            on_order                        --> timer_45_mins                   [label="";]
+            timer_45_mins                   --> ask_for_pizza                   [label="";]
+            ask_for_pizza                   --> on_order                        [label="";]
+
+            ask_for_pizza                   --> timer_45_mins                        [label="";]
+        }
+    }
+
+    lane pizza_store {
+        label = "Pizza Store"
+        _ []
+
+        pool receptionist {
+            label = "Receptionist"
+            _ []
+
+            startMessage                    order_received                      [label="Order Received";]
+            parallel                        on_order_received                   [label="";]
+            throwMessage                    where_is_pizza                      [label="Where is Pizza?"; label_pos="bottom";]
+            task                            deal_with_customer                  [label="";]
+
+            order_received                  --> on_order_received               [label="";]
+            on_order_received               --> where_is_pizza                  [label="";]
+            where_is_pizza                  --> deal_with_customer              [label="";]
+            deal_with_customer              --> where_is_pizza                  [label="";]
+            on_order_received               --> deal_with_customer              [label="";]
+        }
+
+        pool cook {
+            label = "Pizza Cook"
+            _ [move_x="200";]
+
+            task                            bake_pizza                          [label="";]
+        }
+
+        pool delivery_person {
+            label = "Delivery Person"
+            _ [move_x="310";]
+
+            task                            deliver_pizza                       [label="";]
+            task                            collect_payment                     [label="";]
+            endTerminate                    end_terminate                       [label="";]
+
+            deliver_pizza                   --> collect_payment                 [label="";]
+            collect_payment                 --> end_terminate                   [label="";]
+        }
+
+        on_order_received               --> bake_pizza                      [label="";]
+        bake_pizza                      --> deliver_pizza                   [label="";]
+        where_is_pizza                  --> deliver_pizza                   [label="";]
+    }
+
+    order_pizza                     --> bake_pizza                      [label="";]
+    order_pizza                     ~~> order_received                  [label="pizza order";]
+    #ask_for_pizza                   ~~> where_is_pizza                  [label="";]
+    #pay_for_pizza                   ~~> collect_payment                 [label="money";]
+    #deal_with_customer              ~~> ask_for_pizza                   [label="";]
+    #deliver_pizza                   ~~> pizza_received                  [label="pizza";]
+    #collect_payment                 ~~> pay_for_pizza                   [label="receipt";]
+    hunger_satisfied                --> end_terminate                   [label="";]
+}

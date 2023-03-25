@@ -2,35 +2,35 @@
 
 ''' BPMN wrapper objects
 '''
-
-import time
-import yaml
-import datetime
-
-from bpmn.bpmn_api import BpmnObject
+from bpmn.bpmn_api import BpmnRoot
 from bpmn.bpmn_util import *
 from svg.svg_api import SvgObject
+from helper.theme import *
 from helper.logger import *
 
 class BpmnHelper(object):
 
     ''' constructor
     '''
-    def __init__(self, config):
+    def __init__(self, config, theme):
         self._config = config
+        self._theme = theme
 
 
     ''' generate and save the SVG
     '''
     def generate_and_save(self, bpmn_data):
-        # create BPMN object
-        bpmn_object = BpmnObject(config=self._config)
+        # parse the theme
+        self._theme = parse_theme(theme=self._theme)
 
-        # prepare BPMN data
-        prepared_data = bpmn_object.prepare_data(source_data=bpmn_data)
+        # create BPMN root
+        bpmn_object = BpmnRoot(config=self._config, theme=self._theme)
+
+        # parse BPMN data
+        bpmn_object.parse(source_data=bpmn_data)
 
         # create SVG object
-        svg_object = SvgObject(config=self._config)
+        svg_object = SvgObject(config=self._config, theme=self._theme)
 
-        # generate svg from data
-        svg_object.to_svg(bpmn_data=prepared_data)
+        # generate svg from bpmn root
+        svg_object.to_svg(bpmn_object=bpmn_object)

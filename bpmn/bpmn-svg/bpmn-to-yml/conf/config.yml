@@ -1,0 +1,9 @@
+# copy this file as config.yml and do not commit the copied file
+
+dirs:
+  # all outputs go here
+  output-dir:            "../../out"
+
+theme:
+  # all themes go here
+  theme-dir:            "../themes"

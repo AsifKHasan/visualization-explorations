@@ -1,21 +1,106 @@
 defs:
-  style:
-    text-anchor:        "middle"
-    dominant-baseline:  "middle"
-    font-family:        "arial"
-    font-size:          12
-    font-weight:        "normal"
-    fill:               "#02066F"
-    stroke:             "#000000"
-    stroke-width:       1
-  
-  text:
+  # default shape to apply, can be overridden by individual objects
+  shape:          rect
 
+  # default style to apply, can be overridden by individual objects
+  style:          text-anchor="middle" dominant-baseline="middle" font-family="arial" font-size="12" font-weight="normal" fill="#02066F" stroke="#000000" stroke-width="1"
+  
+  # default margins to apply, can be overridden by individual objects
+  margin:         north="10" south="10" west="10" east="10"
+
+  # default wrap to apply, can be overridden by individual objects. 0 means no wrap
+  text-wrap:      30
+
+  # label position relative to object in/north/south/east/west
+  pos:            in
+
+  # label vertical alignment north, middle, south
+  valign:         middle
+
+  # label horizontal alignment west, center, east
+  halign:         center
+
+  # rotation angle (clockwise) of the label in degrees
+  rotation:       0
+
+  # min width default is 20
+  min-width:      20
+  
+  # min height default is 20
+  min-height:     20
+
+  # rx default is 2
+  rx:             2
+
+  # ry default is 2
+  ry:             2
+
+# default for text (labels)
+text:
+  # shape of the label, normally rect
+  shape:          rect
+
+  # style for the label, overrides attributes from defs::style
+  style:        
+
+  # margin from the containing shape
+  margin:         north="10" south="10" west="10" east="10"
+
+  # wrap the label at 0 means no wrap
+  text-wrap:      30
+
+  # label position relative to object in/north/south/east/west
+  pos:            in
+
+  # label vertical alignment north, middle, south
+  valign:         middle
+
+  # label horizontal alignment west, center, east
+  halign:         middle
+
+  # rotation angle (clockwise) of the label in degrees
+  rotation:       0
+  
+  # min width default is 20
+  min-width:      100
+  
+  # min height default is 20
+  min-height:     20
+
+  # min height default is 20
+  min-height:     20
+
+# bpmn attributes
 bpmn:
+  shape:          rect
+  style:          fill="#FFFFFF" stroke="#000000" stroke-width="1"
+  min-width:      400
+  min-height:     200
+  rx:             0
+  ry:             0
+
+  # bpmn label, overrides defs::label
+  text:
+    style:          font-size="24" font-weight="bold"
+    rotation:       -90
+
+# pool attributes
 pool:
+
+# lane attributes
 lane:
+
+# band attributes
 band:
+
+# node attributes
 node:
+
+# edge attributes
 edge:
+
+# edge head attributes
 head:
+
+# edge tail attributes
 tail:
