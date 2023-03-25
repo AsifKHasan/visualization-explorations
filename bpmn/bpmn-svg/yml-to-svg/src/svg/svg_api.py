@@ -10,19 +10,42 @@ from helper.logger import *
 #   ----------------------------------------------------------------------------------------------------------------
 
 
-''' Dot base object
+''' SVG base object
 '''
-class DotObject(object):
+class SvgObject(object):
     ''' constructor
     '''
-    def __init__(self, config, data):
+    def __init__(self, config):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         self._config = config
-        self._data = data
-        self._lines = []
-        self._hide_label = self._data.get('hide-label', False)
-        self._class = None
-        self._label = None
+        self._bpmn_g = None
+
+        self._canvas_width = 100
+        self._canvas_height = 100
+
+
+
+    ''' create the BPMN root group
+    '''
+    def create_root_group(self):
+        self._bpmn_g = a_circle(radius=10, spec={})
+
+
+
+    ''' generate the SVG from data
+    '''
+    def to_svg(self, bpmn_data):
+
+        # bpmn to root group
+        self.create_root_group()
+
+
+        # wrap in a SVG drawing
+        svg = Svg(0, 0, width=self._canvas_width, height=self._canvas_height)
+        svg.addElement(self._bpmn_g)
+
+        # finally save the svg
+        svg.save(self._config['files']['output-svg'], encoding="UTF-8")
 
 
 

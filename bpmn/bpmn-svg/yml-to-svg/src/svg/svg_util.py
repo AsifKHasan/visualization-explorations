@@ -8,57 +8,22 @@ import random
 import string
 import textwrap
 
+from pysvg.builders import *
+from pysvg.shape import *
+from pysvg.structure import *
+from pysvg.style import *
+from pysvg.text import *
+
 from helper.logger import *
 
-''' convert a text to a valid Dot identifier
+''' returns a tuple (svg group, group_width, group_height)
 '''
-def text_to_identifier(text):
-    # Replace SPACE with _
-    id = re.sub('[ ]+', '_', text)
+def a_circle(radius, spec):
+    svg_group = G()
 
-    # Remove invalid characters
-    id = re.sub('[^0-9a-zA-Z_]', '', id)
+    circle_svg = Circle(cx=radius, cy=radius, r=radius)
+    circle_svg.set_style(StyleBuilder(spec.get('style', {})).getStyle())
 
-    # prepoend an underscore if the first char is a digit
-    id = re.sub('^([0-9])', r'_\1', id)
-
-    # replace uppercase with a lowercase
-    id = id.lower()
-
-    return id
-
-
-''' get a random string
-'''
-def random_string(length=12):
-    letters = string.ascii_uppercase
-    return ''.join(random.choice(letters) for i in range(length))
-
-
-''' text to dictionary
-    "fillcolor: #F0F0F0, fontcolor: #202020" is converted to {"fillcolor": "#F0F0F0", "fontcolor": "#202020"}
-'''
-def text_to_dict(text):
-    output_dict = {}
-    pairs = text.split(',')
-    for pair in pairs:
-        kv = pair.split(':')
-        if len(kv) == 2:
-            output_dict[kv[0].strip()] = kv[1].strip()
-            
-    return output_dict
-
-
-
-''' props to dictionary
-    "fillcolor: #F0F0F0, fontcolor: #202020" is converted to {"fillcolor": "#F0F0F0", "fontcolor": "#202020"}
-'''
-def props_to_dict(text):
-    output_dict = {}
-    pairs = text.split(';')
-    for pair in pairs:
-        kv = pair.split('=')
-        if len(kv) == 2:
-            output_dict[kv[0].strip()] = kv[1].strip().strip('"').strip("'")
-            
-    return output_dict
+    # add to group
+    svg_group.addElement(circle_svg)
+    return svg_group

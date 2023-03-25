@@ -5,8 +5,8 @@ import yaml
 import argparse
 from pathlib import Path
 
-from svg.svg_helper import SvgHelper
-from svg.svg_util import *
+from bpmn.bpmn_helper import BpmnHelper
+# from svg.svg_util import *
 from helper.logger import *
 
 
@@ -22,17 +22,17 @@ class SvgFromYml(object):
 
 	def run(self):
 		self.set_up()
-		self._CONFIG['files']['input-yml'] = f"{self._CONFIG['dirs']['data-dir']}/{self._yml_name}.yml"
+		self._CONFIG['files']['input-yml'] = f"{self._CONFIG['dirs']['output-dir']}/{self._yml_name}.yml"
 		self._data = yaml.load(open(self._CONFIG['files']['input-yml'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
 
 		# load theme
 		self._CONFIG['theme']['theme-name'] = self._data.get('theme', 'default')
 		self.load_theme()
 
-		# svg-helper
+		# bpmn-helper
 		self._CONFIG['files']['output-svg'] = f"{self._CONFIG['dirs']['output-dir']}/{self._yml_name_only}.svg"
-		svg_helper = SvgHelper(self._CONFIG)
-		svg_helper.generate_and_save(self._data)
+		bpmn_helper = BpmnHelper(self._CONFIG)
+		bpmn_helper.generate_and_save(bpmn_data=self._data)
 		self.tear_down()
 
 

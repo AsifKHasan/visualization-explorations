@@ -1,10 +1,8 @@
 # copy this file as config.yml and do not commit the copied file
 
 dirs:
-  # all yml input data are supposed to be here
-  data-dir:            "../data"
   # all outputs go here
-  output-dir:            "../out"
+  output-dir:            "../../out"
 
 theme:
   # all themes go here
