@@ -17,49 +17,118 @@ from pysvg.text import *
 from helper.geometry import *
 from helper.logger import *
 
+HALIGN_TO_SVG = {
+    "center":       "50%",
+    "west":         "10%",
+    "east":         "90%",
+}
+
+VALIGN_TO_SVG = {
+    "middle":       "50%",
+    "north":        "10%",
+    "south":        "90%",
+}
+
+
+ROTATION_TO_ANGLE = {
+    "left":         -90,
+    "right":        90,
+    "flip":         180
+}
+
 ''' SVG group wrapper
 '''
 class SvgGroup(object):
     ''' constructor
     '''
-    def __init__(self, group, width, height):
+    def __init__(self, g, width, height):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        self.g, self.width, self.height = group, width, height
+        self.g, self.width, self.height = g, width, height
 
     
     ''' add group to the right
     '''
-    def group_horizontally(self, group):
+    def group_horizontally(self, svg_group):
+        if not isinstance(svg_group, SvgGroup):
+            raise TypeError
+
         new_group = G()
         new_group.addElement(self.g)
 
-        group_pos_xy = Point(self.width, 0)
+        xy = Point(self.width, 0)
         transformer = TransformBuilder()
-        transformer.setTranslation(group_pos_xy)
-        group.set_transform(transformer.getTransform())
-        new_group.addElement(group)
+        transformer.setTranslation(xy)
+        svg_group.g.set_transform(transformer.getTransform())
+        new_group.addElement(svg_group.g)
 
-        return new_group
+        width = self.width + svg_group.width
+        height = max(self.height, svg_group.height)
+
+        return SvgGroup(g=new_group, width=width, height=height)
 
 
     ''' add group to the bottom
     '''
-    def group_vertically(self, group):
+    def group_vertically(self, svg_group):
+        if not isinstance(svg_group, SvgGroup):
+            raise TypeError
+
         new_group = G()
         new_group.addElement(self.g)
 
-        group_pos_xy = Point(0, self.height)
+        xy = Point(0, self.height)
         transformer = TransformBuilder()
-        transformer.setTranslation(group_pos_xy)
-        group.set_transform(transformer.getTransform())
-        new_group.addElement(group)
+        transformer.setTranslation(xy)
+        svg_group.g.set_transform(transformer.getTransform())
+        new_group.addElement(svg_group.g)
 
-        return new_group
+        width = max(self.width, svg_group.width)
+        height = self.height + svg_group.height
+
+        return SvgGroup(g=new_group, width=width, height=height)
 
 
-''' draws a text inside a rectamgular area
+''' draws a text inside a rectangular area
 '''
-def a_text():
+def a_text(text, width, height, spec):
+    # wrap if specified
+    wrap = int(spec['text-wrap'])
+    if wrap:
+        text_lines = textwrap.wrap(text=text, width=wrap, break_long_words=False)
+    else:
+        text_lines = [text]
+
+    # create the rect
+    svg_group = a_rect(width=width, height=height, rx=spec['rx'], ry=spec['ry'], style=spec['style'])
+
+    # TODO: allow for margins
+
+    # alignments
+    x = HALIGN_TO_SVG[spec['halign']]
+    y = VALIGN_TO_SVG[spec['valign']]
+    dx = 15
+
+    # create the texts
+    for t in text_lines:
+        svg_t = Text(content=t, x=x, y=y, dx=dx)
+        svg_t.set_style(StyleBuilder(spec['style']).getStyle())
+        svg_group.g.addElement(svg_t)
+
+
+    # TODO: rotate
+    new_width, new_height = width, height
+    rotation = spec['rotation']
+    if rotation != 'none':
+        transformer = TransformBuilder()
+        transformer.setRotation(ROTATION_TO_ANGLE[rotation])
+        svg_group.g.set_transform(transformer.getTransform())
+
+        if rotation in ['left', 'right']:
+            new_width, new_height = height, width
+
+
+    return SvgGroup(g=svg_group.g, width=new_width, height=new_height)
+
 
 
 ''' draws a rectangle
@@ -73,7 +142,7 @@ def a_rect(width, height, rx, ry, style):
     # add to group
     g.addElement(svg)
 
-    return g
+    return SvgGroup(g=g, width=width, height=height)
 
 
 ''' draws a circle
@@ -88,7 +157,7 @@ def a_circle(radius, style):
     # add to group
     g.addElement(svg)
 
-    return g
+    return SvgGroup(g=g, width=radius*2, height=radius*2)
 
 
 ''' return dimension with margins added

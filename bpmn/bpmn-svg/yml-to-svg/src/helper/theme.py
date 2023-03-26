@@ -68,7 +68,7 @@ def parse_theme_defs(data):
     parsed_data['halign'] = data.get('halign', 'center')
 
     #  rotation defaults to 0
-    parsed_data['rotation'] = int(data.get('rotation', 0))
+    parsed_data['rotation'] = data.get('rotation', 'none')
 
     #  min-width defaults to 20
     parsed_data['min-width'] = int(data.get('min-width', 20))
