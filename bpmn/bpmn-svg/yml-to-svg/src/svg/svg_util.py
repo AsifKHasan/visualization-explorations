@@ -14,6 +14,7 @@ from pysvg.structure import *
 from pysvg.style import *
 from pysvg.text import *
 
+from helper.util import *
 from helper.geometry import *
 from helper.logger import *
 
@@ -49,12 +50,19 @@ class SvgGroup(object):
     ''' translate
     '''
     def translate(self, x, y):
-        print(self.g.get_transform())
         xy = Point(x, y)
         transformer = TransformBuilder()
         transformer.setTranslation(xy)
-        self.g.set_transform(transformer.getTransform() + ' ' + self.g.get_transform())
+        self.g.set_transform(transformer.getTransform() + str(self.g.get_transform() or ''))
 
+
+
+    ''' rotate
+    '''
+    def rotate(self, angle):
+        transformer = TransformBuilder()
+        transformer.setRotation(angle)
+        self.g.set_transform(transformer.getTransform() + str(self.g.get_transform() or ''))
 
 
     ''' add group to the right
@@ -66,10 +74,8 @@ class SvgGroup(object):
         new_group = G()
         new_group.addElement(self.g)
 
-        xy = Point(self.width, 0)
-        transformer = TransformBuilder()
-        transformer.setTranslation(xy)
-        svg_group.g.set_transform(transformer.getTransform())
+        svg_group.translate(x=self.width, y=0)
+
         new_group.addElement(svg_group.g)
 
         width = self.width + svg_group.width
@@ -87,10 +93,8 @@ class SvgGroup(object):
         new_group = G()
         new_group.addElement(self.g)
 
-        xy = Point(0, self.height)
-        transformer = TransformBuilder()
-        transformer.setTranslation(xy)
-        svg_group.g.set_transform(transformer.getTransform())
+        svg_group.translate(x=0, y=self.height)
+
         new_group.addElement(svg_group.g)
 
         width = max(self.width, svg_group.width)
@@ -102,37 +106,51 @@ class SvgGroup(object):
 ''' draws a text inside a rectangular area
 '''
 def a_text(text, width, height, spec):
-    # wrap if specified
-    wrap = int(spec['text-wrap'])
-    if wrap > 0:
-        text_lines = textwrap.wrap(text=text, width=wrap, break_long_words=False)
+    # whether wrapping is required
+    text_pixels = text_size_in_pixels(text=text, font_family=spec['label-style']['font-family'], font_size=int(spec['label-style']['font-size']), font_weight=spec['label-style']['font-weight'], stroke_width=int(spec['label-style']['stroke-width']))
+
+    if text_pixels[0] > width:
+        # wrap if specified
+        wrap = int(spec['text-wrap'])
+        if wrap > 0:
+            text_lines = textwrap.wrap(text=text, width=wrap, break_long_words=False)
+        else:
+            text_lines = [text]
+
     else:
+        # no need to wrap
         text_lines = [text]
 
+
     # create the rect
-    svg_group = a_rect(width=width, height=height, rx=spec['rx'], ry=spec['ry'], style=spec['style'])
+    svg_group = a_rect(width=width, height=height, rx=spec['rx'], ry=spec['ry'], style=spec['shape-style'])
 
     # TODO: allow for margins
 
     # alignments
-    x = HALIGN_TO_SVG[spec['halign']]
-    y = VALIGN_TO_SVG[spec['valign']]
-    dx = 15
+    x = width / 2
+    y = height / 2
+
+    # HACK: calculate a proper dy from font-size
+    font_size = int(spec['label-style']['font-size'])
+    dy = font_size * 1.1
+    the_range = balanced_range(len(text_lines))
+
 
     # create the texts
+    i = 0
     for t in text_lines:
-        svg_t = Text(content=t, x=x, y=y, dx=dx)
-        svg_t.set_style(StyleBuilder(spec['style']).getStyle())
+        svg_t = Text(content=t, x=x, y=y, dy=dy * the_range[i])
+        svg_t.set_style(StyleBuilder(spec['label-style']).getStyle())
         svg_group.g.addElement(svg_t)
+        i = i + 1
 
 
     # TODO: rotate
     new_width, new_height = width, height
     rotation = spec['rotation']
     if rotation != 'none':
-        transformer = TransformBuilder()
-        transformer.setRotation(ROTATION_TO_ANGLE[rotation])
-        svg_group.g.set_transform(transformer.getTransform())
+        svg_group.rotate(angle=ROTATION_TO_ANGLE[rotation])
 
         if rotation in ['left', 'right']:
             new_width, new_height = height, width

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import importlib
-from pprint import pprint
 from bpmn.bpmn_api import *
 from svg.svg_util import *
 from helper.logger import *
@@ -61,26 +60,35 @@ class BpmnSvg(SvgObject):
     '''
     def attach_label(self, attach_to_g):
         # label rect height and width depends on block height and width, label position and label rotation
-        pos = self._theme['bpmn']['text']['pos']
+        pos = self._theme['bpmn']['label']['pos']
 
         # based on position, groups will be placed
-        print(f"label to {pos}")
         if pos == 'in':
             # just embed the text into the attach group
             attach_to_g.g.addElement(text_g.g)
             new_g = attach_to_g
 
         elif pos == 'north':
+            # width is attach object's width, height is text's min-height
+            rect_width, rect_height = self._width, self._theme['bpmn']['label']['min-height']
+
+            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
+
             new_g = text_g.group_vertically(svg_group=attach_to_g)
 
         elif pos == 'south':
+            # width is attach object's width, height is text's min-height
+            rect_width, rect_height = self._width, self._theme['bpmn']['label']['min-height']
+
+            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
+
             new_g = attach_to_g.group_vertically(svg_group=text_g)
 
         elif pos == 'west':
-            # height is attach object's height, width is text's min-width
-            rect_width, rect_height = self._theme['bpmn']['text']['min-width'], self._height
+            # width is attach object's height, height is text's min-width
+            rect_width, rect_height = self._height, self._theme['bpmn']['label']['min-width']
 
-            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['text'])
+            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
             # y translation of width is necessary
             text_g.translate(0, rect_width)
@@ -88,6 +96,14 @@ class BpmnSvg(SvgObject):
             new_g = text_g.group_horizontally(svg_group=attach_to_g)
 
         elif pos == 'east':
+            # width is attach object's height, height is text's min-width
+            rect_width, rect_height = self._height, self._theme['bpmn']['label']['min-width']
+
+            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
+
+            # y translation of width is necessary
+            text_g.translate(0, rect_width)
+
             new_g = attach_to_g.group_horizontally(svg_group=text_g)
             
         
@@ -101,7 +117,7 @@ class BpmnSvg(SvgObject):
         self._bpmn_object = bpmn_object
 
         # bpmn to group
-        g_bpmn = a_rect(width=self._width, height=self._height, rx=self._theme['bpmn']['rx'], ry=self._theme['bpmn']['ry'], style=self._theme['bpmn']['style'])
+        g_bpmn = a_rect(width=self._width, height=self._height, rx=self._theme['bpmn']['rx'], ry=self._theme['bpmn']['ry'], style=self._theme['bpmn']['shape-style'])
 
         # if there is a label, attach it
         if self._bpmn_object._hide_label == False:

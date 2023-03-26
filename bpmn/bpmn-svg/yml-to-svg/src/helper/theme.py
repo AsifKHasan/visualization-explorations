@@ -22,8 +22,9 @@ def parse_theme(theme):
     if 'bpmn' in theme:
         parsed_theme['bpmn'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme['bpmn']))
 
-        if 'text' in theme['bpmn']:
-            parsed_theme['bpmn']['text'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme['bpmn']['text']))
+        if 'label' in theme['bpmn']:
+            parsed_theme['bpmn']['label'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme['bpmn']['label']))
+            
     else:
         ThemeDataMissing(data='root', key='bpmn')
 
@@ -36,11 +37,17 @@ def parse_theme(theme):
 def parse_defs(defs):
     parsed_defs = {}
 
-    #  style
-    if 'style' in defs:
-        parsed_defs['style'] = props_to_dict(text=defs['style'])
+    #  shape style
+    if 'shape-style' in defs:
+        parsed_defs['shape-style'] = props_to_dict(text=defs['shape-style'])
     else:
-        parsed_defs['style'] = {}
+        parsed_defs['shape-style'] = {}
+
+    #  label style
+    if 'label-style' in defs:
+        parsed_defs['label-style'] = props_to_dict(text=defs['label-style'])
+    else:
+        parsed_defs['label-style'] = {}
 
     #  shape defaults to rect
     parsed_defs['shape'] = defs.get('shape', 'rect')
