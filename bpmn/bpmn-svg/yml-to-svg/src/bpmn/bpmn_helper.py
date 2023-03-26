@@ -14,14 +14,14 @@ class BpmnHelper(object):
     '''
     def __init__(self, config, theme):
         self._config = config
-        self._theme = theme
+        self._source_theme = theme
 
 
     ''' generate and save the SVG
     '''
     def generate_and_save(self, bpmn_data):
         # parse the theme
-        self._theme = parse_theme(theme=self._theme)
+        self._theme = parse_theme(theme=self._source_theme)
 
         # create BPMN root
         bpmn_object = BpmnRoot(config=self._config, theme=self._theme)

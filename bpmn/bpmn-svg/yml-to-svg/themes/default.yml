@@ -35,50 +35,10 @@ defs:
   # ry default is 2
   ry:             2
 
-# default for text (labels)
-text:
-  # shape of the label, normally rect
-  shape:          rect
-
-  # style for the label, overrides attributes from defs::style
-  style:        
-
-  # margin from the containing shape
-  margin:         north="10" south="10" west="10" east="10"
-
-  # wrap the label at 0 means no wrap
-  text-wrap:      30
-
-  # label position relative to object in/north/south/east/west
-  pos:            in
-
-  # label vertical alignment north, middle, south
-  valign:         middle
-
-  # label horizontal alignment west, center, east
-  halign:         middle
-
-  # rotation none, left (anti-clock 90), right (clock 90), flip (180)
-  rotation:       none
-  
-  # min width default is 20
-  min-width:      100
-  
-  # min height default is 20
-  min-height:     20
-
-  # rx default is 2
-  rx:             0
-
-  # ry default is 2
-  ry:             0
-
-
 # bpmn attributes
 bpmn:
   shape:          rect
   style:          fill="#FFFFFF" stroke="#000000" stroke-width="1"
-  pos:            west
   min-width:      400
   min-height:     200
   rx:             0
@@ -87,7 +47,9 @@ bpmn:
   # bpmn label, overrides defs::label
   text:
     style:          font-size="24" font-weight="bold"
+    pos:            west
     rotation:       left
+    text-wrap:      12
 
 # pool attributes
 pool:

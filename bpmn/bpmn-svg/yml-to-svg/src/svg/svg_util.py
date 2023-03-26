@@ -46,6 +46,17 @@ class SvgGroup(object):
         self.g, self.width, self.height = g, width, height
 
     
+    ''' translate
+    '''
+    def translate(self, x, y):
+        print(self.g.get_transform())
+        xy = Point(x, y)
+        transformer = TransformBuilder()
+        transformer.setTranslation(xy)
+        self.g.set_transform(transformer.getTransform() + ' ' + self.g.get_transform())
+
+
+
     ''' add group to the right
     '''
     def group_horizontally(self, svg_group):
@@ -93,7 +104,7 @@ class SvgGroup(object):
 def a_text(text, width, height, spec):
     # wrap if specified
     wrap = int(spec['text-wrap'])
-    if wrap:
+    if wrap > 0:
         text_lines = textwrap.wrap(text=text, width=wrap, break_long_words=False)
     else:
         text_lines = [text]
@@ -149,7 +160,6 @@ def a_rect(width, height, rx, ry, style):
 '''
 def a_circle(radius, style):
     g = G()
-    # print(style)
 
     svg = Circle(cx=radius, cy=radius, r=radius)
     svg.set_style(StyleBuilder(style).getStyle())

@@ -61,12 +61,10 @@ class BpmnSvg(SvgObject):
     '''
     def attach_label(self, attach_to_g):
         # label rect height and width depends on block height and width, label position and label rotation
-        pos = self._theme['bpmn']['pos']
-        rect_width, rect_height = self._width, self._height
-
-        text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['text'])
+        pos = self._theme['bpmn']['text']['pos']
 
         # based on position, groups will be placed
+        print(f"label to {pos}")
         if pos == 'in':
             # just embed the text into the attach group
             attach_to_g.g.addElement(text_g.g)
@@ -79,6 +77,14 @@ class BpmnSvg(SvgObject):
             new_g = attach_to_g.group_vertically(svg_group=text_g)
 
         elif pos == 'west':
+            # height is attach object's height, width is text's min-width
+            rect_width, rect_height = self._theme['bpmn']['text']['min-width'], self._height
+
+            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['text'])
+
+            # y translation of width is necessary
+            text_g.translate(0, rect_width)
+
             new_g = text_g.group_horizontally(svg_group=attach_to_g)
 
         elif pos == 'east':

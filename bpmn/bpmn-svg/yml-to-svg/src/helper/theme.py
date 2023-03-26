@@ -10,99 +10,73 @@ from helper.exception import *
 ''' parse theme
 '''
 def parse_theme(theme):
+    parsed_theme = {}
 
     # get the defaults
     if 'defs' in theme:
-        theme['defs'] = parse_theme_defs(data=theme['defs'])
+        parsed_theme['defs'] = parse_defs(defs=theme['defs'])
     else:
         ThemeDataMissing(data='root', key='defs')
 
-    # get the text attributes
-    if 'text' in theme:
-        theme['text'] = merge(theme['defs'], parse_theme_text(data=theme['text']))
-    else:
-        ThemeDataMissing(data='root', key='text')
-
     # get the bpmn attributes
     if 'bpmn' in theme:
-        bpmn_attrs = parse_theme_bpmn(data=theme['bpmn'])
-        theme['bpmn'] = merge(theme['defs'], bpmn_attrs)
+        parsed_theme['bpmn'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme['bpmn']))
+
+        if 'text' in theme['bpmn']:
+            parsed_theme['bpmn']['text'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme['bpmn']['text']))
     else:
         ThemeDataMissing(data='root', key='bpmn')
 
-    return theme
+    return parsed_theme
 
 
 
 ''' parse defs in theme
 '''
-def parse_theme_defs(data):
-    parsed_data = {}
+def parse_defs(defs):
+    parsed_defs = {}
 
     #  style
-    if 'style' in data:
-        parsed_data['style'] = props_to_dict(text=data['style'])
+    if 'style' in defs:
+        parsed_defs['style'] = props_to_dict(text=defs['style'])
     else:
-        parsed_data['style'] = {}
+        parsed_defs['style'] = {}
 
     #  shape defaults to rect
-    parsed_data['shape'] = data.get('shape', 'rect')
+    parsed_defs['shape'] = defs.get('shape', 'rect')
 
     #  margin, defaults to 10 on all sides
-    if 'margin' in data:
-        parsed_data['margin'] = props_to_dict(text=data['margin'])
+    if 'margin' in defs:
+        parsed_defs['margin'] = props_to_dict(text=defs['margin'])
     else:
-        # parsed_data['margin'] = {'north': 10, 'south': 10, 'west': 10, 'east': 10}
-        parsed_data['margin'] = {}
+        # parsed_defs['margin'] = {'north': 10, 'south': 10, 'west': 10, 'east': 10}
+        parsed_defs['margin'] = {}
 
     #  text-wrap defaults to 0
-    parsed_data['text-wrap'] = int(data.get('text-wrap', 0))
+    parsed_defs['text-wrap'] = int(defs.get('text-wrap', 0))
 
     # pos defaults to 'in'
-    parsed_data['pos'] = data.get('pos', 'in')
+    parsed_defs['pos'] = defs.get('pos', 'in')
 
     # valign defaults to 'middle'
-    parsed_data['valign'] = data.get('halign', 'middle')
+    parsed_defs['valign'] = defs.get('valign', 'middle')
 
     # halign defaults to 'center'
-    parsed_data['halign'] = data.get('halign', 'center')
+    parsed_defs['halign'] = defs.get('halign', 'center')
 
     #  rotation defaults to 0
-    parsed_data['rotation'] = data.get('rotation', 'none')
+    parsed_defs['rotation'] = defs.get('rotation', 'none')
 
     #  min-width defaults to 20
-    parsed_data['min-width'] = int(data.get('min-width', 20))
+    parsed_defs['min-width'] = int(defs.get('min-width', 20))
 
     #  min-width defaults to 20
-    parsed_data['min-height'] = int(data.get('min-height', 20))
+    parsed_defs['min-height'] = int(defs.get('min-height', 20))
 
     #  rx defaults to 2
-    parsed_data['rx'] = int(data.get('rx', 2))
+    parsed_defs['rx'] = int(defs.get('rx', 2))
 
     #  ry defaults to 2
-    parsed_data['ry'] = int(data.get('rx', 2))
+    parsed_defs['ry'] = int(defs.get('ry', 2))
 
-    return parsed_data
-
-
-
-''' parse text in theme
-'''
-def parse_theme_text(data):
-    # parse the common attributes
-    parsed_data = parse_theme_defs(data=data)
-
-    return parsed_data
-
-
-''' parse bpmn in theme
-'''
-def parse_theme_bpmn(data):
-    # parse the common attributes
-    parsed_data = parse_theme_defs(data=data)
-
-    # parse the text attributes
-    parsed_data['text'] = parse_theme_text(data=data['text'])
-
-    return parsed_data
-
+    return parsed_defs
