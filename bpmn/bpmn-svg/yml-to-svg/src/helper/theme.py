@@ -62,8 +62,8 @@ def parse_defs(defs):
     #  text-wrap defaults to 0
     parsed_defs['text-wrap'] = int(defs.get('text-wrap', 0))
 
-    # pos defaults to 'in'
-    parsed_defs['pos'] = defs.get('pos', 'in')
+    # position defaults to 'in'
+    parsed_defs['position'] = defs.get('position', 'in')
 
     # valign defaults to 'middle'
     parsed_defs['valign'] = defs.get('valign', 'middle')

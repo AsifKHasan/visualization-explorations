@@ -18,11 +18,12 @@ from helper.util import *
 from helper.geometry import *
 from helper.logger import *
 
-ROTATION_TO_ANGLE = {
-    "left":         -90,
-    "right":        90,
-    "flip":         180
+ROTATION_MATRIX = {
+    "left":         {'angle': -90, 'translation': (0, 1)},
+    "right":        {'angle':  90, 'translation': (1, 0)},
+    "none":         {'angle':   0, 'translation': (0, 0)}
 }
+
 
 ''' SVG group wrapper
 '''
@@ -90,6 +91,29 @@ class SvgGroup(object):
         return SvgGroup(g=new_group, width=width, height=height)
 
 
+
+''' group a list of groups together specified by position
+'''
+def group_together(svg_groups, position):
+    # we need at least two groups
+    if len(svg_groups) < 2:
+        return None
+    
+    if position == 'north':
+        return svg_groups[1].group_vertically(svg_group=svg_groups[0])
+
+    elif position == 'south':
+        return svg_groups[0].group_vertically(svg_group=svg_groups[1])
+
+    elif position == 'west':
+        return svg_groups[1].group_horizontally(svg_group=svg_groups[0])
+
+    elif position == 'east':
+        return svg_groups[0].group_horizontally(svg_group=svg_groups[1])
+    
+
+
+
 ''' draws a text inside a rectangular area
 '''
 def a_text(text, width, height, spec):
@@ -107,7 +131,7 @@ def a_text(text, width, height, spec):
         # wrap if specified
         wrap = int(spec['text-wrap'])
         if wrap > 0:
-            text_lines = textwrap.wrap(text=text, width=wrap, break_long_words=False)
+            text_lines = textwrap.wrap(text=text, width=wrap, break_long_words=True)
         else:
             text_lines = [text]
 
@@ -162,11 +186,9 @@ def a_text(text, width, height, spec):
     # TODO: rotate
     new_width, new_height = width, height
     rotation = spec['rotation']
-    if rotation != 'none':
-        svg_group.rotate(angle=ROTATION_TO_ANGLE[rotation])
-
-        if rotation in ['left', 'right']:
-            new_width, new_height = height, width
+    svg_group.rotate(angle=ROTATION_MATRIX[rotation]['angle'])
+    if rotation in ['left', 'right']:
+        new_width, new_height = height, width
 
 
     return SvgGroup(g=svg_group.g, width=new_width, height=new_height)

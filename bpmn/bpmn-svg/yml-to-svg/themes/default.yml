@@ -1,12 +1,13 @@
+# default values, used implicitly by every other objects as default and to override explicitly
 defs:
   # default shape to apply, can be overridden by individual objects
   shape:          rect
 
   # default style to apply to shapes, can be overridden by individual objects
-  shape-style:    fill="#FFFFFF" stroke="#000000" stroke-width=1
+  shape-style:    fill="#FFFFFF" stroke="#000000" stroke-width="1"
   
   # default style to apply to texts, can be overridden by individual objects
-  label-style:    text-anchor="middle" dominant-baseline="middle" font-family="arial" font-size="12" font-weight="normal" fill="#000000" stroke="#000000" stroke-width=1
+  label-style:    text-anchor="middle" dominant-baseline="middle" font-family="arial" font-size="12" font-weight="normal" fill="#000000" stroke="#000000" stroke-width="1"
   
   # default margins to apply, can be overridden by individual objects
   margin:         north="10" south="10" west="10" east="10"
@@ -15,7 +16,7 @@ defs:
   text-wrap:      30
 
   # label position relative to object in/north/south/east/west
-  pos:            in
+  position:       in
 
   # label vertical alignment north, middle, south
   valign:         middle
@@ -23,7 +24,7 @@ defs:
   # label horizontal alignment west, center, east
   halign:         center
 
-  # rotation none, left (anti-clock 90), right (clock 90), flip (180)
+  # rotation none, left (anti-clock -90), right (clock 90)
   rotation:       none
 
   # min width default is 20
@@ -41,7 +42,7 @@ defs:
 # bpmn attributes
 bpmn:
   shape:          rect
-  shape-style:    fill="#FBFBFB" stroke="#DBDBDB" stroke-width=1
+  shape-style:    fill="#FBFBFB" stroke="#DBDBDB" stroke-width="1"
   min-width:      400
   min-height:     200
   rx:             0
@@ -50,11 +51,12 @@ bpmn:
   # bpmn label
   label:
     shape-style:    fill="#F0F0F0" stroke="#D0D0D0" stroke-width="1"
-    label-style:    font-size="16" font-weight="normal" fill="#000000" stroke="#000000" stroke-width=1
-    pos:            west
-    rotation:       flip
-    text-wrap:      20
+    label-style:    font-size="16" font-weight="normal" fill="#000000" stroke="#000000" stroke-width="1"
+    position:       west
+    rotation:       left
+    text-wrap:      12
     min-width:      80
+    min-height:     30
     valign:         middle
     halign:         center
 

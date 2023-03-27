@@ -60,100 +60,46 @@ class BpmnSvg(SvgObject):
     '''
     def attach_label(self, attach_to_g):
         # label rect height and width depends on block height and width, label position and label rotation
-        pos = self._theme['bpmn']['label']['pos']
+        position = self._theme['bpmn']['label']['position']
         rotation = self._theme['bpmn']['label']['rotation']
 
-        # based on position, groups will be placed
-        if pos == 'in':
+        # based on position and rotation create the label
+        if position == 'in':
             # just embed the text into the attach group
             attach_to_g.g.addElement(text_g.g)
             new_g = attach_to_g
 
-        elif pos == 'north':
-            # width is attach object's width, height is text's min-height
-            rect_width, rect_height = self._width, self._theme['bpmn']['label']['min-height']
-
-            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
-
+        elif position in ['north', 'south']:
             # handle rotation
-            if rotation == 'left':
-                # y translation of width is necessary
-                text_g.translate(0, rect_width)
+            if rotation in ['left', 'right']:
+                # width is object's min-height, height is attach object's width
+                rect_width, rect_height = self._theme['bpmn']['label']['min-height'], self._width
+                text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
-            elif rotation == 'right':
-                # x translation of height is necessary
-                text_g.translate(rect_height, 0)
+            elif rotation in ['none']:
+                # width is attach object's width, height is text's min-height
+                rect_width, rect_height = self._width, self._theme['bpmn']['label']['min-height']
+                text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
-            elif rotation == 'flip':
-                # x translation of width and y translation of height is necessary
-                text_g.translate(rect_width, rect_height)
-
-            new_g = text_g.group_vertically(svg_group=attach_to_g)
-
-        elif pos == 'south':
-            # width is attach object's width, height is text's min-height
-            rect_width, rect_height = self._width, self._theme['bpmn']['label']['min-height']
-
-            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
-
+        elif position in ['west', 'east']:
             # handle rotation
-            if rotation == 'left':
-                # y translation of width is necessary
-                text_g.translate(0, rect_width)
+            if rotation in ['left', 'right']:
+                # width is attach object's height, height is text's min-width
+                rect_width, rect_height = self._height, self._theme['bpmn']['label']['min-width']
+                text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
-            elif rotation == 'right':
-                # x translation of height is necessary
-                text_g.translate(rect_height, 0)
+            elif rotation in ['none']:
+                # width is object's min-width, height is attach object's height
+                rect_width, rect_height = self._theme['bpmn']['label']['min-width'], self._height
+                text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
-            elif rotation == 'flip':
-                # x translation of width and y translation of height is necessary
-                text_g.translate(rect_width, rect_height)
-                
-            new_g = attach_to_g.group_vertically(svg_group=text_g)
 
-        elif pos == 'west':
-            # width is attach object's height, height is text's min-width
-            rect_width, rect_height = self._height, self._theme['bpmn']['label']['min-width']
+        # translate based on rotation
+        text_g.translate(rect_height * ROTATION_MATRIX[rotation]['translation'][0], rect_width * ROTATION_MATRIX[rotation]['translation'][1])
 
-            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
+        # group the object and label based on position
+        new_g = group_together(svg_groups=[attach_to_g, text_g], position=position)
 
-            # handle rotation
-            if rotation == 'left':
-                # y translation of width is necessary
-                text_g.translate(0, rect_width)
-
-            elif rotation == 'right':
-                # x translation of height is necessary
-                text_g.translate(rect_height, 0)
-
-            elif rotation == 'flip':
-                # x translation of width and y translation of height is necessary
-                text_g.translate(rect_width, rect_height)
-
-            new_g = text_g.group_horizontally(svg_group=attach_to_g)
-
-        elif pos == 'east':
-            # width is attach object's height, height is text's min-width
-            rect_width, rect_height = self._height, self._theme['bpmn']['label']['min-width']
-
-            text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
-
-            # handle rotation
-            if rotation == 'left':
-                # y translation of width is necessary
-                text_g.translate(0, rect_width)
-
-            elif rotation == 'right':
-                # x translation of height is necessary
-                text_g.translate(rect_height, 0)
-
-            elif rotation == 'flip':
-                # x translation of width and y translation of height is necessary
-                text_g.translate(rect_width, rect_height)
-
-            new_g = attach_to_g.group_horizontally(svg_group=text_g)
-            
-        
         return new_g
 
 
