@@ -1,0 +1,41 @@
+graph cas_app_submission {
+     
+    label = "CAS User Registration Application Submission Process (A)"
+    _ [hide_labels="false";]
+
+    lane Clustered_Admission_System{
+        label = "Application Submission Process (A)"
+        _ []
+
+        pool applicant {
+            label = "Applicant"
+            _ []  
+
+        start                           start_00                              [label="Start"; label_pos="";]
+        userTask                        provide_info                          [label="Provides basic application information";]
+        userTask                        submit                                [label="Submits application";]
+  
+        start_00                                     --> provide_info
+        provide_info                                 --> submit
+        
+        }     
+
+        pool cas {
+            label = "CAS"
+            _ [move_x=419;] 
+
+        serviceTask                    receives_info                      [label="Receives application";]
+        serviceTask                    basic_validation                   [label="Validates application";]          
+        exclusive                      is_eligible                        [label="valid?";]
+        event                          event_subprocess_app_submission    [label="Proceeds to application verification sub-process (B)";] 
+    
+        receives_info           --> basic_validation 
+        basic_validation        --> is_eligible                                              
+        is_eligible             --> event_subprocess_app_submission                         [label="Yes";]  
+                     
+        }  
+        submit      --> receives_info                      
+        is_eligible                                 --> provide_info      [label="No";]
+        
+   }
+}

@@ -95,7 +95,7 @@ def balanced_range(n):
 ''' get the rough size of text in pixel
 '''
 def text_size_in_pixels(text, font_family, font_size, font_weight='', stroke_width=0):
-    adjusted_text = ' ' + text + ' '
+    adjusted_text = text
     if font_weight != '':
         font_key = font_family + '-' + font_weight
     else:

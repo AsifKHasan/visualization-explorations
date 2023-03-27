@@ -52,9 +52,11 @@ bpmn:
     shape-style:    fill="#F0F0F0" stroke="#D0D0D0" stroke-width="1"
     label-style:    font-size="16" font-weight="normal" fill="#000000" stroke="#000000" stroke-width=1
     pos:            west
-    rotation:       left
+    rotation:       flip
     text-wrap:      20
-    min-width:      50
+    min-width:      80
+    valign:         middle
+    halign:         center
 
 # pool attributes
 pool:

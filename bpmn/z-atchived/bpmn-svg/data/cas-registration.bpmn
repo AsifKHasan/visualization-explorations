@@ -1,0 +1,49 @@
+graph cas_registration {
+   
+    label = "CAS User Registration Sub-process (C)"
+    _ [hide_labels="false";]
+
+    lane Clustered_Admission_System{
+        label = "CAS User Registration Sub-process (C)"
+        _ []
+
+        pool applicant {
+            label = "Applicant"
+            _ []  
+
+        start                           start_00                              [label="Start"; label_pos="";]
+        userTask                        provide_info                          [label="Provides basic info for credential";move_x=50;]
+        userTask                        submit_info                           [label="Submits information";move_x=219;]
+        userTask                        receives_credential                   [label="Receives credential";move_x=176;]
+        userTask                        change_password                       [label="Change password";]
+        event                           event_subprocess_proceeds_post        [label="Proceeds to post-registration sub-process (D)";] 
+        end                             end1                                  [label="End";]
+        start_00                                     --> provide_info
+        provide_info                                 --> submit_info
+        receives_credential                          --> change_password 
+        change_password                              --> event_subprocess_proceeds_post
+        event_subprocess_proceeds_post               --> end1
+        submit_info              ... receives_credential
+        
+        }     
+
+        pool cas {
+            label = "CAS"
+            _ [move_x=150;] 
+
+        serviceTask                    receives_info                      [label="Receives information";]
+        serviceTask                    Validates_info                     [label="Validates information";]          
+        exclusive                      is_valid                           [label="valid?";]
+        serviceTask                    creates_credential                 [label="Creates credential";]
+        serviceTask                    notify_applicant                   [label="Notify applicant about credential";]
+    
+        receives_info           --> Validates_info
+        Validates_info          --> is_valid                                              
+        is_valid                --> creates_credential                    [label="Yes";]  
+        creates_credential      --> notify_applicant             
+        }  
+        submit_info             --> receives_info                      
+        is_valid                --> provide_info                          [label="No";]
+        notify_applicant        --> receives_credential
+   }
+}

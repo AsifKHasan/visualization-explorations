@@ -1,0 +1,36 @@
+graph cas_tld {
+       
+    _ [hide_labels="true";]
+
+    lane Cluster_Admission_System{
+        
+        _ [hide_labels="true";]
+
+        pool components {
+            
+            _ [hide_labels="true";]  
+
+        start                           start_00                          [label="Start"; label_pos="";]
+        task                            registration                      [label="Registration";]
+        task                            exam_planning                     [label="Examination Planning";]
+        task                            examination                       [label="Examination";]
+        task                            result_processing                 [label="Result Processing";]
+        task                            result_publishing                 [label="Result Publishing";]
+        task                            admission                         [label="Admission";]
+        task                            waiting_list_prepare              [label="Waiting List Preparation";]
+        end                             end2                              [label="End";]
+
+        start_00                        --> registration
+        registration                    --> exam_planning
+        exam_planning                   --> examination                
+        examination                     --> result_processing
+        result_processing               --> result_publishing
+        result_publishing               --> admission
+        admission                       --> waiting_list_prepare
+        waiting_list_prepare            --> result_publishing             [label="N times";]
+        waiting_list_prepare            --> end2
+       
+
+        }     
+   }
+}

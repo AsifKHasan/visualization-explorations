@@ -61,6 +61,7 @@ class BpmnSvg(SvgObject):
     def attach_label(self, attach_to_g):
         # label rect height and width depends on block height and width, label position and label rotation
         pos = self._theme['bpmn']['label']['pos']
+        rotation = self._theme['bpmn']['label']['rotation']
 
         # based on position, groups will be placed
         if pos == 'in':
@@ -74,6 +75,19 @@ class BpmnSvg(SvgObject):
 
             text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
+            # handle rotation
+            if rotation == 'left':
+                # y translation of width is necessary
+                text_g.translate(0, rect_width)
+
+            elif rotation == 'right':
+                # x translation of height is necessary
+                text_g.translate(rect_height, 0)
+
+            elif rotation == 'flip':
+                # x translation of width and y translation of height is necessary
+                text_g.translate(rect_width, rect_height)
+
             new_g = text_g.group_vertically(svg_group=attach_to_g)
 
         elif pos == 'south':
@@ -82,6 +96,19 @@ class BpmnSvg(SvgObject):
 
             text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
+            # handle rotation
+            if rotation == 'left':
+                # y translation of width is necessary
+                text_g.translate(0, rect_width)
+
+            elif rotation == 'right':
+                # x translation of height is necessary
+                text_g.translate(rect_height, 0)
+
+            elif rotation == 'flip':
+                # x translation of width and y translation of height is necessary
+                text_g.translate(rect_width, rect_height)
+                
             new_g = attach_to_g.group_vertically(svg_group=text_g)
 
         elif pos == 'west':
@@ -90,8 +117,18 @@ class BpmnSvg(SvgObject):
 
             text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
-            # y translation of width is necessary
-            text_g.translate(0, rect_width)
+            # handle rotation
+            if rotation == 'left':
+                # y translation of width is necessary
+                text_g.translate(0, rect_width)
+
+            elif rotation == 'right':
+                # x translation of height is necessary
+                text_g.translate(rect_height, 0)
+
+            elif rotation == 'flip':
+                # x translation of width and y translation of height is necessary
+                text_g.translate(rect_width, rect_height)
 
             new_g = text_g.group_horizontally(svg_group=attach_to_g)
 
@@ -101,8 +138,18 @@ class BpmnSvg(SvgObject):
 
             text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
-            # y translation of width is necessary
-            text_g.translate(0, rect_width)
+            # handle rotation
+            if rotation == 'left':
+                # y translation of width is necessary
+                text_g.translate(0, rect_width)
+
+            elif rotation == 'right':
+                # x translation of height is necessary
+                text_g.translate(rect_height, 0)
+
+            elif rotation == 'flip':
+                # x translation of width and y translation of height is necessary
+                text_g.translate(rect_width, rect_height)
 
             new_g = attach_to_g.group_horizontally(svg_group=text_g)
             

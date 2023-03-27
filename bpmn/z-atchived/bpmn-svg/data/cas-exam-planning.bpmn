@@ -1,0 +1,82 @@
+graph cas_exam_planning {
+    label = "CAS Exam Planning"
+    _ [hide_labels="false";]
+
+    lane Clustered_Admission_System{
+        label = "Clustered Admission System"
+        _ []
+
+        pool applicant {
+            label = "Applicant"
+            _ [move_x=648;]  
+
+        userTask                        receives_notification                 [label="Receives notification (SMS/Email)";]
+        userTask                        upload                                [label="Upload image and signature";]
+        userTask                        gets_notified                         [label="Gets notified about admit card and exam date";move_x=701;]
+        userTask                        download                              [label="Download admit card";]        
+        end                             end1                                  [label="End";]
+        
+        receives_notification                        --> upload
+        gets_notified                                --> download
+        download                                     --> end1
+        upload                                       ... gets_notified
+        
+        }     
+
+        pool cas {
+            label = "CAS"
+            _ [] 
+        
+        start                          start_00                           [label="Start"; label_pos="";]
+        serviceTask                    receives_info                      [label="Receives registered applicants list";]
+        serviceTask                    sends_data                         [label="Sends registration data to exam authority";]          
+        serviceTask                    gets_shortlist                     [label="Publishes shortlist";]
+        serviceTask                    notify_applicant                   [label="Notify applicants to upload photo and signature";]
+        serviceTask                    gets_give                          [label="Gets uploaded data and gives list to authority";move_x=120;]
+        serviceTask                    gets_capacity_info                 [label="Gets seat capacity and organize seatplan";move_x=51;]
+        serviceTask                    give_list                          [label="Generates admission roll number";]
+        serviceTask                    generate_seat_plan                 [label="Generates and publishes seat plan";move_x=193;]
+        serviceTask                    admit_card_generate                [label="Generates Admit Card";]
+        serviceTask                    gives_notification                 [label="Gives notification of Exam date and Admit card";]
+    
+        start_00                --> receives_info
+        receives_info           --> sends_data
+        gets_shortlist          --> notify_applicant                                              
+        gets_capacity_info      --> give_list                     
+        generate_seat_plan      --> admit_card_generate
+        admit_card_generate     --> gives_notification   
+        sends_data              ... gets_shortlist    
+        notify_applicant        ... gets_give
+        gets_give               ... gets_capacity_info
+        give_list               ... generate_seat_plan     
+             
+        }  
+
+pool examauth {
+            label = "Back Office"
+            _ [move_x=328;] 
+        
+        serviceTask                    gets_data                          [label="Gets registered applicants list";]          
+        serviceTask                    generates_shortlist                [label="Generates shortlist to participate in exam";]
+        serviceTask                    gets_list                          [label="Gets photo uploaded applicants list";move_x=203;]
+        serviceTask                    sitting_capacity                   [label="Gives University sitting capacity";]
+        serviceTask                    gets_capacity_list                 [label="Gets university-wise seat plan with admission roll number";move_x=84;]
+        serviceTask                    input_seatplan                     [label="Circulates admit card download time and Exam date";]
+        gets_data               --> generates_shortlist                                              
+        creates_credential      --> notify_applicant
+        gets_list               --> sitting_capacity
+        gets_capacity_list      --> input_seatplan 
+        sitting_capacity        ... gets_capacity_list
+        generates_shortlist     ... gets_list             
+        }          
+        sends_data              --> gets_data                      
+        generates_shortlist     --> gets_shortlist
+        notify_applicant        --> receives_notification
+        upload                  --> gets_give
+        gets_give               --> gets_list
+        gives_notification      --> gets_notified
+        sitting_capacity        --> gets_capacity_info
+        give_list               --> gets_capacity_list
+        input_seatplan          --> generate_seat_plan
+   }    
+}

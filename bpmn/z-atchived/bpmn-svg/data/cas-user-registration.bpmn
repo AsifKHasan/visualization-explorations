@@ -1,0 +1,45 @@
+graph cas_user_registration {
+  
+    label = "CAS User Registration Process"
+    _ [hide_labels="false";]
+
+    lane Clustered_Admission_System{
+        label = "Overview Of The Registration Process"
+        _ []
+
+        pool applicant {
+            label = "Applicant"
+            _ []  
+
+        start                           start_00                              [label="Start"; label_pos="";]
+        event                           event_subprocess_app_submission       [label="(A) Application submission  sub-process";move_x=100;]
+        event                           event_subprocess_post_registration    [label="(D) Post-registration activities";move_x=602;]
+        end                             end1                                  [label="End";move_x=95;] 
+
+        
+        start_00                                     --> event_subprocess_app_submission
+        navigation                                   --> input
+        event_subprocess_post_registration           --> end1
+
+        event_subprocess_app_submission              ... event_subprocess_post_registration           [label="";]
+        
+        }     
+
+        pool cas {
+            label = "CAS"
+            _ [move_x=288;] 
+
+        event                          event_subprocess_app_verification  [label="(B) Application verification  sub-process";]          
+        exclusive                      is_eligible                        [label="eligible?";move_x=12;]
+        event                          event_subprocess_registration      [label="(C) Registration sub-process";move_x=230;]  
+        endMessage                     end_message                        [label="End with Message";] 
+
+        event_subprocess_app_verification           --> is_eligible 
+        is_eligible                                 --> event_subprocess_registration [label="Yes";]                     
+        is_eligible                                 --> end_message                   [label="No";]
+        
+        }  
+        event_subprocess_app_submission      --> event_subprocess_app_verification                       
+        event_subprocess_registration        --> event_subprocess_post_registration          
+   }
+}

@@ -18,19 +18,6 @@ from helper.util import *
 from helper.geometry import *
 from helper.logger import *
 
-HALIGN_TO_SVG = {
-    "center":       "50%",
-    "west":         "10%",
-    "east":         "90%",
-}
-
-VALIGN_TO_SVG = {
-    "middle":       "50%",
-    "north":        "10%",
-    "south":        "90%",
-}
-
-
 ROTATION_TO_ANGLE = {
     "left":         -90,
     "right":        90,
@@ -108,8 +95,15 @@ class SvgGroup(object):
 def a_text(text, width, height, spec):
     # whether wrapping is required
     text_pixels = text_size_in_pixels(text=text, font_family=spec['label-style']['font-family'], font_size=int(spec['label-style']['font-size']), font_weight=spec['label-style']['font-weight'], stroke_width=int(spec['label-style']['stroke-width']))
+    margin_west = int(spec['margin']['west'])
+    margin_east = int(spec['margin']['east'])
+    margin_north = int(spec['margin']['north'])
+    margin_south = int(spec['margin']['south'])
 
-    if text_pixels[0] > width:
+    max_text_width = width - margin_west - margin_east
+    max_text_height = height - margin_north - margin_south
+
+    if text_pixels[0] > max_text_width:
         # wrap if specified
         wrap = int(spec['text-wrap'])
         if wrap > 0:
@@ -125,16 +119,35 @@ def a_text(text, width, height, spec):
     # create the rect
     svg_group = a_rect(width=width, height=height, rx=spec['rx'], ry=spec['ry'], style=spec['shape-style'])
 
-    # TODO: allow for margins
-
-    # alignments
-    x = width / 2
-    y = height / 2
-
-    # HACK: calculate a proper dy from font-size
+    # calculate a proper dy from font-size
     font_size = int(spec['label-style']['font-size'])
     dy = font_size * 1.1
     the_range = balanced_range(len(text_lines))
+
+    # horizontal alignments
+    halign = spec['halign']
+    if halign == 'center':
+        x = width / 2
+
+    elif halign == 'west':
+        x = margin_west
+        spec['label-style']['text-anchor'] = 'start'
+
+    elif halign == 'east':
+        x = width - margin_east
+        spec['label-style']['text-anchor'] = 'end'
+    
+    # vertical alignment
+    valign = spec['valign']
+    if valign == 'middle':
+        y = height / 2
+
+    elif valign == 'north':
+        y = margin_north + (dy * len(the_range)/2)
+
+    elif valign == 'south':
+        y = height - margin_south - (dy * len(the_range)/2)
+
 
 
     # create the texts
