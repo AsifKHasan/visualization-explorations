@@ -91,6 +91,25 @@ class SvgGroup(object):
         return SvgGroup(g=new_group, width=width, height=height)
 
 
+    ''' embed a group inside the group
+    '''
+    def embed(self, svg_group):
+        if not isinstance(svg_group, SvgGroup):
+            raise TypeError
+
+        translate_x = (self.width - svg_group.width) / 2
+        translate_y = (self.height - svg_group.height) / 2
+
+        svg_group.translate(x=translate_x, y=translate_y)
+
+        self.g.addElement(svg_group.g)
+
+        return self
+
+
+    
+
+
 
 ''' group a list of groups together specified by position
 '''
@@ -110,6 +129,11 @@ def group_together(svg_groups, position):
 
     elif position == 'east':
         return svg_groups[0].group_horizontally(svg_group=svg_groups[1])
+
+    elif position == 'in':
+        return svg_groups[0].embed(svg_group=svg_groups[1])
+
+
     
 
 
@@ -236,6 +260,23 @@ def dimension_with_margin(width, height, margin):
         return width, height
 
     new_width, new_height = width + margin_west + margin_east, height + margin_north + margin_south
+
+    return new_width, new_height
+    
+
+''' return dimension without margins
+'''
+def dimension_without_margin(width, height, margin):
+    if margin:
+        margin_west = int(margin.get('west', 0))
+        margin_east = int(margin.get('east', 0))
+        margin_north = int(margin.get('north', 0))
+        margin_south = int(margin.get('south', 0))
+
+    else:
+        return width, height
+
+    new_width, new_height = width - margin_west - margin_east, height - margin_north - margin_south
 
     return new_width, new_height
     

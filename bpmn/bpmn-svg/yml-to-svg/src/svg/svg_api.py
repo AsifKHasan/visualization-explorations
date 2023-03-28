@@ -21,41 +21,6 @@ class SvgObject(object):
         self._theme = theme
 
 
-    ''' generate the SVG from data
-    '''
-    def to_svg(self, bpmn_object):
-        self._bpmn_object = bpmn_object
-
-        # bpmn to root group
-        bpmn_svg = BpmnSvg(config=self._config, theme=self._theme)
-        
-        bpmn_g = bpmn_svg.to_svg(bpmn_object=bpmn_object)
-
-        canvas_width, canvas_height = dimension_with_margin(width=bpmn_g.width, height=bpmn_g.height, margin=self._theme['bpmn']['margin'])
-
-
-        # wrap in a SVG drawing
-        svg = Svg(0, 0, width=canvas_width, height=canvas_height)
-        svg.addElement(bpmn_g.g)
-
-        # finally save the svg
-        svg.save(self._config['files']['output-svg'], encoding="UTF-8")
-
-
-
-''' BPMN SVG object
-'''
-class BpmnSvg(SvgObject):
-    ''' constructor
-    '''
-    def __init__(self, config, theme):
-        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, theme=theme)
-
-        self._width = self._theme['bpmn']['min-width']
-        self._height = self._theme['bpmn']['min-height']
-
-
     ''' attach label
     '''
     def attach_label(self, attach_to_g):
@@ -66,8 +31,18 @@ class BpmnSvg(SvgObject):
         # based on position and rotation create the label
         if position == 'in':
             # just embed the text into the attach group
-            attach_to_g.g.addElement(text_g.g)
-            new_g = attach_to_g
+            # dimension is attach object's dimension without margin
+            bounding_width, bounding_height = dimension_without_margin(width=self._width, height=self._height, margin=self._theme['bpmn']['margin'])
+            # handle rotation
+            if rotation in ['left', 'right']:
+                # swap dimension
+                rect_width, rect_height = bounding_height, bounding_width
+                text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
+
+            elif rotation in ['none']:
+                # dimension is attach object's dimension without margin
+                rect_width, rect_height = bounding_width, bounding_height
+                text_g = a_text(text=self._bpmn_object._label, width=rect_width, height=rect_height, spec=self._theme['bpmn']['label'])
 
         elif position in ['north', 'south']:
             # handle rotation
@@ -102,6 +77,38 @@ class BpmnSvg(SvgObject):
 
         return new_g
 
+
+
+    ''' generate the SVG from data
+    '''
+    def to_svg(self, bpmn_object):
+        # bpmn to root group
+        bpmn_svg = BpmnSvg(config=self._config, theme=self._theme)
+        bpmn_g = bpmn_svg.to_svg(bpmn_object=bpmn_object)
+
+        # canvas is bpmn size + margin
+        canvas_width, canvas_height = dimension_with_margin(width=bpmn_g.width, height=bpmn_g.height, margin=self._theme['bpmn']['margin'])
+
+        # wrap in a SVG drawing
+        svg = Svg(0, 0, width=canvas_width, height=canvas_height)
+        svg.addElement(bpmn_g.g)
+
+        # finally save the svg
+        svg.save(self._config['files']['output-svg'], encoding="UTF-8")
+
+
+
+''' BPMN SVG object
+'''
+class BpmnSvg(SvgObject):
+    ''' constructor
+    '''
+    def __init__(self, config, theme):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+        super().__init__(config=config, theme=theme)
+
+        self._width = self._theme['bpmn']['min-width']
+        self._height = self._theme['bpmn']['min-height']
 
 
     ''' generate the SVG from data

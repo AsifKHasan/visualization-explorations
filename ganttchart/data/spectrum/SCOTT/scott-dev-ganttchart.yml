@@ -1,8 +1,8 @@
 # (Mandatory)       - use task theme where time is in weeks
-theme:              task-day-default
+theme:              task-week-default
 
 # (Mandatory)       - view can be day/week/month/year. There is no default
-view:               day
+view:               week
 
 # (Optional)        - show only the pools listed. If the list is empty, show all pools
 visible-pools:
@@ -14,7 +14,7 @@ pool-scheme:        false
 start-date:         "2023-04-02"
 
 # (Optional)        - whether to consider holidays. Default is false. Note it is meaningful only if [start-date] is valid
-consider-holidays:  true
+consider-holidays:  false
 
 # (Optional)        - these days are holidays. Valid only when [consider-holidays] is true. dates must be yyyy-mm-dd format
 holiday-list:
