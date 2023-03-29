@@ -44,7 +44,7 @@ bpmn:
   shape:          rect
   shape-style:    fill="#FBFBFB" stroke="#DBDBDB" stroke-width="1"
   min-width:      400
-  min-height:     200
+  min-height:     100
   rx:             0
   ry:             0
 
@@ -63,7 +63,7 @@ pool:
   shape:          rect
   shape-style:    fill="#FBFBFB" stroke="#DBDBDB" stroke-width="1"
   min-width:      400
-  min-height:     200
+  min-height:     100
   rx:             0
   ry:             0
 
@@ -73,7 +73,7 @@ pool:
     position:       west
     rotation:       left
     text-wrap:      12
-    min-width:      80
+    min-width:      50
     valign:         middle
     halign:         center
 
@@ -82,7 +82,7 @@ lane:
   shape:          rect
   shape-style:    fill="#FBFBFB" stroke="#DBDBDB" stroke-width="1"
   min-width:      400
-  min-height:     200
+  min-height:     100
   rx:             0
   ry:             0
 
@@ -92,7 +92,7 @@ lane:
     position:       west
     rotation:       left
     text-wrap:      12
-    min-width:      80
+    min-width:      40
     valign:         middle
     halign:         center
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import copy
 from mergedeep import merge
 
 from helper.util import *
@@ -45,15 +46,15 @@ def parse_theme(theme):
 
     # get the object specific attributes
     # for object_type in ['bpmn', 'pool', 'lane', 'band', 'node', 'edge', 'head', 'tail']:
-    for object_type in ['bpmn', 'pool', ]:
-        if object_type in theme:
+    for object_type in ['bpmn', 'pool', 'lane']:
+        if object_type in theme and theme[object_type]:
             parsed_theme[object_type] = merge({}, parsed_theme['defs'], parse_defs(defs=theme[object_type]))
 
             if 'label' in theme[object_type]:
                 parsed_theme[object_type]['label'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme[object_type]['label']))
                 
         else:
-            ThemeDataMissing(data='root', key=object_type)
+            raise ThemeDataMissing(data='root', key=object_type)
 
     return parsed_theme
 
