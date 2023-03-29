@@ -43,15 +43,17 @@ def parse_theme(theme):
     else:
         ThemeDataMissing(data='root', key='defs')
 
-    # get the bpmn attributes
-    if 'bpmn' in theme:
-        parsed_theme['bpmn'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme['bpmn']))
+    # get the object specific attributes
+    # for object_type in ['bpmn', 'pool', 'lane', 'band', 'node', 'edge', 'head', 'tail']:
+    for object_type in ['bpmn', 'pool', ]:
+        if object_type in theme:
+            parsed_theme[object_type] = merge({}, parsed_theme['defs'], parse_defs(defs=theme[object_type]))
 
-        if 'label' in theme['bpmn']:
-            parsed_theme['bpmn']['label'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme['bpmn']['label']))
-            
-    else:
-        ThemeDataMissing(data='root', key='bpmn')
+            if 'label' in theme[object_type]:
+                parsed_theme[object_type]['label'] = merge({}, parsed_theme['defs'], parse_defs(defs=theme[object_type]['label']))
+                
+        else:
+            ThemeDataMissing(data='root', key=object_type)
 
     return parsed_theme
 

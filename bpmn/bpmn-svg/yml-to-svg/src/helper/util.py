@@ -39,6 +39,9 @@ FONT_SPEC = {
 ''' convert a text to a valid Dot identifier
 '''
 def text_to_identifier(text):
+    if text is None or text == '':
+        text = random_string()
+
     # Replace SPACE with _
     id = re.sub('[ ]+', '_', text)
 
