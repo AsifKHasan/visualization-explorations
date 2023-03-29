@@ -1,0 +1,61 @@
+theme:                                default
+bpmn:                                 Proposed ANPR based automated toll collection system
+edges:
+- sequence:                           Vehicle Stops                         -> Take Snapshot
+- message:                            Parallel                              -> Query Vehicle
+- message:                            Print Toll Receipt                    -> Receive Toll Receipt
+- message:                            Query Vehicle                         -> Show Vehicle Data
+
+pools:
+- pool:                               Vehicle
+  lanes:
+  - lane:                             v
+    hide-label:                       true
+    nodes:
+    - start:                          Start
+    - task:                           Vehicle Stops
+    - user-task:                      Receive Toll Receipt
+    - end:                            End
+    edges:
+    - sequence:                       Start                                 -> Vehicle Stops
+    - sequence:                       Vehicle Stops                         -> Receive Toll Receipt
+    - sequence:                       Receive Toll Receipt                  -> End
+
+- pool:                               Toll Plaza Management System
+  edges:
+  - sequence:                         Parallel                              -> Show Vehicle Data
+  - sequence:                         Detection Successful?                 -> Manual Entry                      [label="No";]
+  - sequence:                         Submit                                -> Print Toll Receipt
+
+  lanes:
+  - lane:                             ANPR
+    nodes:
+    - service-task:                   Take Snapshot
+    - service-task:                   License Plate Detection
+    - exclusive:                      Detection Successful?
+    - parallel:                       Parallel
+    edges:
+    - sequence:                       Take Snapshot                         -> License Plate Detection
+    - sequence:                       License Plate Detection               -> Detection Successful?
+    - sequence:                       Detection Successful?                 -> Parallel                          [label="Yes";]
+
+  - lane:                             Operator Interface
+    nodes:
+    - manual-task:                    Manual Entry
+    - service-task:                   Show Vehicle Data
+    - task:                           Calculate Vehicle Amount
+    - parallel:                       Submit
+    edges:
+    - sequence:                       Show Vehicle Data                     -> Calculate Vehicle Amount
+    - sequence:                       Calculate Vehicle Amount              -> Submit                            [label="";]
+    - sequence:                       Manual Entry                          -> Submit
+
+  - lane:                             Ticketing System
+    nodes:
+    - service-task:                   Print Toll Receipt
+
+- pool:                               BRTA
+  lanes:
+  - lane:                             BRTA API
+    nodes:
+    - service-task:                   Query Vehicle

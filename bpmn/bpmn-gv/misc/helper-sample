@@ -1,2 +1,4 @@
 ./bpmn-from-yml.sh sample/pizza-order
 bpmn-from-yml.bat sample/pizza-order
+
+bpmn-from-yml.bat spectrum/ITS/anpr-ticket-brta-flow

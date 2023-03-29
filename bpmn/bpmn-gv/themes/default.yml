@@ -112,13 +112,13 @@ node:
 
         # task activities
         task:                                   shape='rectangle'; style='rounded, filled';
-        business-rule-task:                     shape='rectangle'; style='rounded, filled';
-        manual-task:                            shape='rectangle'; style='rounded, filled';
+        business-rule-task:                     shape='rectangle'; style='rounded, filled'; 
+        manual-task:                            shape='rectangle'; style='rounded, filled'; image="./bpmn/activity/task/manual-task.png"; imagepos=tl; imagescale=false;
         receive-task:                           shape='rectangle'; style='rounded, filled';
         script-task:                            shape='rectangle'; style='rounded, filled';
         send-task:                              shape='rectangle'; style='rounded, filled';
-        service-task:                           shape='rectangle'; style='rounded, filled';
-        user-task:                              shape='rectangle'; style='rounded, filled';
+        service-task:                           shape='rectangle'; style='rounded, filled'; image="./bpmn/activity/task/service-task.png"; imagepos=tl; imagescale=false;
+        user-task:                              shape='rectangle'; style='rounded, filled'; image="./bpmn/activity/task/user-task.png"; imagepos=tl; imagescale=false;
 
         # call activities
         call:                                   shape='rectangle'; penwidth='3.0'; style='rounded, filled';

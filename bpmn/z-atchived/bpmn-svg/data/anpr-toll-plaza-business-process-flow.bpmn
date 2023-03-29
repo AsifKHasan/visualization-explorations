@@ -1,0 +1,84 @@
+graph toll_plaza_anpr {
+  label = "Proposed ANPR based automated toll collection system"
+  _ [hide_label="false";]
+
+  lane vehicle {
+    label = "Vehicle"
+    _ []
+
+    pool vehicle {
+      label = "Vehicle"
+      _ [hide_label="true";]
+
+      start                           start_00                            [label="Start"; label_pos="";]
+      task                            vehicle_arrived                     [label="Vehicle arrived";]
+      userTask                        receive_toll_receipt                [label="Receive the Toll Receipt"; move_x=0;]
+      end                             end1                                [label="End";]
+
+      start_00                        --> vehicle_arrived
+      vehicle_arrived                 ... receive_toll_receipt            [label="";]
+      receive_toll_receipt            --> end1
+    }
+  }
+
+  lane Toll_Plaza_Management_System {
+    label = "Toll Plaza Management System"
+    _ []
+
+    pool anpr {
+      label = "ANPR"
+      _ []
+
+      serviceTask                     take_snapshot                       [label="Take snapshot"; move_x=120;]
+      serviceTask                     license_plate_detection             [label="License plate detection";]
+      exclusive                       is_successful                       [label="Detection successful?"; move_x=0;]
+      parallel                        gateway03                           [label="Parallel";]
+
+      take_snapshot                   --> license_plate_detection
+      license_plate_detection         --> is_successful
+      is_successful                   --> gateway03                       [label="Yes";]
+    }
+
+    pool operator_interface {
+      label = "Operator Interface"
+      _ [move_x=0;]
+
+      manualTask                      manual_entry                        [label="Manual entry"; move_x=0;]
+      serviceTask                     show_vehicle_data                   [label="Show the vehicle data";]
+      task                            calculate_amount                    [label="Calculate the vehicle amount";]
+      parallel                        gateway                             [label="Submit";]
+
+      show_vehicle_data               --> calculate_amount
+      calculate_amount                --> gateway                         [label="";]
+      manual_entry                    --> gateway
+    }
+
+    pool ticketing_system {
+      label = "Ticketing system"
+      _ []
+
+      serviceTask                     print                               [label="Print the Toll Receipt"; move_x=0;]
+    }
+
+    gateway03                         --> show_vehicle_data
+    is_successful                     --> resolve_vehicle_no              [label="Yes";]
+    is_successful                     --> manual_entry                    [label="No";]
+    gateway                           --> print
+    print                             --> receive_toll_receipt
+  }
+
+  lane brta {
+    label = "BRTA"
+    _ []
+
+    pool brta {
+      label = "BRTA"
+      _ [hide_label="true";]
+
+      serviceTask                     save_data                           [label="Save data"; move_x=500;]
+    }
+  }
+
+  vehicle_arrived                   --> take_snapshot                     [placement="west";]
+  gateway03                         --> save_data
+}

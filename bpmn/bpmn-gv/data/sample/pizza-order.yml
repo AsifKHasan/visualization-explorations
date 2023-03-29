@@ -2,8 +2,8 @@ theme:                       default
 bpmn:                        Pizza Order Process Modeling
 hide-label:                  true
 
-# top level bpmn may contain elements directly
-elements:
+# top level bpmn may contain nodes directly
+nodes:
 
 # top level bpmn may contain edges directly
 edges:
@@ -20,8 +20,8 @@ pools:
 - pool:                      Customer
   hide-label:                false
 
-  # a pool may contain elements directly
-  elements:
+  # a pool may contain nodes directly
+  nodes:
 
   # a pool may contain edges directly
   edges:
@@ -30,7 +30,7 @@ pools:
   - lane:                    Pizza Customer
     hide-label:              false
 
-    elements:
+    nodes:
     - start:                   Hungry for Pizza         
     - task:                    Goto Pizza Shop          
     - task:                    Select a Pizza           
@@ -62,7 +62,7 @@ pools:
   - lane:                    Receptionist
     hide-label:              false
 
-    elements:
+    nodes:
     - start-message:         Order Received             
     - parallel:              On Order Received          
     - throw-message:         Where is Pizza?            
@@ -77,7 +77,7 @@ pools:
   - lane:                    Pizza Cook
     hide-label:              false
 
-    elements:
+    nodes:
     - task:                  Bake Pizza
 
     edges:
@@ -85,7 +85,7 @@ pools:
   - lane:                    Delivery Person
     hide-label:              false
 
-    elements:
+    nodes:
     - task:                  Deliver Pizza
     - task:                  Collect Payment
     - end-terminate:         Terminate                  
@@ -94,7 +94,7 @@ pools:
     - sequence:              Deliver Pizza              -> Collect Payment
     - sequence:              Collect Payment            -> Terminate
 
-  elements:
+  nodes:
 
   edges:
   - sequence:                On Order Received          -> Bake Pizza

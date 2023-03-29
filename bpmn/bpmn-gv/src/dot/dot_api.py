@@ -40,28 +40,28 @@ def subgraph_differs(from_node, to_node):
     if not from_node_object:
         warn(f"node {from_node} missing")
         return True
-    
+
     if not to_node_object:
         warn(f"node {to_node} missing")
         return True
-    
+
     # check pool differs or not
     if from_node_object._parent_pool is None:
         # from node is in the root graph
         if to_node_object._parent_pool is None:
             # to node is in the root graph
             return False
-        
+
         else:
             # to node is not in the root graph
             return True
-        
+
     else:
         # from node is not in the root graph
         if to_node_object._parent_pool is None:
             # to node is in the root graph
             return True
-        
+
         else:
             # to node is not in the root grap
             if from_node_object._parent_pool == to_node_object._parent_pool:
@@ -72,28 +72,28 @@ def subgraph_differs(from_node, to_node):
                     if to_node_object._parent_lane is None:
                         # to node is in the pool
                         return False
-                    
+
                     else:
                         # to node is not in a pool
                         return True
-                    
+
                 else:
                     # from node is in a lane
                     if to_node_object._parent_lane is None:
                         # to node is in the pool
                         return True
-                    
+
                     else:
                         # to node is in a lane
                         if from_node_object._parent_lane == to_node_object._parent_lane:
                             # lane is same
                             return False
-                        
+
                         else:
                             # lane is different
                             return True
-                
-            
+
+
             else:
                 # pool is different
                 return True
@@ -132,10 +132,10 @@ class DotObject(object):
     ''' process nodes
     '''
     def process_nodes(self, parent_pool=None, parent_lane=None):
-        if 'elements' in self._data and self._data['elements']:
+        if 'nodes' in self._data and self._data['nodes']:
             self.append_content(content='')
             self.append_content(content=f"# {self._class} nodes")
-            for node in self._data['elements']:
+            for node in self._data['nodes']:
                 for k, v in node.items():
                     node_object = NodeObject(config=self._config, data={'type': k, 'value': v}, parent_pool=parent_pool, parent_lane=parent_lane)
                     node_object.parse_node()
@@ -165,6 +165,8 @@ class DotObject(object):
     def process_label(self):
         if not self._hide_label:
             self.append_content(content=make_a_property(prop_key='label', prop_value=wrap_text(text=self._label)) + ';')
+        else:
+            self.append_content(content=make_a_property(prop_key='label', prop_value=' ') + ';')
 
 
 
@@ -196,7 +198,7 @@ class PoolObject(DotObject):
         # graph properties
         self.append_content(content=f"graph [ {make_property_list(self._theme['graph'])}; ]")
 
-        # elements
+        # nodes
         self.process_nodes(parent_pool=self._id)
 
         # lanes
@@ -248,9 +250,9 @@ class LaneObject(DotObject):
         # graph properties
         self.append_content(content=f"graph [ {make_property_list(self._theme['graph'])}; ]")
 
-        # elements
+        # nodes
         self.process_nodes(parent_pool=self._parent_pool, parent_lane=self._id)
-                        
+
 
         # edges
         self.process_edges()
@@ -303,7 +305,7 @@ class GraphObject(DotObject):
         # edge properties
         self.append_content(content=f"edge [ {make_property_list(self._theme['edge'])}; ]")
 
-        # elements
+        # nodes
         self.process_nodes()
 
         # pools
