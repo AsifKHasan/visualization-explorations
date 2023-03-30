@@ -213,9 +213,9 @@ class BpmnNode(object):
     def parse(self, source_data):
         k, v = list(source_data.items())[0]
         self._ntype = k
-        # TODO: actually value is a label + optional properties enclosed in []
-        self._label = v
-        self._props = {}
+
+        # value is a label + optional properties enclosed in []
+        self._label, self._props = parse_node_from_text(text=v)
         self._id = f"node__{self._ntype}__{text_to_identifier(self._label)}"
         # print(f"[node] : [{self._ntype}] : [{self._id}] : [{self._label}] : {self._location}")
 
@@ -235,9 +235,8 @@ class BpmnEdge(object):
     def parse(self, source_data):
         k, v = list(source_data.items())[0]
         self._etype = k
-        # TODO: actually value is a node -> node + optional properties enclosed in []
-        self._tail_node = v
-        self._head_node = v
-        self._props = {}
+
+        # value is a node -> node + optional properties enclosed in []
+        self._tail_node, self._head_node, self._props = parse_edge_from_text(text=v)
         self._id = f"edge__{self._etype}__{text_to_identifier(self._tail_node)}__{text_to_identifier(self._head_node)}"
-        print(f"[edge] : [{self._etype}] : [{self._tail_node}] -> [{self._head_node}] : {self._location}")
+        # print(f"[edge] : [{self._etype}] : [{self._tail_node}] -> [{self._head_node}] : {self._location}")
