@@ -24,7 +24,7 @@ class BpmnHelper(object):
         self._theme = parse_theme(theme=self._source_theme)
 
         # create BPMN root
-        bpmn_object = BpmnRoot(config=self._config, theme=self._theme)
+        bpmn_object = BpmnRoot()
 
         # parse BPMN data
         bpmn_object.parse(source_data=bpmn_data)

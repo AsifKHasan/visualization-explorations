@@ -1,5 +1,5 @@
 # (Mandatory)       - use task theme where time is in weeks
-theme:              task-week-default
+theme:              task-day-default
 
 # (Mandatory)       - view can be day/week/month/year. There is no default
 view:               week
