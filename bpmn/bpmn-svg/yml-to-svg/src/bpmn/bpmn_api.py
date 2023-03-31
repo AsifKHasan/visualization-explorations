@@ -86,10 +86,20 @@ class BpmnObject(object):
             debug(f"no 'edge' for [{self._my_type}] : [{self._label}]")
 
         # from edges create bands only if the tail and head nodes are in the same group
-        node_list = [ node._label for node in self._nodes ]
-        edge_list = [ (edge._tail_node, edge._head_node) for edge in self._edges if edge._tail_node in node_list and edge._head_node in node_list]
+        edge_list = [ (edge._tail_node, edge._head_node) for edge in self._edges ]
+        node_list = [ node._id for node in self._nodes ]
+
+        # get the bands
         band_list = edges_to_bands(edge_list=edge_list, node_list=node_list)
         # pprint(band_list)
+        i = 0
+        for band in band_list:
+            band_object = BpmnBand(parent_id=self._id, serial=i, location=location)
+            for node_id in band:
+                band_object.add_node(node=ALL_NODES[node_id])
+
+            self._bands.append(band_object)
+            i = i + 1
 
 
 
@@ -207,6 +217,15 @@ class BpmnBand(BpmnObject):
         self._id = f"{self._my_type}__{parent_id}__{serial}"
         self._hide_label = True
 
+        self._nodes = []
+
+
+    ''' add node to band
+    '''
+    def add_node(self, node):
+        node._location['band'] = self._id
+        self._nodes.append(node)
+
 
 
 ''' BPMN node object
@@ -227,7 +246,7 @@ class BpmnNode(object):
 
         # value is a label + optional properties enclosed in []
         self._label, self._props = parse_node_from_text(text=v)
-        self._id = f"node__{self._ntype}__{text_to_identifier(self._label)}"
+        self._id = node_id_from_label(label=self._label)
         # print(f"[node] : [{self._ntype}] : [{self._id}] : [{self._label}] : {self._location}")
 
 

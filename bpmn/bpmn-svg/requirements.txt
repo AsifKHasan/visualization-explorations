@@ -9,3 +9,4 @@ colorama
 termcolor
 Pillow
 mergedeep
+bigtree

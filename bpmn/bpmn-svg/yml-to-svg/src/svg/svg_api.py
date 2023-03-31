@@ -224,7 +224,7 @@ class LaneSvg(SvgObject):
         # finally create the lane group
         g_lane = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
 
-        # embed the lanes
+        # embed the bands
         g_lane = g_lane.embed_vertically(svg_groups=self.band_svgs, margin=self._theme[self._object_type]['margin'])
 
 
@@ -235,3 +235,50 @@ class LaneSvg(SvgObject):
 
         # return group
         return g_lane
+
+
+
+''' Band SVG object
+'''
+class BandSvg(SvgObject):
+    ''' constructor
+    '''
+    def __init__(self, config, theme):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+        super().__init__(config=config, theme=theme, object_type='band')
+        self.node_svgs = []
+
+
+
+    ''' generate the band SVG from data
+    '''
+    def to_svg(self, band_object):
+        self._band_object = band_object
+
+        # band to group
+        # first we need to get all child nodes
+        for node_object in self._band_object._nodes:
+            # node_svg = NodeSvg(config=self._config, theme=self._theme)
+            # g_node = node_svg.to_svg(node_object=node_object)
+            # self.node_svgs.append(g_node)
+            pass
+
+        # calculate width, height with all nodes embedded
+        self._width = max([node_g.g_width for node_g in self.node_svgs] + [self._width])
+        self._height = max(sum([node_g.g_height for node_g in self.node_svgs]), self._height)
+        self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
+
+        # finally create the band group
+        g_band = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+
+        # embed the nodes
+        g_band = g_band.embed_vertically(svg_groups=self.node_svgs, margin=self._theme[self._object_type]['margin'])
+
+
+        # if there is a label, attach it
+        if self._band_object._hide_label == False:
+            g_band = self.attach_label(attach_to_g=g_band, label=self._band_object._label)
+
+
+        # return group
+        return g_band

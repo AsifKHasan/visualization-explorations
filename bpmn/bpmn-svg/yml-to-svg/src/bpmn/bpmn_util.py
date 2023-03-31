@@ -9,6 +9,13 @@ from helper.util import *
 various utilities for BPMN
 '''
 
+
+''' create node-id from node label
+'''
+def node_id_from_label(label):
+    return f"node__{text_to_identifier(label)}"    
+
+
 ''' parse node
     Pay for the Pizza        [ width='1.5in'; ]
 '''
@@ -50,8 +57,8 @@ def parse_edge_from_text(text):
 
     # get the from and to nodes
     node_list = edge_str.split('->')
-    tail_node = text=node_list[0].strip()
-    head_node = text=node_list[1].strip()
+    tail_node = node_id_from_label(label=node_list[0].strip())
+    head_node = node_id_from_label(label=node_list[1].strip())
 
     return tail_node, head_node, prop_dict
 
@@ -61,11 +68,14 @@ def parse_edge_from_text(text):
     edge_list is a list of tuples (tail_node, head_node)
 '''
 def edges_to_bands(edge_list, node_list):
-    # head and tail nodes of an edge must be in the node_list
-    pruned_edge_list = [ (edge[0], edge[1]) for edge in edge_list if edge[0] in node_list and edge[1] in node_list ]
-
-    # eliminate edges where they make a cycle
-    pruned_edge_list = [ (edge[0], edge[1]) for edge in pruned_edge_list if (edge[1], edge[0]) not in pruned_edge_list ]
+    # edge list needs to be curated
+    pruned_edge_list = []
+    for edge in edge_list:
+        # head and tail nodes of an edge must be in the node_list
+        if edge[0] in node_list and edge[1] in node_list:
+            # if there is any edge (tail->head) it should be removed if there is another edge (head->tail) to remove cycles
+            if (edge[1], edge[0]) not in pruned_edge_list:
+                pruned_edge_list.append(edge)
 
     # for t in pruned_edge_list:
     #     print(f"{t[0]:40} -> {t[1]}")
@@ -74,11 +84,9 @@ def edges_to_bands(edge_list, node_list):
     if len(pruned_edge_list) > 0:
 
         root = list_to_tree_by_relation(pruned_edge_list)
-        print_tree(root)
+        # print_tree(root)
         band = []
         traverse_preorder(root=root, bands=bands, band=band)
-        if len(band) > 0:
-            bands.append(band)
 
     # we may have stray nodes which were not part of any edges, put those in a separate band
     connected_nodes = [ edge[0] for edge in edge_list] + [ edge[1] for edge in pruned_edge_list ]
@@ -94,20 +102,12 @@ def traverse_preorder(root, bands, band):
     if root:
         # it is going into the current band
         band.append(root.name)
-        new_branch = False
         for node in root.children:
-            if new_branch:
-                bands.append(band)
-                band = []
-                print("new band")
-                print(band)
-
             # Then recur on this child
             traverse_preorder(root=node, bands=bands, band=band)
+            if node.is_leaf:
+                bands.append(band)
             
-            if new_branch == False:
-                new_branch = True
-
-            # the branch ends here
+            band = []
 
 

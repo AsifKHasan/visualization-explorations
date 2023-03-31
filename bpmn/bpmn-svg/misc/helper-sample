@@ -3,20 +3,22 @@ svg-from-bpmn.bat sample/pizza-order
 
 from bigtree import list_to_tree, list_to_tree_by_relation, print_tree
 from bigtree import list_to_tree_by_relation, print_tree
+from pprint import pprint
 
 root = list_to_tree_by_relation([('A', 'B'), ('B', 'C'), ('C', 'E'), ('E', 'F'), ('E', 'G'), ('B', 'D'), ('D', 'H'), ('H', 'I'), ('I', 'J'), ('I', 'K')])
 print_tree(root)
 
-bands = []
-band = []
-def traverse_preorder(root):
-  global bands
-  global band
+def traverse_preorder(root, bands, band):
   if root:
     # First print the data of node
     band.append(root.name)
     for node in root.children:
-      # Then recur on left child
-      traverse_preorder(root=node)
-      bands.append(band)
+      # Then recur on this child
+      traverse_preorder(root=node, bands=bands, band=band)
+      if node.is_leaf:
+        bands.append(band)
       band = []
+
+bands, band = [], []
+traverse_preorder(root=root, bands=bands, band=band)
+pprint(bands)

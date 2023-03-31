@@ -46,7 +46,7 @@ def parse_theme(theme):
 
     # get the object specific attributes
     # for object_type in ['bpmn', 'pool', 'lane', 'band', 'node', 'edge', 'head', 'tail']:
-    for object_type in ['bpmn', 'pool', 'lane']:
+    for object_type in ['bpmn', 'pool', 'lane', 'band', 'node', ]:
         if object_type in theme and theme[object_type]:
             parsed_theme[object_type] = merge({}, parsed_theme['defs'], parse_defs(defs=theme[object_type]))
 

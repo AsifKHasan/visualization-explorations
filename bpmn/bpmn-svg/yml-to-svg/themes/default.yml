@@ -98,9 +98,32 @@ lane:
 
 # band attributes
 band:
+  shape:          rect
+  shape-style:    fill="#E0E0E0" stroke="#C0C0C0" stroke-width="1"
+  min-width:      400
+  min-height:     100
+  rx:             0
+  ry:             0
 
 # node attributes
 node:
+  shape:          rect
+  shape-style:    fill="#FFFFFF" stroke="#202020" stroke-width="1"
+  min-width:      80
+  min-height:     30
+  rx:             0
+  ry:             0
+
+  label:
+    shape-style:    fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"
+    label-style:    font-size="10" font-weight="normal" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1"
+    position:       in
+    rotation:       none
+    text-wrap:      12
+    min-width:      50
+    valign:         middle
+    halign:         center
+
 
 # edge attributes
 edge:
