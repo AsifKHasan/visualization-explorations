@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import importlib
+from pprint import pprint
 
 from bpmn.bpmn_util import *
 from helper.util import *
@@ -10,6 +11,8 @@ from helper.logger import *
 #   ----------------------------------------------------------------------------------------------------------------
 #   BPMN objects wrappers
 #   ----------------------------------------------------------------------------------------------------------------
+
+ALL_NODES = {}
 
 
 ''' BPMN base object
@@ -59,12 +62,15 @@ class BpmnObject(object):
     ''' parse nodes, edges, bands
     '''
     def parse_bands(self, source_data, location):
+        global ALL_NODES
+
         # process 'nodes'
         if 'nodes' in source_data and source_data['nodes']:
             for node in source_data['nodes']:
                 node_object = BpmnNode(location=location)
                 node_object.parse(source_data=node)
                 self._nodes.append(node_object)
+                ALL_NODES[node_object._id] = node_object
 
         else:
             debug(f"no 'node' for [{self._my_type}] : [{self._label}]")
@@ -79,7 +85,11 @@ class BpmnObject(object):
         else:
             debug(f"no 'edge' for [{self._my_type}] : [{self._label}]")
 
-        # from nodes and edges create bands
+        # from edges create bands only if the tail and head nodes are in the same group
+        node_list = [ node._label for node in self._nodes ]
+        edge_list = [ (edge._tail_node, edge._head_node) for edge in self._edges if edge._tail_node in node_list and edge._head_node in node_list]
+        band_list = edges_to_bands(edge_list=edge_list, node_list=node_list)
+        # pprint(band_list)
 
 
 
@@ -96,6 +106,7 @@ class BpmnRoot(BpmnObject):
     ''' prepare the output data
     '''
     def parse(self, source_data):
+        global ALL_NODES
         # the 'bpmn' key is a must
         if self._my_type not in source_data:
             raise BpmnDataMissing('BPMN', self._my_type)
