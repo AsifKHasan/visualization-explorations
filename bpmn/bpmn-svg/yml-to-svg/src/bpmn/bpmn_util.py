@@ -77,15 +77,10 @@ def edges_to_bands(edge_list, node_list):
             if (edge[1], edge[0]) not in pruned_edge_list:
                 pruned_edge_list.append(edge)
 
-    # for t in pruned_edge_list:
-    #     print(f"{t[0]:40} -> {t[1]}")
-
     bands = []
     if len(pruned_edge_list) > 0:
-
-        root = list_to_tree_by_relation(pruned_edge_list)
-        # print_tree(root)
         band = []
+        root = list_to_tree_by_relation(pruned_edge_list)
         traverse_preorder(root=root, bands=bands, band=band)
 
     # we may have stray nodes which were not part of any edges, put those in a separate band
@@ -98,6 +93,8 @@ def edges_to_bands(edge_list, node_list):
     return bands
 
 
+''' recusive function for preorder tree traversal
+'''
 def traverse_preorder(root, bands, band):
     if root:
         # it is going into the current band

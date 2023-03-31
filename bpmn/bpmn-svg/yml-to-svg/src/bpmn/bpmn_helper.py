@@ -30,7 +30,11 @@ class BpmnHelper(object):
         bpmn_object.parse(source_data=bpmn_data)
 
         # create SVG object
-        svg_object = SvgObject(config=self._config, theme=self._theme)
+        svg_object = SvgObject(theme=self._theme)
 
         # generate svg from bpmn root
-        svg_object.to_svg(bpmn_object=bpmn_object)
+        svg = svg_object.to_svg(bpmn_object=bpmn_object)
+
+        # finally save the svg
+        svg.save(self._config['files']['output-svg'], encoding="UTF-8")
+

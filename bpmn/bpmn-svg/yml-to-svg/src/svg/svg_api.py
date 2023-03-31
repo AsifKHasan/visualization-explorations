@@ -15,9 +15,8 @@ from helper.logger import *
 class SvgObject(object):
     ''' constructor
     '''
-    def __init__(self, config, theme, object_type='bpmn'):
+    def __init__(self, theme, object_type='bpmn'):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        self._config = config
         self._theme = theme
         self._object_type = object_type
 
@@ -87,7 +86,7 @@ class SvgObject(object):
     '''
     def to_svg(self, bpmn_object):
         # bpmn to root group
-        bpmn_svg = BpmnSvg(config=self._config, theme=self._theme)
+        bpmn_svg = BpmnSvg(theme=self._theme)
         bpmn_g = bpmn_svg.to_svg(bpmn_object=bpmn_object)
 
         # canvas is bpmn size + margin
@@ -97,9 +96,7 @@ class SvgObject(object):
         svg = Svg(0, 0, width=canvas_width, height=canvas_height)
         svg.addElement(bpmn_g.g)
 
-        # finally save the svg
-        svg.save(self._config['files']['output-svg'], encoding="UTF-8")
-
+        return svg
 
 
 ''' BPMN SVG object
@@ -107,9 +104,9 @@ class SvgObject(object):
 class BpmnSvg(SvgObject):
     ''' constructor
     '''
-    def __init__(self, config, theme):
+    def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, theme=theme, object_type='bpmn')
+        super().__init__(theme=theme, object_type='bpmn')
         self.pool_svgs = []
 
 
@@ -122,7 +119,7 @@ class BpmnSvg(SvgObject):
         # bpmn to group
         # first we need to get all child pools
         for pool_object in self._bpmn_object._pools:
-            pool_svg = PoolSvg(config=self._config, theme=self._theme)
+            pool_svg = PoolSvg(theme=self._theme)
             g_pool = pool_svg.to_svg(pool_object=pool_object)
             self.pool_svgs.append(g_pool)
 
@@ -151,9 +148,9 @@ class BpmnSvg(SvgObject):
 class PoolSvg(SvgObject):
     ''' constructor
     '''
-    def __init__(self, config, theme):
+    def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, theme=theme, object_type='pool')
+        super().__init__(theme=theme, object_type='pool')
         self.lane_svgs = []
 
 
@@ -166,7 +163,7 @@ class PoolSvg(SvgObject):
         # pool to group
         # first we need to get all child lanes
         for lane_object in self._pool_object._lanes:
-            lane_svg = LaneSvg(config=self._config, theme=self._theme)
+            lane_svg = LaneSvg(theme=self._theme)
             g_lane = lane_svg.to_svg(lane_object=lane_object)
             self.lane_svgs.append(g_lane)
 
@@ -197,9 +194,9 @@ class PoolSvg(SvgObject):
 class LaneSvg(SvgObject):
     ''' constructor
     '''
-    def __init__(self, config, theme):
+    def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, theme=theme, object_type='lane')
+        super().__init__(theme=theme, object_type='lane')
         self.band_svgs = []
 
 
@@ -212,7 +209,7 @@ class LaneSvg(SvgObject):
         # lane to group
         # first we need to get all child bands
         for band_object in self._lane_object._bands:
-            band_svg = BandSvg(config=self._config, theme=self._theme)
+            band_svg = BandSvg(theme=self._theme)
             g_band = band_svg.to_svg(band_object=band_object)
             self.band_svgs.append(g_band)
 
@@ -243,9 +240,9 @@ class LaneSvg(SvgObject):
 class BandSvg(SvgObject):
     ''' constructor
     '''
-    def __init__(self, config, theme):
+    def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(config=config, theme=theme, object_type='band')
+        super().__init__(theme=theme, object_type='band')
         self.node_svgs = []
 
 
@@ -258,7 +255,7 @@ class BandSvg(SvgObject):
         # band to group
         # first we need to get all child nodes
         for node_object in self._band_object._nodes:
-            # node_svg = NodeSvg(config=self._config, theme=self._theme)
+            # node_svg = NodeSvg(theme=self._theme)
             # g_node = node_svg.to_svg(node_object=node_object)
             # self.node_svgs.append(g_node)
             pass
