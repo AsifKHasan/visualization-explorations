@@ -51,8 +51,8 @@ node-spec:
             # (Optional) - another data column
             text:
                 label:          Task
-                header-style:   width=3.00in; label="{}\l";
-                row-style:      width=3.00in; shape=none;
+                header-style:   width=4.50in; label="{}\l";
+                row-style:      width=4.50in; shape=none;
                 level-styles:
                     L0:         label="{}\l";
                     L1:         label="    {}\l";

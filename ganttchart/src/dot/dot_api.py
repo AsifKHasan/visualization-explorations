@@ -395,7 +395,8 @@ class GraphObject(object):
             item = Item(data=item_data, level=0)
             item.process()
             self._items.append(item)
-            self._time_count = max(self._time_count, item._time)
+            self._time_count = max(self._time_count, item._endt)
+            # print(f"time-count [{self._time_count}], [{item._text}]")
 
 
 
@@ -542,6 +543,7 @@ class GraphObject(object):
             label = ''
             nodes.append({'type': 'time-node', 'id':id, 'label': label, 'props': THEME['node-spec']['time-nodes']['data-row']['base-style'], 'day-number': t})
 
+        # print(f"time-node start at [{time_node_strt}], number-time-nodes [{self._time_count}]")
 
         # shape the time nodes so that they fill the time line
         self._lines = append_content(lines=self._lines, content='')

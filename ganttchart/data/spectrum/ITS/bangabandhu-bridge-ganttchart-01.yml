@@ -1,0 +1,99 @@
+theme:              task-week-default
+view:               week
+items:
+- hash:         0
+  text:         Inception    
+  items:
+  - hash:         0.1  
+    text:         NoA Issuance
+    span:         1-1
+  - hash:         0.2  
+    text:         NoA Acceptance
+    span:         1-1
+  - hash:         0.3  
+    text:         Contract signing
+    span:         1-1
+  - hash:         0.4  
+    text:         Kick-off meeting
+    span:         1-1
+  - hash:         0.5  
+    text:         Project Inception Report and project charter
+    span:         2-2
+- hash:         1  
+  text:         Site Survey and Requirements    
+  items:
+  - hash:         1.1  
+    text:         Central Data Center (CDC) Site Survey
+    span:         2-2
+  - hash:         1.2  
+    text:         Disaster Recovery Center (RDC) Site Survey
+    span:         2-2
+  - hash:         1.3  
+    text:         Central Monitoring Center (CDC) Site Survey
+    span:         2-2
+  - hash:         1.4  
+    text:         Local Data Center (LDC) Site Survey
+    span:         2-2
+  - hash:         1.5  
+    text:         Toll Plaza Site Survey
+    span:         2-2
+  - hash:         1.6  
+    text:         Current System Understanding
+    span:         2-2
+- hash:         2  
+  text:         Design & BOQ Finalization    
+  items:
+  - hash:         2.1  
+    text:         Software Requirement Finalization
+    span:         2-3
+  - hash:         2.2  
+    text:         Central Data Center (CDC) Site Design and BOQ Finalization
+    span:         2-3
+  - hash:         2.3  
+    text:         Disaster Recovery Center (RDC) Site Design and BOQ Finalization
+    span:         2-3
+  - hash:         2.4  
+    text:         Central Monitoring Center (CDC) Site Design and BOQ Finalization
+    span:         2-3
+  - hash:         2.5  
+    text:         Local Data Center (LDC) Site Design and BOQ Finalization
+    span:         2-3
+  - hash:         2.6  
+    text:         Toll Plaza Site Design and BOQ Finalization
+    span:         2-3
+- hash:         3  
+  text:         Local Product Ordering    
+  items:
+  - hash:         3.1  
+    text:         CDC Site all Local Product Ordering
+    span:         4-4
+  - hash:         3.2  
+    text:         RDC Site all Local Product Ordering
+    span:         4-4
+  - hash:         3.3  
+    text:         CDC Site all Local Product Ordering
+    span:         4-4
+  - hash:         3.4  
+    text:         LDC Site all Local Product Ordering
+    span:         4-4
+  - hash:         3.5  
+    text:         Toll Plaza Site Local Product Ordering
+    span:         4-4
+- hash:         4  
+  text:         Foreign Product Ordering    
+  items:
+  - hash:         4.1  
+    text:         CDC Site all Foreign Product Ordering
+    span:         2-3
+  - hash:         4.2  
+    text:         RDC Site all Foreign Product Ordering
+    span:         2-3
+  - hash:         4.3  
+    text:         CDC Site all Foreign Product Ordering
+    span:         2-3
+  - hash:         4.4  
+    text:         LDC Site all Foreign Product Ordering
+    span:         2-3
+  - hash:         4.5  
+    text:         Toll Plaza Site Foreign Product Ordering
+    span:         2-3

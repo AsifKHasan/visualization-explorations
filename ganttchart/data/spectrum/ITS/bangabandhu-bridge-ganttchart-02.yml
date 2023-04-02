@@ -1,0 +1,111 @@
+theme:              task-week-default
+view:               week
+items:
+- hash:         5  
+  text:         Local Product Delivery    
+  items:
+  - hash:         5.1  
+    text:         CDC Site all Local Product Delivery
+    span:         5-12
+  - hash:         5.2  
+    text:         RDC Site all Local Product Delivery
+    span:         5-12
+  - hash:         5.3  
+    text:         CDC Site all Local Product Delivery
+    span:         5-12
+  - hash:         5.4  
+    text:         LDC Site all Local Product Delivery
+    span:         5-12
+  - hash:         5.5  
+    text:         Toll Plaza Site Local Product Delivery
+    span:         5-12
+- hash:         6  
+  text:         Foreign Product Delivery    
+  items:
+  - hash:         6.1  
+    text:         CDC Site all Foreign Product Delivery
+    span:         12-24
+  - hash:         6.2  
+    text:         RDC Site all Foreign Product Delivery
+    span:         12-24
+  - hash:         6.3  
+    text:         CDC Site all Foreign Product Delivery
+    span:         12-24
+  - hash:         6.4  
+    text:         LDC Site all Foreign Product Delivery
+    span:         12-24
+  - hash:         6.5  
+    text:         Toll Plaza Site Foreign Product Delivery
+    span:         12-24
+- hash:         7  
+  text:         Local Product Installation Testing and Commissioning    
+  items:
+  - hash:         7.1  
+    text:         CDC Site Local Product Installation, Testing and Commissioning
+    span:         5-20
+  - hash:         7.2  
+    text:         RDC Site Local Product Installation, Testing and Commissioning
+    span:         5-20
+  - hash:         7.3  
+    text:         CDC Site Local Product Installation, Testing and Commissioning
+    span:         5-20
+  - hash:         7.4  
+    text:         LDC Site Local Product Installation, Testing and Commissioning
+    span:         5-20
+  - hash:         7.5  
+    text:         Toll Plaza Site Local Product Installation, Testing and Commissioning
+    span:         5-20
+- hash:         8  
+  text:         Foreign Product Installation Testing and Commissioning    
+  items:
+  - hash:         8.1  
+    text:         CDC Site Foreign Product Installation, Testing and Commissioning
+    span:         12-24
+  - hash:         8.2  
+    text:         RDC Site Foreign Product Installation, Testing and Commissioning
+    span:         12-24
+  - hash:         8.3  
+    text:         CDC Site Foreign Product Installation, Testing and Commissioning
+    span:         12-24
+  - hash:         8.4  
+    text:         LDC Site Foreign Product Installation, Testing and Commissioning
+    span:         12-24
+  - hash:         8.5  
+    text:         Toll Plaza Site Foreign Product Installation, Testing and Commissioning
+    span:         12-24
+- hash:         9  
+  text:         Capacity Building - Training &Technology Transfer    
+  items:
+  - hash:         9.1  
+    text:         Toll Management Software Application Training
+    span:         25-25
+  - hash:         9.2  
+    text:         Toll Collection Training
+    span:         25-25
+  - hash:         9.3  
+    text:         Active Network Training
+    span:         25-25
+  - hash:         9.4  
+    text:         Server and Storage Training
+    span:         25-25
+  - hash:         9.5  
+    text:         Infrastructure Training
+    span:         25-25
+- hash:         10  
+  text:         Go-Live and Acceptance    
+  items:
+  - hash:         10.1  
+    text:         CDC Site Live and Acceptance
+    span:         26-26
+  - hash:         10.2  
+    text:         RDC Site Live and Acceptance
+    span:         26-26
+  - hash:         10.3  
+    text:         CDC Site Live and Acceptance
+    span:         26-26
+  - hash:         10.4  
+    text:         LDC Site Live and Acceptance
+    span:         26-26
+  - hash:         10.5  
+    text:         Toll Plaza Site Live and Acceptance
+    span:         26-26
