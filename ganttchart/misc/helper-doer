@@ -1,0 +1,2 @@
+./ganttchart-from-yml.sh doer/MRA/IMS/mra-ims-dev-ganttchart
+ganttchart-from-yml.bat doer/MRA/IMS/mra-ims-dev-ganttchart
