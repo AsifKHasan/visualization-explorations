@@ -13,7 +13,7 @@ set FMT=%~2
 
 :: yml-to-bpmn
 pushd .\src
-.\yml-to-bpmn.py --config "../conf/config.yml" --yml "%YML%"
+python yml-to-bpmn.py --config "../conf/config.yml" --yml "%YML%"
 
 if errorlevel 1 (
   popd

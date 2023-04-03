@@ -26,7 +26,7 @@ set FMT=%~3
 
 :: yml-to-mindmap
 pushd .\src
-.\yml-to-mindmap.py --config "../conf/config.yml" --yml "%YML%"
+python yml-to-mindmap.py --config "../conf/config.yml" --yml "%YML%"
 
 if errorlevel 1 (
   popd
