@@ -195,105 +195,933 @@ items:
   items:
   - hash:         B.1
     text:         General Configuration
+    items:
+    - hash:         B.1.1
+      text:         View All General Configuration
+      pool:         Ishtiak
+      span:         1-1
+    - hash:         B.1.2
+      text:         Manage General Configuration
+      pool:         Ishtiak
+      span:         1-1
+
   - hash:         B.2
     text:         ID Configuration
+    items:
+    - hash:         B.2.1
+      text:         View ID conventions
+      pool:         Kamal
+      span:         21-21
+    - hash:         B.2.2
+      text:         Manage ID conventions
+      pool:         Kamal
+      span:         22-22
+
   - hash:         B.3
     text:         Branch Configuration
+    items:
+    - hash:         B.3.1
+      text:         View All Branch
+      pool:         Ishtiak
+      span:         2-3
+    - hash:         B.3.2
+      text:         Add New Branch
+      pool:         Ishtiak
+      span:         3-3
+    - hash:         B.3.3
+      text:         View Branch Detail
+      pool:         Ishtiak
+      span:         3-3
+    - hash:         B.3.4
+      text:         Edit Branch
+      pool:         Ishtiak
+      span:         3-3
+    - hash:         B.3.5
+      text:         Delete Branch
+      pool:         Ishtiak
+      span:         4-4
+    - hash:         B.3.6
+      text:         Search Branch
+      pool:         Ishtiak
+      span:         4-4
+
   - hash:         B.4
     text:         Samity Configuration
+    items:
+    - hash:         B.4.1
+      text:         View All Samity Configuration 
+      pool:         Ishtiak
+      span:         4-4
+    - hash:         B.4.2
+      text:         Manage Samity Configuration
+      pool:         Ishtiak
+      span:         5-5
+
   - hash:         B.5
     text:         Member Configuration
+    items:
+    - hash:         B.5.1
+      text:         View All Member Configuration 
+      pool:         Ishtiak
+      span:         6-6
+    - hash:         B.5.2
+      text:         Manage Member Configuration
+      pool:         Ishtiak
+      span:         7-7
+
   - hash:         B.6
     text:         Work Area Configuration
+    items:
+    - hash:         B.6.1
+      text:         View All Address
+      pool:         Ishtiak
+      span:         8-8
+    - hash:         B.6.2
+      text:         Add New Address
+      pool:         Ishtiak
+      span:         8-8
+    - hash:         B.6.3
+      text:         View Address Detail
+      pool:         Ishtiak
+      span:         9-9
+    - hash:         B.6.4
+      text:         Edit Address
+      pool:         Ishtiak
+      span:         9-9
+    - hash:         B.6.5
+      text:         Delete Address
+      pool:         Ishtiak
+      span:         10-10
+    - hash:         B.6.6
+      text:         Search Address
+      pool:         Ishtiak
+      span:         10-10
+
   - hash:         B.7
     text:         Workdays Configuration
+    items:
+    - hash:         B.7.1
+      text:         View All Workdays
+      pool:         Kamal
+      span:         23-23
+    - hash:         B.7.2
+      text:         Add New Workdays
+      pool:         Kamal
+      span:         24-24
+    - hash:         B.7.3
+      text:         View Workdays Detail
+      pool:         Kamal
+      span:         25-25
+    - hash:         B.7.4
+      text:         Edit Workdays
+      pool:         Kamal
+      span:         26-26
+    - hash:         B.7.5
+      text:         Delete Workdays
+      pool:         Kamal
+      span:         26-26
+    - hash:         B.7.6
+      text:         Search Workdays
+      pool:         Kamal
+      span:         27-27
+
   - hash:         B.8
     text:         Holidays and Non-Working Days Configuration
+    items:
+    - hash:         B.8.1
+      text:         View All Holidays or Non-Working Days
+      pool:         Kamal
+      span:         27-27
+    - hash:         B.8.2
+      text:         Add New Holidays or Non-Working Days
+      pool:         Kamal
+      span:         28-28
+    - hash:         B.8.3
+      text:         View Holidays or Non-Working Days Detail
+      pool:         Kamal
+      span:         29-29
+    - hash:         B.8.4
+      text:         Edit Holidays or Non-Working Days
+      pool:         Kamal
+      span:         29-29
+    - hash:         B.8.5
+      text:         Delete Holidays or Non-Working Days
+      pool:         Kamal
+      span:         30-30
+    - hash:         B.8.6
+      text:         Search Holidays or Non-Working Days
+      pool:         Kamal
+      span:         30-30
+
   - hash:         B.9
     text:         Areas
+    items:
+    - hash:         B.9.1
+      text:         View All Areas
+      pool:         Ishtiak
+      span:         11-11
+    - hash:         B.9.2
+      text:         Add New Areas
+      pool:         Ishtiak
+      span:         11-11
+    - hash:         B.9.3
+      text:         View Areas Detail
+      pool:         Ishtiak
+      span:         12-12
+    - hash:         B.9.4
+      text:         Edit Areas
+      pool:         Ishtiak
+      span:         12-12
+    - hash:         B.9.5
+      text:         Delete Areas
+      pool:         Ishtiak
+      span:         13-13
+    - hash:         B.9.6
+      text:         Search Areas
+      pool:         Ishtiak
+      span:         13-13
+
   - hash:         B.10
     text:         Zone
+    items:
+    - hash:         B.10.1
+      text:         View All Zone
+      pool:         Ishtiak
+      span:         14-14
+    - hash:         B.10.2
+      text:         Add New Zone
+      pool:         Ishtiak
+      span:         14-14
+    - hash:         B.10.3
+      text:         View Zone Detail
+      pool:         Ishtiak
+      span:         15-15
+    - hash:         B.10.4
+      text:         Edit Zone
+      pool:         Ishtiak
+      span:         16-16
+    - hash:         B.10.5
+      text:         Delete Zone
+      pool:         Ishtiak
+      span:         17-17
+    - hash:         B.10.6
+      text:         Search Zone
+      pool:         Ishtiak
+      span:         17-17
+
   - hash:         B.11
     text:         Region
+    items:
+    - hash:         B.11.1
+      text:         View All Region
+      pool:         Ishtiak
+      span:         17-17
+    - hash:         B.11.2
+      text:         Add New Region
+      pool:         Ishtiak
+      span:         18-18
+    - hash:         B.11.3
+      text:         View Region Detail
+      pool:         Ishtiak
+      span:         19-19
+    - hash:         B.11.4
+      text:         Edit Region
+      pool:         Ishtiak
+      span:         19-19
+    - hash:         B.11.5
+      text:         Delete Region
+      pool:         Ishtiak
+      span:         20-20
+    - hash:         B.11.6
+      text:         Search Region
+      pool:         Ishtiak
+      span:         20-20
+
   - hash:         B.12
     text:         Funding Organizations
+    items:
+    - hash:         B.12.1
+      text:         View All Funding Organization
+      pool:         Ishtiak
+      span:         21-21
+    - hash:         B.12.2
+      text:         Add New Funding Organization
+      pool:         Ishtiak
+      span:         22-22
+    - hash:         B.12.3
+      text:         View Funding Organization Detail
+      pool:         Ishtiak
+      span:         23-23
+    - hash:         B.12.4
+      text:         Edit Funding Organization
+      pool:         Ishtiak
+      span:         24-24
+    - hash:         B.12.5
+      text:         Delete Funding Organization
+      pool:         Ishtiak
+      span:         24-24
+    - hash:         B.12.6
+      text:         Search Funding Organization
+      pool:         Ishtiak
+      span:         25-25
+
   - hash:         B.13
     text:         Member Transfer Configuration
+    items:
+    - hash:         B.13.1
+      text:         View member transfer rules
+      pool:         Kamal
+      span:         31-31
+    - hash:         B.13.2
+      text:         Manage member transfer rules
+      pool:         Kamal
+      span:         32-32
+
   - hash:         B.14
     text:         Collection Sheet Configuration
+    items:
+    - hash:         B.14.1
+      text:         View All Collection Sheet Configuration 
+      pool:         Kamal
+      span:         33-33
+    - hash:         B.14.2
+      text:         Manage Collection Sheet Configuration
+      pool:         Kamal
+      span:         34-34
+
   - hash:         B.15
     text:         Loan Product Category
+    items:
+    - hash:         B.15.1
+      text:         View All Loan Product Category
+      pool:         Ishtiak
+      span:         26-26
+    - hash:         B.15.2
+      text:         Add New Loan Product Category
+      pool:         Ishtiak
+      span:         27-27
+    - hash:         B.15.3
+      text:         View Loan Product Category Detail
+      pool:         Ishtiak
+      span:         27-27
+    - hash:         B.15.4
+      text:         Edit Loan Product Category
+      pool:         Ishtiak
+      span:         28-28
+    - hash:         B.15.5
+      text:         Delete Loan Product Category
+      pool:         Ishtiak
+      span:         29-29
+    - hash:         B.15.6
+      text:         Search Loan Product Category
+      pool:         Ishtiak
+      span:         29-29
+
   - hash:         B.16
     text:         Economic Purpose Code
+    items:
+    - hash:         B.16.1
+      text:         View All Economic Purpose Code
+      pool:         Ishtiak
+      span:         30-30
+    - hash:         B.16.2
+      text:         Add New Economic Purpose Code
+      pool:         Ishtiak
+      span:         30-30
+    - hash:         B.16.3
+      text:         View Economic Purpose Code Detail
+      pool:         Ishtiak
+      span:         31-31
+    - hash:         B.16.4
+      text:         Edit Economic Purpose Code
+      pool:         Ishtiak
+      span:         31-31
+    - hash:         B.16.5
+      text:         Delete Economic Purpose Code
+      pool:         Ishtiak
+      span:         32-32
+    - hash:         B.16.6
+      text:         Search Economic Purpose Code
+      pool:         Ishtiak
+      span:         32-32
+
   - hash:         B.17
     text:         Economic Purpose
+    items:
+    - hash:         B.17.1
+      text:         View All Economic Purpose
+      pool:         Ishtiak
+      span:         33-33
+    - hash:         B.17.2
+      text:         Add New Economic Purpose 
+      pool:         Ishtiak
+      span:         33-33
+    - hash:         B.17.3
+      text:         View Economic Purpose Detail
+      pool:         Ishtiak
+      span:         34-34
+    - hash:         B.17.4
+      text:         Edit Economic Purpose 
+      pool:         Ishtiak
+      span:         35-35
+    - hash:         B.17.5
+      text:         Delete Economic Purpose 
+      pool:         Ishtiak
+      span:         35-35
+    - hash:         B.17.6
+      text:         Search Economic Purpose
+      pool:         Ishtiak
+      span:         36-36
+
   - hash:         B.18
     text:         Dashboard Settings
+    items:
+    - hash:         B.18.1
+      text:         View dashboard setting
+      pool:         Ishtiak
+      span:         
+    - hash:         B.18.2
+      text:         Manage visual reports
+      pool:         Ishtiak
+      span:         
 
-- hash:         C  
+- hash:         C
   text:         Employees
   items:
   - hash:         C.1
     text:         Employees Departments
+    items:
+    - hash:         C.1.1
+      text:         View All Employees Department
+      pool:         Tanvir Mallik
+      span:         1-1
+    - hash:         C.1.2
+      text:         Add New Employees Department
+      pool:         Tanvir Mallik
+      span:         1-1
+    - hash:         C.1.3
+      text:         View Employees Department Detail
+      pool:         Tanvir Mallik
+      span:         2-2
+    - hash:         C.1.4
+      text:         Edit Employees Department
+      pool:         Tanvir Mallik
+      span:         3-3
+    - hash:         C.1.5
+      text:         Delete Employees Department
+      pool:         Tanvir Mallik
+      span:         3-3
+    - hash:         C.1.6
+      text:         Search Employees Department
+      pool:         Tanvir Mallik
+      span:         3-3
+
   - hash:         C.2
     text:         Employees Designations
+    items:
+    - hash:         C.2.1
+      text:         View All Employees Designation
+      pool:         Tanvir Mallik
+      span:         4-4
+    - hash:         C.2.2
+      text:         Add New Employees Designation
+      pool:         Tanvir Mallik
+      span:         4-4
+    - hash:         C.2.3
+      text:         View Employees Designation Detail
+      pool:         Tanvir Mallik
+      span:         5-5
+    - hash:         C.2.4
+      text:         Edit Employees Designation
+      pool:         Tanvir Mallik
+      span:         6-6
+    - hash:         C.2.5
+      text:         Delete Employees Designation
+      pool:         Tanvir Mallik
+      span:         6-6
+    - hash:         C.2.6
+      text:         Search Employees Designation
+      pool:         Tanvir Mallik
+      span:         6-6
+
   - hash:         C.3
     text:         Employees
+    items:
+    - hash:         C.3.1
+      text:         View All Employee
+      pool:         Tanvir Mallik
+      span:         7-7
+    - hash:         C.3.2
+      text:         Add New Employee
+      pool:         Tanvir Mallik
+      span:         8-8
+    - hash:         C.3.3
+      text:         Edit Employee
+      pool:         Tanvir Mallik
+      span:         9-9
+    - hash:         C.3.4
+      text:         View Employee Details
+      pool:         Tanvir Mallik
+      span:         9-9
+    - hash:         C.3.5
+      text:         Delete Employee
+      pool:         Tanvir Mallik
+      span:         10-10
+    - hash:         C.3.6
+      text:         Search Employee
+      pool:         Tanvir Mallik
+      span:         10-10
+
   - hash:         C.4
     text:         Employees Responsibility Historical
+    items:
+    - hash:         C.4.1
+      text:         Add Responsibility
+      pool:         Tanvir Mallik
+      span:         10-10
+    - hash:         C.4.2
+      text:         Edit Responsibility
+      pool:         Tanvir Mallik
+      span:         11-11
+    - hash:         C.4.3
+      text:         Delete Responsibility
+      pool:         Tanvir Mallik
+      span:         12-12
+    - hash:         C.4.4
+      text:         View Employee Responsibility
+      pool:         Tanvir Mallik
+      span:         12-12
+
   - hash:         C.5
     text:         Employees Branch Transfer
+    items:
+    - hash:         C.5.1
+      text:         View Transfer list
+      pool:         Tanvir Mallik
+      span:         13-13
+    - hash:         C.5.2
+      text:         Execute Employee Transfer
+      pool:         Tanvir Mallik
+      span:         14-14
+    - hash:         C.5.3
+      text:         Search Transferred Employee
+      pool:         Tanvir Mallik
+      span:         14-14
+
   - hash:         C.6
     text:         Employees Resign/Termination
+    items:
+    - hash:         C.6.1
+      text:         View Resign List
+      pool:         Tanvir Mallik
+      span:         14-14
+    - hash:         C.6.2
+      text:         Execute Employee Resign/Terminate
+      pool:         Tanvir Mallik
+      span:         14-14
+    - hash:         C.6.3
+      text:         Edit Resigned/Terminated Employee 
+      pool:         Tanvir Mallik
+      span:         15-15
+    - hash:         C.6.4
+      text:         Delete Resigned/Terminated Employee 
+      pool:         Tanvir Mallik
+      span:         16-16
+    - hash:         C.6.5
+      text:         Search Resigned/Terminated Employee 
+      pool:         Tanvir Mallik
+      span:         16-16
+
   - hash:         C.7
     text:         Field Officer Management
+    items:
+    - hash:         C.7.1
+      text:         View All Field Officer
+      pool:         Tanvir Mallik
+      span:         17-17
+    - hash:         C.7.2
+      text:         Add Field Officer
+      pool:         Tanvir Mallik
+      span:         18-18
+    - hash:         C.7.3
+      text:         Edit Field Officer 
+      pool:         Tanvir Mallik
+      span:         18-18
+    - hash:         C.7.4
+      text:         Delete Field Officer
+      pool:         Tanvir Mallik
+      span:         19-19
 
 - hash:         D  
   text:         Samity
   items:
   - hash:         D.1
     text:         Samity Management
+    items:
+    - hash:         D.1.1
+      text:         View All Samity
+      pool:         Tanvir Mallik
+      span:         20-20
+    - hash:         D.1.2
+      text:         Add New Samity
+      pool:         Tanvir Mallik
+      span:         21-21
+    - hash:         D.1.3
+      text:         View Samity Detail
+      pool:         Tanvir Mallik
+      span:         22-22
+    - hash:         D.1.4
+      text:         Edit Samity
+      pool:         Tanvir Mallik
+      span:         23-23
+    - hash:         D.1.5
+      text:         Delete Samity
+      pool:         Tanvir Mallik
+      span:         24-24
+    - hash:         D.1.6
+      text:         Search Samity
+      pool:         Tanvir Mallik
+      span:         24-24
+
   - hash:         D.2
     text:         Samity Transfers
+    items:
+    - hash:         D.2.1
+      text:         View All Transfered Samity
+      pool:         Tanvir Mallik
+      span:         25-25
+    - hash:         D.2.2
+      text:         Execute New Samity Transfer
+      pool:         Tanvir Mallik
+      span:         25-25
+    - hash:         D.2.3
+      text:         View Samity Transfer Detail
+      pool:         Tanvir Mallik
+      span:         26-26
+    - hash:         D.2.4
+      text:         Delete Samity Transfer
+      pool:         Tanvir Mallik
+      span:         26-26
+
   - hash:         D.3
     text:         Samity Field Officer Change
+    items:
+    - hash:         D.3.1
+      text:         View All Field Officer Change History
+      pool:         Tanvir Mallik
+      span:         27-27
+    - hash:         D.3.2
+      text:         Change assigned field officer
+      pool:         Tanvir Mallik
+      span:         27-27
+    - hash:         D.3.3
+      text:         View Field Officer Change Detail
+      pool:         Tanvir Mallik
+      span:         27-27
+    - hash:         D.3.4
+      text:         Delete Field Officer Change
+      pool:         Tanvir Mallik
+      span:         28-28
+    - hash:         D.3.5
+      text:         Search Field Officer Change
+      pool:         Tanvir Mallik
+      span:         28-28
+
   - hash:         D.4
     text:         Samity Batch Field Officer Change
+    items:
+    - hash:         D.4.1
+      text:         Change assigned batch field officer
+      pool:         Tanvir Mallik
+      span:         29-29
+    - hash:         D.4.2
+      text:         Change assigned batch field officer
+      pool:         Tanvir Mallik
+      span:         29-29
+    - hash:         D.4.3
+      text:         View Batch Field Officer Change Detail
+      pool:         Tanvir Mallik
+      span:         30-30
+    - hash:         D.4.4
+      text:         Delete Batch Field Officer Change
+      pool:         Tanvir Mallik
+      span:         30-30
+    - hash:         D.4.5
+      text:         Search Batch Field Officer Change
+      pool:         Tanvir Mallik
+      span:         30-30
+
   - hash:         D.5
     text:         Samity Day Change
+    items:
+    - hash:         D.5.1
+      text:         View Samity Day Change
+      pool:         Tanvir Mallik
+      span:         31-31
+    - hash:         D.5.2
+      text:         Samity Day Change Create
+      pool:         Tanvir Mallik
+      span:         31-31
+    - hash:         D.5.3
+      text:         View Samity Day Change Detail
+      pool:         Tanvir Mallik
+      span:         31-31
+    - hash:         D.5.4
+      text:         Delete Samity Day Change Activity
+      pool:         Tanvir Mallik
+      span:         32-32
+    - hash:         D.5.5
+      text:         Search Samity Day Change Activity
+      pool:         Tanvir Mallik
+      span:         32-32
+
   - hash:         D.6
     text:         Samity Closings
+    items:
+    - hash:         D.6.1
+      text:         View Samity Closing
+      pool:         Tanvir Mallik
+      span:         33-33
+    - hash:         D.6.2
+      text:         Close Samity
+      pool:         Tanvir Mallik
+      span:         33-33
+    - hash:         D.6.3
+      text:         View Samity Closing Detail
+      pool:         Tanvir Mallik
+      span:         33-33
+    - hash:         D.6.4
+      text:         Delete Samity Closing Activity
+      pool:         Tanvir Mallik
+      span:         34-34
+    - hash:         D.6.5
+      text:         Search Samity Closing Activity
+      pool:         Tanvir Mallik
+      span:         34-34
 
 - hash:         E  
   text:         Member
   items:
   - hash:         E.1
     text:         Member Management
+    items:
+    - hash:         E.1.1
+      text:         View All Members
+      pool:         Kamal
+      span:         1-1
+    - hash:         E.1.2
+      text:         Add New Member
+      pool:         Kamal
+      span:         1-1
+    - hash:         E.1.3
+      text:         View Member Detail
+      pool:         Kamal
+      span:         2-2
+    - hash:         E.1.4
+      text:         Edit Member
+      pool:         Kamal
+      span:         3-3
+    - hash:         E.1.5
+      text:         Delete Member
+      pool:         Kamal
+      span:         4-4
+    - hash:         E.1.6
+      text:         Search Member
+      pool:         Kamal
+      span:         4-4
+
   - hash:         E.2
     text:         Member Samity Transfer
+    items:
+
+    - hash:         E.2.1
+      text:         View Member Samity Transfer
+      pool:         Kamal
+      span:         4-4
+    - hash:         E.2.2
+      text:         Change Member Samity
+      pool:         Kamal
+      span:         5-5
+    - hash:         E.2.3
+      text:         View Member Samity Transfer Detail
+      pool:         Kamal
+      span:         5-5
+    - hash:         E.2.4
+      text:         Edit Member Samity Transfer
+      pool:         Kamal
+      span:         6-8
+    - hash:         E.2.5
+      text:         Delete Member Samity Transfer
+      pool:         Kamal
+      span:         7-7
+    - hash:         E.2.6
+      text:         Search Member Samity Transfer
+      pool:         Kamal
+      span:         7-7
+
   - hash:         E.3
     text:         Member Primary Product Transfer
+    items:
+    - hash:         E.3.1
+      text:         View Member Product Transfer
+      pool:         Kamal
+      span:         8-8
+    - hash:         E.3.2
+      text:         Change Product Member
+      pool:         Kamal
+      span:         8-8
+    - hash:         E.3.3
+      text:         View Member Product Transfer Detail
+      pool:         Kamal
+      span:         9-9
+    - hash:         E.3.4
+      text:         Edit Member Product Transfer
+      pool:         Kamal
+      span:         10-10
+    - hash:         E.3.5
+      text:         Delete Member Product Transfer
+      pool:         Kamal
+      span:         10-10
+    - hash:         E.3.6
+      text:         Search Member Product Transfer
+      pool:         Kamal
+      span:         11-11
+
   - hash:         E.4
     text:         Member Closing
+    items:
+    - hash:         E.4.1
+      text:         View Member Closing
+      pool:         Kamal
+      span:         11-11
+    - hash:         E.4.2
+      text:         Close Member
+      pool:         Kamal
+      span:         12-12
+    - hash:         E.4.3
+      text:         View Member Closing Detail
+      pool:         Kamal
+      span:         12-12
+    - hash:         E.4.4
+      text:         Delete Member Closing Activity
+      pool:         Kamal
+      span:         13-13
+    - hash:         E.4.5
+      text:         Search Member Closing Activity
+      pool:         Kamal
+      span:         13-13
+
   - hash:         E.5
     text:         Member Black List
+    items:
+    - hash:         E.5.1
+      text:         View Member Black List
+      pool:         Kamal
+      span:         14-14
+    - hash:         E.5.2
+      text:         Black List Member
+      pool:         Kamal
+      span:         14-14
+    - hash:         E.5.3
+      text:         Remove Black List Member
+      pool:         Kamal
+      span:         15-15
+
   - hash:         E.6
     text:         Member Attendances
+    items:
+    - hash:         E.6.1
+      text:         View Member Attendances
+      pool:         Kamal
+      span:         15-15
+    - hash:         E.6.2
+      text:         Member Attendances Create
+      pool:         Kamal
+      span:         16-16
+    - hash:         E.6.3
+      text:         View Member Attendances Detail
+      pool:         Kamal
+      span:         17-17
+    - hash:         E.6.4
+      text:         Delete Member Attendances Activity
+      pool:         Kamal
+      span:         17-17
+    - hash:         E.6.5
+      text:         Search Member Attendances Activity
+      pool:         Kamal
+      span:         18-18
+
   - hash:         E.7
     text:         Member Pass Book Sale
+    items:
+    - hash:         E.7.1
+      text:         View Member Pass Book
+      pool:         Kamal
+      span:         18-18
+    - hash:         E.7.2
+      text:         Member Pass Book Issue
+      pool:         Kamal
+      span:         19-19
+    - hash:         E.7.3
+      text:         View Member Pass Book Sale Detail
+      pool:         Kamal
+      span:         20-20
+    - hash:         E.7.4
+      text:         Search Member Pass Book Sale Activity
+      pool:         Kamal
+      span:         20-20
 
 - hash:         F  
   text:         Mobile Apps Transaction
   items:
   - hash:         F.1
     text:         Loan Repayment 
+    items:
+    - hash:         F.1.1
+      text:         Samity Day Regular Loan Repayment
+      pool:         Ferdous
+      span:         2-8
+    - hash:         F.1.2
+      text:         Non-Samity Day Regular Loan Repayment
+      pool:         Ferdous
+      span:         9-10
+    - hash:         F.1.3
+      text:         Samity Day Seasonal Loan Repayment
+      pool:         Ferdous
+      span:         11-15
+    - hash:         F.1.4
+      text:         Non-Samity Day Seasonal Loan Repayment
+      pool:         Ferdous
+      span:         16-17
+
   - hash:         F.2
     text:         Savings collection & withdrawal 
+    items:
+    - hash:         F.2.1
+      text:         General Savings
+      pool:         Ferdous
+      span:         18-24
+    - hash:         F.2.2
+      text:         Voluntary Savings
+      pool:         Ferdous
+      span:         25-26
+    - hash:         F.2.3
+      text:         Term Savings
+      pool:         Ferdous
+      span:         27-31
+
   - hash:         F.3
     text:         Member
-
-
-
-
-
-
+    items:
+    - hash:         F.3.1
+      text:         Member Application
+      pool:         Ferdous
+      span:         33-34
+    - hash:         F.3.2
+      text:         Loan Application
+      pool:         Ferdous
+      span:         35-38
+    - hash:         F.3.3
+      text:         Savings Account Application
+      pool:         Ferdous
+      span:         39-43
