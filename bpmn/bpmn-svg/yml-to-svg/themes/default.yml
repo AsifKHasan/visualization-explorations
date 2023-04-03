@@ -105,6 +105,24 @@ band:
   rx:             0
   ry:             0
 
+# inter-pool edge pathways
+pool-path:
+  shape:          rect
+  shape-style:    fill="#A0A0A0" stroke="#A0A0A0" stroke-width="0"
+  min-height:     10
+
+# inter-pool edge pathways
+lane-path:
+  shape:          rect
+  shape-style:    fill="#A0A0A0" stroke="#A0A0A0" stroke-width="0"
+  min-height:     10
+
+# inter-pool edge pathways
+band-path:
+  shape:          rect
+  shape-style:    fill="#A0A0A0" stroke="#A0A0A0" stroke-width="0"
+  min-height:     10
+
 # node attributes
 node:
   shape:          rect
