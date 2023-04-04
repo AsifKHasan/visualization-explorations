@@ -45,8 +45,8 @@ def parse_theme(theme):
         ThemeDataMissing(data='root', key='defs')
 
     # get the object specific attributes
-    # for object_type in ['bpmn', 'pool', 'lane', 'band', 'node', 'edge', 'head', 'tail']:
-    for object_type in ['bpmn', 'pool', 'lane', 'band', 'node', ]:
+    # for object_type in ['bpmn', 'pool', 'lane', 'band', 'node', 'pool-path', 'lane-path', 'band-path', 'edge', 'head', 'tail']:
+    for object_type in ['bpmn', 'pool', 'lane', 'band', 'node', 'pool-path', 'lane-path', 'band-path']:
         if object_type in theme and theme[object_type]:
             parsed_theme[object_type] = merge({}, parsed_theme['defs'], parse_defs(defs=theme[object_type]))
 

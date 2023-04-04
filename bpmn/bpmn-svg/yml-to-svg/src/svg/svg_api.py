@@ -99,6 +99,7 @@ class SvgObject(object):
         return svg
 
 
+
 ''' BPMN SVG object
 '''
 class BpmnSvg(SvgObject):
@@ -116,12 +117,25 @@ class BpmnSvg(SvgObject):
     def to_svg(self, bpmn_object):
         self._bpmn_object = bpmn_object
 
+        # TODO: what about the bands directly under the Bpmn?
+
         # bpmn to group
         # first we need to get all child pools
-        for pool_object in self._bpmn_object._pools:
+        pool_count = len(self._bpmn_object._pools)
+        for i in range(0, pool_count):
+            # append pool-paths if this is not the first pool
+            if i != 0:
+                for n in range(0, self._bpmn_object._pool_path_count):
+                    pool_path_svg = PoolPathSvg(theme=self._theme)
+                    g_pool_path = pool_path_svg.to_svg(num=n)
+                    self.pool_svgs.append(g_pool_path)
+
+            pool_object = self._bpmn_object._pools[i]
             pool_svg = PoolSvg(theme=self._theme)
             g_pool = pool_svg.to_svg(pool_object=pool_object)
             self.pool_svgs.append(g_pool)
+
+
 
         # calculate width, height with all pools embedded
         self._width = max([pool_g.g_width for pool_g in self.pool_svgs] + [self._width])
@@ -279,3 +293,60 @@ class BandSvg(SvgObject):
 
         # return group
         return g_band
+
+
+
+''' PoolPath SVG object
+'''
+class PoolPathSvg(SvgObject):
+    ''' constructor
+    '''
+    def __init__(self, theme):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+        super().__init__(theme=theme, object_type='pool-path')
+
+
+
+    ''' generate the pool-path SVG
+    '''
+    def to_svg(self, num):
+        self._num = num
+
+        # TODO: create the pool-path group
+        g_band = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+
+
+
+''' LanePath SVG object
+'''
+class LanePathSvg(SvgObject):
+    ''' constructor
+    '''
+    def __init__(self, theme):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+        super().__init__(theme=theme, object_type='lane-path')
+
+
+
+    ''' generate the lane-path SVG
+    '''
+    def to_svg(self, num):
+        self._num = num
+
+
+
+''' BandPath SVG object
+'''
+class BandPathSvg(SvgObject):
+    ''' constructor
+    '''
+    def __init__(self, theme):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+        super().__init__(theme=theme, object_type='band-path')
+
+
+
+    ''' generate the band-path SVG
+    '''
+    def to_svg(self, num):
+        self._num = num

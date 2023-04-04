@@ -13,7 +13,9 @@ from helper.logger import *
 #   ----------------------------------------------------------------------------------------------------------------
 
 ALL_NODES = {}
-
+pool_path_count = 1
+lane_path_count = 1
+band_path_count = 1
 
 ''' BPMN base object
 '''
@@ -62,7 +64,7 @@ class BpmnObject(object):
     ''' parse nodes, edges, bands
     '''
     def parse_bands(self, source_data, location):
-        global ALL_NODES
+        global ALL_NODES, band_path_count
 
         # process 'nodes'
         if 'nodes' in source_data and source_data['nodes']:
@@ -95,6 +97,7 @@ class BpmnObject(object):
         i = 0
         for band in band_list:
             band_object = BpmnBand(parent_id=self._id, serial=i, location=location)
+            band_object._band_path_count = band_path_count
             for node_id in band:
                 band_object.add_node(node=ALL_NODES[node_id])
 
@@ -116,13 +119,20 @@ class BpmnRoot(BpmnObject):
     ''' prepare the output data
     '''
     def parse(self, source_data):
-        global ALL_NODES
+        global ALL_NODES, pool_path_count, lane_path_count, band_path_count
+
         # the 'bpmn' key is a must
         if self._my_type not in source_data:
             raise BpmnDataMissing('BPMN', self._my_type)
 
         # common processing
         super().parse_common(source_data=source_data)
+
+        # intra-pool/lane/band path counts
+        pool_path_count = source_data.get('pool-paths', 1)
+        lane_path_count = source_data.get('lane-paths', 1)
+        band_path_count = source_data.get('band-paths', 1)
+
 
         # nodes, edges, bands
         super().parse_bands(source_data=source_data, location={})
@@ -152,6 +162,12 @@ class BpmnPool(BpmnObject):
     ''' prepare the output data
     '''
     def parse(self, source_data):
+        global pool_path_count, lane_path_count, band_path_count
+
+        self._pool_path_count = pool_path_count
+        self._lane_path_count = lane_path_count
+        self._band_path_count = band_path_count
+
         # the 'pool' key is a must
         if self._my_type not in source_data:
             raise BpmnDataMissing('BPMN', self._my_type)
@@ -190,6 +206,11 @@ class BpmnLane(BpmnObject):
     ''' prepare the output data
     '''
     def parse(self, source_data):
+        global lane_path_count, band_path_count
+
+        self._lane_path_count = lane_path_count
+        self._band_path_count = band_path_count
+
         # the 'lane' key is a must
         if self._my_type not in source_data:
             raise BpmnDataMissing('BPMN', self._my_type)
