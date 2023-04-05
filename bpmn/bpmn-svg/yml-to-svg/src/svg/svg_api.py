@@ -31,6 +31,9 @@ class SvgObject(object):
         position = self._theme[self._object_type]['label']['position']
         rotation = self._theme[self._object_type]['label']['rotation']
 
+        text_g, rect_width, rect_height = None, None, None
+        gid = f"label__{self._gid}"
+
         # based on position and rotation create the label
         if position == 'in':
             # just embed the text into the attach group
@@ -40,43 +43,46 @@ class SvgObject(object):
             if rotation in ['left', 'right']:
                 # swap dimension
                 rect_width, rect_height = bounding_height, bounding_width
-                text_g = a_text(text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
             elif rotation in ['none']:
                 # dimension is attach object's dimension without margin
                 rect_width, rect_height = bounding_width, bounding_height
-                text_g = a_text(text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
         elif position in ['north', 'south']:
             # handle rotation
             if rotation in ['left', 'right']:
                 # width is object's min-height, height is attach object's width
                 rect_width, rect_height = self._theme[self._object_type]['label']['min-height'], self._width
-                text_g = a_text(text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
             elif rotation in ['none']:
                 # width is attach object's width, height is text's min-height
                 rect_width, rect_height = self._width, self._theme[self._object_type]['label']['min-height']
-                text_g = a_text(text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
         elif position in ['west', 'east']:
             # handle rotation
             if rotation in ['left', 'right']:
                 # width is attach object's height, height is text's min-width
                 rect_width, rect_height = self._height, self._theme[self._object_type]['label']['min-width']
-                text_g = a_text(text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
             elif rotation in ['none']:
                 # width is object's min-width, height is attach object's height
                 rect_width, rect_height = self._theme[self._object_type]['label']['min-width'], self._height
-                text_g = a_text(text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
 
         # translate based on rotation
-        text_g.translate(rect_height * ROTATION_MATRIX[rotation]['translation'][0], rect_width * ROTATION_MATRIX[rotation]['translation'][1])
+        x = rect_height * ROTATION_MATRIX[rotation]['translation'][0]
+        y = rect_width * ROTATION_MATRIX[rotation]['translation'][1]
+        text_g.translate(x=x, y=y)
 
         # group the object and label based on position
-        new_g = group_together(svg_groups=[attach_to_g, text_g], position=position)
+        gid = f"group__{self._gid}"
+        new_g = group_together(gid=gid, svg_groups=[attach_to_g, text_g], position=position)
 
         return new_g
 
@@ -85,6 +91,8 @@ class SvgObject(object):
     ''' generate the SVG from data
     '''
     def to_svg(self, bpmn_object):
+        self._gid = f"{bpmn_object._id}"
+
         # bpmn to root group
         bpmn_svg = BpmnSvg(theme=self._theme)
         bpmn_g = bpmn_svg.to_svg(bpmn_object=bpmn_object)
@@ -116,6 +124,7 @@ class BpmnSvg(SvgObject):
     '''
     def to_svg(self, bpmn_object):
         self._bpmn_object = bpmn_object
+        self._gid = f"{bpmn_object._id}"
 
         # TODO: what about the bands directly under the Bpmn?
 
@@ -142,7 +151,12 @@ class BpmnSvg(SvgObject):
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
         # finally create the bpmn group
-        g_bpmn = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        g_bpmn = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the pools
         g_bpmn = g_bpmn.embed_vertically(svg_groups=self.pool_svgs, margin=self._theme[self._object_type]['margin'])
@@ -172,6 +186,7 @@ class PoolSvg(SvgObject):
     '''
     def to_svg(self, pool_object):
         self._pool_object = pool_object
+        self._gid = f"{self._pool_object._id}"
 
         # TODO: what about the bands directly under the Pool?
 
@@ -196,7 +211,12 @@ class PoolSvg(SvgObject):
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
         # finally create the pool group
-        g_pool = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        g_pool = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the lanes
         g_pool = g_pool.embed_vertically(svg_groups=self.lane_svgs, margin=self._theme[self._object_type]['margin'])
@@ -228,6 +248,7 @@ class LaneSvg(SvgObject):
     '''
     def to_svg(self, lane_object):
         self._lane_object = lane_object
+        self._gid = f"{self._lane_object._id}"
 
         # lane to group, get all child bands
         band_count = len(self._lane_object._bands)
@@ -250,7 +271,12 @@ class LaneSvg(SvgObject):
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
         # finally create the lane group
-        g_lane = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        g_lane = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the bands
         g_lane = g_lane.embed_vertically(svg_groups=self.band_svgs, margin=self._theme[self._object_type]['margin'])
@@ -282,6 +308,7 @@ class BandSvg(SvgObject):
     '''
     def to_svg(self, band_object):
         self._band_object = band_object
+        self._gid = f"{self._band_object._id}"
 
         # band to group
         # first we need to get all child nodes
@@ -297,7 +324,12 @@ class BandSvg(SvgObject):
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
         # finally create the band group
-        g_band = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        g_band = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the nodes
         g_band = g_band.embed_vertically(svg_groups=self.node_svgs, margin=self._theme[self._object_type]['margin'])
@@ -333,7 +365,13 @@ class PoolPathSvg(SvgObject):
         self._width = width
 
         # TODO: create the pool-path group
-        g_pool_path = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        gid = f"gid"
+        g_pool_path = a_rect(gid=gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # return group
         return g_pool_path
@@ -360,7 +398,13 @@ class LanePathSvg(SvgObject):
         self._width = width
 
         # TODO: create the lane-path group
-        g_lane_path = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        gid = f"gid"
+        g_lane_path = a_rect(gid=gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # return group
         return g_lane_path
@@ -387,7 +431,13 @@ class BandPathSvg(SvgObject):
         self._width = width
 
         # TODO: create the band-path group
-        g_band_path = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        gid = f"gid"
+        g_band_path = a_rect(gid=gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # return group
         return g_band_path

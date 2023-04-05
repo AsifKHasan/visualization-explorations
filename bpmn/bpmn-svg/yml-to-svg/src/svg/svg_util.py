@@ -159,22 +159,22 @@ class SvgGroup(object):
 
 ''' group a list of groups together specified by position
 '''
-def group_together(svg_groups, position):
+def group_together(gid, svg_groups, position):
     # we need at least two groups
     if len(svg_groups) < 2:
         return None
     
     if position == 'north':
-        return svg_groups[1].group_vertically(svg_groups=[svg_groups[0]])
+        return svg_groups[1].group_vertically(gid=gid, svg_groups=[svg_groups[0]])
 
     elif position == 'south':
-        return svg_groups[0].group_vertically(svg_groups=[svg_groups[1]])
+        return svg_groups[0].group_vertically(gid=gid, svg_groups=[svg_groups[1]])
 
     elif position == 'west':
-        return svg_groups[1].group_horizontally(svg_groups=[svg_groups[0]])
+        return svg_groups[1].group_horizontally(gid=gid, svg_groups=[svg_groups[0]])
 
     elif position == 'east':
-        return svg_groups[0].group_horizontally(svg_groups=[svg_groups[1]])
+        return svg_groups[0].group_horizontally(gid=gid, svg_groups=[svg_groups[1]])
 
     elif position == 'in':
         return svg_groups[0].embed(svg_group=svg_groups[1])
@@ -186,7 +186,7 @@ def group_together(svg_groups, position):
 
 ''' draws a text inside a rectangular area
 '''
-def a_text(text, width, height, spec):
+def a_text(gid, text, width, height, spec):
     # whether wrapping is required
     text_pixels = text_size_in_pixels(text=text, font_family=spec['label-style']['font-family'], font_size=int(spec['label-style']['font-size']), font_weight=spec['label-style']['font-weight'], stroke_width=int(spec['label-style']['stroke-width']))
     margin_west = int(spec['margin']['west'])
@@ -211,7 +211,7 @@ def a_text(text, width, height, spec):
 
 
     # create the rect
-    svg_group = a_rect(width=width, height=height, rx=spec['rx'], ry=spec['ry'], style=spec['shape-style'])
+    svg_group = a_rect(gid=gid, width=width, height=height, rx=spec['rx'], ry=spec['ry'], style=spec['shape-style'])
 
     # calculate a proper dy from font-size
     font_size = int(spec['label-style']['font-size'])
