@@ -56,11 +56,11 @@ class SvgGroup(object):
 
     ''' add groups to the right
     '''
-    def group_horizontally(self, svg_groups):
+    def group_horizontally(self, gid, svg_groups):
         if not isinstance(svg_groups, list):
             raise TypeError
 
-        new_group = G()
+        new_group = G(id=gid)
         new_group.addElement(self.g)
 
         translate_to_x = self.g_width
@@ -87,11 +87,11 @@ class SvgGroup(object):
 
     ''' add groups to the bottom
     '''
-    def group_vertically(self, svg_groups):
+    def group_vertically(self, gid, svg_groups):
         if not isinstance(svg_groups, list):
             raise TypeError
 
-        new_group = G()
+        new_group = G(id=gid)
         new_group.addElement(self.g)
 
         translate_to_y = self.g_height
@@ -267,8 +267,8 @@ def a_text(text, width, height, spec):
 
 ''' draws a rectangle
 '''
-def a_rect(width, height, rx, ry, style):
-    g = G()
+def a_rect(gid, width, height, rx, ry, style):
+    g = G(id=gid)
 
     svg = Rect(width=width, height=height, rx=rx, ry=ry)
     svg.set_style(StyleBuilder(style).getStyle())
@@ -281,8 +281,8 @@ def a_rect(width, height, rx, ry, style):
 
 ''' draws a circle
 '''
-def a_circle(radius, style):
-    g = G()
+def a_circle(gid, radius, style):
+    g = G(id=gid)
 
     svg = Circle(cx=radius, cy=radius, r=radius)
     svg.set_style(StyleBuilder(style).getStyle())

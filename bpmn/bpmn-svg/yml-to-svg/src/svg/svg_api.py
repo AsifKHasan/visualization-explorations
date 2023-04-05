@@ -119,15 +119,14 @@ class BpmnSvg(SvgObject):
 
         # TODO: what about the bands directly under the Bpmn?
 
-        # bpmn to group
-        # first we need to get all child pools
+        # bpmn to group, get all child pools
         pool_count = len(self._bpmn_object._pools)
         for i in range(0, pool_count):
             # append pool-paths if this is not the first pool
             if i != 0:
                 for n in range(0, self._bpmn_object._pool_path_count):
                     pool_path_svg = PoolPathSvg(theme=self._theme)
-                    g_pool_path = pool_path_svg.to_svg(num=n)
+                    g_pool_path = pool_path_svg.to_svg(num=n, width=self._width)
                     self.pool_svgs.append(g_pool_path)
 
             pool_object = self._bpmn_object._pools[i]
@@ -174,9 +173,19 @@ class PoolSvg(SvgObject):
     def to_svg(self, pool_object):
         self._pool_object = pool_object
 
-        # pool to group
-        # first we need to get all child lanes
-        for lane_object in self._pool_object._lanes:
+        # TODO: what about the bands directly under the Pool?
+
+        # pool to group, get all child lanes
+        lane_count = len(self._pool_object._lanes)
+        for i in range(0, lane_count):
+            # append lane-paths if this is not the first lane
+            if i != 0:
+                for n in range(0, self._pool_object._lane_path_count):
+                    lane_path_svg = LanePathSvg(theme=self._theme)
+                    g_lane_path = lane_path_svg.to_svg(num=n, width=self._width)
+                    self.lane_svgs.append(g_lane_path)
+
+            lane_object = self._pool_object._lanes[i]
             lane_svg = LaneSvg(theme=self._theme)
             g_lane = lane_svg.to_svg(lane_object=lane_object)
             self.lane_svgs.append(g_lane)
@@ -220,9 +229,17 @@ class LaneSvg(SvgObject):
     def to_svg(self, lane_object):
         self._lane_object = lane_object
 
-        # lane to group
-        # first we need to get all child bands
-        for band_object in self._lane_object._bands:
+        # lane to group, get all child bands
+        band_count = len(self._lane_object._bands)
+        for i in range(0, band_count):
+            # append band-paths if this is not the first band
+            if i != 0:
+                for n in range(0, self._lane_object._band_path_count):
+                    band_path_svg = BandPathSvg(theme=self._theme)
+                    g_band_path = band_path_svg.to_svg(num=n, width=self._width)
+                    self.band_svgs.append(g_band_path)
+
+            band_object = self._lane_object._bands[i]
             band_svg = BandSvg(theme=self._theme)
             g_band = band_svg.to_svg(band_object=band_object)
             self.band_svgs.append(g_band)
@@ -308,12 +325,18 @@ class PoolPathSvg(SvgObject):
 
 
     ''' generate the pool-path SVG
+        num     : 0-based sequence of the pool-path between two pools
+        width   : width of the pool-path
     '''
-    def to_svg(self, num):
+    def to_svg(self, num, width):
         self._num = num
+        self._width = width
 
         # TODO: create the pool-path group
-        g_band = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+        g_pool_path = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+
+        # return group
+        return g_pool_path
 
 
 
@@ -329,9 +352,18 @@ class LanePathSvg(SvgObject):
 
 
     ''' generate the lane-path SVG
+        num     : 0-based sequence of the lane-path between two lanes
+        width   : width of the lane-path
     '''
-    def to_svg(self, num):
+    def to_svg(self, num, width):
         self._num = num
+        self._width = width
+
+        # TODO: create the lane-path group
+        g_lane_path = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+
+        # return group
+        return g_lane_path
 
 
 
@@ -347,6 +379,15 @@ class BandPathSvg(SvgObject):
 
 
     ''' generate the band-path SVG
+        num     : 0-based sequence of the band-path between two bands
+        width   : width of the band-path
     '''
-    def to_svg(self, num):
+    def to_svg(self, num, width):
         self._num = num
+        self._width = width
+
+        # TODO: create the band-path group
+        g_band_path = a_rect(width=self._width, height=self._height, rx=self._theme[self._object_type]['rx'], ry=self._theme[self._object_type]['ry'], style=self._theme[self._object_type]['shape-style'])
+
+        # return group
+        return g_band_path

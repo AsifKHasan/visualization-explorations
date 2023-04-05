@@ -129,9 +129,9 @@ class BpmnRoot(BpmnObject):
         super().parse_common(source_data=source_data)
 
         # intra-pool/lane/band path counts
-        pool_path_count = source_data.get('pool-paths', 1)
-        lane_path_count = source_data.get('lane-paths', 1)
-        band_path_count = source_data.get('band-paths', 1)
+        pool_path_count = self._pool_path_count = source_data.get('pool-paths', 1)
+        lane_path_count = self._lane_path_count = source_data.get('lane-paths', 1)
+        band_path_count = self._band_path_count = source_data.get('band-paths', 1)
 
 
         # nodes, edges, bands
