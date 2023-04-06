@@ -23,15 +23,36 @@ class SvgObject(object):
         self._width = self._theme[self._object_type]['min-width']
         self._height = self._theme[self._object_type]['min-height']
 
+        self.g_outer, self._g_label, self.g_content = None, None, None
 
-    ''' attach label
+
+
+    ''' add paths to the content group and extend group height accordingly
     '''
-    def attach_label(self, attach_to_g, label):
+    def add_paths(self, svg_groups):
+        previous_content_height = self.g_content.g_height
+        self.g_content.extend_vertically(svg_groups=svg_groups)
+        current_content_height = self.g_content.g_height
+        height_to_add = current_content_height - previous_content_height
+        if height_to_add > 0:
+            self.g_outer.g_height = self.g_outer.g_height + height_to_add
+
+
+
+    ''' post process the svg element
+        1. attach label
+    '''
+    def post_process(self):
+        # if there is a label, attach it
+        if self._data_object._hide_label == True:
+            self.g_outer = self.g_content
+            return
+
         # label rect height and width depends on block height and width, label position and label rotation
         position = self._theme[self._object_type]['label']['position']
         rotation = self._theme[self._object_type]['label']['rotation']
 
-        text_g, rect_width, rect_height = None, None, None
+        self._g_label, rect_width, rect_height = None, None, None
         gid = f"label__{self._gid}"
 
         # based on position and rotation create the label
@@ -43,48 +64,46 @@ class SvgObject(object):
             if rotation in ['left', 'right']:
                 # swap dimension
                 rect_width, rect_height = bounding_height, bounding_width
-                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                self._g_label = a_text(gid=gid, text=self._data_object._label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
             elif rotation in ['none']:
                 # dimension is attach object's dimension without margin
                 rect_width, rect_height = bounding_width, bounding_height
-                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                self._g_label = a_text(gid=gid, text=self._data_object._label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
         elif position in ['north', 'south']:
             # handle rotation
             if rotation in ['left', 'right']:
                 # width is object's min-height, height is attach object's width
                 rect_width, rect_height = self._theme[self._object_type]['label']['min-height'], self._width
-                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                self._g_label = a_text(gid=gid, text=self._data_object._label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
             elif rotation in ['none']:
                 # width is attach object's width, height is text's min-height
                 rect_width, rect_height = self._width, self._theme[self._object_type]['label']['min-height']
-                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                self._g_label = a_text(gid=gid, text=self._data_object._label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
         elif position in ['west', 'east']:
             # handle rotation
             if rotation in ['left', 'right']:
                 # width is attach object's height, height is text's min-width
                 rect_width, rect_height = self._height, self._theme[self._object_type]['label']['min-width']
-                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                self._g_label = a_text(gid=gid, text=self._data_object._label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
             elif rotation in ['none']:
                 # width is object's min-width, height is attach object's height
                 rect_width, rect_height = self._theme[self._object_type]['label']['min-width'], self._height
-                text_g = a_text(gid=gid, text=label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
+                self._g_label = a_text(gid=gid, text=self._data_object._label, width=rect_width, height=rect_height, spec=self._theme[self._object_type]['label'])
 
 
         # translate based on rotation
         x = rect_height * ROTATION_MATRIX[rotation]['translation'][0]
         y = rect_width * ROTATION_MATRIX[rotation]['translation'][1]
-        text_g.translate(x=x, y=y)
+        self._g_label.translate(x=x, y=y)
 
         # group the object and label based on position
         gid = f"group__{self._gid}"
-        new_g = group_together(gid=gid, svg_groups=[attach_to_g, text_g], position=position)
-
-        return new_g
+        self.g_outer = group_together(gid=gid, svg_groups=[self.g_content, self._g_label], position=position)
 
 
 
@@ -123,26 +142,31 @@ class BpmnSvg(SvgObject):
     ''' generate the bpmn SVG from data
     '''
     def to_svg(self, bpmn_object):
-        self._bpmn_object = bpmn_object
-        self._gid = f"{bpmn_object._id}"
+        self._data_object = bpmn_object
+        self._gid = f"{self._data_object._id}"
 
         # TODO: what about the bands directly under the Bpmn?
 
         # bpmn to group, get all child pools
-        pool_count = len(self._bpmn_object._pools)
-        for i in range(0, pool_count):
-            # append pool-paths if this is not the first pool
+        count = len(self._data_object._pools)
+        for i in range(0, count):
+            # append paths if this is not the first child
             if i != 0:
-                for n in range(0, self._bpmn_object._pool_path_count):
-                    pool_path_svg = PoolPathSvg(theme=self._theme)
-                    g_pool_path = pool_path_svg.to_svg(parent_id=self._bpmn_object._id, num=n, width=self._width)
-                    self.pool_svgs.append(g_pool_path)
+                path_svgs = []
+                path_width = preceding_svg.g_content.g_width
+                for n in range(0, self._data_object._pool_path_count):
+                    path_svg = PoolPathSvg(theme=self._theme)
+                    g_path = path_svg.to_svg(parent_id=self._data_object._id, num=n, width=path_width)
+                    path_svgs.append(g_path)
 
-            pool_object = self._bpmn_object._pools[i]
+                # add paths to the preceding svg
+                preceding_svg.add_paths(svg_groups=path_svgs)
+
+            pool_object = self._data_object._pools[i]
             pool_svg = PoolSvg(theme=self._theme)
             g_pool = pool_svg.to_svg(pool_object=pool_object)
             self.pool_svgs.append(g_pool)
-
+            preceding_svg = pool_svg
 
 
         # calculate width, height with all pools embedded
@@ -156,17 +180,16 @@ class BpmnSvg(SvgObject):
         rx = self._theme[self._object_type]['rx']
         ry = self._theme[self._object_type]['ry']
         style = self._theme[self._object_type]['shape-style']
-        g_bpmn = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
+        self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the pools
-        g_bpmn = g_bpmn.embed_vertically(svg_groups=self.pool_svgs, margin=self._theme[self._object_type]['margin'])
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.pool_svgs, margin=self._theme[self._object_type]['margin'])
 
-        # if there is a label, attach it
-        if self._bpmn_object._hide_label == False:
-            g_bpmn = self.attach_label(attach_to_g=g_bpmn, label=self._bpmn_object._label)
+        # finalize the group
+        self.post_process()
 
         # return group
-        return g_bpmn
+        return self.g_outer
 
 
 
@@ -185,25 +208,31 @@ class PoolSvg(SvgObject):
     ''' generate the pool SVG from data
     '''
     def to_svg(self, pool_object):
-        self._pool_object = pool_object
-        self._gid = f"{self._pool_object._id}"
+        self._data_object = pool_object
+        self._gid = f"{self._data_object._id}"
 
         # TODO: what about the bands directly under the Pool?
 
         # pool to group, get all child lanes
-        lane_count = len(self._pool_object._lanes)
-        for i in range(0, lane_count):
-            # append lane-paths if this is not the first lane
+        count = len(self._data_object._lanes)
+        for i in range(0, count):
+            # append paths if this is not the first child
             if i != 0:
-                for n in range(0, self._pool_object._lane_path_count):
-                    lane_path_svg = LanePathSvg(theme=self._theme)
-                    g_lane_path = lane_path_svg.to_svg(parent_id=self._pool_object._id, num=n, width=self._width)
-                    self.lane_svgs.append(g_lane_path)
+                path_svgs = []
+                path_width = preceding_svg.g_content.g_width
+                for n in range(0, self._data_object._lane_path_count):
+                    path_svg = PoolPathSvg(theme=self._theme)
+                    g_path = path_svg.to_svg(parent_id=self._data_object._id, num=n, width=path_width)
+                    path_svgs.append(g_path)
 
-            lane_object = self._pool_object._lanes[i]
+                # add paths to the preceding svg
+                preceding_svg.add_paths(svg_groups=path_svgs)
+
+            lane_object = self._data_object._lanes[i]
             lane_svg = LaneSvg(theme=self._theme)
             g_lane = lane_svg.to_svg(lane_object=lane_object)
             self.lane_svgs.append(g_lane)
+            preceding_svg = lane_svg
 
         # calculate width, height with all lanes embedded
         self._width = max([lane_g.g_width for lane_g in self.lane_svgs] + [self._width])
@@ -216,19 +245,16 @@ class PoolSvg(SvgObject):
         rx = self._theme[self._object_type]['rx']
         ry = self._theme[self._object_type]['ry']
         style = self._theme[self._object_type]['shape-style']
-        g_pool = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
+        self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the lanes
-        g_pool = g_pool.embed_vertically(svg_groups=self.lane_svgs, margin=self._theme[self._object_type]['margin'])
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.lane_svgs, margin=self._theme[self._object_type]['margin'])
 
-
-        # if there is a label, attach it
-        if self._pool_object._hide_label == False:
-            g_pool = self.attach_label(attach_to_g=g_pool, label=self._pool_object._label)
-
+        # finalize the group
+        self.post_process()
 
         # return group
-        return g_pool
+        return self.g_outer
 
 
 
@@ -247,23 +273,29 @@ class LaneSvg(SvgObject):
     ''' generate the lane SVG from data
     '''
     def to_svg(self, lane_object):
-        self._lane_object = lane_object
-        self._gid = f"{self._lane_object._id}"
+        self._data_object = lane_object
+        self._gid = f"{self._data_object._id}"
 
         # lane to group, get all child bands
-        band_count = len(self._lane_object._bands)
-        for i in range(0, band_count):
-            # append band-paths if this is not the first band
+        count = len(self._data_object._bands)
+        for i in range(0, count):
+            # append paths if this is not the first child
             if i != 0:
-                for n in range(0, self._lane_object._band_path_count):
-                    band_path_svg = BandPathSvg(theme=self._theme)
-                    g_band_path = band_path_svg.to_svg(parent_id=self._lane_object._id, num=n, width=self._width)
-                    self.band_svgs.append(g_band_path)
+                path_svgs = []
+                path_width = preceding_svg.g_content.g_width
+                for n in range(0, self._data_object._band_path_count):
+                    path_svg = PoolPathSvg(theme=self._theme)
+                    g_path = path_svg.to_svg(parent_id=self._data_object._id, num=n, width=path_width)
+                    path_svgs.append(g_path)
 
-            band_object = self._lane_object._bands[i]
+                # add paths to the preceding svg
+                preceding_svg.add_paths(svg_groups=path_svgs)
+
+            band_object = self._data_object._bands[i]
             band_svg = BandSvg(theme=self._theme)
             g_band = band_svg.to_svg(band_object=band_object)
             self.band_svgs.append(g_band)
+            preceding_svg = band_svg
 
         # calculate width, height with all bands embedded
         self._width = max([band_g.g_width for band_g in self.band_svgs] + [self._width])
@@ -276,19 +308,16 @@ class LaneSvg(SvgObject):
         rx = self._theme[self._object_type]['rx']
         ry = self._theme[self._object_type]['ry']
         style = self._theme[self._object_type]['shape-style']
-        g_lane = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
+        self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the bands
-        g_lane = g_lane.embed_vertically(svg_groups=self.band_svgs, margin=self._theme[self._object_type]['margin'])
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.band_svgs, margin=self._theme[self._object_type]['margin'])
 
-
-        # if there is a label, attach it
-        if self._lane_object._hide_label == False:
-            g_lane = self.attach_label(attach_to_g=g_lane, label=self._lane_object._label)
-
+        # finalize the group
+        self.post_process()
 
         # return group
-        return g_lane
+        return self.g_outer
 
 
 
@@ -307,12 +336,12 @@ class BandSvg(SvgObject):
     ''' generate the band SVG from data
     '''
     def to_svg(self, band_object):
-        self._band_object = band_object
-        self._gid = f"{self._band_object._id}"
+        self._data_object = band_object
+        self._gid = f"{self._data_object._id}"
 
         # band to group
         # first we need to get all child nodes
-        for node_object in self._band_object._nodes:
+        for node_object in self._data_object._nodes:
             # node_svg = NodeSvg(theme=self._theme)
             # g_node = node_svg.to_svg(node_object=node_object)
             # self.node_svgs.append(g_node)
@@ -329,19 +358,16 @@ class BandSvg(SvgObject):
         rx = self._theme[self._object_type]['rx']
         ry = self._theme[self._object_type]['ry']
         style = self._theme[self._object_type]['shape-style']
-        g_band = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
+        self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the nodes
-        g_band = g_band.embed_vertically(svg_groups=self.node_svgs, margin=self._theme[self._object_type]['margin'])
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.node_svgs, margin=self._theme[self._object_type]['margin'])
 
-
-        # if there is a label, attach it
-        if self._band_object._hide_label == False:
-            g_band = self.attach_label(attach_to_g=g_band, label=self._band_object._label)
-
+        # finalize the group
+        self.post_process()
 
         # return group
-        return g_band
+        return self.g_outer
 
 
 

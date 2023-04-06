@@ -30,15 +30,16 @@ ROTATION_MATRIX = {
 class SvgGroup(object):
     ''' constructor
     '''
-    def __init__(self, g, width, height):
+    def __init__(self, g, width, height, x=0, y=0, angle=0):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        self.g, self.g_width, self.g_height = g, width, height
+        self.g, self.g_width, self.g_height, self.g_x, self.g_y, self.g_angle = g, width, height, x, y, 0
 
     
     ''' translate
     '''
     def translate(self, x, y):
-        xy = Point(x, y)
+        self.g_x, self.g_y = x, y
+        xy = Point(self.g_x, self.g_y)
         transformer = TransformBuilder()
         transformer.setTranslation(xy)
         self.g.set_transform(transformer.getTransform() + str(self.g.get_transform() or ''))
@@ -48,8 +49,9 @@ class SvgGroup(object):
     ''' rotate
     '''
     def rotate(self, angle):
+        self.g_angle = angle
         transformer = TransformBuilder()
-        transformer.setRotation(angle)
+        transformer.setRotation(self.g_angle)
         self.g.set_transform(transformer.getTransform() + str(self.g.get_transform() or ''))
 
 
@@ -136,12 +138,12 @@ class SvgGroup(object):
     
     ''' embed groups vertically inside the group
     '''
-    def embed_vertically(self, svg_groups, margin):
+    def embed_vertically(self, svg_groups, margin={}):
         if not isinstance(svg_groups, list):
             raise TypeError
 
-        translate_to_x = int(margin['west'])
-        translate_to_y = int(margin['north'])
+        translate_to_x = int(margin.get('west', 0))
+        translate_to_y = int(margin.get('north', 0))
 
         # place groups one by one
         for svg_group in svg_groups:
@@ -152,6 +154,32 @@ class SvgGroup(object):
     
             # move the translation position for the next group
             translate_to_y  = translate_to_y + svg_group.g_height
+
+        return self
+
+
+
+    ''' add groups vertically inside the group and extend the group
+    '''
+    def extend_vertically(self, svg_groups):
+        if not isinstance(svg_groups, list):
+            raise TypeError
+
+        translate_to_x = 0
+        translate_to_y = self.g_height
+
+        # place groups one by one
+        for svg_group in svg_groups:
+            svg_group.translate(x=translate_to_x, y=translate_to_y)
+
+            # add this group
+            self.g.addElement(svg_group.g)
+    
+            # move the translation position for the next group
+            translate_to_y  = translate_to_y + svg_group.g_height
+
+            self.g_width = max(self.g_width, svg_group.g_width)
+            self.g_height = self.g_height + svg_group.g_height
 
         return self
 
