@@ -1,8 +1,20 @@
-theme:                       default
-bpmn:                        Pizza Order Process Modeling
-hide-label:                  false
+# the theme to be used to generate the diagram
+theme:                      default
 
-# top level bpmn may contain nodes directly
+# the label of the BPMN
+bpmn:                       Pizza Order Process Modeling
+
+# whether to hid the label
+hide-label:                 false
+
+# number of inter-pool pathways to route edges, the more we have the less it is likely edges will be merged, default is 1
+pool-paths:                 3
+# number of inter-lane pathways to route edges, the more we have the less it is likely edges will be merged, default is 1
+lane-paths:                 3
+# number of inter-band pathways to route edges, the more we have the less it is likely edges will be merged, default is 1
+band-paths:                 3
+
+# top level bpmn may contain elements directly
 nodes:
 
 # top level bpmn may contain edges directly
@@ -20,7 +32,7 @@ pools:
 - pool:                      Customer
   hide-label:                false
 
-  # a pool may contain nodes directly
+  # a pool may contain elements directly
   nodes:
 
   # a pool may contain edges directly

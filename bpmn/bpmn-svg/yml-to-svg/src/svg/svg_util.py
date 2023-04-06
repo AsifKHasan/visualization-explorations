@@ -35,6 +35,16 @@ class SvgGroup(object):
         self.g, self.g_width, self.g_height, self.g_x, self.g_y, self.g_angle = g, width, height, x, y, 0
 
     
+    ''' wrap in an outer group
+    '''
+    def wrap(self, gid):
+        new_group = G(id=gid)
+        new_group.addElement(self.g)
+
+        return SvgGroup(g=new_group, width=self.g_width, height=self.g_height)
+
+
+
     ''' translate
     '''
     def translate(self, x, y):
