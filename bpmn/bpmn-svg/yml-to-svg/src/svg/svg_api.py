@@ -20,6 +20,8 @@ class SvgObject(object):
         self._theme = theme
         self._object_type = object_type
 
+        self.child_svgs = []
+
         self._width = self._theme[self._object_type]['min-width']
         self._height = self._theme[self._object_type]['min-height']
 
@@ -127,6 +129,25 @@ class SvgObject(object):
 
 
 
+    ''' generate the path SVG
+        num     : 0-based sequence of the paths between two pools/lanes/bands
+        width   : width of the path
+    '''
+    def create_svg(self, parent_id, num, width):
+        self._num = num
+        self._width = width
+        gid = f"{self._object_type}__{parent_id}__{self._num}"
+
+        # TODO: create the pool-path group
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        self.g_content = a_rect(gid=gid, width=width, height=height, rx=rx, ry=ry, style=style)
+
+
+
 ''' BPMN SVG object
 '''
 class BpmnSvg(SvgObject):
@@ -135,7 +156,6 @@ class BpmnSvg(SvgObject):
     def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(theme=theme, object_type='bpmn')
-        self.pool_svgs = []
 
 
 
@@ -165,13 +185,13 @@ class BpmnSvg(SvgObject):
             pool_object = self._data_object._pools[i]
             pool_svg = PoolSvg(theme=self._theme)
             g_pool = pool_svg.to_svg(pool_object=pool_object)
-            self.pool_svgs.append(g_pool)
+            self.child_svgs.append(g_pool)
             preceding_svg = pool_svg
 
 
         # calculate width, height with all pools embedded
-        self._width = max([pool_g.g_width for pool_g in self.pool_svgs] + [self._width])
-        self._height = max(sum([pool_g.g_height for pool_g in self.pool_svgs]), self._height)
+        self._width = max([pool_g.g_width for pool_g in self.child_svgs] + [self._width])
+        self._height = max(sum([pool_g.g_height for pool_g in self.child_svgs]), self._height)
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
         # finally create the bpmn group
@@ -183,7 +203,7 @@ class BpmnSvg(SvgObject):
         self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the pools
-        self.g_content = self.g_content.embed_vertically(svg_groups=self.pool_svgs, margin=self._theme[self._object_type]['margin'])
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.child_svgs, margin=self._theme[self._object_type]['margin'])
 
         # finalize the group
         self.post_process()
@@ -201,7 +221,6 @@ class PoolSvg(SvgObject):
     def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(theme=theme, object_type='pool')
-        self.lane_svgs = []
 
 
 
@@ -231,12 +250,12 @@ class PoolSvg(SvgObject):
             lane_object = self._data_object._lanes[i]
             lane_svg = LaneSvg(theme=self._theme)
             g_lane = lane_svg.to_svg(lane_object=lane_object)
-            self.lane_svgs.append(g_lane)
+            self.child_svgs.append(g_lane)
             preceding_svg = lane_svg
 
         # calculate width, height with all lanes embedded
-        self._width = max([lane_g.g_width for lane_g in self.lane_svgs] + [self._width])
-        self._height = max(sum([lane_g.g_height for lane_g in self.lane_svgs]), self._height)
+        self._width = max([lane_g.g_width for lane_g in self.child_svgs] + [self._width])
+        self._height = max(sum([lane_g.g_height for lane_g in self.child_svgs]), self._height)
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
         # finally create the pool group
@@ -248,7 +267,7 @@ class PoolSvg(SvgObject):
         self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the lanes
-        self.g_content = self.g_content.embed_vertically(svg_groups=self.lane_svgs, margin=self._theme[self._object_type]['margin'])
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.child_svgs, margin=self._theme[self._object_type]['margin'])
 
         # finalize the group
         self.post_process()
@@ -266,7 +285,6 @@ class LaneSvg(SvgObject):
     def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(theme=theme, object_type='lane')
-        self.band_svgs = []
 
 
 
@@ -294,12 +312,12 @@ class LaneSvg(SvgObject):
             band_object = self._data_object._bands[i]
             band_svg = BandSvg(theme=self._theme)
             g_band = band_svg.to_svg(band_object=band_object)
-            self.band_svgs.append(g_band)
+            self.child_svgs.append(g_band)
             preceding_svg = band_svg
 
         # calculate width, height with all bands embedded
-        self._width = max([band_g.g_width for band_g in self.band_svgs] + [self._width])
-        self._height = max(sum([band_g.g_height for band_g in self.band_svgs]), self._height)
+        self._width = max([band_g.g_width for band_g in self.child_svgs] + [self._width])
+        self._height = max(sum([band_g.g_height for band_g in self.child_svgs]), self._height)
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
         # finally create the lane group
@@ -311,7 +329,7 @@ class LaneSvg(SvgObject):
         self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the bands
-        self.g_content = self.g_content.embed_vertically(svg_groups=self.band_svgs, margin=self._theme[self._object_type]['margin'])
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.child_svgs, margin=self._theme[self._object_type]['margin'])
 
         # finalize the group
         self.post_process()
@@ -329,7 +347,6 @@ class BandSvg(SvgObject):
     def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(theme=theme, object_type='band')
-        self.node_svgs = []
 
 
 
@@ -344,12 +361,12 @@ class BandSvg(SvgObject):
         for node_object in self._data_object._nodes:
             # node_svg = NodeSvg(theme=self._theme)
             # g_node = node_svg.to_svg(node_object=node_object)
-            # self.node_svgs.append(g_node)
+            # self.child_svgs.append(g_node)
             pass
 
         # calculate width, height with all nodes embedded
-        self._width = max([node_g.g_width for node_g in self.node_svgs] + [self._width])
-        self._height = max(sum([node_g.g_height for node_g in self.node_svgs]), self._height)
+        self._width = max([node_g.g_width for node_g in self.child_svgs] + [self._width])
+        self._height = max(sum([node_g.g_height for node_g in self.child_svgs]), self._height)
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
         # finally create the band group
@@ -361,7 +378,7 @@ class BandSvg(SvgObject):
         self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
         # embed the nodes
-        self.g_content = self.g_content.embed_vertically(svg_groups=self.node_svgs, margin=self._theme[self._object_type]['margin'])
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.child_svgs, margin=self._theme[self._object_type]['margin'])
 
         # finalize the group
         self.post_process()
@@ -387,20 +404,10 @@ class PoolPathSvg(SvgObject):
         width   : width of the pool-path
     '''
     def to_svg(self, parent_id, num, width):
-        self._num = num
-        self._width = width
-        gid = f"{self._object_type}__{parent_id}__{self._num}"
-
-        # TODO: create the pool-path group
-        width = self._width
-        height = self._height
-        rx = self._theme[self._object_type]['rx']
-        ry = self._theme[self._object_type]['ry']
-        style = self._theme[self._object_type]['shape-style']
-        g_pool_path = a_rect(gid=gid, width=width, height=height, rx=rx, ry=ry, style=style)
+        self.create_svg(parent_id=parent_id, num=num, width=width)
 
         # return group
-        return g_pool_path
+        return self.g_content
 
 
 
@@ -420,20 +427,10 @@ class LanePathSvg(SvgObject):
         width   : width of the lane-path
     '''
     def to_svg(self, parent_id, num, width):
-        self._num = num
-        self._width = width
-        gid = f"{self._object_type}__{parent_id}__{self._num}"
-
-        # TODO: create the lane-path group
-        width = self._width
-        height = self._height
-        rx = self._theme[self._object_type]['rx']
-        ry = self._theme[self._object_type]['ry']
-        style = self._theme[self._object_type]['shape-style']
-        g_lane_path = a_rect(gid=gid, width=width, height=height, rx=rx, ry=ry, style=style)
+        self.create_svg(parent_id=parent_id, num=num, width=width)
 
         # return group
-        return g_lane_path
+        return self.g_content
 
 
 
@@ -453,17 +450,7 @@ class BandPathSvg(SvgObject):
         width   : width of the band-path
     '''
     def to_svg(self, parent_id, num, width):
-        self._num = num
-        self._width = width
-        gid = f"{self._object_type}__{parent_id}__{self._num}"
-
-        # TODO: create the band-path group
-        width = self._width
-        height = self._height
-        rx = self._theme[self._object_type]['rx']
-        ry = self._theme[self._object_type]['ry']
-        style = self._theme[self._object_type]['shape-style']
-        g_band_path = a_rect(gid=gid, width=width, height=height, rx=rx, ry=ry, style=style)
+        self.create_svg(parent_id=parent_id, num=num, width=width)
 
         # return group
-        return g_band_path
+        return self.g_content
