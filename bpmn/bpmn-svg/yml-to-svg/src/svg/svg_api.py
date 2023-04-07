@@ -448,3 +448,58 @@ class BandPathSvg(SvgObject):
 
         # return group
         return self.g_content
+
+
+
+''' node-svg base object
+             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            |                                     |
+            |             NORTH-LABEL             |
+     _ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _
+    |       |                                     |       |
+    |       |              edge route             |       |
+    |       |          _________________          |       |
+    |       |         |                 |         |       |
+    |    L  |   e r   |      Actual     |   e r   |     L |
+    |  W A  |   d o   |       Node      |   d o   |  E  A |
+    |  E B  |   g u   |                 |   g u   |  A  B |
+    |  S E  |   e t   |     IN-LABEL    |   e t   |  S  E |
+    |  T L  |     e   |_________________|     e   |  T  L |
+    |       |                                     |       |
+    |       |              edge route             |       |
+    |_ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _|
+            |                                     |
+            |             SOUTH-LABEL             |
+            |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|
+
+
+
+             _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            |                                     |
+            |             NORTH-LABEL             |
+     _ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _
+    |       |                                     |       |
+    |       |              edge route             |       |
+    |       |                                     |       |
+    |       |                 / \                 |       |
+    |    L  |   e r        /       \        e r   |     L |
+    |  W A  |   d o      /           \      d o   |  E  A |
+    |  E B  |   g u    /     Actual    \    g u   |  A  B |
+    |  S E  |   e t    \      Node     /    e t   |  S  E |
+    |  T L  |     e      \           /        e   |  T  L |
+    |       |              \       /              |       |
+    |       |                 \ /                 |       |
+    |       |                                     |       |
+    |       |              edge route             |       |
+    |_ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _|
+            |                                     |
+            |             SOUTH-LABEL             |
+            |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|
+
+'''
+class NodeSvg(SvgObject):
+    ''' constructor
+    '''
+    def __init__(self, theme):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+        super().__init__(theme=theme, object_type='node')

@@ -101,6 +101,7 @@ band:
   shape:          rect
   shape-style:    fill="#E0E0E0" stroke="#C0C0C0" stroke-width="1"
   min-width:      400
+  # must be greater than node min-height
   min-height:     100
   rx:             0
   ry:             0
