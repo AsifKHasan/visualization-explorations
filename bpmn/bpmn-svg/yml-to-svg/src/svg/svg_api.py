@@ -502,4 +502,14 @@ class NodeSvg(SvgObject):
     '''
     def __init__(self, theme):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
-        super().__init__(theme=theme, object_type='node')
+        self._x, self._y = 0, 0
+
+        self.g_container, self.g_route_area, self.g_node, self.g_in_label, self.g_west_label, self.g_noth_label, self.g_east_label, self.g_south_label = None, None, None, None, None, None, None, None
+
+
+
+    ''' generate svg from node_data
+    '''
+    def to_svg(self, node_data):
+        
+        return self.g_container
