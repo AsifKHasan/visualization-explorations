@@ -161,12 +161,12 @@ class SvgObject(object):
             preceding_svg = bpmn_svg
 
 
-        # calculate width, height with all pools embedded
+        # calculate width, height with all children embedded
         self._width = max([child_g.g_width for child_g in self.child_svgs] + [self._width])
         self._height = max(sum([child_g.g_height for child_g in self.child_svgs]), self._height)
         self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
 
-        # finally create the bpmn group
+        # finally create the group
         width = self._width
         height = self._height
         rx = self._theme[self._object_type]['rx']
@@ -174,7 +174,7 @@ class SvgObject(object):
         style = self._theme[self._object_type]['shape-style']
         self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
 
-        # embed the pools
+        # embed the children
         self.g_content = self.g_content.embed_vertically(svg_groups=self.child_svgs, margin=self._theme[self._object_type]['margin'])
 
         # finalize the group
@@ -366,8 +366,7 @@ class BandSvg(SvgObject):
     ''' return child objects to process
     '''
     def get_children(self):
-        # return self._data_object._nodes
-        return []
+        return self._data_object._nodes
 
 
 
@@ -375,7 +374,33 @@ class BandSvg(SvgObject):
     '''
     def to_svg(self, data_object):
         self._data_object = data_object
-        self.create_svg_block()
+        self._gid = f"{self._data_object._id}"
+
+        # get all children
+        child_objects = self.get_children()
+        count = len(child_objects)
+        for i in range(0, count):
+            bpmn_object = child_objects[i]
+            bpmn_svg = NodeSvg(theme=self._theme)
+            g_bpmn = bpmn_svg.to_svg(data_object=bpmn_object)
+            self.child_svgs.append(g_bpmn)
+
+
+        # calculate width, height with all children embedded
+        self._width = max([child_g.g_width for child_g in self.child_svgs] + [self._width])
+        self._height = max(sum([child_g.g_height for child_g in self.child_svgs]), self._height)
+        self._width, self._height = dimension_with_margin(width=self._width, height=self._height, margin=self._theme[self._object_type]['margin'])
+
+        # finally create the group
+        width = self._width
+        height = self._height
+        rx = self._theme[self._object_type]['rx']
+        ry = self._theme[self._object_type]['ry']
+        style = self._theme[self._object_type]['shape-style']
+        self.g_content = a_rect(gid=self._gid, width=width, height=height, rx=rx, ry=ry, style=style)
+
+        # embed the children
+        self.g_content = self.g_content.embed_vertically(svg_groups=self.child_svgs, margin=self._theme[self._object_type]['margin'])
 
         # return group
         return self.g_outer
@@ -511,5 +536,7 @@ class NodeSvg(SvgObject):
     ''' generate svg from node_data
     '''
     def to_svg(self, node_data):
+
+
         
         return self.g_container
