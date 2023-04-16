@@ -59,10 +59,10 @@ node-spec:
                     L2:         label="        {}\l";
 
             # (Optional) - another data column
-            pool:
-                label:          Who
-                header-style:   width=1.00in;
-                row-style:      width=1.00in; shape=none; label="{};
+            # pool:
+            #     label:          Who
+            #     header-style:   width=1.00in;
+            #     row-style:      width=1.00in; shape=none; label="{};
 
             # (Mandatory) time KEY must not be used in data yml, it is implicitly used by the code
             time:
@@ -99,7 +99,7 @@ node-spec:
         # used only for time header nodes
         head-row:
             label:          "{}"
-            style:          width=0.30in; fontsize=9pt;
+            style:          width=0.25in; fontsize=8pt;
 
             # (Optional) - style for holidays
             holiday-style:  fillcolor=#B0B0B0; shape=rectangle; penwidth=0; 
@@ -121,13 +121,13 @@ node-spec:
             # style overrides for time data nodes based on hierarchy levels and node type
             level-styles:
                 L0:             
-                    style:      height=0.20in; fillcolor=#005249; color=#005249; fontsize=10pt;
+                    style:      height=0.20in; fillcolor=#005249; color=#005249; fontsize=8pt;
                     edge:       height=0.12in;
                 L1:             
-                    style:      height=0.16in; fillcolor=#4E0550; color=#4E0550; fontsize=9pt;
+                    style:      height=0.16in; fillcolor=#4E0550; color=#4E0550; fontsize=7pt;
                     edge:       height=0.08in;
                 L2:             
-                    style:      height=0.12in; fillcolor=#CA6641; color=#CA6641; fontsize=8pt;
+                    style:      height=0.12in; fillcolor=#CA6641; color=#CA6641; fontsize=6pt;
                     edge:       height=0.04in;
 
         # (Optional) - style override for styling based on pool, this overrides the level and node type based styles for rows

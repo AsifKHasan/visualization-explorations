@@ -1,0 +1,142 @@
+theme:              task-day-default
+view:               day
+start-date:         "2023-06-01"
+consider-holidays:  true
+holiday-list:
+  weekdays:
+  - Fri
+  - Sat
+
+  dates:
+    "2023-06-28":   Eid ul-Adha
+    "2023-06-29":   Eid ul-Adha
+    "2023-06-30":   Eid ul-Adha
+    "2023-07-29":   Ashura
+    "2023-08-15":   National Mourning Day
+    "2023-09-06":   Shuba Janmashtami
+    "2023-09-28":   Eid-e-Milad un-Nabi
+    "2023-10-24":   Vijaya Dashami
+    "2023-12-16":   Victory Day
+    "2023-12-25":   Christmas Day
+
+items:
+- hash:         0
+  text:           Inception
+  items:
+  - hash:         0.1  
+    text:         NoA Issuance
+    span:         1-1
+  - hash:         0.2  
+    text:         NoA Acceptance
+    span:         1-1
+  - hash:         0.3  
+    text:         Contract signing
+    span:         1-1
+  - hash:         0.4  
+    text:         Kick-off meeting
+    span:         1-1
+  - hash:         0.5  
+    text:         Project Inception Report and project charter
+    span:         2-2
+- hash:         1
+  text:         Proof of Purchase
+  items:
+  - hash:         1.1  
+    text:         Proof of Purchase of domain
+    span:         1-1
+  - hash:         1.2  
+    text:         Proof of Purchase of hosting
+    span:         1-1
+  - hash:         1.3  
+    text:         Proof of Purchase of SSL certificate
+    span:         1-1
+- hash:         2  
+  text:         Configuration of domain, hosting, and SSL
+  items:
+  - hash:         2.1  
+    text:         Configuration of Domain
+    span:         2-2
+  - hash:         2.2  
+    text:         Configuration of Hosting
+    span:         2-2
+  - hash:         2.3  
+    text:         Configuration of SSL certificate
+    span:         2-2
+- hash:         3  
+  text:         Final Requirement and Documents
+  items:
+  - hash:         3.1  
+    text:         Software Requirement Finalization
+    span:         3-30
+  - hash:         3.2  
+    text:         Provide All Documents
+    span:         3-30
+  - hash:         3.3  
+    text:         Provide All Diagrams
+    span:         3-30
+- hash:         4  
+  text:         Validate Requirement Analysis
+  items:
+  - hash:         4.1  
+    text:         Validate Requirement Analysis
+    span:         31-35
+- hash:         5  
+  text:         Development of the System    
+  items:
+  - hash:         5.1  
+    text:         UI/UX Development
+    span:         36-155
+  - hash:         5.2  
+    text:         Database Design and Development
+    span:         36-155
+  - hash:         5.3  
+    text:         Implementation
+    span:         36-155
+- hash:         6  
+  text:         Perform all Security Testing
+  items:
+  - hash:         6.1  
+    text:         Security Test
+    span:         156-170
+  - hash:         6.2  
+    text:         Provide All Certificate
+    span:         156-170
+- hash:         7  
+  text:         Validate Development Work
+  items:
+  - hash:         7.1  
+    text:         UAT with Counterparts
+    span:         171-175
+- hash:         8  
+  text:         Deployment of the System    
+  items:
+  - hash:         8.1  
+    text:         Software System in Live Server
+    span:         176-180
+  - hash:         8.2  
+    text:         Database System in Live Server
+    span:         176-180
+- hash:         9  
+  text:         Deliver Final Documents    
+  items:
+  - hash:         9.1  
+    text:         User Manual
+    span:         181-210
+  - hash:         9.2  
+    text:         Operational Manual
+    span:         181-210
+  - hash:         9.2  
+    text:         Troubleshooting Documents
+    span:         181-210
+  - hash:         9.2  
+    text:         Source Code
+    span:         181-210
+  - hash:         9.2  
+    text:         Database
+    span:         181-210
+- hash:         10 
+  text:         Training for Stakeholders    
+  items:
+  - hash:         10.1  
+    text:         Train all the Stakeholders
+    span:         211-220   
