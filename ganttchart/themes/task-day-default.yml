@@ -107,7 +107,7 @@ node-spec:
         # used only for time data nodes
         data-row:
             # common styles for time data nodes
-            base-style:     width=0.30in; height=0.02in; style="solid, filled"; fontcolor=#FFFFFF; shape=none; fontname=FreeSans; penwidth=0.75; label="";
+            base-style:     width=0.25in; height=0.02in; style="solid, filled"; fontcolor=#FFFFFF; shape=none; fontname=FreeSans; penwidth=0.75; label="";
             
             # (Optional) - style for holidays
             holiday-style:  fillcolor=#808080;
