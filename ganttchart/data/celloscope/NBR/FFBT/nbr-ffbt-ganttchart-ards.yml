@@ -79,64 +79,64 @@ items:
   items:
   - hash:         4.1  
     text:         Validate Requirement Analysis
-    span:         21-23
+    span:         28-30
 - hash:         5  
   text:         Development of the System    
   items:
   - hash:         5.1  
     text:         UI/UX Development
-    span:         24-73
+    span:         35-84
   - hash:         5.2  
     text:         Database Design and Development
-    span:         24-73
+    span:         35-84
   - hash:         5.3  
     text:         Implementation
-    span:         24-73
+    span:         35-84
 - hash:         6  
   text:         Perform all Security Testing
   items:
   - hash:         6.1  
     text:         Security Test
-    span:         74-85
+    span:         107-118
   - hash:         6.2  
     text:         Provide All Certificate
-    span:         74-85
+    span:         107-118
 - hash:         7  
   text:         Validate Development Work
   items:
   - hash:         7.1  
     text:         UAT with Counterparts
-    span:         86-88
+    span:         126-128
 - hash:         8  
   text:         Deployment of the System    
   items:
   - hash:         8.1  
     text:         Software System in Live Server
-    span:         89-93
+    span:         131-135
   - hash:         8.2  
     text:         Database System in Live Server
-    span:         89-93
+    span:         131-135
 - hash:         9  
   text:         Deliver Final Documents    
   items:
   - hash:         9.1  
     text:         User Manual
-    span:         94-105
+    span:         138-149
   - hash:         9.2  
     text:         Operational Manual
-    span:         94-105
+    span:         138-149
   - hash:         9.2  
     text:         Troubleshooting Documents
-    span:         94-105
+    span:         138-149
   - hash:         9.2  
     text:         Source Code
-    span:         94-105
+    span:         138-149
   - hash:         9.2  
     text:         Database
-    span:         94-105
+    span:        138-149
 - hash:         10 
   text:         Training for Stakeholders    
   items:
   - hash:         10.1  
     text:         Train all the Stakeholders
-    span:         106-110   
+    span:         155-159  
