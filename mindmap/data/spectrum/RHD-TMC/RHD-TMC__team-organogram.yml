@@ -1,0 +1,50 @@
+graph:            "overlap: false, splines: ortho1, nodesep: 0.5, ranksep: 0.02, esep: +10, sep: +10"
+label:            TMC Team Lead, (TMC-TL)
+style:            "fillcolor: #ffe599, shape: rectangle, width: 4.0"
+wrap-width:       100
+# len:              2
+children:
+- label:          TMC Operation Lead, (TMC-OL)
+  style:          "fillcolor: #ffe599, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  # len:            1
+  children:
+  - label:        TMC Domain and Technical Specialists, (TMC-TS)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   20
+  - label:        TMC Operation Officers, (TMC-OO)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   10
+
+- label:          TMC Engineering Lead, (TMC-EL)
+  style:          "fillcolor: #ffe599, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  # len:            1
+  children:
+  - label:        TMC Data Science Expert, (TMC-DS)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   12
+  - label:        TMC Electro Mechanical Engineers, (TMC-EM)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   12
+  - label:        TMC Software Engineers, (TMC-SE)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   10
+  - label:        TMC Systems and Infrastructure Engineers, (TMC-IE)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   20
+  - label:        TMC Field Technicians, (TMC-FT)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   5
+
+- label:          TMC AI/ML Lead, (TMC-MLL)
+  style:          "fillcolor: #ffe599, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  # len:            1
+  children:
+  - label:        TMC AI/ML Researchers, (TMC-MLR)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   5
+  - label:        TMC AI/ML Engineers, (TMC-MLE)
+    style:        "fillcolor: #ffe599, shape: rectangle, width: 2.0"
+    wrap-width:   5

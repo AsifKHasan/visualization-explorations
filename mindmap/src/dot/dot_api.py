@@ -30,8 +30,10 @@ class DotObject(object):
         self._theme = self._config['theme']['theme-data'][str(self._level)]
         self._lines = []
 
+        self._wrap_width = self._data.get('wrap-width', 12)
+
         self._labels = split_text(text=self._data['label'])
-        self._label = wrap_text(text=self._labels[0])
+        self._label = wrap_text(text=self._labels[0], width=self._wrap_width)
         self._sublabels = self._labels[1:]
         self._id = text_to_identifier(text=self._label)
 
@@ -73,7 +75,7 @@ class DotObject(object):
                 self.append_content(content=f"graph [ {make_property_list(props=graph_properties)} ]")
 
             self.append_content(content='')
-            
+
             self._config['previous-level'] = self._level
 
 
@@ -92,7 +94,7 @@ class DotObject(object):
                     # should we show it
                     if child_object._show == False:
                         continue
-            
+
                     self.append_content(content=child_object.to_dot())
 
                     # make the edges between parent and child

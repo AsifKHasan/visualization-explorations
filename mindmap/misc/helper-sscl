@@ -1,3 +1,7 @@
+./mindmap-from-yml.sh sscl/SCOTT/SCOTT__functional-features
+mindmap-from-yml.bat sscl/SCOTT/SCOTT__functional-features circo svg
+
+
 mindmap-from-yml.bat "sscl/NBR/NBR-CA-MGT"
 
 ./mindmap-from-yml.sh "sscl/NBR/NBR-CA-MGT"
