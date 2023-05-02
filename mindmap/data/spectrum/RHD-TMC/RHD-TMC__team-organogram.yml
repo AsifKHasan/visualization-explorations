@@ -9,7 +9,7 @@ children:
   wrap-width:     100
   # len:            1
   children:
-  - label:        TMC Domain and Technical Specialists, (TMC-TS), [1]
+  - label:        TMC Domain and Technical Specialists, (TMC-TS), [2]
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
     wrap-width:   20
   - label:        TMC Operation Officers, (TMC-OO), [6]
@@ -24,7 +24,7 @@ children:
   - label:        TMC Data Science Expert, (TMC-DS), [1]
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
     wrap-width:   12
-  - label:        TMC Electro Mechanical Engineers, (TMC-EM), [2]
+  - label:        TMC Electro Mechanical Engineer, (TMC-EM), [2]
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
     wrap-width:   12
   - label:        TMC Software Engineers, (TMC-SE), [2]
@@ -42,9 +42,9 @@ children:
   wrap-width:     100
   # len:            1
   children:
-  - label:        TMC AI/ML Researchers, (TMC-MLR), [1]
+  - label:        TMC AI/ML Researcher, (TMC-MLR), [1]
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
     wrap-width:   5
-  - label:        TMC AI/ML Engineers, (TMC-MLE), [1]
+  - label:        TMC AI/ML Engineer, (TMC-MLE), [1]
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
     wrap-width:   5
