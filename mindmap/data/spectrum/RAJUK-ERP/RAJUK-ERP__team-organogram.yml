@@ -1,0 +1,90 @@
+graph:            "overlap: false, splines: line, nodesep: 0.5, ranksep: 0.02, esep: +10, sep: +10"
+
+label:            Project Manager, (ERP-PM), [1]
+style:            "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+wrap-width:       100
+children:
+- label:          Deputy Project Manager, (ERP-DPM), [1]
+  style:          "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  children:
+  - label:        Training Expert, (ERP-TRE), [2]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+    children:
+    - label:        Trainer, (ERP-TR), [4]
+      style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+      wrap-width:   20
+
+- label:          Business Analyst, (ERP-BA), [2]
+  style:          "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  children:
+  - label:        Technical Document Writer, (ERP-DW), [3]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+
+  - label:        ML Developer, (ERP-MLD), [3]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+
+- label:          System Analyst, (ERP-SAn), [1]
+  style:          "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  children:
+  - label:        Implementation Engineer, (ERP-EE), [8]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+
+- label:          Solution Architect, (ERP-SA), [1]
+  style:          "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  children:
+  - label:        Sr. Software Engineer, (ERP-SSE), [12]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+    children:
+    - label:        Software Developer, (ERP-SD), [12]
+      style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+      wrap-width:   20
+
+  - label:        UX Expert, (ERP-UxE), [1]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+    children:
+    - label:        UI Designer, (ERP-UD), [2]
+      style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+      wrap-width:   20
+
+  - label:        QA Engineer, (ERP-QA), [2]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+    children:
+    - label:        Testing Engineer, (ERP-TE), [4]
+      style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+      wrap-width:   20
+
+  - label:        DevOps Engineer, (ERP-DevOps), [2]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+
+- label:          Data Migration Specialist, (ERP-DMS), [1]
+  style:          "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  children:
+  - label:        Database Administrator, (ERP-DB), [1]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+
+- label:          Network and Security Expert, (ERP-NSE), [1]
+  style:          "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+  wrap-width:     100
+  children:
+  - label:        System Administrator, (ERP-SAd), [1]
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+    children:
+    - label:        Helpdesk Executive, (ERP-HD), [3]
+      style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+      wrap-width:   20
+

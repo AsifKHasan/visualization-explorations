@@ -1,5 +1,5 @@
-./mindmap-from-yml.sh spectrum/RHD-TMC/RHD-TMC__team-organogram dot svg
-mindmap-from-yml.bat spectrum/RHD-TMC/RHD-TMC__team-organogram dot svg
+./mindmap-from-yml.sh spectrum/RAJUK-ERP/RAJUK-ERP__team-organogram dot svg
+mindmap-from-yml.bat spectrum/RAJUK-ERP/RAJUK-ERP__team-organogram dot svg
 
 
 
