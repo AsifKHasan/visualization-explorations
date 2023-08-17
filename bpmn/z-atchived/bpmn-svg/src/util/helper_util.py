@@ -134,14 +134,15 @@ def text_size_in_pixels(text, font_family, font_size, font_weight='', stroke_wid
 
     try:
         font_path = font_spec[font_key][sys.platform]
-        font = ImageFont.truetype(font_path, font_size, layout_engine=ImageFont.LAYOUT_BASIC)
+        font = ImageFont.truetype(font_path, font_size, layout_engine=ImageFont.Layout.BASIC)
     except:
         font_path = font_spec['arial-bold'][sys.platform]
-        font = ImageFont.truetype(font_path, font_size, layout_engine=ImageFont.LAYOUT_BASIC)
+        font = ImageFont.truetype(font_path, font_size, layout_engine=ImageFont.Layout.BASIC)
 
     # debug('sizing [{0}] with font {1} size {2}'.format(text, font_path, font_size))
-    size = font.getsize(adjusted_text, stroke_width=stroke_width)
-    return size
+    # size = font.getsize(adjusted_text, stroke_width=stroke_width)
+    left, top, right, bottom = font.getbbox(adjusted_text, stroke_width=stroke_width)
+    return right - left, bottom - top
 
 def em_range(n):
     if n == 1:
