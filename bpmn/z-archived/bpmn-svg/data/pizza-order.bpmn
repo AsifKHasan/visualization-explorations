@@ -1,6 +1,6 @@
 graph pizza_orders {
     label = "Pizza Order Process Modeling"
-    _ [hide_labels="false";]
+    _ [hide_labels="true";]
 
     lane customer {
         label = "Customer"
@@ -22,7 +22,7 @@ graph pizza_orders {
             task                            pay_for_pizza                       [label="";]
             end                             hunger_satisfied                    [label="Hunger Satisfied";]
 
-            hungry                          --> goto_pizza_shop                 [label="";]
+            hungry                          --> goto_pizza_shop                 [label="abcd";]
             goto_pizza_shop                 --> select_pizza                    [label="";]
             select_pizza                    --> order_pizza                     [label="";]
             order_pizza                     --> on_order                        [label="";]
