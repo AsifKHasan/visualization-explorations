@@ -1,0 +1,36 @@
+theme:                       default
+bpmn:                        ARDS - Ruling Application Process
+
+pools:
+- pool:                      Applicant
+
+  lanes:
+  - lane:                    Importer/Exporter
+    nodes:
+    - start:                 Need a ruling
+    - task:                  Goto NBR ARDS Website
+    - exclusive:             Is a registered user?
+    - task:                  Login to the System
+    - process:                  Registration Process
+    - task:                  Apply for ruling with payment    [ fontsize="8pt"; ]
+    - event-signal:           Wait for Notification
+
+    edges:
+    - sequence:               Need a ruling         -> Goto NBR ARDS Website
+    - sequence:               Goto NBR ARDS Website          -> Is a registered user?
+    - sequence:               Is a registered user?          -> Login to the System       [ label='yes'; ]
+    - sequence:               Is a registered user?          -> Registration Process      [ label='no'; ]
+    - sequence:               Login to the System          -> Apply for ruling with payment
+    - sequence:               Apply for ruling with payment          -> Wait for Notification
+
+- pool:                      Advance Ruling Unit, NBR
+
+  lanes:
+  - lane:                    Receiver
+    nodes:
+    - task:                 Receive Application
+
+  - lane:                    Approver
+
+edges:
+- sequence:                 Apply for ruling with payment -> Receive Application

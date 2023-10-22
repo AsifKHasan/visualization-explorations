@@ -19,7 +19,7 @@ graph:
         fontsize:       "10pt"
         margin:         "0.20,0.20"
         width:          "1.5in"
-    
+
     edge:
         fillcolor:      "#606060"
         color:          "#202020"
@@ -37,7 +37,7 @@ pool:
         fontname:       "Arial"
         fontcolor:      "#202020"
         fontsize:       "16pt"
-        margin:         "10,10"    
+        margin:         "10,10"
 
 lane:
     graph:
@@ -54,7 +54,7 @@ node:
     wrap-at:                                    10
     shapes:
         # start events
-        start:                                  shape='circle'; fontsize="8pt"; width='0.5in'; 
+        start:                                  shape='circle'; fontsize="8pt"; width='0.5in';
         start-compensation:                     shape='circle'; fontsize="8pt"; width='0.5in'; image="./bpmn/event/start/start-compensation.png";
         start-conditional:                      shape='circle'; fontsize="8pt"; width='0.5in'; image="./bpmn/event/start/start-conditional.png";
         start-conditional-non:                  shape='circle'; fontsize="8pt"; width='0.5in'; image="./bpmn/event/start/start-conditional-non.png";
@@ -73,7 +73,7 @@ node:
         start-timer-non:                        shape='circle'; fontsize="8pt"; width='0.5in'; image="./bpmn/event/start/start-timer-non.png";
 
         # end events
-        end:                                    shape='circle'; fontsize="8pt"; penwidth='3.0'; width='0.5in'; 
+        end:                                    shape='circle'; fontsize="8pt"; penwidth='3.0'; width='0.5in';
         end-cancel:                             shape='circle'; fontsize="8pt"; penwidth='3.0'; width='0.5in'; image="./bpmn/event/end/end-cancel.png";
         end-compensation:                       shape='circle'; fontsize="8pt"; penwidth='3.0'; width='0.5in'; image="./bpmn/event/end/end-compensation.png";
         end-error:                              shape='circle'; fontsize="8pt"; penwidth='3.0'; width='0.5in'; image="./bpmn/event/end/end-error.png";
@@ -112,7 +112,7 @@ node:
 
         # task activities
         task:                                   shape='rectangle'; style='rounded, filled';
-        business-rule-task:                     shape='rectangle'; style='rounded, filled'; 
+        business-rule-task:                     shape='rectangle'; style='rounded, filled';
         manual-task:                            shape='rectangle'; style='rounded, filled'; image="./bpmn/activity/task/manual-task.png"; imagepos=tl; imagescale=false;
         receive-task:                           shape='rectangle'; style='rounded, filled';
         script-task:                            shape='rectangle'; style='rounded, filled';
