@@ -10,27 +10,65 @@ pools:
     - start-conditional-non:                 Need a ruling
     - task:                  Goto NBR ARDS Website
     - exclusive:             Is a registered user?
-    - manual-task:                  Login to the System
-    - process:                  Registration Process
-    - user-task:                  Apply for ruling with payment    [ fontsize="8pt"; wrap_at=20; ]
-    - event-signal:           Wait for Notification
+    - task:                  Login to the System
+    - process:               Registration Process
+    - task:                  Apply for ruling with payment                                                                      [ fontsize="8pt"; ]
+    - event-signal:          Wait for Notification
+    - exclusive:             Receive Notification
+    - task:                  Submit documents
+    - end:                   Application rejected
+    - exclusive:             Approve Application with acceptance?
+    - end:                   Application accepted
+    - task:                  Application review request process                                                                 [ fontsize="8pt"; ]
 
     edges:
-    - sequence:               Need a ruling         -> Goto NBR ARDS Website
-    - sequence:               Goto NBR ARDS Website          -> Is a registered user?
-    - sequence:               Is a registered user?          -> Login to the System       [ label='yes'; ]
-    - sequence:               Is a registered user?          -> Registration Process      [ label='no'; ]
-    - sequence:               Login to the System          -> Apply for ruling with payment
-    - sequence:               Apply for ruling with payment          -> Wait for Notification
+    - sequence:               Need a ruling                                         -> Goto NBR ARDS Website
+    - sequence:               Goto NBR ARDS Website                                 -> Is a registered user?
+    - sequence:               Is a registered user?                                 -> Login to the System                      [ label='yes'; ]
+    - sequence:               Is a registered user?                                 -> Registration Process                     [ label='no'; ]
+    - sequence:               Login to the System                                   -> Apply for ruling with payment
+    - sequence:               Apply for ruling with payment                         -> Wait for Notification
+    - sequence:               Wait for Notification                                 -> Receive Notification
+    - sequence:               Receive Notification                                  -> Submit documents                         [ label='documents \n submission'; ]
+    - sequence:               Receive Notification                                  -> Application rejected                     [ label='Rejection'; ]
+    - sequence:               Receive Notification                                  -> Approve Application with acceptance?     [ label='Approve তানিম'; fontname="Noto Sans Bengali"; ]
+    - sequence:               Approve Application with acceptance?                  -> Application accepted                     [ label='yes'; ]
+    - sequence:               Approve Application with acceptance?                  -> Application review request process       [ label='No'; ]
 
-- pool:                      Advance Ruling Unit, NBR
+- pool:                       Advance Ruling Unit, NBR
 
   lanes:
-  - lane:                    Receiver
+  - lane:                     AReceiver
     nodes:
-    - task:                 Receive Application
+    - task:                   Receive Application for review
+    - task:                   Review Application
+    - exclusive:              Is need any documents?
+    - event-message:          Notify applicant for documents                                                                    [ fontsize="8pt"; ]
 
-  - lane:                    Approver
+    edges:
+    - sequence:               Receive Application for review                        -> Review Application
+    - sequence:               Review Application                                    -> Is need any documents?
+    - sequence:               Is need any documents?                                -> Notify applicant for documents           [ label='yes'; ]
+
+  - lane:                     BApprover
+    nodes:
+    - task:                   Receive Application for approval                                                                  [ fontsize="8pt"; ]
+    - exclusive:              Is issued ruling?
+    - event-message:          Notify applicant for rejection                                                                    [ fontsize="8pt"; ]
+    - task:                   Approve application for ruling
+    - event-message:          Notify applicant for approval                                                                     [ fontsize="8pt"; ]
+
+    edges:
+    - sequence:               Receive Application for approval                      -> Is issued ruling?
+    - sequence:               Is issued ruling?                                     -> Notify applicant for rejection           [ label='no'; ]
+    - sequence:               Is issued ruling?                                     -> Approve application for ruling           [ label='yes'; ]
+    - sequence:               Approve application for ruling                        -> Notify applicant for approval
+
+  edges:
+    - sequence:               Is need any documents?                                -> Receive Application for approval         [ label='no'; ]
 
 edges:
-- sequence:                 Apply for ruling with payment -> Receive Application
+- sequence:                   Apply for ruling with payment                         -> Receive Application for review
+- message:                    Notify applicant for documents                        -> Wait for Notification
+- message:                    Notify applicant for rejection                        -> Wait for Notification
+- message:                    Notify applicant for approval                         -> Wait for Notification

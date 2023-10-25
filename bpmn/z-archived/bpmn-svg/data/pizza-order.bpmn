@@ -1,6 +1,6 @@
 graph pizza_orders {
     label = "Pizza Order Process Modeling"
-    _ [hide_labels="true";]
+    _ [hide_labels="false";]
 
     lane customer {
         label = "Customer"
