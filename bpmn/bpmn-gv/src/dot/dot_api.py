@@ -362,6 +362,10 @@ class NodeObject(DotObject):
             prop_str = m.group(1)
             self._prop_dict = props_to_dict(text=prop_str)
 
+            # handle wrap_at
+            if 'wrap_at' in self._prop_dict:
+                self._wrap_at = int(self._prop_dict['wrap_at'])
+
             node_str = self._value[:m.start(0)]
 
         # get the label and id

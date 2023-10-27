@@ -7,12 +7,12 @@ pools:
   lanes:
   - lane:                    Importer/Exporter
     nodes:
-    - start:                 Need a ruling
+    - start-conditional-non:                 Need a ruling
     - task:                  Goto NBR ARDS Website
     - exclusive:             Is a registered user?
-    - task:                  Login to the System
+    - manual-task:                  Login to the System
     - process:                  Registration Process
-    - task:                  Apply for ruling with payment    [ fontsize="8pt"; ]
+    - user-task:                  Apply for ruling with payment    [ fontsize="8pt"; wrap_at=20; ]
     - event-signal:           Wait for Notification
 
     edges:
