@@ -7,7 +7,7 @@ pools:
   lanes:
   - lane:                    Importer/Exporter
     nodes:
-    - start-conditional-non:                 Need a ruling
+    - start:                 Need a ruling
     - task:                  Goto NBR ARDS Website
     - exclusive:             Is a registered user?
     - task:                  Login to the System
@@ -38,7 +38,7 @@ pools:
 - pool:                       Advance Ruling Unit, NBR
 
   lanes:
-  - lane:                     AReceiver
+  - lane:                     Receiver
     nodes:
     - task:                   Receive Application for review
     - task:                   Review Application
@@ -50,7 +50,7 @@ pools:
     - sequence:               Review Application                                    -> Is need any documents?
     - sequence:               Is need any documents?                                -> Notify applicant for documents           [ label='yes'; ]
 
-  - lane:                     BApprover
+  - lane:                     Approver
     nodes:
     - task:                   Receive Application for approval                                                                  [ fontsize="8pt"; ]
     - exclusive:              Is issued ruling?
