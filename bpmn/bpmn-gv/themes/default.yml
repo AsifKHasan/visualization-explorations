@@ -7,7 +7,8 @@ graph:
         concentrate:    "false"
         ranksep:        "0.5"
         nodesep:        "1.0"
-        forcelabels:     "true"
+        forcelabels:    "true"
+        rankdir:        "LR"
 
     node:
         fixedsize:      "true"
@@ -15,7 +16,7 @@ graph:
         fillcolor:      "#FFFFFF"
         color:          "#000000"
         penwidth:       "0.5"
-        fontname:       "Noto Sans"
+        fontname:       "Calibri"
         fontsize:       "10pt"
         margin:         "0.20,0.20"
         width:          "1.5in"
@@ -24,7 +25,7 @@ graph:
         fillcolor:      "#606060"
         color:          "#202020"
         penwidth:       "0.5"
-        fontname:       "Noto Sans"
+        fontname:       "Calibri"
         fontsize:       "8pt"
         style:          "solid"
 
@@ -34,10 +35,11 @@ pool:
         color:          "#D0D0D0"
         penwidth:       "0.5"
         fillcolor:      "#FFFFFF"
-        fontname:       "Arial"
+        fontname:       "Calibri"
         fontcolor:      "#202020"
         fontsize:       "16pt"
         margin:         "10,10"
+        labeljust:      "l"
 
 lane:
     graph:
@@ -45,13 +47,14 @@ lane:
         color:          "#D0D0D0"
         penwidth:       "0.5"
         fillcolor:      "#F8F8F8"
-        fontname:       "Arial"
+        fontname:       "Calibri"
         fontcolor:      "#202020"
         fontsize:       "14pt"
-        margin:         "30,20"
+        margin:         "10,10"
+        labeljust:      "l"
 
 node:
-    wrap-at:                                    10
+    wrap-at:                                    20
     shapes:
         # start events
         start:                                  shape='circle'; fontsize="8pt"; width='0.5in';

@@ -53,15 +53,15 @@ pools:
   - lane:                     Approver
     nodes:
     - task:                   Receive Application for approval                                                                  [ fontsize="8pt"; ]
-    - exclusive:              Is issued ruling?
+    - exclusive:              Ruling issued?
     - event-message:          Notify applicant for rejection                                                                    [ fontsize="8pt"; ]
     - task:                   Approve application for ruling
     - event-message:          Notify applicant for approval                                                                     [ fontsize="8pt"; ]
 
     edges:
-    - sequence:               Receive Application for approval                      -> Is issued ruling?
-    - sequence:               Is issued ruling?                                     -> Notify applicant for rejection           [ label='no'; ]
-    - sequence:               Is issued ruling?                                     -> Approve application for ruling           [ label='yes'; ]
+    - sequence:               Receive Application for approval                      -> Ruling issued?
+    - sequence:               Ruling issued?                                        -> Notify applicant for rejection           [ label='no'; ]
+    - sequence:               Ruling issued?                                        -> Approve application for ruling           [ label='yes'; ]
     - sequence:               Approve application for ruling                        -> Notify applicant for approval
 
   edges:
