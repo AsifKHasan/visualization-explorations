@@ -8,7 +8,6 @@ graph:
         ranksep:        "0.5"
         nodesep:        "1.0"
         forcelabels:    "true"
-        rankdir:        "LR"
 
     node:
         fixedsize:      "true"
@@ -39,7 +38,7 @@ pool:
         fontcolor:      "#202020"
         fontsize:       "16pt"
         margin:         "10,10"
-        labeljust:      "l"
+        labeljust:      "c"
 
 lane:
     graph:
@@ -51,7 +50,7 @@ lane:
         fontcolor:      "#202020"
         fontsize:       "14pt"
         margin:         "10,10"
-        labeljust:      "l"
+        labeljust:      "c"
 
 node:
     wrap-at:                                    20

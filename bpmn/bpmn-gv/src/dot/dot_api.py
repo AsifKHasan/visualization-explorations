@@ -114,6 +114,7 @@ class DotObject(object):
         self._hide_label = self._data.get('hide-label', False)
         self._class = None
         self._label = None
+        # self._vertical = True
 
 
     ''' append single line or list of lines to _lines
@@ -164,9 +165,15 @@ class DotObject(object):
     '''
     def process_label(self):
         if not self._hide_label:
-            self.append_content(content=make_a_property(prop_key='label', prop_value=wrap_text(text=self._label)) + ';')
+            if self._vertical:
+                self.append_content(content=make_a_property(prop_key='label', prop_value=wrap_text(text=self._label)) + ';')
+            else:
+                self.append_content(content=make_a_property(prop_key='label', prop_value='') + ';')
         else:
-            self.append_content(content=make_a_property(prop_key='label', prop_value=' ') + ';')
+            if self._vertical:
+                self.append_content(content=make_a_property(prop_key='label', prop_value=' ') + ';')
+            else:
+                self.append_content(content=make_a_property(prop_key='label', prop_value='') + ';')
 
 
 
@@ -176,7 +183,7 @@ class PoolObject(DotObject):
 
     ''' constructor
     '''
-    def __init__(self, config, data):
+    def __init__(self, config, data, vertical):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
@@ -184,7 +191,8 @@ class PoolObject(DotObject):
         self._theme = self._config['theme']['theme-data'][self._class]
 
         self._label = self._data.get('pool')
-        self._id = f"cluster_{text_to_identifier(text=self._label)}"
+        self._id = f"pool_{text_to_identifier(text=self._label)}"
+        self._vertical = vertical
 
 
     ''' generates the dot code
@@ -206,7 +214,7 @@ class PoolObject(DotObject):
             self.append_content(content='')
             self.append_content(content=f"# lane collection")
             for lane in self._data['lanes']:
-                lane_object = LaneObject(config=self._config, data=lane, parent_pool=self._id)
+                lane_object = LaneObject(config=self._config, data=lane, vertical=self._vertical, parent_pool=self._id)
                 self.append_content(content=lane_object.to_dot())
                 self.append_content(content='')
 
@@ -214,7 +222,7 @@ class PoolObject(DotObject):
         self.process_edges()
 
         # wrap as a subgraph
-        self._lines = indent_and_wrap(self._lines, wrap_keyword='subgraph ', object_name=self._id)
+        self._lines = indent_and_wrap(self._lines, wrap_keyword='subgraph ', object_id=self._id)
 
         return self._lines
 
@@ -226,7 +234,7 @@ class LaneObject(DotObject):
 
     ''' constructor
     '''
-    def __init__(self, config, data, parent_pool):
+    def __init__(self, config, data, vertical, parent_pool):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
@@ -234,7 +242,8 @@ class LaneObject(DotObject):
         self._theme = self._config['theme']['theme-data'][self._class]
 
         self._label = self._data.get('lane')
-        self._id = f"cluster_{text_to_identifier(text=self._label)}"
+        self._id = f"lane_{text_to_identifier(text=self._label)}"
+        self._vertical = vertical
 
         self._parent_pool = parent_pool
 
@@ -258,7 +267,7 @@ class LaneObject(DotObject):
         self.process_edges()
 
         # wrap as a subgraph
-        self._lines = indent_and_wrap(self._lines, wrap_keyword='subgraph ', object_name=self._id)
+        self._lines = indent_and_wrap(self._lines, wrap_keyword='subgraph ', object_id=self._id)
 
         return self._lines
 
@@ -279,7 +288,7 @@ class GraphObject(DotObject):
 
         self._label = self._data.get('bpmn')
         self._id = f"{self._class}_{text_to_identifier(text=self._label)}"
-
+        self._vertical = self._data.get('vertical', True)
 
 
 
@@ -296,7 +305,14 @@ class GraphObject(DotObject):
         self.process_label()
 
         # graph attributes
-        self.append_content(content=make_property_lines(self._theme['attributes']))
+        new_attributes = {}
+        if self._vertical:
+            new_attributes['rankdir'] = 'TB'
+        else:
+            new_attributes['rankdir'] = 'LR'
+
+
+        self.append_content(content=make_property_lines({**self._theme['attributes'], **new_attributes}))
         self.append_content(content='')
 
         # node properties
@@ -313,7 +329,7 @@ class GraphObject(DotObject):
             self.append_content(content='')
             self.append_content(content=f"# pool collection")
             for pool in self._data['pools']:
-                pool_object = PoolObject(config=self._config, data=pool)
+                pool_object = PoolObject(config=self._config, data=pool, vertical=self._vertical)
                 self.append_content(content=pool_object.to_dot())
                 self.append_content(content='')
 
@@ -321,7 +337,7 @@ class GraphObject(DotObject):
         self.process_edges()
 
         # wrap as a digraph
-        self._lines = indent_and_wrap(self._lines, wrap_keyword='digraph ', object_name=self._id)
+        self._lines = indent_and_wrap(self._lines, wrap_keyword='digraph ', object_id=self._id)
 
         return self._lines
 

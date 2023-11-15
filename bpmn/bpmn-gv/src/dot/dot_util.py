@@ -84,7 +84,7 @@ def make_a_node(id, label, prop_dict, xlabel=False):
     else:
         label_str = make_a_property(prop_key='label', prop_value=label)
     
-    node_str = f"{id.ljust(30)} [ {label_str}; {make_property_list(prop_dict=prop_dict)}; ]"
+    node_str = f"{id.ljust(30)} [ id={id}; {label_str}; {make_property_list(prop_dict=prop_dict)}; ]"
 
     return node_str
 
@@ -106,15 +106,19 @@ def make_an_edge(from_node, to_node, prop_dict):
 
 ''' wrap (in start/stop) and indent dot lines
 '''
-def indent_and_wrap(lines, wrap_keyword, object_name, wrap_start=' {', wrap_stop='}', indent_level=1):
+def indent_and_wrap(lines, wrap_keyword, object_id, wrap_start=' {', wrap_stop='}', indent_level=1):
     output_lines = []
 
     # subgraph's identifier must be prefixed with 'cluster_'
-    if wrap_keyword == 'subgraph':
-        object_name = f"cluster_{object_name}"
+    if wrap_keyword == 'subgraph ':
+        object_name = f"cluster_{object_id}"
+    else:
+        object_name = object_id
     
     # start wrap
     output_lines.append(f"{wrap_keyword}{object_name}{wrap_start}")
+
+    lines = [f"id={object_id};"] + lines
 
     # indent
     indent = "\t" * indent_level
