@@ -4,3 +4,4 @@ bpmn-from-yml.bat sample/pizza-order
 bpmn-from-yml.bat spectrum/ITS/anpr-ticket-brta-flow
 
 ./bpmn-from-yml.sh celloscope/nbr-ards/ruling-application-process
+bpmn-from-yml.bat celloscope/nbr-ards/ruling-application-process
