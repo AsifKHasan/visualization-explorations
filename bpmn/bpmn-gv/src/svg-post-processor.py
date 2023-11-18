@@ -19,7 +19,7 @@ SVG_OUT_PATH = '../out/ruling-application-process-new.svg'
 
 GRAPH_ID = 'graph_ards__ruling_application_process'
 
-def update_svg_root(svg_root):
+def update_svg(svg_root):
 
     # view box
     vp_str = svg_root.get_viewBox()
@@ -53,6 +53,6 @@ def update_svg_root(svg_root):
 
 if __name__ == '__main__':
     svg_root = parse(inFileName=SVG_IN_PATH)
-    new_svg_root = update_svg_root(svg_root=svg_root)
+    new_svg_root = update_svg(svg_root=svg_root)
     new_svg_root.save(filename=SVG_OUT_PATH, encoding="UTF-8")
     
