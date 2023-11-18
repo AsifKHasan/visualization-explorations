@@ -46,7 +46,7 @@ if "%FMT%"=="" (
 echo processing %YML_NAME% : [FMT=%FMT%]
 
 pushd .\out
-:: dot -Kdot -T%FMT%%RENDERER% -o%YML_NAME%.%FMT% %YML_NAME%.gv
+@REM dot -Kdot -T%FMT%%RENDERER% -o%YML_NAME%.%FMT% %YML_NAME%.gv
 dot -Kdot -T%FMT% -o%YML_NAME%.%FMT% %YML_NAME%.gv
 
 if errorlevel 1 (
