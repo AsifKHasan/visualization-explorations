@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import re
 from pysvg.filter import *
 from pysvg.gradient import *
 from pysvg.linking import *
@@ -12,9 +12,12 @@ from pysvg.builders import *
 from pysvg.parser import parse
 
 from helper.geometry import Point
+from helper.svg_parselets import *
 
 SVG_IN_PATH = '../out/ruling-application-process.svg'
 SVG_OUT_PATH = '../out/ruling-application-process-new.svg'
+
+GRAPH_ID = 'graph_ards__ruling_application_process'
 
 def update_svg_root(svg_root):
 
@@ -30,15 +33,23 @@ def update_svg_root(svg_root):
     w = w_str[0:-2]
     new_w = float(w) + 100
 
-    print(new_vp_str)
-    print(new_w)
-
     svg_root.set_viewBox(new_vp_str)
     svg_root.set_width(f"{new_w}pt")
 
+    # graph node
+    graph_node = svg_root.getElementByID(GRAPH_ID)[0]
+    trans_str = graph_node.get_transform()
+    transforms = parse_transform(trans_str)
+    transforms['translate'][0] = transforms['translate'][0] + 100
+    new_trans_str = build_transform(transforms)
+    graph_node.set_transform(new_trans_str)
+
+    print(new_vp_str)
+    print(new_w)
+    print(new_trans_str)
+
     return svg_root
     
-
 
 if __name__ == '__main__':
     svg_root = parse(inFileName=SVG_IN_PATH)
