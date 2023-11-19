@@ -15,7 +15,7 @@ PYTHON=python3
 
 # yml-to-bpmn
 pushd ./src
-${PYTHON} yml-to-bpmn.py --config "../conf/config.yml" --yml ${YML}
+# ${PYTHON} yml-to-bpmn.py --config "../conf/config.yml" --yml ${YML}
 
 if [ ${?} -ne 0 ]; then
   popd && exit 1

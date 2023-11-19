@@ -1,4 +1,4 @@
-theme:                       default-hor
+theme:                       default
 vertical:                    false
 bpmn:                        ARDS - Ruling Application Process
 
@@ -32,7 +32,7 @@ pools:
     - sequence:               Wait for Notification                                 -> Receive Notification
     - sequence:               Receive Notification                                  -> Submit documents                         [ label='documents \n submission'; ]
     - sequence:               Receive Notification                                  -> Application rejected                     [ label='Rejection'; ]
-    - sequence:               Receive Notification                                  -> Approve Application with acceptance?     [ label='তানিম Approve'; fontname="Noto Sans Bengali"; ]
+    - sequence:               Receive Notification                                  -> Approve Application with acceptance?     [ label='Approve তানিম'; fontname="Noto Sans Bengali"; ]
     - sequence:               Approve Application with acceptance?                  -> Application accepted                     [ label='yes'; ]
     - sequence:               Approve Application with acceptance?                  -> Application review request process       [ label='No'; ]
 
