@@ -40,6 +40,18 @@ pool:
         margin:         "10,10"
         labeljust:      "c"
 
+    label-node:
+        shape:          "rectangle"
+        fixedsize:      "true"
+        style:          "filled"
+        fillcolor:      "#FFFFFF"
+        color:          "#000000"
+        penwidth:       "0.5"
+        fontname:       "Calibri"
+        fontsize:       "16pt"
+        margin:         "0.20,0.20"
+        width:          "0.3in"
+
 lane:
     graph:
         style:          "filled"
@@ -51,6 +63,18 @@ lane:
         fontsize:       "14pt"
         margin:         "10,10"
         labeljust:      "c"
+
+    label-node:
+        shape:          "rectangle"
+        fixedsize:      "true"
+        style:          "filled"
+        fillcolor:      "#FFFFFF"
+        color:          "#000000"
+        penwidth:       "0.5"
+        fontname:       "Calibri"
+        fontsize:       "14pt"
+        margin:         "0.20,0.20"
+        width:          "0.3in"
 
 node:
     wrap-at:                                    20
