@@ -115,6 +115,7 @@ class DotObject(object):
         self._hide_label = self._data.get("hide-label", False)
         self._class = None
         self._label = None
+        self._first_node_id = None
         # self._vertical = True
 
 
@@ -124,6 +125,7 @@ class DotObject(object):
         lines = []
         if "nodes" in self._data and self._data["nodes"]:
             lines = append_content(append_to=lines, content=f"# {self._class} nodes")
+            first_node = True
             for node in self._data["nodes"]:
                 for k, v in node.items():
                     node_object = NodeObject(
@@ -140,6 +142,11 @@ class DotObject(object):
                         lines = append_content(append_to=lines, content=node_object.to_dot())
                     else:
                         warn(f"node {node_object._label} is duplicated")
+
+                if first_node:
+                    self._first_node_id = node_object._id
+
+                first_node = False
 
         return lines
 
@@ -175,7 +182,8 @@ class DotObject(object):
 '''
 class PoolObject(DotObject):
 
-    '''constructor'''
+    '''constructor
+    '''
     def __init__(self, config, data, vertical):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
@@ -187,29 +195,36 @@ class PoolObject(DotObject):
         self._id = f"pool_{text_to_identifier(text=self._label)}"
         self._vertical = vertical
 
+        self._label_node_id = f"{self._id}_label"
+        self._label_node_line = make_a_node(id=self._label_node_id, label=wrap_text(text=self._label), prop_dict=self._theme['label-node'], xlabel=False)
+
         self._lanes = []
 
 
     ''' lane labels (infused) as nodes
-        TODO
     '''
     def process_lane_label_nodes(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
         lines = []
         append_content(append_to=lines, content=f"# lane labels (infused)")
+        for lane_object in self._lanes:
+            lines = append_content(append_to=lines, content=lane_object._label_node_line)
 
         return lines
 
 
     ''' lane label to lane node edges (infused)
-        TODO
     '''
     def process_lane_label_edges(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
+        prop_dict = {'style': 'invis'}
         lines = []
         append_content(append_to=lines, content=f"# lane label to lane node edges (infused)")
+        for lane_object in self._lanes:
+            lines = append_content(append_to=lines, content=make_an_edge(from_node=lane_object._label_node_id, to_node=lane_object._first_node_id, prop_dict=prop_dict))
+        
 
         return lines
 
@@ -291,6 +306,9 @@ class LaneObject(DotObject):
 
         self._parent_pool = parent_pool
 
+        self._label_node_id = f"{self._id}_label"
+        self._label_node_line = make_a_node(id=self._label_node_id, label=wrap_text(text=self._label), prop_dict=self._theme['label-node'], xlabel=False)
+
 
     ''' generates the dot code
     '''
@@ -345,27 +363,29 @@ class GraphObject(DotObject):
 
 
     ''' pool labels (infused) as nodes
-        TODO
     '''
     def process_pool_label_nodes(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
         lines = []
         append_content(append_to=lines, content=f"# pool labels (infused)")
-
-        make_a_node(id, label, prop_dict, xlabel=False)
+        for pool_object in self._pools:
+            lines = append_content(append_to=lines, content=pool_object._label_node_line)
 
         return lines
 
 
     ''' pool label to lane label edges (infused)
-        TODO
     '''
     def process_pool_label_edges(self):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
+        prop_dict = {'style': 'invis'}
         lines = []
         append_content(append_to=lines, content=f"# pool label to lane label edges (infused)")
+        for pool_object in self._pools:
+            for lane_object in pool_object._lanes:
+                lines = append_content(append_to=lines, content=make_an_edge(from_node=pool_object._label_node_id, to_node=lane_object._label_node_id, prop_dict=prop_dict))
 
         return lines
 
