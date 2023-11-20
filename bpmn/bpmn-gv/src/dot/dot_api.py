@@ -23,12 +23,14 @@ def parse_node_props(node_props):
         NODE_PROPS[k] = prop_dict
 
 
+
 ''' parse edge properties
 '''
 def parse_edge_props(edge_props):
     for k, v in edge_props.items():
         prop_dict = props_to_dict(text=v)
         EDGE_PROPS[k] = prop_dict
+
 
 
 ''' if the nodes are in different subgraphs
@@ -65,7 +67,6 @@ def subgraph_differs(from_node, to_node):
         else:
             # to node is not in the root grap
             if from_node_object._parent_pool == to_node_object._parent_pool:
-
                 # pool is same, check lane differs or not
                 if from_node_object._parent_lane is None:
                     # from node is in a pool
@@ -93,7 +94,6 @@ def subgraph_differs(from_node, to_node):
                             # lane is different
                             return True
 
-
             else:
                 # pool is different
                 return True
@@ -101,79 +101,73 @@ def subgraph_differs(from_node, to_node):
     return False
 
 
+
 ''' Dot base object
 '''
 class DotObject(object):
-    ''' constructor
-    '''
+
+    '''constructor'''
     def __init__(self, config, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         self._config = config
         self._data = data
         self._lines = []
-        self._hide_label = self._data.get('hide-label', False)
+        self._hide_label = self._data.get("hide-label", False)
         self._class = None
         self._label = None
         # self._vertical = True
 
 
-    ''' append single line or list of lines to _lines
-    '''
-    def append_content(self, content):
-        if content is None:
-            return
-
-        if isinstance(content, str):
-            self._lines.append(content)
-
-        elif isinstance(content, list):
-            self._lines = self._lines + content
-
-
     ''' process nodes
     '''
     def process_nodes(self, parent_pool=None, parent_lane=None):
-        if 'nodes' in self._data and self._data['nodes']:
-            self.append_content(content='')
-            self.append_content(content=f"# {self._class} nodes")
-            for node in self._data['nodes']:
+        lines = []
+        if "nodes" in self._data and self._data["nodes"]:
+            lines = append_content(append_to=lines, content=f"# {self._class} nodes")
+            for node in self._data["nodes"]:
                 for k, v in node.items():
-                    node_object = NodeObject(config=self._config, data={'type': k, 'value': v}, parent_pool=parent_pool, parent_lane=parent_lane)
+                    node_object = NodeObject(
+                        config=self._config,
+                        data={"type": k, "value": v},
+                        parent_pool=parent_pool,
+                        parent_lane=parent_lane,
+                    )
                     node_object.parse_node()
 
                     if not node_object._id in NODE_DICT:
                         debug(f"adding node [{node_object._id}] {node_object._label}")
                         NODE_DICT[node_object._id] = node_object
-                        self.append_content(content=node_object.to_dot())
+                        lines = append_content(append_to=lines, content=node_object.to_dot())
                     else:
                         warn(f"node {node_object._label} is duplicated")
+
+        return lines
 
 
     ''' process edges
     '''
     def process_edges(self):
-        if 'edges' in self._data and self._data['edges']:
-            self.append_content(content='')
-            self.append_content(content=f"# {self._class} edges")
-            for edge in self._data['edges']:
+        lines = []
+        if "edges" in self._data and self._data["edges"]:
+            lines = append_content(append_to=lines, content=f"# {self._class} edges")
+            for edge in self._data["edges"]:
                 for k, v in edge.items():
-                    edge_object = EdgeObject(config=self._config, data={'type': k, 'value': v})
-                    self.append_content(content=edge_object.to_dot())
+                    edge_object = EdgeObject(
+                        config=self._config, data={"type": k, "value": v}
+                    )
+                    lines = append_content(append_to=lines, content=edge_object.to_dot())
+
+        return lines
 
 
     ''' process label
     '''
     def process_label(self):
-        if not self._hide_label:
-            if self._vertical:
-                self.append_content(content=make_a_property(prop_key='label', prop_value=wrap_text(text=self._label)) + ';')
-            else:
-                self.append_content(content=make_a_property(prop_key='label', prop_value='') + ';')
-        else:
-            if self._vertical:
-                self.append_content(content=make_a_property(prop_key='label', prop_value=' ') + ';')
-            else:
-                self.append_content(content=make_a_property(prop_key='label', prop_value='') + ';')
+        lines = []
+        # lines = append_content(append_to=lines, content=make_a_property(prop_key="label", prop_value=wrap_text(text=self._label)) + ";")
+        lines = append_content(append_to=lines,content=make_a_property(prop_key="label", prop_value="") + ";")
+
+        return lines
 
 
 
@@ -181,18 +175,43 @@ class DotObject(object):
 '''
 class PoolObject(DotObject):
 
-    ''' constructor
-    '''
+    '''constructor'''
     def __init__(self, config, data, vertical):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
-        self._class = 'pool'
-        self._theme = self._config['theme']['theme-data'][self._class]
+        self._class = "pool"
+        self._theme = self._config["theme"]["theme-data"][self._class]
 
-        self._label = self._data.get('pool')
+        self._label = self._data.get("pool")
         self._id = f"pool_{text_to_identifier(text=self._label)}"
         self._vertical = vertical
+
+        self._lanes = []
+
+
+    ''' lane labels (infused) as nodes
+        TODO
+    '''
+    def process_lane_label_nodes(self):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+
+        lines = []
+        append_content(append_to=lines, content=f"# lane labels (infused)")
+
+        return lines
+
+
+    ''' lane label to lane node edges (infused)
+        TODO
+    '''
+    def process_lane_label_edges(self):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+
+        lines = []
+        append_content(append_to=lines, content=f"# lane label to lane node edges (infused)")
+
+        return lines
 
 
     ''' generates the dot code
@@ -201,28 +220,54 @@ class PoolObject(DotObject):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
         # label
-        self.process_label()
+        label_lines = self.process_label()
 
         # graph properties
-        self.append_content(content=f"graph [ {make_property_list(self._theme['graph'])}; ]")
+        graph_attribute_lines = f"graph [ {make_property_list(self._theme['graph'])}; ]"
 
         # nodes
-        self.process_nodes(parent_pool=self._id)
+        node_lines = self.process_nodes(parent_pool=self._id)
 
         # lanes
-        if 'lanes' in self._data and self._data['lanes']:
-            self.append_content(content='')
-            self.append_content(content=f"# lane collection")
-            for lane in self._data['lanes']:
-                lane_object = LaneObject(config=self._config, data=lane, vertical=self._vertical, parent_pool=self._id)
-                self.append_content(content=lane_object.to_dot())
-                self.append_content(content='')
+        lane_lines = []
+        if "lanes" in self._data and self._data["lanes"]:
+            lane_lines = append_content(append_to=lane_lines, content=f"# lane collection")
+            for lane in self._data["lanes"]:
+                lane_object = LaneObject(
+                    config=self._config,
+                    data=lane,
+                    vertical=self._vertical,
+                    parent_pool=self._id,
+                )
+                lane_lines = append_content(append_to=lane_lines, content=lane_object.to_dot())
+                self._lanes.append(lane_object)
 
         # edges
-        self.process_edges()
+        edge_lines = self.process_edges()
+
+        # lane labels (infused)
+        lane_label_node_lines = self.process_lane_label_nodes()
+
+		# lane label to lane node edges (infused)
+        lane_label_edge_lines = self.process_lane_label_edges()
+
+        # concatenate lines
+        self._lines = append_content(append_to=self._lines, content=label_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=graph_attribute_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=lane_label_node_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=node_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=lane_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=lane_label_edge_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=edge_lines)
 
         # wrap as a subgraph
-        self._lines = indent_and_wrap(self._lines, wrap_keyword='subgraph ', object_id=self._id)
+        self._lines = indent_and_wrap(self._lines, wrap_keyword="subgraph ", object_id=self._id)
 
         return self._lines
 
@@ -232,16 +277,15 @@ class PoolObject(DotObject):
 '''
 class LaneObject(DotObject):
 
-    ''' constructor
-    '''
+    '''constructor'''
     def __init__(self, config, data, vertical, parent_pool):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
-        self._class = 'lane'
-        self._theme = self._config['theme']['theme-data'][self._class]
+        self._class = "lane"
+        self._theme = self._config["theme"]["theme-data"][self._class]
 
-        self._label = self._data.get('lane')
+        self._label = self._data.get("lane")
         self._id = f"lane_{text_to_identifier(text=self._label)}"
         self._vertical = vertical
 
@@ -254,20 +298,28 @@ class LaneObject(DotObject):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
         # label
-        self.process_label()
+        label_lines = self.process_label()
 
         # graph properties
-        self.append_content(content=f"graph [ {make_property_list(self._theme['graph'])}; ]")
+        graph_attribute_lines = f"graph [ {make_property_list(self._theme['graph'])}; ]"
 
         # nodes
-        self.process_nodes(parent_pool=self._parent_pool, parent_lane=self._id)
-
+        node_lines = self.process_nodes(parent_pool=self._parent_pool, parent_lane=self._id)
 
         # edges
-        self.process_edges()
+        edge_lines = self.process_edges()
+
+        # concatenate lines
+        self._lines = append_content(append_to=self._lines, content=label_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=graph_attribute_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=node_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=edge_lines)
 
         # wrap as a subgraph
-        self._lines = indent_and_wrap(self._lines, wrap_keyword='subgraph ', object_id=self._id)
+        self._lines = indent_and_wrap(self._lines, wrap_keyword="subgraph ", object_id=self._id)
 
         return self._lines
 
@@ -277,19 +329,45 @@ class LaneObject(DotObject):
 '''
 class GraphObject(DotObject):
 
-    ''' constructor
-    '''
+    '''constructor'''
     def __init__(self, config, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
-        self._class = 'graph'
-        self._theme = self._config['theme']['theme-data'][self._class]
+        self._class = "graph"
+        self._theme = self._config["theme"]["theme-data"][self._class]
 
-        self._label = self._data.get('bpmn')
+        self._label = self._data.get("bpmn")
         self._id = f"{self._class}_{text_to_identifier(text=self._label)}"
-        self._vertical = self._data.get('vertical', True)
+        self._vertical = self._data.get("vertical", True)
 
+        self._pools = [] 
+
+
+    ''' pool labels (infused) as nodes
+        TODO
+    '''
+    def process_pool_label_nodes(self):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+
+        lines = []
+        append_content(append_to=lines, content=f"# pool labels (infused)")
+
+        make_a_node(id, label, prop_dict, xlabel=False)
+
+        return lines
+
+
+    ''' pool label to lane label edges (infused)
+        TODO
+    '''
+    def process_pool_label_edges(self):
+        # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
+
+        lines = []
+        append_content(append_to=lines, content=f"# pool label to lane label edges (infused)")
+
+        return lines
 
 
     ''' generates the dot code
@@ -298,46 +376,64 @@ class GraphObject(DotObject):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
 
         # parse node and edge properties
-        parse_node_props(node_props=self._config['theme']['theme-data']['node']['shapes'])
-        parse_edge_props(edge_props=self._config['theme']['theme-data']['edge']['shapes'])
+        parse_node_props(node_props=self._config["theme"]["theme-data"]["node"]["shapes"])
+        parse_edge_props(edge_props=self._config["theme"]["theme-data"]["edge"]["shapes"])
 
         # label
-        self.process_label()
+        label_lines = self.process_label()
 
         # graph attributes
         new_attributes = {}
-        if self._vertical:
-            new_attributes['rankdir'] = 'TB'
-        else:
-            new_attributes['rankdir'] = 'LR'
-
-
-        self.append_content(content=make_property_lines({**self._theme['attributes'], **new_attributes}))
-        self.append_content(content='')
+        new_attributes["rankdir"] = "TB" if self._vertical else "LR"
+        graph_attribute_lines = make_property_lines({**self._theme["attributes"], **new_attributes})
 
         # node properties
-        self.append_content(content=f"node [ {make_property_list(self._theme['node'])}; ]")
+        node_attribute_lines = f"node [ {make_property_list(self._theme['node'])}; ]"
 
         # edge properties
-        self.append_content(content=f"edge [ {make_property_list(self._theme['edge'])}; ]")
+        edge_attribute_lines = f"edge [ {make_property_list(self._theme['edge'])}; ]"
 
         # nodes
-        self.process_nodes()
+        node_lines = self.process_nodes()
 
         # pools
-        if 'pools' in self._data and self._data['pools']:
-            self.append_content(content='')
-            self.append_content(content=f"# pool collection")
-            for pool in self._data['pools']:
+        pool_lines = []
+        if "pools" in self._data and self._data["pools"]:
+            pool_lines = append_content(append_to=pool_lines, content=f"# pool collection")
+            for pool in self._data["pools"]:
                 pool_object = PoolObject(config=self._config, data=pool, vertical=self._vertical)
-                self.append_content(content=pool_object.to_dot())
-                self.append_content(content='')
+                pool_lines = append_content(append_to=pool_lines, content=pool_object.to_dot())
+                self._pools.append(pool_object)
 
         # edges
-        self.process_edges()
+        edge_lines = self.process_edges()
+
+        # pool labels (infused)
+        pool_label_node_lines = self.process_pool_label_nodes()
+
+		# pool label to lane label edges (infused)
+        pool_label_edge_lines = self.process_pool_label_edges()
+
+        # concatenate lines
+        self._lines = append_content(append_to=self._lines, content=label_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=graph_attribute_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=node_attribute_lines)
+        self._lines = append_content(append_to=self._lines, content=edge_attribute_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=pool_label_node_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=node_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=pool_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=pool_label_edge_lines)
+        self._lines = append_content(append_to=self._lines, content="")
+        self._lines = append_content(append_to=self._lines, content=edge_lines)
 
         # wrap as a digraph
-        self._lines = indent_and_wrap(self._lines, wrap_keyword='digraph ', object_id=self._id)
+        self._lines = indent_and_wrap(self._lines, wrap_keyword="digraph ", object_id=self._id)
 
         return self._lines
 
@@ -347,21 +443,20 @@ class GraphObject(DotObject):
 '''
 class NodeObject(DotObject):
 
-    ''' constructor
-    '''
+    '''constructor'''
     def __init__(self, config, data, parent_pool=None, parent_lane=None):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
-        self._class = 'node'
-        self._theme = self._config['theme']['theme-data'][self._class]
+        self._class = "node"
+        self._theme = self._config["theme"]["theme-data"][self._class]
 
-        self._type = self._data['type']
-        self._value = self._data['value']
+        self._type = self._data["type"]
+        self._value = self._data["value"]
 
         self._prop_dict = {}
 
-        self._wrap_at = self._theme.get('wrap-at', 10)
+        self._wrap_at = self._theme.get("wrap-at", 10)
 
         self._parent_pool = parent_pool
         self._parent_lane = parent_lane
@@ -379,10 +474,10 @@ class NodeObject(DotObject):
             self._prop_dict = props_to_dict(text=prop_str)
 
             # handle wrap_at
-            if 'wrap_at' in self._prop_dict:
-                self._wrap_at = int(self._prop_dict['wrap_at'])
+            if "wrap_at" in self._prop_dict:
+                self._wrap_at = int(self._prop_dict["wrap_at"])
 
-            node_str = self._value[:m.start(0)]
+            node_str = self._value[: m.start(0)]
 
         # get the label and id
         self._label = node_str.strip()
@@ -397,12 +492,19 @@ class NodeObject(DotObject):
         if self._type in NODE_PROPS:
             self._prop_dict = {**NODE_PROPS[self._type], **self._prop_dict}
             # if the property shape is circle, doublecircle or diamond, we need an xlabel
-            if 'shape' in self._prop_dict and self._prop_dict['shape'] in ['circle', 'doublecircle', 'diamond']:
+            if "shape" in self._prop_dict and self._prop_dict["shape"] in ["circle", "doublecircle", "diamond",]:
                 xlabel = True
             else:
                 xlabel = False
 
-            self.append_content(content=make_a_node(id=self._id, label=wrap_text(text=self._label, width=self._wrap_at), prop_dict=self._prop_dict, xlabel=xlabel))
+            self._lines = append_content(append_to=self._lines, 
+                content=make_a_node(
+                    id=self._id,
+                    label=wrap_text(text=self._label, width=self._wrap_at),
+                    prop_dict=self._prop_dict,
+                    xlabel=xlabel,
+                )
+            )
 
         else:
             warn(f"no shape defined for {self._class} type {self._type}")
@@ -415,17 +517,16 @@ class NodeObject(DotObject):
 '''
 class EdgeObject(DotObject):
 
-    ''' constructor
-    '''
+    '''constructor'''
     def __init__(self, config, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
-        self._class = 'edge'
-        self._theme = self._config['theme']['theme-data'][self._class]
+        self._class = "edge"
+        self._theme = self._config["theme"]["theme-data"][self._class]
 
-        self._type = self._data['type']
-        self._value = self._data['value']
+        self._type = self._data["type"]
+        self._value = self._data["value"]
 
         self._from_node = None
         self._to_node = None
@@ -444,21 +545,21 @@ class EdgeObject(DotObject):
             # print(prop_str)
             self._prop_dict = props_to_dict(text=prop_str)
 
-            if 'label' in self._prop_dict:
-                self._prop_dict['xlabel'] = self._prop_dict.pop('label')
+            if "label" in self._prop_dict:
+                self._prop_dict["xlabel"] = self._prop_dict.pop("label")
 
-            edge_str = self._value[:m.start(0)]
+            edge_str = self._value[: m.start(0)]
 
-        if not 'xlabel' in self._prop_dict:
-            self._prop_dict['xlabel'] = ''
+        if not "xlabel" in self._prop_dict:
+            self._prop_dict["xlabel"] = ""
 
         # get the from and to nodes
-        node_list = edge_str.split('->')
+        node_list = edge_str.split("->")
         self._from_node = text_to_identifier(text=node_list[0].strip())
         self._to_node = text_to_identifier(text=node_list[1].strip())
 
         if subgraph_differs(from_node=self._from_node, to_node=self._to_node):
-            self._prop_dict['constraint'] = 'false'
+            self._prop_dict["constraint"] = "false"
 
 
     ''' generates the dot code
@@ -468,7 +569,13 @@ class EdgeObject(DotObject):
         if self._type in EDGE_PROPS:
             self.parse_edge()
             self._prop_dict = {**EDGE_PROPS[self._type], **self._prop_dict}
-            self.append_content(content=make_an_edge(from_node=self._from_node, to_node=self._to_node, prop_dict=self._prop_dict))
+            self._lines = append_content(append_to=self._lines, 
+                content=make_an_edge(
+                    from_node=self._from_node,
+                    to_node=self._to_node,
+                    prop_dict=self._prop_dict,
+                )
+            )
 
         else:
             warn(f"no properties defined for {self._class} type {self._type}")

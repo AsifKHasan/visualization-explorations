@@ -8,7 +8,7 @@ pools:
   lanes:
   - lane:                    Importer/Exporter
     nodes:
-    - start:                 Need a ruling
+    - start:                 Need a ruling                                                                                      [ wrap_at=10; ]
     - task:                  Goto NBR ARDS Website
     - exclusive:             Is a registered user?
     - task:                  Login to the System
