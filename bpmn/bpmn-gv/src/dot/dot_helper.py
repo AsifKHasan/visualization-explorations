@@ -27,6 +27,6 @@ class DotHelper(object):
         dot_object = GraphObject(config=self._config, data=structure)
         self.dot_lines =  self.dot_lines + dot_object.to_dot()
 
-        # save the markdown document string in a file
+        # save the dot document lines in a file
         with open(self._config['files']['output-dot'], "w", encoding="utf-8") as f:
             f.write('\n'.join(self.dot_lines))

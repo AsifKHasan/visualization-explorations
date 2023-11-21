@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import re
 
+from helper.geometry import Point
+from helper.logger import *
+
 TRANSFORM_RE = re.compile(r"[a-zA-Z]+?\([0-9\.\,\-\s]+?\)")
 ARGUMENT_RE = re.compile(r"[0-9\.\-]+")
 # TRANSFORMS = {
@@ -11,6 +14,10 @@ ARGUMENT_RE = re.compile(r"[0-9\.\-]+")
 #     "skewy": skewy_matrix,
 #     "matrix": matrix_matrix,
 # }
+
+
+def points_from_polygon(path_str):
+    return [Point.from_str(xy_str) for xy_str in path_str.split(' ')]
 
 
 def parse_transform(trans_str):

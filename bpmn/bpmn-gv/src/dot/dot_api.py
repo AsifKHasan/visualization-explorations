@@ -116,7 +116,6 @@ class DotObject(object):
         self._class = None
         self._label = None
         self._first_node_id = None
-        # self._vertical = True
 
 
     ''' process nodes
@@ -184,7 +183,7 @@ class PoolObject(DotObject):
 
     '''constructor
     '''
-    def __init__(self, config, data, vertical):
+    def __init__(self, config, data):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
@@ -193,7 +192,6 @@ class PoolObject(DotObject):
 
         self._label = self._data.get("pool")
         self._id = f"pool_{text_to_identifier(text=self._label)}"
-        self._vertical = vertical
 
         self._label_node_id = f"{self._id}_label"
         self._label_node_line = make_a_node(id=self._label_node_id, label=wrap_text(text=self._label), prop_dict=self._theme['label-node'], xlabel=False)
@@ -229,6 +227,16 @@ class PoolObject(DotObject):
         return lines
 
 
+    ''' pool and lane id's
+    '''
+    def cluster_ids(self):
+        ids = [self._id]
+        for lane_object in self._lanes:
+            ids.append(lane_object._id)
+
+        return ids
+
+
     ''' generates the dot code
     '''
     def to_dot(self):
@@ -251,7 +259,6 @@ class PoolObject(DotObject):
                 lane_object = LaneObject(
                     config=self._config,
                     data=lane,
-                    vertical=self._vertical,
                     parent_pool=self._id,
                 )
                 lane_lines = append_content(append_to=lane_lines, content=lane_object.to_dot())
@@ -293,7 +300,7 @@ class PoolObject(DotObject):
 class LaneObject(DotObject):
 
     '''constructor'''
-    def __init__(self, config, data, vertical, parent_pool):
+    def __init__(self, config, data, parent_pool):
         # debug(f". {self.__class__.__name__} : {inspect.stack()[0][3]}")
         super().__init__(config, data)
 
@@ -302,7 +309,6 @@ class LaneObject(DotObject):
 
         self._label = self._data.get("lane")
         self._id = f"lane_{text_to_identifier(text=self._label)}"
-        self._vertical = vertical
 
         self._parent_pool = parent_pool
 
@@ -357,7 +363,6 @@ class GraphObject(DotObject):
 
         self._label = self._data.get("bpmn")
         self._id = f"{self._class}_{text_to_identifier(text=self._label)}"
-        self._vertical = self._data.get("vertical", True)
 
         self._pools = [] 
 
@@ -404,7 +409,7 @@ class GraphObject(DotObject):
 
         # graph attributes
         new_attributes = {}
-        new_attributes["rankdir"] = "TB" if self._vertical else "LR"
+        new_attributes["rankdir"] = self._data['direction']
         graph_attribute_lines = make_property_lines({**self._theme["attributes"], **new_attributes})
 
         # node properties
@@ -421,7 +426,7 @@ class GraphObject(DotObject):
         if "pools" in self._data and self._data["pools"]:
             pool_lines = append_content(append_to=pool_lines, content=f"# pool collection")
             for pool in self._data["pools"]:
-                pool_object = PoolObject(config=self._config, data=pool, vertical=self._vertical)
+                pool_object = PoolObject(config=self._config, data=pool)
                 pool_lines = append_content(append_to=pool_lines, content=pool_object.to_dot())
                 self._pools.append(pool_object)
 
@@ -454,6 +459,15 @@ class GraphObject(DotObject):
 
         # wrap as a digraph
         self._lines = indent_and_wrap(self._lines, wrap_keyword="digraph ", object_id=self._id)
+
+        # the dot script starts with label node id's as comments
+        cluster_id_list = []
+        for pool_object in self._pools:
+            cluster_id_list = cluster_id_list + pool_object.cluster_ids()
+
+        cluster_id_list = list(map(lambda x: '# ' + x, cluster_id_list))
+
+        # self._lines = append_content(append_to=cluster_id_list, content=self._lines)
 
         return self._lines
 

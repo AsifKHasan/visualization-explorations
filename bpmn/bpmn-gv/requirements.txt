@@ -12,3 +12,6 @@ PyYAML
 termcolor
 colorama
 yamllint
+pysvg
+pysvg-py3
+svg.path

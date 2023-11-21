@@ -16,18 +16,20 @@ from helper.logger import *
 
 class BpmnFromYml(object):
 
-	def __init__(self, config_path, yml_name=None):
+	def __init__(self, config_path, yml_name=None, direction='LR'):
 		self.start_time = int(round(time.time() * 1000))
 		self._config_path = Path(config_path).resolve()
 		self._data = {}
 		self._yml_name = yml_name
 		self._yml_name_only = self._yml_name.split('/')[-1]
+		self._direction = direction
 
 
 	def run(self):
 		self.set_up()
 		self._CONFIG['files']['input-yml'] = f"{self._CONFIG['dirs']['data-dir']}/{self._yml_name}.yml"
 		self._data = yaml.load(open(self._CONFIG['files']['input-yml'], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
+		self._data['direction'] = self._direction
 
 		# load theme
 		self._CONFIG['theme']['theme-name'] = self._data.get('theme', 'default')
@@ -82,7 +84,8 @@ if __name__ == '__main__':
 	ap = argparse.ArgumentParser()
 	ap.add_argument("-c", "--config", required=True, help="configuration yml path")
 	ap.add_argument("-y", "--yml", required=True, help="yml file name to generate dot from")
+	ap.add_argument("-d", "--dir", required=True, help="direction LR/TB")
 	args = vars(ap.parse_args())
 
-	generator = BpmnFromYml(config_path=args["config"], yml_name=args["yml"])
+	generator = BpmnFromYml(config_path=args["config"], yml_name=args["yml"], direction=args["dir"])
 	generator.run()

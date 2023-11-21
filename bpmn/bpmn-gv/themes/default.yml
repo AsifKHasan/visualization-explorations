@@ -5,7 +5,7 @@ graph:
         compound:       "true"
         ratio:          "auto"
         concentrate:    "false"
-        ranksep:        "0.5"
+        ranksep:        "0.3"
         nodesep:        "1.0"
         forcelabels:    "true"
 
@@ -38,17 +38,16 @@ pool:
         fontcolor:      "#202020"
         fontsize:       "16pt"
         margin:         "10,10"
-        labeljust:      "c"
 
     label-node:
         shape:          "rectangle"
         fixedsize:      "true"
         style:          "filled"
-        fillcolor:      "#FFFFFF"
-        color:          "#000000"
+        fillcolor:      "#E8E8E8"
+        color:          "#D0D0D0"
         penwidth:       "0.5"
         fontname:       "Calibri"
-        fontsize:       "16pt"
+        fontsize:       "18pt"
         margin:         "0.20,0.20"
         width:          "0.3in"
 
@@ -62,14 +61,13 @@ lane:
         fontcolor:      "#202020"
         fontsize:       "14pt"
         margin:         "10,10"
-        labeljust:      "c"
 
     label-node:
         shape:          "rectangle"
         fixedsize:      "true"
         style:          "filled"
-        fillcolor:      "#FFFFFF"
-        color:          "#000000"
+        fillcolor:      "#E8E8E8"
+        color:          "#D0D0D0"
         penwidth:       "0.5"
         fontname:       "Calibri"
         fontsize:       "14pt"

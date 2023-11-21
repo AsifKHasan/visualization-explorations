@@ -1,19 +1,26 @@
 :: yml->dot->bpmn image pipeline
 
 :: usage
-:: bpmn-from-yml.bat YML [FMT]
+:: bpmn-from-yml.bat YML [DIR]
 
-:: FMT may be one of jpg/png/pdf/svg. "svg" is the default
+:: DIR may be LR or TB. "LR" is the default
 
 @echo off
 
 :: parameters
 set YML=%~1
-set FMT=%~2
+set DIR=%~2
+
+:: DIR
+if "%DIR%"=="" (
+  set DIR="LR"
+) else if not "%DIR%"=="LR" if not "%DIR%"=="TB" (
+  set DIR="LR"
+)
 
 :: yml-to-bpmn
 pushd .\src
-python yml-to-bpmn.py --config "../conf/config.yml" --yml "%YML%"
+python yml-to-bpmn.py --config "../conf/config.yml" --yml "%YML%" --dir "%DIR%"
 
 if errorlevel 1 (
   popd
@@ -22,7 +29,7 @@ if errorlevel 1 (
 
 popd
 
-:: dot -> FMT
+:: dot -> SVG
 :: get the actual yml name without path prefix
 set token_string=%YML%
 
@@ -33,25 +40,22 @@ for /F "tokens=1* delims=/" %%A in ( "%token_string%" ) do (
   goto find_last_loop
 )
 
-:: format
-if "%FMT%"=="" (
-  set FMT=svg
-  set RENDERER=":cairo:cairo"
-) else if "%FMT%"=="svg" (
-  set RENDERER=":cairo:cairo"
-) else (
-  set RENDERER=""
-)
-
-echo processing %YML_NAME% : [FMT=%FMT%]
+echo processing %YML_NAME% : [DIR=%DIR%]
 
 pushd .\out
-@REM dot -Kdot -T%FMT%%RENDERER% -o%YML_NAME%.%FMT% %YML_NAME%.gv
-dot -Kdot -T%FMT% -o%YML_NAME%.%FMT% %YML_NAME%.gv
+dot -Kdot -Tsvg -o%YML_NAME%.svg %YML_NAME%.gv
 
 if errorlevel 1 (
   popd
   exit /b %errorlevel%
 )
+
+popd
+
+:: post process SVG
+echo post processing %YML_NAME%.svg : [DIR=%DIR%]
+
+pushd .\src
+python svg-post-process.py --config "../conf/config.yml" --svg "%YML_NAME%".svg --dir "%DIR%"
 
 popd

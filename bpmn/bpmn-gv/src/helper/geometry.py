@@ -7,6 +7,11 @@ class Point:
         self.x = x
         self.y = y
 
+    @classmethod
+    def from_str(self, xy_str):
+        xy_list = xy_str.split(',')
+        return Point(float(xy_list[0]), float(xy_list[1]))
+
     def __copy__(self):
         return self.__class__(self.x, self.y)
 
