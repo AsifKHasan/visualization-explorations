@@ -1,5 +1,5 @@
 theme:                       default
-vertical:                    true
+vertical:                    false
 bpmn:                        ARDS - Ruling Application Process
 
 pools:
