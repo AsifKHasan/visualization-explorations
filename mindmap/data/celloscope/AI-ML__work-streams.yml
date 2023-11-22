@@ -1,0 +1,60 @@
+label: Celloscope AI-ML Work Streams
+children:
+- label: Vision
+  children:
+  - label: NID Data Extraction
+    children:
+    - label: Vision-OCR
+    - label: OCR-Space
+
+  - label: Facematch
+    children:
+    - label: Celloscope
+    - label: Azure
+
+  - label: Vehicle Number Plate
+
+- label: Speech
+  children:
+  - label: Text to Speech
+  - label: Speech to Text
+  - label: Diarization
+
+- label: NLP
+  children:
+  - label: Model Exploration
+    children:
+    - label: what are we exploring?
+  - label: Bangla Vernaculars
+    children:
+    - label: how can we collect data?
+
+- label: Form Digitization
+  children:
+  - label: What are the business cases?
+
+- label: Cenversational AI
+  children:
+  - label: bpmn yml from conversation
+
+- label: Generative AI
+  children:
+  - label: What can we do here?
+
+- label: Promotion
+  children:
+  - label: https://ai.celloscope.net/
+
+- label: Productizaion
+  children:
+  - label: Interview Transcription for Journalists
+  - label: Meeting Transcription for Consumers
+
+- label: Monetization
+  children:
+  - label: ABL Voice Banking
+
+- label: Publication
+  children:
+  - label: what next?
+
