@@ -1,4 +1,4 @@
-> *bpmn-from-yml* is for generating bpmn image (SVG, PNG etc.) via GraphViz .dot documents from yml data
+> *bpmn-from-yml* is for generating SVG image via GraphViz .dot documents from yml data
 
 # pre-requisites
 1. Git (https://git-scm.com/downloads). *Make sure Git executables are in the PATH*
@@ -14,23 +14,23 @@
        git clone https://github.com/AsifKHasan/visualization-explorations.git
 
 4. this should get you all required source in a subdirectory named ```visualization-explorations```
-5. cd to **mindmap** code
+5. cd to **bpmn** code
 
-        cd visualization-explorations/bpmn
+        cd visualization-explorations/bpmn/bpmn-gv
 6. get required Python libraries
 
         pip install -r requirements.txt
 
 You should be done with installations now
 
-# generating mindmaps
-bpmn images are geneated by running a script which takes the name of an ```yml``` file. What we want in the mindmap we describe in the yml.
+# generating bpmn images
+bpmn images are geneated by running a script which takes the name of an ```yml``` file. What we want in the bpmn we describe in the yml.
 
 ```yml``` files must under ```data``` directory and must have ```*.yml``` extension. You can create subdirectories under ```data``` directory to create and keep your ```yml``` files
 
 For example if you have a bpmn ```yml``` under ```data/spectrum``` directory named ```my-test.yml```, this is how you run the tool and generate the bpmn as an SVG
 
-    bpmn-from-yml.bat spectrum/my-test
+    bpmn-from-yml.bat spectrum/my-test [LR|TB]
 
 >   note we do not need to indicate that the file is under ```data``` directory (it is assumed) and we do not need to provide the ```*.yml``` extension (it is assumed)
 
@@ -38,6 +38,8 @@ If everything goes well you should be able to get two files under ```out``` dire
 
 - my-test.gv
 - my-test.svg
+
+Note depending on the second parameter value you will get either a top-down (vertical) or left-right (horizontal) bpmn. TB means top-down, LR means left-right. Any other value or if you do not provide the second argument at all will defaulty to LR and produce a left-right bpmn.
 
 The best way to open the ```svg``` is through a browser.
 
