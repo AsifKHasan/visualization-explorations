@@ -1,0 +1,93 @@
+theme:              task-day-default
+view:               day
+start-date:         "2023-12-07"
+consider-holidays:  false
+holiday-list:
+  weekdays:
+  - Fri
+  - Sat
+
+  dates:
+    "2023-12-16":   Victory Day
+    "2023-12-25":   Christmas Day
+    "2024-02-21":   Language Martyrs Day
+    "2024-03-17":   Mujib's birthday and Children's Day
+    "2024-03-26":   Independence Day
+    "2024-04-10":   Eid ul-Fitr
+    "2024-04-11":   Eid ul-Fitr
+    "2024-04-12":   Eid ul-Fitr
+    "2024-04-14":   Bengali New Year
+    "2024-05-01":   May Day
+    "2024-05-23":   Buddha Purnima
+    "2024-05-16":   Eid ul-Adha
+    "2024-05-17":   Eid ul-Adha
+    "2024-05-18":   Eid ul-Adha
+    "2024-07-17":   Ashura
+    "2024-08-15":   National Mourning Day
+    "2024-08-17":   Shuba Janmashtami
+    "2024-09-16":   Eid-e-Milad un-Nabi
+    "2024-10-13":   Vijaya Dashami
+    "2024-12-16":   Victory Day
+    "2024-12-25":   Christmas Day
+
+items:
+- hash:         0
+  text:           Inception
+  items:
+  - hash:         0.1  
+    text:         NoA Issuance
+    span:         1-1
+  - hash:         0.2  
+    text:         NoA Acceptance
+    span:         1-1
+  - hash:         0.3  
+    text:         Contract signing
+    span:         1-1
+- hash:         1
+  text:         Feasibility Study & Information Collection
+  items:
+  - hash:         1.1  
+    text:         Feasibility Study and System Study
+    span:         1-30
+  - hash:         1.2  
+    text:         Requirements Analysis and System Requirements Specification (SRS)
+    span:         31-60
+  - hash:         1.3  
+    text:         Logical Design and Physical Design
+    span:         61-75
+- hash:         2  
+  text:         Coding & Development
+  items:
+  - hash:         2.1  
+    text:         Development, Coding and Debugging
+    span:         76-195
+  - hash:         2.2  
+    text:         1st level feedback collection and incorporation
+    span:         196-210
+  - hash:         2.3  
+    text:         Testing, debugging, update
+    span:         211-225
+  - hash:         2.3  
+    text:         Delivery of UAT and 2nd level feedback collection
+    span:         226-236
+  - hash:         2.3  
+    text:         Testing by using multiple test method
+    span:         237-257
+  - hash:         2.3  
+    text:         Finalize Reports
+    span:         258-272
+- hash:         3  
+  text:         Installation & Training
+  items:
+  - hash:         3.1  
+    text:         Installation and Piloting and User Acceptance Test
+    span:         273-302
+  - hash:         3.2  
+    text:         Delivery of all required documentation
+    span:         303-317
+  - hash:         3.3  
+    text:         Server Configuration & On Board
+    span:         318-332
+  - hash:         3.3  
+    text:         Training on usability, operation & maintenance
+    span:         333-362
