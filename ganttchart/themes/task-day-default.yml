@@ -104,6 +104,9 @@ node-spec:
             # (Optional) - style for holidays
             holiday-style:  fillcolor=#B0B0B0; shape=rectangle; penwidth=0; 
         
+            # (Optional) - style for collapsed range nodes
+            collapsed-style:  fillcolor=#B0B0B0; shape=rectangle; penwidth=0; 
+        
         # used only for time data nodes
         data-row:
             # common styles for time data nodes
@@ -111,6 +114,9 @@ node-spec:
             
             # (Optional) - style for holidays
             holiday-style:  fillcolor=#808080;
+
+            # (Optional) - style for collapsed range nodes
+            collapsed-style:  fillcolor=#808080;
 
             # style overrides for time data nodes based on whether the node type is a head, tail or edge node
             type-styles:         

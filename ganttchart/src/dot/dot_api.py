@@ -288,12 +288,22 @@ class GraphObject(object):
         else:
             time_nodes['head-row']['holiday-style'] = {}
 
+        if 'collapsed-style' in time_nodes['head-row'] and time_nodes['head-row']['collapsed-style'] is not None:
+            time_nodes['head-row']['collapsed-style'] = props_to_dict(text=time_nodes['head-row']['collapsed-style'])
+        else:
+            time_nodes['head-row']['collapsed-style'] = {}
+
         # time node has data-rows
         time_nodes['data-row']['base-style'] = props_to_dict(text=time_nodes['data-row']['base-style'])
         if 'holiday-style' in time_nodes['data-row'] and time_nodes['data-row']['holiday-style'] is not None:
             time_nodes['data-row']['holiday-style'] = props_to_dict(text=time_nodes['data-row']['holiday-style'])
         else:
             time_nodes['data-row']['holiday-style'] = {}
+
+        if 'collapsed-style' in time_nodes['data-row'] and time_nodes['data-row']['collapsed-style'] is not None:
+            time_nodes['data-row']['collapsed-style'] = props_to_dict(text=time_nodes['data-row']['collapsed-style'])
+        else:
+            time_nodes['data-row']['collapsed-style'] = {}
 
         # data rows have node types edge/head/tail
         for ntype in ['edge', 'tail', 'head']:
@@ -356,6 +366,8 @@ class GraphObject(object):
         CONSIDER_HOLIDAYS = DATA.get('consider-holidays', False)
         START_DATE = DATA.get('start-date', None)
 
+        self._collapsed_ranges = {}
+
         # get start date if any
         if START_DATE:
             try:
@@ -389,6 +401,21 @@ class GraphObject(object):
             else:
                 warn("[holiday-list] is not defined, will not consider holidays ...")
                 CONSIDER_HOLIDAYS = False
+
+
+        if 'collapsed-ranges' in DATA:
+            # we have spans, we need satrt and end
+            for span_text in DATA['collapsed-ranges']:
+                # a span is a pair of numbers (separated by -)
+                pair = span_text.split('-')
+                if len(pair) != 2:
+                    warn(f"span [{span_text}] is invalid for [collapsed-ranges]")
+                else:
+                    strt, endt = int(pair[0]), int(pair[1])
+                    # add to collapsed ranges
+                    self._collapsed_ranges[str(strt)] = [strt, endt]
+
+        # print(self._collapsed_ranges)
 
 
         for item_data in DATA['items']:
@@ -435,6 +462,13 @@ class GraphObject(object):
 
         return self._lines
 
+
+
+    ''' return the item in collapsed range if the t falls in the range
+    '''
+    def collapsed_range_key_if_in_range(self, t):
+        return None
+
     
 
     ''' the header row - 0
@@ -475,6 +509,11 @@ class GraphObject(object):
             # this could be a holiday
             if is_holiday(day_number=t):
                 props = {**props, **THEME['node-spec']['time-nodes']['head-row']['holiday-style']}
+
+            # TODO: this could be a date within a collapsed range
+            # collapsed_node_id = self.collapsed_range_key_if_in_range(t)
+
+            
 
             nodes.append({'id': id, 'label': label, 'props': props})
 

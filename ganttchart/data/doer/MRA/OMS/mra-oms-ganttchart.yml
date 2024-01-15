@@ -30,6 +30,10 @@ holiday-list:
     "2024-12-16":   Victory Day
     "2024-12-25":   Christmas Day
 
+collapsed-ranges:
+- 4-27
+- 34-57
+
 items:
 - hash:         0
   text:           Inception
