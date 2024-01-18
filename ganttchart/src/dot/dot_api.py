@@ -216,6 +216,8 @@ class GraphObject(object):
         self._current_row = 0
         self._items = []
 
+        self._collapsed_ranges = {}
+
 
 
     ''' parse the theme
@@ -366,8 +368,6 @@ class GraphObject(object):
         CONSIDER_HOLIDAYS = DATA.get('consider-holidays', False)
         START_DATE = DATA.get('start-date', None)
 
-        self._collapsed_ranges = {}
-
         # get start date if any
         if START_DATE:
             try:
@@ -412,8 +412,9 @@ class GraphObject(object):
                     warn(f"span [{span_text}] is invalid for [collapsed-ranges]")
                 else:
                     strt, endt = int(pair[0]), int(pair[1])
-                    # add to collapsed ranges
-                    self._collapsed_ranges[str(strt)] = [strt, endt]
+                    # add each t to collapsed ranges where value is the node_id
+                    for t in range(strt, endt + 1):
+                        self._collapsed_ranges[str(t)] = {'strt': strt}
 
         # print(self._collapsed_ranges)
 
@@ -464,13 +465,6 @@ class GraphObject(object):
 
 
 
-    ''' return the item in collapsed range if the t falls in the range
-    '''
-    def collapsed_range_key_if_in_range(self, t):
-        return None
-
-    
-
     ''' the header row - 0
     '''
     def process_header_row(self):
@@ -510,12 +504,25 @@ class GraphObject(object):
             if is_holiday(day_number=t):
                 props = {**props, **THEME['node-spec']['time-nodes']['head-row']['holiday-style']}
 
-            # TODO: this could be a date within a collapsed range
-            # collapsed_node_id = self.collapsed_range_key_if_in_range(t)
+            nodes.append({'id': id, 'label': label, 'props': props, 'day-number': t})
 
-            
 
-            nodes.append({'id': id, 'label': label, 'props': props})
+        # TODO: process collapsed ranges
+        props_collapsed = THEME['node-spec']['time-nodes']['head-row']['collapsed-style']
+        for n in range(len(nodes) - 1, -1, -1):
+            if nodes[n]:
+                if 'day-number' in nodes[n]:
+                    day_number = nodes[n]['day-number']
+                    collapsed_node = self._collapsed_ranges.get(str(day_number), None)
+                    if collapsed_node:
+                        # this is in a collapsed node, only the first node to be appended
+                        if day_number == collapsed_node['strt']:
+                            nodes[n]['label'] = '...'
+                            nodes[n]['props'] = {**nodes[n]['props'], **props_collapsed}
+
+                        else:
+                            nodes[n] = {}
+
 
         for node in nodes:
             if node:
@@ -580,7 +587,9 @@ class GraphObject(object):
         for t in range(1, self._time_count + 1):
             id = f"_{self._current_row:03}_{t:02}"
             label = ''
-            nodes.append({'type': 'time-node', 'id':id, 'label': label, 'props': THEME['node-spec']['time-nodes']['data-row']['base-style'], 'day-number': t})
+            props = THEME['node-spec']['time-nodes']['data-row']['base-style']
+            nodes.append({'type': 'time-node', 'id': id, 'label': label, 'props': props, 'day-number': t})
+
 
         # print(f"time-node start at [{time_node_strt}], number-time-nodes [{self._time_count}]")
 
@@ -644,12 +653,28 @@ class GraphObject(object):
 
 
         # apply holiday styles
-        props_holiday = THEME['node-spec']['time-nodes']['head-row']['holiday-style']
+        props_holiday = THEME['node-spec']['time-nodes']['data-row']['holiday-style']
         for node in nodes:
             if node:
                 if node['type'] == 'time-node':
                     if is_holiday(day_number=node['day-number']):
                         node['props'] = {**node['props'], **props_holiday}
+
+
+        # TODO: process collapsed ranges
+        props_collapsed = THEME['node-spec']['time-nodes']['data-row']['collapsed-style']
+        for n in range(len(nodes) - 1, -1, -1):
+            if nodes[n]:
+                if 'day-number' in nodes[n]:
+                    day_number = nodes[n]['day-number']
+                    collapsed_node = self._collapsed_ranges.get(str(day_number), None)
+                    if collapsed_node:
+                        # this is in a collapsed node, only the first node to be appended
+                        if day_number == collapsed_node['strt']:
+                            nodes[n]['label'] = '...'
+                            nodes[n]['props'] = {**nodes[n]['props'], **props_collapsed}
+                        else:
+                            nodes[n] = {}
 
 
         # generate the nodes
