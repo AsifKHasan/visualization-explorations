@@ -5,7 +5,7 @@ graph:
         compound:       "true"
         ratio:          "auto"
         concentrate:    "false"
-        ranksep:        "0.3"
+        ranksep:        "0.5"
         nodesep:        "1.0"
         forcelabels:    "true"
 
@@ -19,6 +19,7 @@ graph:
         fontsize:       "10pt"
         margin:         "0.20,0.20"
         width:          "1.5in"
+        minheight:      "1.0"
 
     edge:
         fillcolor:      "#606060"
@@ -60,7 +61,7 @@ lane:
         fontname:       "Calibri"
         fontcolor:      "#202020"
         fontsize:       "14pt"
-        margin:         "10,10"
+        margin:         "20,20"
 
     label-node:
         shape:          "rectangle"
@@ -75,7 +76,7 @@ lane:
         width:          "0.3in"
 
 node:
-    wrap-at:                                    20
+    wrap-at:                                    10
     shapes:
         # start events
         start:                                  shape='circle'; fontsize="8pt"; width='0.5in';

@@ -1,0 +1,43 @@
+theme:                                default
+bpmn:                                 Personal Management Information System (PMIS)
+
+pools:
+- pool:                               RAJUK
+  lanes:
+  - lane:                             Employee
+    hide-label:                       false
+    nodes:
+    - start:                          Start
+    - task:                           Add/Update Personal Data
+    - task:                           Send to Reviewer
+    edges:
+    - sequence:                       Start                                 -> Add/Update Personal Data
+    - sequence:                       Add/Update Personal Data              -> Send to Reviewer
+
+  - lane:                             Reviwer
+    nodes:
+    - task:                           Receive Personal Data
+    - task:                           Verify Personal Data
+    - exclusive:                      Verified?
+    - task:                           Send to Approver
+    edges:
+    - sequence:                       Receive Personal Data                 -> Verify Personal Data
+    - sequence:                       Verify Personal Data                  -> Verified?
+    - sequence:                       Verified?                             -> Send to Approver                          [label="Yes";]
+
+  - lane:                             Approver
+    nodes:
+    - task:                           Receive Reviewed Data
+    - task:                           Verify Reviewed Data
+    - exclusive:                      Approved?
+    - end:                            End
+    edges:
+    - sequence:                       Receive Reviewed Data                 -> Verify Reviewed Data
+    - sequence:                       Verify Reviewed Data                  -> Approved?                      
+    - sequence:                       Approved?                             -> End                                        [label="Yes";]
+
+  edges:
+  - sequence:                         Send to Reviewer                      -> Receive Personal Data
+  - sequence:                         Verified?                             -> Add/Update Personal Data                   [label="No";]
+  - sequence:                         Send to Approver                      -> Receive Reviewed Data
+  - sequence:                         Approved?                             -> Add/Update Personal Data                   [label="No";]

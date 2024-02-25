@@ -5,3 +5,6 @@ bpmn-from-yml.bat spectrum/ITS/anpr-ticket-brta-flow
 
 ./bpmn-from-yml.sh celloscope/nbr-ards/ruling-application-process
 bpmn-from-yml.bat celloscope/nbr-ards/ruling-application-process
+
+
+bpmn-from-yml.bat spectrum/RAJUK-ERP/RAJUK-ERP__PMIS-flow
