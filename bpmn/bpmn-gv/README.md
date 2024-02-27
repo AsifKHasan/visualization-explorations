@@ -33,13 +33,14 @@ For example if you have a bpmn ```yml``` under ```data/spectrum``` directory nam
     bpmn-from-yml.bat spectrum/my-test [LR|TB]
 
 >   note we do not need to indicate that the file is under ```data``` directory (it is assumed) and we do not need to provide the ```*.yml``` extension (it is assumed)
+>   note you will need to copy the directory  ```misc/bpmn``` under ```out``` directory, otherwise some bpmn element may not render properly
 
 If everything goes well you should be able to get two files under ```out``` directory
 
 - my-test.gv
 - my-test.svg
 
-Note depending on the second parameter value you will get either a top-down (vertical) or left-right (horizontal) bpmn. TB means top-down, LR means left-right. Any other value or if you do not provide the second argument at all will defaulty to LR and produce a left-right bpmn.
+Note depending on the second parameter value you will get either a top-down (vertical) or left-right (horizontal) bpmn. TB means top-down, LR means left-right. Any other value or if you do not provide the second argument at all will default to LR and produce a left-right bpmn.
 
 The best way to open the ```svg``` is through a browser.
 
