@@ -1,0 +1,72 @@
+graph:            "overlap: false, splines: line, nodesep: 0.5, ranksep: 0.02, esep: +10, sep: +10"
+label:            Project Manager
+style:            "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+wrap-width:       100
+# len:              2
+children:
+- label:        AI/ML Lead
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+  wrap-width:   20
+  # len:            1
+  children:
+  - label:        AI/ML Researcher
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   5
+  - label:        AI/ML Engineer
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   10
+
+- label:        App Lead
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+  wrap-width:   10
+  # len:            1
+  children:
+  - label:        Full-stack Developer
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   10
+
+- label:        Web Lead
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+  wrap-width:   10
+  # len:            1
+  children:
+  - label:        Front-end Developer
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   10
+  - label:        Back-end Developer
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   10
+
+- label:        Data Lead
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+  wrap-width:   10
+  # len:            1
+  children:
+  - label:        BI and Analytics Engineer
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   20
+  - label:        Database Engineer
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   10
+
+- label:        SRE Lead
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+  wrap-width:   10
+  # len:            1
+  children:
+  - label:        SRE Engineer
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   10
+
+- label:        QA Lead
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+  wrap-width:   10
+  # len:            1
+  children:
+  - label:        QA Engineer
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 2.0"
+    wrap-width:   10
+
+
+
+
