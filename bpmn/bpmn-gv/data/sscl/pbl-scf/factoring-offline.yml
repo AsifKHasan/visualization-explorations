@@ -1,0 +1,126 @@
+theme:                       default
+bpmn:                        Factoring Finance Offline Modeling
+hide-label:                  true
+
+# top level bpmn may contain nodes directly
+nodes:
+
+# top level bpmn may contain edges directly
+edges:
+- message:                   Set Limit                                        -> Receive Limit request
+- message:                   Limit API                                        -> Set Limit                                          [ label='Fetch available information from CBS'; ]
+- message:                   Limit disapproval message                        -> Receive disapproval message for Limit              [ label='Forward to CAD Maker and do not allow him to proceed'; ]
+- message:                   Submit Invoice                                   -> Account balance and Account status API             [ label='Check account balance and account status from CBS'; ]
+- message:                   Submit Invoice                                   -> Receive Invoice                                 
+- message:                   Invoice disapproval message                      -> Receive disapproval message for Invoice            [ label='Forward to CAD Maker and do not allow him to proceed'; ]
+- message:                   Approve Invoice for Fund Request Submission      -> Receive Fund Request Notification                  [ label='Notify CAD Maker regarding the Fund Request'; ]
+- message:                   Initiate Fund Request                            -> Receive Fund Request
+- message:                   Fund Request disapproval message                 -> Receive disapproval message for Fund Request       [ label='Forward to CAD Maker and do not allow him to proceed'; ]
+- message:                   Create Payment Request                           -> Transaction API                                    [ label='CBS Instruction to disburse amount'; ]
+- message:                   Disbursement Process Succeed?                    -> Receive Disbursement Failed Notification           [ label='No'; ] 
+- message:                   Disbursement Process Succeed?                    -> Marked Request as paid                             [ label='Yes'; ]      
+- message:                   Marked Request as Paid                           -> Receive Disbursement Notification                  [ label='Notify CAD Maker regarding the disbursement'; ]
+- message:                   Settlement API                                   -> Receive Settlement Notification                    [ label='Notify CAD Maker regarding the repayment'; ]
+- message:                   Initiate Repayment                               -> Receive Repayment Request
+- message:                   Outstanding adjustment                           -> Settlement API                                     [ label='Outstanding will be adjusted, but invoice will not be washed out from the live invoice tray'; ]                   
+- message:                   Loan Balance will be adjusted                    -> Settlement API
+- message:                   Settlement API                                   -> Marked as settled
+
+
+# top level bpmn may contain pools
+pools:
+- pool:                      Factoring Finance Offline
+  hide-label:                false
+
+  # a pool may contain nodes directly
+  nodes:
+
+  # a pool may contain edges directly
+  edges:
+
+  lanes:
+  - lane:                    CAD Maker
+    hide-label:              false
+
+    nodes: 
+    - start:                   Start Factoring Finance
+    - task:                    Set Limit       
+    - catch-message:           Receive disapproval message for Limit         
+    - task:                    Submit Invoice           
+    - catch-message:           Receive disapproval message for Invoice
+    - task:                    Receive Fund Request Notification
+    - task:                    Initiate Fund Request
+    - catch-message:           Receive disapproval message for Fund Request
+    - task:                    Receive Disbursement Notification
+    - task:                    Receive Settlement Notification
+    - task:                    Initiate Repayment                   
+
+    edges:
+    - sequence:                Start Factoring Finance      -> Set Limit      [ label='Factoring Finance Offline Process Starts'; ]
+    
+ 
+  - lane:                    CAD Authorizer
+    hide-label:              false
+
+    nodes:
+    - task:                  Wait for Limit Request
+    - task:                  Receive Limit request            
+    - exclusive:             Is Limit Approved?        
+    - throw-message:         Limit disapproval message          
+    - task:                  Approve Supplier for invoice submission
+    - task:                  Wait for Invoice
+    - task:                  Receive Invoice           
+    - exclusive:             Is Invoice Approved? 
+    - throw-message:         Invoice disapproval message
+    - task:                  Approve Invoice for Fund Request submission
+    - task:                  Wait for Fund Request
+    - task:                  Receive Fund Request          
+    - exclusive:             Is Fund Request Approved? 
+    - throw-message:         Fund Request disapproval message
+    - task:                  Create Payment Request
+    - task:                  Marked Request as paid
+    - task:                  Receive Disbursement Failed Notification
+    - task:                  Wait for Repayment Request
+    - task:                  Receive Repayment Request
+    - exclusive:             Collection with Allocation?
+    - task:                  Outstanding adjustment
+    - task:                  Loan Balance will be adjusted 
+    - task:                  Marked as settled
+    - end:                   End 
+
+    edges:
+    - sequence:              Wait for Limit Request          -> Receive Limit request
+    - sequence:              Receive Limit request           -> Is Limit Approved?
+    - sequence:              Is Limit Approved?              -> Limit disapproval message                     [ label='No'; ]
+    - sequence:              Is Limit Approved?              -> Approve Supplier for invoice submission       [ label='Yes'; ]
+    - sequence:              Wait for Invoice                -> Receive Invoice
+    - sequence:              Receive Invoice                 -> Is Invoice Approved?
+    - sequence:              Is Invoice Approved?            -> Invoice disapproval message                   [ label='No'; ]
+    - sequence:              Is Invoice Approved?            -> Approve Invoice for Fund Request submission   [ label='Yes'; ]
+    - sequence:              Wait for Fund Request           -> Receive Fund Request 
+    - sequence:              Receive Fund Request            -> Is Fund Request Approved?
+    - sequence:              Is Fund Request Approved?       -> Fund Request disapproval message              [ label='No'; ]
+    - sequence:              Is Fund Request Approved?       -> Create Payment Request                        [ label='Yes'; ]
+    - sequence:              Wait for Repayment Request      ->  Receive Repayment Request
+    - sequence:              Receive Repayment Request       -> Collection with Allocation?
+    - sequence:              Collection with Allocation?     -> Outstanding adjustment                        [ label='No'; ]
+    - sequence:              Collection with Allocation?     -> Loan Balance will be adjusted                 [ label='Yes'; ]
+    - sequence:              Outstanding adjustment          -> Marked as settled
+    - sequence:              Loan Balance will be adjusted   -> Marked as settled
+    - sequence:              Marked as settled               -> End
+
+  - lane:                   CBS
+    hide-label:              false
+
+    nodes:
+    - process:               Limit API
+    - process:               Account balance and Account status API 
+    - process:               Transaction API
+    - exclusive:             Disbursement Process Succeed? 
+    - process:               Settlement API 
+
+    edges:
+    - sequence:              Transaction API           ->  Disbursement Process Succeed?                 
+   
+
+  

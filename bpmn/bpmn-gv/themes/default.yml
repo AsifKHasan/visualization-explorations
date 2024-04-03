@@ -196,6 +196,7 @@ node:
         data-store:                             shape='cylinder'; style='filled';
 
 edge:
+    wrap-at:                                    30
     shapes:
         sequence:                               style='solid, filled'; arrowhead=normal;
         message:                                style=dashed; arrowhead=empty;
