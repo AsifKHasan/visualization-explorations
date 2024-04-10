@@ -1,0 +1,196 @@
+theme:                       default
+bpmn:                        Factoring Finance Online Modeling
+hide-label:                  true
+
+# top level bpmn may contain nodes directly
+nodes:
+
+# top level bpmn may contain edges directly
+edges:
+- message:                   Set Limit                                        -> Receive Limit request
+- message:                   Limit API                                        -> Set Limit                                          [ label='Fetch available information from CBS'; ]
+- message:                   Limit disapproval message                        -> Receive disapproval message for Limit              [ label='Forward to CAD Maker and do not allow him to proceed'; ]
+- message:                   Approve Supplier for Invoice Submission          -> Receive Notification for Invoice Submission
+- message:                   Create Invoice                                   -> Receive Invoice                                    [ label='Forward Invoice to Buyer for Validation'; ]
+- message:                   Create Invoice on behalf of Supplier (Bank)      -> Receive Invoice                                    [ label='Forward Invoice to Buyer for Validation'; ]                                
+- message:                   Invoice disapproval message                      -> Receive Invoice disapproval message (Supplier)            [ label='Forward to Supplier who has initiated the invoice and do not allow him to proceed'; ]
+- message:                   Invoice disapproval message                      -> Receive disapproval message for Invoice to Bank    [ label='Forward to Bank who has initiated the invoice and do not allow him to proceed'; ]
+- message:                   Is Invoice Approved by Buyer?                    -> Receive Invoice for Validation                     [ label='Yes'; ]
+- message:                   Create Invoice on behalf of Supplier (Buyer)     -> Receive Invoice for Validation                     [ label='Yes'; ]
+- message:                   Invoice disapproval message by CAD Maker         -> Receive Invoice disapproval message (Supplier)     [ label='Forward to Supplier who has created the invoice and do not allow him to proceed'; ]
+- message:                   Invoice disapproval message by CAD Maker         -> Receive Invoice disapproval message (Buyer)        [ label='Forward to Buyer who has created the invoice and do not allow him to proceed'; ]
+- message:                   Is Invoice Approved by CAD Maker?                -> Receive Invoice for Validation by CAD Authorizer   [ label='Yes'; ]
+- message:                   Invoice disapproval message by CAD Authorizer    -> Receive Invoice disapproval message                [ label='Forward to CAD Maker who has forwarded the invoice and do not allow him to proceed'; ]
+- message:                   Approve Invoice for Fund Request Submission      -> Receive Fund Request Notification                  [ label='Notify Supplier regarding the Fund Request'; ]
+- message:                   Initiate Fund Request                            -> Receive Fund Request
+- message:                   Initiate Fund Request on behalf of Supplier      -> Receive Fund Request                               [ label='Even Bank can initiate Fund Request'; ]
+- message:                   Fund Request disapproval message by CAD Maker    -> Receive Fund Request disapproval message (Supplier)     [ label='Forward to Supplier who has initiated the Fund Request and do not allow him to proceed'; ]
+- message:                   Fund Request disapproval message by CAD Maker    -> Receive Fund Request disapproval message (Bank)         [ label='Forward to Bank who has initiated the Fund Request and do not allow him to proceed'; ]
+- message:                   Is Fund Request Approved by CAD Maker?           -> Receive Fund Request for Validation                [ label='Forward approved Fund Request to CAD Authorizer'; ]
+- message:                   Fund Request disapproval message                 -> Receive disapproval message for Fund Request       [ label='Forward to CAD Maker and do not allow him to proceed'; ]
+- message:                   Create Payment Request                           -> Transaction API                                    [ label='CBS Instruction to disburse amount'; ]
+- message:                   Disbursement Process Succeed?                    -> Receive Disbursement Failed Notification           [ label='No'; ] 
+- message:                   Disbursement Process Succeed?                    -> Marked Request as paid                             [ label='Yes'; ]      
+- message:                   Marked Request as Paid                           -> Receive Disbursement Notification                  [ label='Notify CAD Maker regarding the disbursement'; ]
+- message:                   Marked Request as Paid                           -> Receive Disbursement Notification (Supplier)       [ label='Notify Supplier regarding the disbursement'; ]
+- message:                   Settlement API                                   -> Receive Settlement Notification                    [ label='Notify CAD Maker regarding the repayment'; ]
+- message:                   Initiate Repayment                               -> Receive Repayment Request
+- message:                   Outstanding adjustment                           -> Settlement API                                     [ label='Outstanding will be adjusted, but invoice will not be washed out from the live invoice tray'; ]                   
+- message:                   Loan Balance will be adjusted                    -> Settlement API
+- message:                   Settlement API                                   -> Marked as settled
+
+
+
+
+pools:
+- pool:                       Factoring Finance Online
+  hide-label:                 false
+
+  # a pool may contain nodes directly
+  nodes:
+
+  # a pool may contain edges directly
+  edges:
+
+  lanes:
+  - lane:                      CAD Maker
+    hide-label:                false
+
+    nodes: 
+    - start:                   Start Factoring Finance
+    - task:                    Set Limit       
+    - catch-message:           Receive disapproval message for Limit 
+    - task:                    Wait for Invoice        
+    - task:                    Receive Invoice for Validation 
+    - exclusive:               Is Invoice approved by CAD Maker?
+    - throw-message:           Invoice disapproval message by CAD Maker         
+    - catch-message:           Receive disapproval message for Invoice
+    - task:                    Wait for Fund Request
+    - task:                    Receive Fund Request
+    - exclusive:               Is Fund Request Approved by CAD Maker?
+    - throw-message:           Fund Request disapproval message by CAD Maker
+    - catch-message:           Receive disapproval message for Fund Request
+    - task:                    Receive Disbursement Notification
+    - task:                    Receive Settlement Notification
+    - task:                    Initiate Repayment                   
+
+    edges:
+    - sequence:                Start Factoring Finance              -> Set Limit                             [ label='Factoring Finance Online Process Starts'; ]
+    - sequence:                Wait for Invoice                     -> Receive Invoice for Validation 
+    - sequence:                Receive Invoice for Validation       -> Is Invoice approved by CAD Maker? 
+    - sequence:                Is Invoice approved by CAD Maker?    -> Invoice disapproval message by CAD Maker [ label='No'; ]
+    - sequence:                Wait for Fund Request                -> Receive Fund Request
+    - sequence:                Receive Fund Request                 -> Is Fund Request Approved by CAD Maker?
+    - sequence:                Is Fund Request Approved by CAD Maker?                 -> Fund Request disapproval message by CAD Maker     [ label='No'; ]
+    - sequence:                Receive Settlement Notification                        -> Initiate Repayment  
+    
+ 
+  - lane:                    CAD Authorizer
+    hide-label:              false
+
+    nodes:
+    - task:                  Wait for Limit Request
+    - task:                  Receive Limit request            
+    - exclusive:             Is Limit Approved?        
+    - throw-message:         Limit disapproval message          
+    - task:                  Approve Supplier for Invoice Submission 
+    - task:                  Wait for Invoice
+    - task:                  Receive Invoice for Validation by CAD Authorizer          
+    - exclusive:             Is Invoice Approved? 
+    - throw-message:         Invoice disapproval message by CAD Authorizer
+    - task:                  Marked Invoice as Approved
+    - task:                  Approve Invoice for Fund Request submission
+    - task:                  Wait for Fund Request
+    - task:                  Receive Fund Request for Validation          
+    - exclusive:             Is Fund Request Approved? 
+    - throw-message:         Fund Request disapproval message
+    - task:                  Create Payment Request
+    - task:                  Marked Request as paid
+    - task:                  Receive Disbursement Failed Notification
+    - task:                  Wait for Repayment Request
+    - task:                  Receive Repayment Request
+    - exclusive:             Collection with Allocation?
+    - task:                  Outstanding adjustment
+    - task:                  Loan Balance will be adjusted 
+    - task:                  Marked as settled
+    - end:                   End 
+
+    edges:
+    - sequence:              Wait for Limit Request          -> Receive Limit request
+    - sequence:              Receive Limit request           -> Is Limit Approved?
+    - sequence:              Is Limit Approved?              -> Limit disapproval message                     [ label='No'; ]
+    - sequence:              Is Limit Approved?              -> Approve Supplier for Invoice Submission      [ label='Yes'; ]
+    - sequence:              Wait for Invoice                -> Receive Invoice for Validation by CAD Authorizer
+    - sequence:              Receive Invoice for Validation by CAD Authorizer                 -> Is Invoice Approved?
+    - sequence:              Is Invoice Approved?            ->  Invoice disapproval message by CAD Authorizer                  [ label='No'; ]
+    - sequence:              Is Invoice Approved?            -> Marked Invoice as Approved                       [ label='Yes'; ]
+    - sequence:              Wait for Fund Request           -> Receive Fund Request for Validation 
+    - sequence:              Receive Fund Request for Validation            -> Is Fund Request Approved?
+    - sequence:              Is Fund Request Approved?       -> Fund Request disapproval message              [ label='No'; ]
+    - sequence:              Is Fund Request Approved?       -> Create Payment Request                        [ label='Yes'; ]
+    - sequence:              Wait for Repayment Request      ->  Receive Repayment Request
+    - sequence:              Receive Repayment Request       -> Collection with Allocation?
+    - sequence:              Collection with Allocation?     -> Outstanding adjustment                        [ label='No'; ]
+    - sequence:              Collection with Allocation?     -> Loan Balance will be adjusted                 [ label='Yes'; ]
+    - sequence:              Outstanding adjustment          -> Marked as settled
+    - sequence:              Loan Balance will be adjusted   -> Marked as settled
+    - sequence:              Marked as settled               -> End
+
+
+  - lane:                   Supplier
+    hide-label:             false
+    nodes:   
+    - task:                 Receive Notification for Invoice Submission
+    - task:                 Create Invoice
+    - task:                 Receive Invoice disapproval message (Supplier) 
+    - task:                 Receive Fund Request Notification 
+    - task:                 Initiate Fund Request
+    - task:                 Receive Fund Request disapproval message (Supplier)
+    - task:                 Receive Disbursement Notification (Supplier)
+
+    edges:
+    - sequence:              Receive Notification for Invoice Submission           ->  Create Invoice 
+    - sequence:              Receive Fund Request Notification                     ->  Initiate Fund Request   
+
+  
+  - lane:                   Buyer
+    hide-label:             false
+    nodes:   
+    - task:                 Receive Invoice
+    - exclusive:            Is Invoice Approved by Buyer?
+    - throw-message:        Invoice disapproval message                      
+    - task:                 Create Invoice on behalf of Supplier (Buyer)
+  
+
+    edges:
+    - sequence:             Receive Invoice                                       ->  Is Invoice Approved by Buyer?
+    - sequence:             Is Invoice Approved by Buyer?                         ->  Invoice disapproval message
+
+
+ - lane:                   Bank
+    hide-label:            false
+    nodes:   
+    - task:                 Create Invoice on behalf of Supplier (Bank) 
+    - task:                 Receive disapproval message for Invoice to Bank 
+    - task:                 Initiate Fund Request on behalf of Supplier                    
+    - task:                 Receive Fund Request disapproval message (Bank)
+  
+
+    edges:
+    
+
+  - lane:                   CBS
+    hide-label:             false
+
+    nodes:
+    - process:               Limit API
+    - process:               Account balance and Account status API 
+    - process:               Transaction API
+    - exclusive:             Disbursement Process Succeed? 
+    - process:               Settlement API 
+
+    edges:
+    - sequence:              Transaction API           ->  Disbursement Process Succeed?                 
+   
+
+  
