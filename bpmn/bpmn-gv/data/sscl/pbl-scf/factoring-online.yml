@@ -64,7 +64,7 @@ pools:
     - task:                    Receive Invoice for Validation 
     - exclusive:               Is Invoice approved by CAD Maker?
     - throw-message:           Invoice disapproval message by CAD Maker         
-    - catch-message:           Receive disapproval message for Invoice
+    - catch-message:           Receive Invoice disapproval message
     - task:                    Wait for Fund Request
     - task:                    Receive Fund Request
     - exclusive:               Is Fund Request Approved by CAD Maker?
@@ -160,6 +160,7 @@ pools:
     - exclusive:            Is Invoice Approved by Buyer?
     - throw-message:        Invoice disapproval message                      
     - task:                 Create Invoice on behalf of Supplier (Buyer)
+    - task:                 Receive Invoice disapproval message (Buyer)
   
 
     edges:
@@ -167,7 +168,7 @@ pools:
     - sequence:             Is Invoice Approved by Buyer?                         ->  Invoice disapproval message
 
 
- - lane:                   Bank
+  - lane:                   Bank
     hide-label:            false
     nodes:   
     - task:                 Create Invoice on behalf of Supplier (Bank) 
@@ -184,7 +185,6 @@ pools:
 
     nodes:
     - process:               Limit API
-    - process:               Account balance and Account status API 
     - process:               Transaction API
     - exclusive:             Disbursement Process Succeed? 
     - process:               Settlement API 
