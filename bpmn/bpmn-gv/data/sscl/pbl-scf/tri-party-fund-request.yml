@@ -1,0 +1,107 @@
+theme:                       default
+bpmn:                        Three Party Invoice & Fund Request Submission Modeling
+hide-label:                  true
+
+# top level bpmn may contain nodes directly
+nodes:
+
+# top level bpmn may contain edges directly
+edges:
+- message:                   Create Invoice                                   -> Receive Invoice                                           [ label='Forward Invoice to Buyer for Validation'; wrap_at=100; ]
+- message:                   Invoice disapproved by Buyer                     -> Invoice disapproval message                               [ label='Forward to Supplier who has initiated the invoice and do not allow him to proceed'; wrap_at=100; ]
+- message:                   Is Invoice Approved by Buyer?                    -> Receive Invoice for Validation                            [ label='Yes'; ]
+- message:                   Invoice disapproved by CAD Maker                 -> Invoice disapproval message                               [ label='Forward to Supplier who has created the invoice and do not allow him to proceed'; wrap_at=100; ]
+- message:                   Is Invoice Approved by CAD Maker?                -> Receive Invoice for Validation by CAD Authorizer          [ label='Yes'; ]
+- message:                   Invoice disapproved by CAD Authorizer            -> Invoice disapproval message                               [ label='Forward to Supplier who has created the invoice and do not allow him to proceed'; wrap_at=100; ]
+- message:                   Approve Buyer for Invoice and Fund Request       -> Receive Fund Request Notification                         
+- message:                   Receive Fund Request Notification                -> Initiate Fund Request
+- message:                   Initiate Fund Request                            -> Supplier Fund Request Notification
+- message:                   Initiate Fund Request                            -> Initiate Fund Transfer
+- message:                   Initiate Fund Transfer                           -> Execute Fund Disbursement
+- message:                   Execute Fund Disbursement                        -> Transaction API
+
+
+
+pools:
+- pool:                       Three Party Invoice & Fund Request Submission Subprocess
+  hide-label:                 false
+
+  # a pool may contain nodes directly
+  nodes:
+
+  # a pool may contain edges directly
+  edges:
+
+  lanes:
+
+  - lane:                   CBS
+    hide-label:             false
+
+    nodes:
+    - process:               Transaction API
+    
+    edges:
+    
+  
+  - lane:                    CAD Authorizer
+    hide-label:              false
+
+    nodes:
+    - task:                  Receive Invoice for Validation by CAD Authorizer          
+    - exclusive:             Is Invoice Approved by CAD Authorizer?
+    - throw-message:         Invoice disapproved by CAD Authorizer
+    - task:                  Approve Buyer for Invoice and Fund Request
+    - task:                  Execute Fund Disbursement
+    - end:                   End 
+
+    edges:
+    - sequence:              Receive Invoice for Validation by CAD Authorizer                -> Is Invoice Approved by CAD Authorizer?
+    - sequence:              Is Invoice Approved by CAD Authorizer?                          -> Invoice disapproved by CAD Authorizer                                [ label='No'; ]
+    - sequence:              Is Invoice Approved by CAD Authorizer?                          -> Approve Buyer for Invoice and Fund Request                           [ label='Yes'; ]
+    - sequence:              Execute Fund Disbursement                                       -> End 
+
+  - lane:                      CAD Maker
+    hide-label:                false
+
+    nodes: 
+    - task:                    Receive Invoice for Validation
+    - exclusive:               Is Invoice Approved by CAD Maker?             [ wrap_at=15; ]
+    - throw-message:           Invoice disapproved by CAD Maker              [ wrap_at=15; ]
+    - task:                    Initiate Fund Transfer
+    
+    edges:
+    - sequence:                Receive Invoice for Validation                    -> Is Invoice Approved by CAD Maker?
+    - sequence:                Is Invoice Approved by CAD Maker?                 -> Invoice disapproved by CAD Maker                                             [ label='No'; ]
+
+
+  - lane:                   Buyer
+    hide-label:             false
+    nodes:
+    - task:                 Receive Invoice
+    - exclusive:            Is Invoice Approved by Buyer? 
+    - throw-message:        Invoice disapproved by Buyer                      [ wrap_at=15; ]
+    - task:                 Receive Fund Request Notification
+    - task:                 Initiate Fund Request 
+
+    edges:
+    - sequence:            Receive Invoice                        -> Is Invoice Approved by Buyer? 
+    - sequence:            Is Invoice Approved by Buyer?          -> Invoice disapproved by Buyer          [ label='No'; ]          
+    - sequence:            Receive Fund Request Notification      -> Initiate Fund Request  
+   
+ 
+ 
+  - lane:                   Supplier
+    hide-label:             false
+    nodes:
+    - start:                Start
+    - task:                 Create Invoice
+    - catch-message:        Invoice disapproval message                    [ wrap_at=15; ]
+    - task:                 Supplier Fund Request Notification
+    
+    edges:
+    - sequence:             Start                                                 ->   Create Invoice
+    
+  
+   
+
+  

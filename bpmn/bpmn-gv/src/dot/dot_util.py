@@ -11,6 +11,11 @@ import textwrap
 
 from helper.logger import *
 
+# LaTeX escape sequences
+CONV = {
+    '&': r'\&amp;',
+}
+
 PROPS_TO_QUOTE = [
     "fontsize",
     "fontname",
@@ -228,6 +233,22 @@ def props_to_dict(text):
     return output_dict
 
 
+
+''' :param text: a plain text message
+    :return: the message escaped to appear correctly in SVG
+'''
+def tex_escape(text):
+    regex = re.compile('|'.join(re.escape(str(key)) for key in sorted(CONV.keys(), key = lambda item: - len(item))))
+    return regex.sub(lambda match: CONV[match.group()], text)
+
+
+
+''' wrap a text as CDATA
+'''
+def wrap_as_cdata(text):
+    return f"<![CDATA[{text}]]>"
+
+    
 
 ''' output something like this
     <<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">

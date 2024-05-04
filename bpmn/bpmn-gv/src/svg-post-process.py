@@ -4,6 +4,7 @@ import argparse
 import yaml
 from pathlib import Path
 
+from pysvg.core import TextContent
 from pysvg.shape import Polygon
 from pysvg.structure import G, Svg
 from pysvg.text import Text
@@ -12,6 +13,7 @@ from pysvg.parser import parse
 from helper.geometry import Point
 from helper.logger import *
 from helper.svg_parselets import *
+from dot.dot_util import *
 
 def update_svg(svg_root):
 
@@ -81,6 +83,13 @@ def update_label_node(svg_root, cluster_id, direction='LR'):
     if label_node is None:
         warn(f"label node [{cluster_id}_label] not found")
         return
+
+    # get the Text under label_node
+    label_texts = label_node.getElementsByType(Text)
+    for label_text in label_texts:
+        for text_content in label_text.getElementsByType(TextContent):
+            text_content.setContent(wrap_as_cdata(text_content.content))
+            # print(f"label = {text_content.content}")
 
     # get the Polygon under label_node
     label_polygons = label_node.getElementsByType(Polygon)

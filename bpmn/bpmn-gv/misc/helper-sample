@@ -12,3 +12,5 @@ bpmn-from-yml.bat spectrum/RAJUK-ERP/RAJUK-ERP__PMIS-flow
 
 ./bpmn-from-yml.sh sscl/pbl-scf/factoring-offline TB
 ./bpmn-from-yml.sh sscl/pbl-scf/factoring-online TB
+./bpmn-from-yml.sh sscl/pbl-scf/bi-party-fund-request TB
+./bpmn-from-yml.sh sscl/pbl-scf/tri-party-fund-request TB
