@@ -63,6 +63,7 @@ def update_label_node(svg_root, cluster_id, direction='LR'):
     trans_str = graph_node.get_transform()
     transforms = parse_transform(trans_str)
     translate_x = transforms['translate'][0]
+    translate_y = transforms['translate'][1]
 
     # get the cluster node
     cluster_node = graph_node.getElementByID(cluster_id)[0]
@@ -83,13 +84,6 @@ def update_label_node(svg_root, cluster_id, direction='LR'):
     if label_node is None:
         warn(f"label node [{cluster_id}_label] not found")
         return
-
-    # get the Text under label_node
-    label_texts = label_node.getElementsByType(Text)
-    for label_text in label_texts:
-        for text_content in label_text.getElementsByType(TextContent):
-            text_content.setContent(wrap_as_cdata(text_content.content))
-            # print(f"label = {text_content.content}")
 
     # get the Polygon under label_node
     label_polygons = label_node.getElementsByType(Polygon)
@@ -129,15 +123,27 @@ def update_label_node(svg_root, cluster_id, direction='LR'):
         if len(label_texts) == 0:
             warn(f"no Text found under label node [{cluster_id}_label]")
         else:
-            label_text = label_texts[0]
+            for label_text in label_texts:
+                # translate and rotate text
+                text_x = float(label_text.get_x())
+                text_y = float(label_text.get_y())
+                translate_x = (label_x1 + label_x2) / 2 - text_y + translate_x
+                translate_y = (cluster_y1 + cluster_y2) / 2 + text_x
+                transform_str = f"translate({Point(translate_x, translate_y)}) rotate(-90)"
+                label_text.set_transform(transform_str)
+    else:
+        # get the Text under label_node
+        label_texts = label_node.getElementsByType(Text)
+        if len(label_texts) == 0:
+            warn(f"no Text found under label node [{cluster_id}_label]")
+        else:
+            for label_text in label_texts:
+                # change x only
+                label_x1 = min([p.x for p in label_points])
+                label_x2 = max([p.x for p in label_points])
+                new_label_x = (label_x1 + label_x2) / 2
+                label_text.set_x(new_label_x)
 
-        # translate and rotate text
-        text_x = float(label_text.get_x())
-        text_y = float(label_text.get_y())
-        translate_x = (label_x1 + label_x2) / 2 - text_y + translate_x
-        translate_y = (cluster_y1 + cluster_y2) / 2 + text_x
-        transform_str = f"translate({Point(translate_x, translate_y)}) rotate(-90)"
-        label_text.set_transform(transform_str)
 
 
     # print(cluster_polygon.get_points())
@@ -171,5 +177,12 @@ if __name__ == '__main__':
 
     for cluster_id in cluster_ids:
         update_label_node(svg_root=svg_root, cluster_id=cluster_id, direction=args['dir'])
+
+    # labels may contain characters that SVG may have problem with rendering, so we wrap all labels as CDATA
+    label_texts = svg_root.getElementsByType(Text)
+    for label_text in label_texts:
+        for text_content in label_text.getElementsByType(TextContent):
+            text_content.setContent(wrap_as_cdata(text_content.content))
+            # print(f"label = {text_content.content}")
 
     svg_root.save(filename=svg_path, encoding="UTF-8")

@@ -1,5 +1,5 @@
 theme:                       default
-bpmn:                        Three Party Invoice & Fund Request Submission Modeling
+bpmn:                        Three Party Fund Request Submission Modeling
 hide-label:                  true
 
 # top level bpmn may contain nodes directly
@@ -7,23 +7,25 @@ nodes:
 
 # top level bpmn may contain edges directly
 edges:
-- message:                   Create Invoice                                   -> Receive Invoice                                           [ label='Forward Invoice to Buyer for Validation'; wrap_at=100; ]
-- message:                   Invoice disapproved by Buyer                     -> Invoice disapproval message                               [ label='Forward to Supplier who has initiated the invoice and do not allow him to proceed'; wrap_at=100; ]
-- message:                   Is Invoice Approved by Buyer?                    -> Receive Invoice for Validation                            [ label='Yes'; ]
-- message:                   Invoice disapproved by CAD Maker                 -> Invoice disapproval message                               [ label='Forward to Supplier who has created the invoice and do not allow him to proceed'; wrap_at=100; ]
-- message:                   Is Invoice Approved by CAD Maker?                -> Receive Invoice for Validation by CAD Authorizer          [ label='Yes'; ]
-- message:                   Invoice disapproved by CAD Authorizer            -> Invoice disapproval message                               [ label='Forward to Supplier who has created the invoice and do not allow him to proceed'; wrap_at=100; ]
-- message:                   Approve Buyer for Invoice and Fund Request       -> Receive Fund Request Notification                         
-- message:                   Receive Fund Request Notification                -> Initiate Fund Request
-- message:                   Initiate Fund Request                            -> Supplier Fund Request Notification
-- message:                   Initiate Fund Request                            -> Initiate Fund Transfer
-- message:                   Initiate Fund Transfer                           -> Execute Fund Disbursement
-- message:                   Execute Fund Disbursement                        -> Transaction API
+
+- message:                   Create PO & Fund Request                         -> Receive Purchase Order
+- message:                   PO Disapproved by Anchor                         -> Fund Request disapproval message
+- message:                   Is PO Approved by Anchor?                        -> Receive Fund Request
+- message:                   Fund Request disapproved by CAD Maker            -> Fund Request disapproval message                          [ label='Forward to Supplier and do not allow him to proceed'; wrap_at=52; ]
+- message:                   Is Fund Request Approved by CAD Maker?           -> Receive Fund Request for Validation                       [ label='Forward approved Fund Request to CAD Authorizer'; wrap_at=30; ]
+- message:                   Fund Request disapproved by CAD Authorizer       -> Fund Request disapproval message                          [ label='Forward to Supplier and do not allow him to proceed'; wrap_at=52; ]
+- message:                   Create Payment Request                           -> Transaction API                                           [ label='CBS Instruction to disburse amount'; wrap_at=30; ]
+- message:                   Disbursement Process Succeed?                    -> Receive Disbursement Failed Notification                  [ label='No'; ] 
+- message:                   Disbursement Process Succeed?                    -> Marked Request as paid                                    [ label='Yes'; ]      
+- message:                   Marked Request as Paid                           -> Dealer Disbursement Notification                          [ label='Notify CAD Maker regarding the disbursement'; wrap_at=25; ]
+- message:                   Marked Request as Paid                           -> CAD Maker Disbursement Notification                       [ label='Notify Supplier regarding the disbursement'; wrap_at=25; ]
+- message:                   Marked Request as Paid                           -> Anchor Payment Notification                               [ label='Notify Anchor regarding the Request is paid'; wrap_at=25; ]
+
 
 
 
 pools:
-- pool:                       Three Party Invoice & Fund Request Submission Subprocess
+- pool:                       Three Party Fund Request Submission
   hide-label:                 false
 
   # a pool may contain nodes directly
@@ -39,68 +41,70 @@ pools:
 
     nodes:
     - process:               Transaction API
-    
+    - exclusive:             Disbursement Process Succeed?                                [ wrap_at=60; ]
+   
     edges:
-    
+    - sequence:              Transaction API           ->  Disbursement Process Succeed?                 
+   
   
   - lane:                    CAD Authorizer
     hide-label:              false
 
     nodes:
-    - task:                  Receive Invoice for Validation by CAD Authorizer          
-    - exclusive:             Is Invoice Approved by CAD Authorizer?
-    - throw-message:         Invoice disapproved by CAD Authorizer
-    - task:                  Approve Buyer for Invoice and Fund Request
-    - task:                  Execute Fund Disbursement
+    - task:                  Receive Fund Request for Validation          
+    - exclusive:             Is Fund Request Approved? 
+    - throw-message:         Fund Request disapproved by CAD Authorizer
+    - task:                  Create Payment Request
+    - task:                  Marked Request as paid
+    - task:                  Receive Disbursement Failed Notification
     - end:                   End 
 
     edges:
-    - sequence:              Receive Invoice for Validation by CAD Authorizer                -> Is Invoice Approved by CAD Authorizer?
-    - sequence:              Is Invoice Approved by CAD Authorizer?                          -> Invoice disapproved by CAD Authorizer                                [ label='No'; ]
-    - sequence:              Is Invoice Approved by CAD Authorizer?                          -> Approve Buyer for Invoice and Fund Request                           [ label='Yes'; ]
-    - sequence:              Execute Fund Disbursement                                       -> End 
+    - sequence:              Receive Fund Request for Validation                              -> Is Fund Request Approved?
+    - sequence:              Is Fund Request Approved?                                        -> Fund Request disapproved by CAD Authorizer                                [ label='No'; ]
+    - sequence:              Is Fund Request Approved?                                        -> Create Payment Request                                                    [ label='Yes'; ]
+    - sequence:              Marked Request as paid                                           -> End
 
   - lane:                      CAD Maker
     hide-label:                false
 
     nodes: 
-    - task:                    Receive Invoice for Validation
-    - exclusive:               Is Invoice Approved by CAD Maker?             [ wrap_at=15; ]
-    - throw-message:           Invoice disapproved by CAD Maker              [ wrap_at=15; ]
-    - task:                    Initiate Fund Transfer
+    - task:                    Receive Fund Request
+    - exclusive:               Is Fund Request Approved by CAD Maker?            [ wrap_at=15; ]
+    - throw-message:           Fund Request disapproved by CAD Maker             [ wrap_at=15; ]
+    - task:                    CAD Maker Disbursement Notification
     
     edges:
-    - sequence:                Receive Invoice for Validation                    -> Is Invoice Approved by CAD Maker?
-    - sequence:                Is Invoice Approved by CAD Maker?                 -> Invoice disapproved by CAD Maker                                             [ label='No'; ]
+    - sequence:                Receive Fund Request                                   -> Is Fund Request Approved by CAD Maker?
+    - sequence:                Is Fund Request Approved by CAD Maker?                 -> Fund Request disapproved by CAD Maker                                             [ label='No'; ]
 
 
-  - lane:                   Buyer
+  - lane:                   Anchor
     hide-label:             false
     nodes:
-    - task:                 Receive Invoice
-    - exclusive:            Is Invoice Approved by Buyer? 
-    - throw-message:        Invoice disapproved by Buyer                      [ wrap_at=15; ]
-    - task:                 Receive Fund Request Notification
-    - task:                 Initiate Fund Request 
-
+    - task:                 Receive Purchase Order 
+    - exclusive:            Is PO Approved by Anchor? 
+    - throw-message:        PO Disapproved by Anchor                     [ wrap_at=15; ]
+    - task:                 Anchor Payment Notification
     edges:
-    - sequence:            Receive Invoice                        -> Is Invoice Approved by Buyer? 
-    - sequence:            Is Invoice Approved by Buyer?          -> Invoice disapproved by Buyer          [ label='No'; ]          
-    - sequence:            Receive Fund Request Notification      -> Initiate Fund Request  
+    - sequence:            Receive Purchase Order                        ->  Is PO Approved by Anchor?  
+    - sequence:            Is PO Approved by Anchor?                     ->  PO Disapproved by Anchor   
    
  
  
-  - lane:                   Supplier
+  - lane:                   Dealer
     hide-label:             false
     nodes:
     - start:                Start
-    - task:                 Create Invoice
-    - catch-message:        Invoice disapproval message                    [ wrap_at=15; ]
-    - task:                 Supplier Fund Request Notification
+    - task:                 Receive Fund Request Notification 
+    - task:                 Create PO & Fund Request 
+    - catch-message:        Fund Request disapproval message                     [ wrap_at=15; ]
+    - task:                 Dealer Disbursement Notification
     
     edges:
-    - sequence:             Start                                                 ->   Create Invoice
-    
+    - sequence:             Start                                                 ->  Receive Fund Request Notification
+    - sequence:             Receive Fund Request Notification                     ->  Create PO & Fund Request   
+
   
    
 
