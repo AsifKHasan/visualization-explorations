@@ -1,0 +1,94 @@
+theme:                       default
+bpmn:                        Supplier Initiated Fund Request Modeling
+hide-label:                  true
+
+# top level bpmn may contain nodes directly
+nodes:
+
+# top level bpmn may contain edges directly
+edges:
+- message:                   Initiate Fund Request                            -> Receive Fund Request
+- message:                   Fund Request disapproved by CAD Maker            -> Fund Request disapproval message                          [ label='Forward to Supplier and do not allow him to proceed'; wrap_at=20; ]
+- message:                   Is Fund Request Approved by CAD Maker?           -> Receive Fund Request for Validation                       [ label='Forward approved Fund Request to CAD Authorizer'; wrap_at=30; ]
+- message:                   Fund Request disapproved by CAD Authorizer       -> Fund Request disapproval message                          [ label='Forward to Supplier and do not allow him to proceed'; wrap_at=20; ]
+- message:                   Create Payment Request                           -> Transaction API                                           [ label='CBS Instruction to disburse amount'; wrap_at=30; ]
+- message:                   Disbursement Process Succeed?                    -> Receive Disbursement Failed Notification                  [ label='No'; ] 
+- message:                   Disbursement Process Succeed?                    -> Marked Request as paid                                    [ label='Yes'; ]      
+- message:                   Marked Request as Paid                           -> Supplier Disbursement Notification                        [ label='Notify CAD Maker regarding the disbursement'; wrap_at=25; ]
+- message:                   Marked Request as Paid                           -> CAD Maker Disbursement Notification                       [ label='Notify Supplier regarding the disbursement'; wrap_at=25; ]
+
+
+
+
+pools:
+- pool:                       Supplier Initiated Fund Request Submission
+  hide-label:                 false
+
+  # a pool may contain nodes directly
+  nodes:
+
+  # a pool may contain edges directly
+  edges:
+
+  lanes:
+
+  - lane:                   CBS
+    hide-label:             false
+
+    nodes:
+    - process:               Transaction API
+    - exclusive:             Disbursement Process Succeed?                                [ wrap_at=60; ]
+   
+    edges:
+    - sequence:              Transaction API           ->  Disbursement Process Succeed?                 
+   
+  
+  - lane:                    CAD Authorizer
+    hide-label:              false
+
+    nodes:
+    - task:                  Receive Fund Request for Validation                     
+    - exclusive:             Is Fund Request Approved?                      [ wrap_at=15; ]                       
+    - throw-message:         Fund Request disapproved by CAD Authorizer
+    - task:                  Create Payment Request
+    - task:                  Marked Request as paid
+    - task:                  Receive Disbursement Failed Notification
+    - process:               Collection 
+
+    edges:
+    - sequence:              Receive Fund Request for Validation                              -> Is Fund Request Approved?
+    - sequence:              Is Fund Request Approved?                                        -> Fund Request disapproved by CAD Authorizer                                [ label='No'; ]
+    - sequence:              Is Fund Request Approved?                                        -> Create Payment Request                                                    [ label='Yes'; ]
+    - sequence:              Marked Request as paid                                           -> Collection
+
+  - lane:                      CAD Maker
+    hide-label:                false
+
+    nodes: 
+    - task:                    Receive Fund Request
+    - exclusive:               Is Fund Request Approved by CAD Maker?            [ wrap_at=15; ]
+    - throw-message:           Fund Request disapproved by CAD Maker             [ wrap_at=15; ]
+    - task:                    CAD Maker Disbursement Notification
+    
+    edges:
+    - sequence:                Receive Fund Request                                   -> Is Fund Request Approved by CAD Maker?
+    - sequence:                Is Fund Request Approved by CAD Maker?                 -> Fund Request disapproved by CAD Maker                                             [ label='No'; ]
+   
+ 
+  - lane:                   Supplier
+    hide-label:             false
+    nodes:
+    - process:              Invoice Submission
+    - task:                 Receive Fund Request Notification 
+    - task:                 Initiate Fund Request
+    - catch-message:        Fund Request disapproval message                     [ wrap_at=15; ]
+    - task:                 Supplier Disbursement Notification
+    
+    edges:
+    - sequence:             Invoice Submission                                    ->  Receive Fund Request Notification
+    - sequence:             Receive Fund Request Notification                     ->  Initiate Fund Request   
+
+  
+   
+
+  
