@@ -1,0 +1,84 @@
+theme:              task-day-default
+view:               day
+start-date:         "2024-07-01"
+consider-holidays:  true
+holiday-list:
+  weekdays:
+  - Fri
+  - Sat
+
+  dates:
+    "2024-07-17":   Ashura
+    "2024-08-15":   National Mourning Day
+    "2024-08-17":   Shuba Janmashtami
+    "2024-09-16":   Eid-e-Milad un-Nabi
+    "2024-10-13":   Vijaya Dashami
+    "2024-12-16":   Victory Day
+    "2024-12-25":   Christmas Day
+
+collapsed-ranges:
+- 3-7
+- 13-37
+- 43-57
+
+items:
+- hash:         0
+  text:           Train the Voicebot Chatbot - Single Custom Workflow
+  items:
+  - hash:         0.1  
+    text:         Initial Setup
+    span:         1-10
+  - hash:         0.2  
+    text:         Model Training and Fine-tuning
+    span:         11-40
+
+- hash:         1
+  text:           Train the Voicebot Chatbot - Single FAQ Workflow
+  items:
+  - hash:         1.1  
+    text:         Prepare FAQ dataset
+    span:         36-40
+  - hash:         1.2  
+    text:         Train model with FAQ dataset
+    span:         41-60
+
+- hash:         2
+  text:           Add Branding Materials and Run Tests
+  items:
+  - hash:         2.1  
+    text:         Design and integrate branding elements
+    span:         61-66
+  - hash:         2.2  
+    text:         Implement Branding elements in Chatbot UI
+    span:         67-69
+
+- hash:         3
+  text:           Deployment
+  items:
+  - hash:         3.1  
+    text:         Prepare Deployment Environment
+    span:         70-73
+  - hash:         3.2  
+    text:         Deploy the Model and Application
+    span:         74-76
+
+- hash:         4
+  text:           Testing the Production Readiness
+  items:
+  - hash:         4.1  
+    text:         Initial live performance testing
+    span:         77-78
+  - hash:         4.2  
+    text:         Identify and fix bugs
+    span:         79-81
+
+- hash:         5
+  text:           Training the Customer Support Operators
+  items:
+  - hash:         5.1  
+    text:         Conduct training sessions
+    span:         82-83
+  - hash:         5.2  
+    text:         User acceptance testing
+    span:         84-84
+

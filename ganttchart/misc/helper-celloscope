@@ -4,3 +4,6 @@
 ganttchart-from-yml.bat celloscope/NBR/FFBT/nbr-ffbt-ganttchart-aps
 ganttchart-from-yml.bat celloscope/NBR/FFBT/nbr-ffbt-ganttchart-ards
 
+
+./ganttchart-from-yml.sh celloscope/BEC/Chatbot/bec-chatbot-ganttchart-for-ahq
+
