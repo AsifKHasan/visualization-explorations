@@ -7,5 +7,5 @@ mindmap-from-yml.bat "celloscope/Celloscope__sales-organization"
 ./mindmap-from-yml.sh "celloscope/Celloscope__sales-organization"
 ./mindmap-from-yml.sh "celloscope/AI-ML__work-streams"
 
-mindmap-from-yml.bat "celloscope/BEC-AI-Chatbot__role-hierarchy"
-./mindmap-from-yml.sh "celloscope/BEC-AI-Chatbot__role-hierarchy"
+mindmap-from-yml.bat "celloscope/BEC-AI-Chatbot__RFP__role-hierarchy"
+./mindmap-from-yml.sh "celloscope/BEC-AI-Chatbot__RFP__role-hierarchy" dot svg

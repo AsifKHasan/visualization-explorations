@@ -6,7 +6,7 @@
             "size": "11,8!",
             "ratio": "fill",
             "center": "true",
-            "dpi": "144",
+            "dpi": "300",
             "mode": "KK",
             "model": "shortpath",
             "esep": "+30",
@@ -18,15 +18,15 @@
             "fontcolor": "#202020",
             "fontcolorsub": "#802020",
             "fontname": "Calibri",
-            "fontsize": "32",
+            "fontsize": "96",
             "fillcolor": "#E0E0E0",
             "penwidth": "2.0"
         },
         "edge": {
-            "penwidth": "0.5",
+            "penwidth": "2.5",
             "color": "#202020",
             "style": "solid",
-            "len": "4"
+            "len": "2"
         }
     },
     "1": {
@@ -36,15 +36,15 @@
             "fontcolor": "#202020",
             "fontcolorsub": "#802020",
             "fontname": "Calibri",
-            "fontsize": "28",
+            "fontsize": "80",
             "fillcolor": "#E0E0E0",
             "penwidth": "1.5"
         },
         "edge": {
-            "penwidth": "0.5",
+            "penwidth": "1.5",
             "color": "#202020",
             "style": "solid",
-            "len": "3"
+            "len": "1"
         }
     },
     "2": {
@@ -54,7 +54,7 @@
             "fontcolor": "#202020",
             "fontcolorsub": "#802020",
             "fontname": "Calibri",
-            "fontsize": "20",
+            "fontsize": "64",
             "fillcolor": "#F0F0F0",
             "penwidth": "1.0"
         },
@@ -62,7 +62,7 @@
             "penwidth": "0.5",
             "color": "#202020",
             "style": "solid",
-            "len": "2"
+            "len": "1"
         }
     },
     "3": {

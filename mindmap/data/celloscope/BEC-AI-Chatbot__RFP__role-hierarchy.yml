@@ -1,0 +1,53 @@
+graph:            "overlap: false, splines: line, nodesep: 0.5, ranksep: 0.02, esep: +10, sep: +10"
+label:            Team Leader/Project Manager, Dr. Md. Faizul Bari
+style:            "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 4.0"
+wrap-width:       100
+# len:              2
+children:
+- label:        Natural Language Processing Expert, Syed Mostofa Monsur
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.5"
+  wrap-width:   30
+  # len:            1
+  children:
+  - label:        Backend Developer 3, Md. Shariar Kabir
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   15
+  - label:        Documentation Expert, Mohammad Kamrul Hasan
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   15
+
+- label:        Backend Developer 1, Umme Rumman Usha
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.5"
+  wrap-width:   30
+  # len:            1
+  children:
+  - label:        Backend Developer 2, Mushfika Faria
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   15
+  - label:        Database Expert, Maly Mohsem Ahmed
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   10
+  - label:        Development Engineer, Khondoker Tanvir Hossain
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   15
+  - label:        QA Engineer 1, Amiya Ahmed
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   10
+
+- label:        Frontend Developer 1, Alif Arfab Pavel
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.5"
+  wrap-width:   30
+  # len:            1
+  children:
+  - label:        Frontend Developer 2, Farhana Naz
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   15
+  - label:        QA Engineer 2
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   10
+
+- label:        Security Expert, Md. Nazmul Alam
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.5"
+  wrap-width:   30
+  # len:            1
+  children:
