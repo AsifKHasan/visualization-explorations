@@ -34,7 +34,7 @@ children:
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
     wrap-width:   10
 
-- label:        Frontend Developer 1, Alif Arfab Pavel
+- label:        Frontend Developer 1, Arnab Basak
   style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.5"
   wrap-width:   30
   # len:            1
@@ -42,7 +42,7 @@ children:
   - label:        Frontend Developer 2, Farhana Naz
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
     wrap-width:   15
-  - label:        QA Engineer 2
+  - label:        QA Engineer 2, Al-Hai Rezwan Huq
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
     wrap-width:   10
 
