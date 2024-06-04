@@ -133,4 +133,3 @@ dmypy.json
 out
 personal
 personal/*.yml
-credential.json
