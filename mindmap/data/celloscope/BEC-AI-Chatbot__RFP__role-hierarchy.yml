@@ -9,9 +9,6 @@ children:
   wrap-width:   30
   # len:            1
   children:
-  - label:        Backend Developer 3, Md. Shariar Kabir
-    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
-    wrap-width:   15
   - label:        Documentation Expert, Mohammad Kamrul Hasan
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
     wrap-width:   15
@@ -27,9 +24,6 @@ children:
   - label:        Database Expert, Maly Mohsem Ahmed
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
     wrap-width:   10
-  - label:        Development Engineer, Khondoker Tanvir Hossain
-    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
-    wrap-width:   15
   - label:        QA Engineer 1, Amiya Ahmed
     style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
     wrap-width:   10
@@ -51,3 +45,19 @@ children:
   wrap-width:   30
   # len:            1
   children:
+
+- label:        Development Engineer, Khondoker Tanvir Hossain
+  style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+  wrap-width:   15
+  # len:            1
+  children:
+  - label:        Support Engineer 1, MD. Fuad Hasan Chowdhury (Mugdho)
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   10
+  - label:        Support Engineer 2, Md. Samiul Alim
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   10
+  - label:        Support Engineer 3, MD. Abu Yousuf Sajal
+    style:        "fillcolor: #D8DCD6, color: #214761, shape: rectangle, width: 3.0"
+    wrap-width:   10
+
