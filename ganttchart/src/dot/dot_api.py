@@ -402,10 +402,10 @@ class GraphObject(object):
                 warn("[holiday-list] is not defined, will not consider holidays ...")
                 CONSIDER_HOLIDAYS = False
 
-
-        if 'collapsed-ranges' in DATA:
+        collapsed_ranges = DATA.get('collapsed-ranges', [])
+        if len(collapsed_ranges) > 0:
             # we have spans, we need satrt and end
-            for span_text in DATA['collapsed-ranges']:
+            for span_text in collapsed_ranges:
                 # a span is a pair of numbers (separated by -)
                 pair = span_text.split('-')
                 if len(pair) != 2:

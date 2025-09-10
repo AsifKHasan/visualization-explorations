@@ -2,4 +2,4 @@
 ganttchart-from-yml.bat spectrum/SCOTT/scott-dev-ganttchart
 
 
-ganttchart-from-yml.bat spectrum/ITS/bangabandhu-bridge
+./ganttchart-from-yml.sh spectrum/BCC-DR/bcc-dr-gantt-chart

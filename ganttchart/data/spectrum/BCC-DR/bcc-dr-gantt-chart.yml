@@ -1,7 +1,7 @@
 theme:              task-day-default
 view:               day
-start-date:         "2024-07-01"
-consider-holidays:  true
+start-date:         "2025-07-01"
+consider-holidays:  false
 holiday-list:
   weekdays:
   - Fri
@@ -16,69 +16,360 @@ holiday-list:
     "2024-12-16":   Victory Day
     "2024-12-25":   Christmas Day
 
-collapsed-ranges:
-- 3-7
-- 13-37
-- 43-57
+collapsed-ranges:   []
 
 items:
-- hash:         0
-  text:           Train the Voicebot Chatbot - Single Custom Workflow
+- hash:      0
+  text:      Starting and Closing of Project  
+  span:      1-242
+- hash:      1
+  text:      Project Award  
+  span:      1-1
   items:
-  - hash:         0.1  
-    text:         Initial Setup
-    span:         1-10
-  - hash:         0.2  
-    text:         Model Training and Fine-tuning
-    span:         11-40
-
-- hash:         1
-  text:           Train the Voicebot Chatbot - Single FAQ Workflow
+  - hash:      1.1
+    text:      PO Received
+    span:      1-1
+  - hash:      1.2
+    text:      Site handover
+    span:      2-14
+  - hash:      1.3
+    text:      Project Office Setup (Rental, Furniture, Office Equipment, etc.)
+    span:      2-42
+- hash:      2
+  text:      LC/Payment  
+  span:      2-14
   items:
-  - hash:         1.1  
-    text:         Prepare FAQ dataset
-    span:         36-40
-  - hash:         1.2  
-    text:         Train model with FAQ dataset
-    span:         41-60
-
-- hash:         2
-  text:           Add Branding Materials and Run Tests
+  - hash:      2.1
+    text:      LC/Payment Transmit to Huawei
+    span:      2-14
+- hash:      3
+  text:      Manufacture and Shipment (Huawei)  
+  span:      93-115
   items:
-  - hash:         2.1  
-    text:         Design and integrate branding elements
-    span:         61-66
-  - hash:         2.2  
-    text:         Implement Branding elements in Chatbot UI
-    span:         67-69
-
-- hash:         3
-  text:           Deployment
+  - hash:      3.1
+    text:      Manufacture_Racks, UPS, Rectifier, Battery, PDU, Storage, Firewall, Network
+    span:      93-115
+- hash:      4
+  text:      Manufacture & Shipment (Non-Huawei)  
+  span:      17-71
   items:
-  - hash:         3.1  
-    text:         Prepare Deployment Environment
-    span:         70-73
-  - hash:         3.2  
-    text:         Deploy the Model and Application
-    span:         74-76
-
-- hash:         4
-  text:           Testing the Production Readiness
+  - hash:      4.1
+    text:      Steel Structure_Materials production & Shipment_Non Huawei
+    span:      17-57
+  - hash:      4.2
+    text:      Manufacture & FAT_Local purchase Genset(DG) including Fuel tank_Non Huawei
+    span:      17-71
+  - hash:      4.3
+    text:      MEP_Materials production & Shipment_Non Huawei
+    span:      17-57
+  - hash:      4.4
+    text:      RMU/HT/LT/AVR_Materials production Shipment_Non Huawei
+    span:      17-71
+  - hash:      4.5
+    text:      Fire Fighting_Materials production & Shipment_Non Huawei
+    span:      17-57
+- hash:      5
+  text:      Custom Clearance, Warehousing & Material on Site  
+  span:      27-125
   items:
-  - hash:         4.1  
-    text:         Initial live performance testing
-    span:         77-78
-  - hash:         4.2  
-    text:         Identify and fix bugs
-    span:         79-81
-
-- hash:         5
-  text:           Training the Customer Support Operators
+  - hash:      5.1
+    text:      Custom Clearance (New DR_Non Huawei_Steel Structure)
+    span:      58-65
+  - hash:      5.2
+    text:      Equipment Delivery at site(New DR_Non Huawei_Steel Structure)
+    span:      69-69
+  - hash:      5.3
+    text:      Custom Clearance (New DR_Non Huawei_DG)
+    span:      58-65
+  - hash:      5.4
+    text:      Equipment Delivery at site (New DR_Non Huawei_DG)
+    span:      66-68
+  - hash:      5.5
+    text:      Custom Clearance (New DR_Non Huawei_MEP)
+    span:      58-65
+  - hash:      5.6
+    text:      Equipment Delivery at site (New DR_Non Huawei_MEP)
+    span:      66-68
+  - hash:      5.7
+    text:      Custom Clearance (New DR_Non Huawei_PW)
+    span:      72-79
+  - hash:      5.8
+    text:      Equipment Delivery at site (New DR_Non Huawei_PW)
+    span:      80-82
+  - hash:      5.9
+    text:      Custom Clearance(New DR_Non Huawei_FS)
+    span:      27-34
+  - hash:      5.10
+    text:      Equipment Delivery at site (New DR_Non Huawei_FS)
+    span:      35-35
+  - hash:      5.11
+    text:      Custom Clearance (New DR_Huawei)
+    span:      116-124
+  - hash:      5.12
+    text:      Equipment Delivery at site(New DR_Huawei)
+    span:      125-125
+- hash:      6
+  text:      Design & Approval (HLD/LLD/TCDD)  
+  span:      2-36
   items:
-  - hash:         5.1  
-    text:         Conduct training sessions
-    span:         82-83
-  - hash:         5.2  
-    text:         User acceptance testing
-    span:         84-84
-
+  - hash:      6.1
+    text:      Site Dismantle Design Plan & Aproval
+    span:      2-21
+  - hash:      6.2
+    text:      Detail design output with Civil modification Work, DG Room & Site preparation
+    span:      22-34
+  - hash:      6.3
+    text:      LT System and Power panels and electrical system
+    span:      22-34
+  - hash:      6.4
+    text:      DG and Fueling system
+    span:      22-34
+  - hash:      6.5
+    text:      Fire Fighting System
+    span:      22-29
+  - hash:      6.6
+    text:      Containment, HVAC, Access, CCTV, DCIM, Fresh Air system & MEP
+    span:      22-44
+  - hash:      6.7
+    text:      Commercial power incoming solution verify by Local supplier
+    span:      16-21
+  - hash:      6.8
+    text:      Detail design Approval
+    span:      15-27
+  - hash:      6.9
+    text:      TCDD certification acquire
+    span:      22-29
+  - hash:      6.10
+    text:      Shop Drawing & customer approval
+    span:      31-36
+  - hash:      6.11
+    text:      New DR site LLD and approval
+    span:      32-40
+- hash:      7
+  text:      Required GOV. approval & permission  
+  span:      9-40
+  items:
+  - hash:      7.1
+    text:      Power Authority (DESCO) related approval process for 2.5MV Commercial power incoming
+    span:      9-37
+  - hash:      7.2
+    text:      Required Demand note application & demand fee submit with related other GOV fee
+    span:      9-37
+  - hash:      7.3
+    text:      City corporation approval for Civil work
+    span:      10-40
+  - hash:      7.4
+    text:      Certification from Explosives department for Bulk fuel reserve
+    span:      9-37
+  - hash:      7.5
+    text:      Certification from Fire & safety department for industrial facility/arrangement
+    span:      9-37
+  - hash:      7.6
+    text:      Environment dept. approval for Industrial level high rated Generator use
+    span:      10-40
+- hash:      8
+  text:      Civil Work  
+  span:      17-183
+  items:
+  - hash:      8.1
+    text:      Site Survey & Excavation
+    span:      17-22
+  - hash:      8.2
+    text:      Civil materials Purchased & Site Foundation
+    span:      17-42
+  - hash:      8.3
+    text:      New Steel structure Hoisting and splicing
+    span:      44-62
+  - hash:      8.4
+    text:      First Stairs and Floors
+    span:      64-104
+  - hash:      8.5
+    text:      Second Stairs and Floors
+    span:      106-146
+  - hash:      8.6
+    text:      Third Floors
+    span:      148-174
+  - hash:      8.7
+    text:      Site readiness work (Civil, Raise floor, Cable ladders, ducts, cooling system base etc.)
+    span:      147-173
+  - hash:      8.8
+    text:      Fire Gas suppression Piping & related installation
+    span:      175-182
+  - hash:      8.9
+    text:      Decoration & related finishing works
+    span:      163-175
+  - hash:      8.10
+    text:      Required Earthing Pit readiness for Substation, DG & DC Facility
+    span:      148-160
+- hash:      9
+  text:      Commercial Power Connection  
+  span:      148-188
+  items:
+  - hash:      9.1
+    text:      11KV Commercial power incoming line construction via Power Authority
+    span:      148-174
+  - hash:      9.2
+    text:      Required Metering & Surge Arrester for incoming line
+    span:      148-174
+  - hash:      9.3
+    text:      RMU/AIS Panel installation & related 11KV Power cabling
+    span:      169-188
+  - hash:      9.4
+    text:      Transformer installation
+    span:      169-188
+- hash:      10
+  text:      DG Connectivity  
+  span:      169-195
+  items:
+  - hash:      10.1
+    text:      DG on Site Installation
+    span:      169-195
+  - hash:      10.2
+    text:      Smoke Pipe/Silencer installation
+    span:      169-195
+  - hash:      10.3
+    text:      Cable Laying
+    span:      169-195
+  - hash:      10.4
+    text:      Sync Panel Panels Installation
+    span:      169-195
+  - hash:      10.5
+    text:      Fuel Tank & related piping installation
+    span:      169-195
+- hash:      11
+  text:      MEP  
+  span:      107-209
+  items:
+  - hash:      11.1
+    text:      Substation AVR, ATS, LT, MDB, DB Installation_Local purchased items
+    span:      107-135
+  - hash:      11.2
+    text:      Substation Power & other Cabling work_Local purchased items
+    span:      107-135
+  - hash:      11.3
+    text:      Grounding/Earthing system & LPS implementation with cabling
+    span:      139-155
+  - hash:      11.4
+    text:      Fire Fighting System Installation
+    span:      157-175
+  - hash:      11.5
+    text:      Power Room PDC, Rectifier, UPS, Battery, DB Installation_Huawei HQ items
+    span:      177-205
+  - hash:      11.6
+    text:      Power Room cabling work for PDC Rectifier, UPS, Battery, DB_Huawei HQ items
+    span:      177-209
+  - hash:      11.7
+    text:      MDC Installation
+    span:      185-209
+  - hash:      11.8
+    text:      Cooling system Installation
+    span:      174-202
+  - hash:      11.9
+    text:      Lighting, Soket & Decoration
+    span:      174-188
+  - hash:      11.10
+    text:      Comfort Cooling & Fresh Air System
+    span:      174-209
+  - hash:      11.11
+    text:      CCTV & Access control System Installation
+    span:      171-189
+  - hash:      11.12
+    text:      Video Wall Monitor, NOC room arrangements with office Furnitures
+    span:      167-194
+  - hash:      11.13
+    text:      DCIM & Environment monitoring system installation
+    span:      190-204
+- hash:      12
+  text:      Rectification & Testing  
+  span:      205-212
+  items:
+  - hash:      12.1
+    text:      Rectification Work & Clear Punch points
+    span:      205-210
+  - hash:      12.2
+    text:      Check/Test before Power on, Power on & Commissioning
+    span:      205-210
+  - hash:      12.3
+    text:      DG load test by 100% dummy load
+    span:      205-210
+  - hash:      12.4
+    text:      DCIM integration & Commissioning
+    span:      205-212
+  - hash:      12.5
+    text:      Integration System Test(IST) & Site acceptance Test(SAT)
+    span:      205-210
+- hash:      13
+  text:      Site RFI  
+  span:      211-210
+  items:
+  - hash:      13.1
+    text:      Site RFI declaration(Ready for service) including 50 racks
+    span:      211-210
+- hash:      14
+  text:      Data Migration from Existing DR  
+  span:      167-216
+  items:
+  - hash:      14.1
+    text:      Collect Live network data
+    span:      167-174
+  - hash:      14.2
+    text:      Prepare Migration Solution
+    span:      175-187
+  - hash:      14.3
+    text:      Perform Health check for Existing device which data will be migrate and if required any rectification performed that.
+    span:      188-204
+  - hash:      14.4
+    text:      Prepared Migration MOP and Verify with HQ
+    span:      205-212
+  - hash:      14.5
+    text:      Complete the migration & Service Test
+    span:      213-216
+- hash:      15
+  text:      Cloud Expansion & Firewall Migration  
+  span:      217-224
+  items:
+  - hash:      15.1
+    text:      Cloud Platform Readiness (DC & DR)
+    span:      217-224
+  - hash:      15.2
+    text:      Cloud service expansion on NDC & DR
+    span:      217-224
+  - hash:      15.3
+    text:      Data Collection from customer existing firewall
+    span:      217-224
+  - hash:      15.4
+    text:      Migration Preparation & MOP Readiness
+    span:      217-224
+  - hash:      15.5
+    text:      Migration Completion
+    span:      217-224
+- hash:      16
+  text:      TCCF  
+  span:      211-230
+  items:
+  - hash:      16.1
+    text:      Tier Certification
+    span:      211-230
+- hash:      17
+  text:      Training  
+  span:      107-194
+  items:
+  - hash:      17.1
+    text:      Foreign Training
+    span:      107-114
+  - hash:      17.2
+    text:      Local Training
+    span:      174-194
+- hash:      18
+  text:      Acceptance  
+  span:      225-240
+  items:
+  - hash:      18.1
+    text:      Self-Test
+    span:      225-232
+  - hash:      18.2
+    text:      Site Acceptance
+    span:      233-240
+- hash:      19
+  text:      Closing of Project  
+  span:      241-242
