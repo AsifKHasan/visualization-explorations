@@ -1,4 +1,8 @@
 # copy this file as config.yml and do not commit the copied file
+# log level (0-TRACE, 1-DEBUG, 2-INFO, 3-WARN, 4-ERROR) below which logs will not be printed
+log-level:                  1
+
+credential-json:            '../conf/credential-spectrum-895-221613.json'
 
 dirs:
   # all yml input data are supposed to be here
@@ -9,3 +13,4 @@ dirs:
 theme:
   # all themes go here
   theme-dir:            "../themes"
+  theme-name:           "default"

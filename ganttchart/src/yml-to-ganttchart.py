@@ -8,17 +8,86 @@ import yaml
 import datetime
 import argparse
 from pathlib import Path
+import pprint
+
+from ggle.google_service import GoogleService
 
 from dot.dot_helper import DotHelper
 from dot.dot_util import *
 from helper.logger import *
+from helper import logger
+
+
+def filter_columns(data, keep_first_n, keep_extra):
+    """
+    data         : list of lists
+    keep_first_n : number of first columns to keep
+    keep_extra   : list of additional column indices to keep (0-based)
+    """
+    result = []
+    for row in data:
+        new_row = row[:keep_first_n]  # take first N
+        for idx in keep_extra:
+            if idx < len(row):  # only keep if index exists
+                new_row.append(row[idx])
+        result.append(new_row)
+    return result
+
+
+def nested_list_from_data(data):
+
+	result = []
+	stack = []  # keeps track of last node seen at each level
+
+	for row in data:
+		# level = first non-blank column (excluding last column which is "span")
+		level = next((i for i, val in enumerate(row[:-1]) if val.strip()), None)
+		if level is None:
+			continue  # skip empty row
+		
+		node = {
+			"hash": row[level],
+			"span": row[-1],
+			"items": []
+		}
+		
+		# Only add text if non-blank and not the same as hash
+		if level + 1 < len(row) - 1 and row[level+1].strip():
+			node["text"] = row[level+1]
+		
+		# Insert into tree
+		if level == 0:  # top level
+			result.append(node)
+		else:  # child of previous level
+			parent = stack[level-1]
+			parent.setdefault("items", []).append(node)
+		
+		# Update stack for this level
+		if len(stack) <= level:
+			stack.extend([None] * (level - len(stack) + 1))
+		stack[level] = node
+		# Trim deeper levels (start fresh after this node)
+		stack = stack[:level+1]
+
+		# --- helper to prune empty children ---
+		def prune(node):
+			if "items" in node:
+				if not node["items"]:
+					del node["items"]
+				else:
+					node["items"] = [prune(child) for child in node["items"]]
+			return node
+
+	cleaned = [prune(item) for item in result]
+
+	return cleaned
 
 
 class GanttchartFromYml(object):
 
-	def __init__(self, config_path, yml_name=None):
+	def __init__(self, config, yml_name=None):
 		self.start_time = int(round(time.time() * 1000))
-		self._config_path = Path(config_path).resolve()
+		self._CONFIG = config
 		self._data = {}
 		self._yml_name = yml_name
 		self._yml_name_only = self._yml_name.split('/')[-1]
@@ -35,17 +104,42 @@ class GanttchartFromYml(object):
 
 		# dot-helper
 		self._CONFIG['files']['output-dot'] = f"{self._CONFIG['dirs']['output-dir']}/{self._yml_name_only}.gv"
+
+		# this is where we need to get the data, it may be in-yaml or in a gsheet
+		if 'credential-json' in self._CONFIG:
+			credential_json = self._CONFIG['credential-json']
+			if 'gsheet' in self._data:
+				gsheet_name = self._data['gsheet']
+				debug(f"trying to access data from gsheet [{gsheet_name}], ignoring any in-yaml data")
+				g_service = GoogleService(service_account_json_path=credential_json)
+				info(f"processing gsheet {gsheet_name}")
+				g_sheet = g_service.open(gsheet_name=gsheet_name)
+				worksheet_name = self._data.get('worksheet', 'gantt-chart')
+				start_row = self._data.get('start-row', 3)
+				task_columns = self._data.get('task-columns', 3)
+				span_column = self._data.get('span-column', 4)
+
+				range_spec = f"{worksheet_name}!A{start_row}:Z"
+				worksheet_data = g_sheet.get_range_values(range_spec=range_spec)
+				worksheet_data = filter_columns(worksheet_data['values'], keep_first_n=task_columns, keep_extra=[span_column-1])
+				
+
+				# generate items from the data
+				items = nested_list_from_data(data=worksheet_data)
+
+				self._data['items'] = items
+
+		else:
+			debug(f"No credential for gsheet access, so ignoring any gsheet related data access")
+
+
 		dot_helper = DotHelper(self._CONFIG)
 		dot_helper.generate_and_save(self._data)
 		self.tear_down()
 
 
 	def set_up(self):
-		# configuration
-		self._CONFIG = yaml.load(open(self._config_path, 'r', encoding='utf-8'), Loader=yaml.FullLoader)
-		config_dir = self._config_path.parent
-
-		self._CONFIG['dirs']['output-dir'] = config_dir / self._CONFIG['dirs']['output-dir']
+		self._CONFIG['dirs']['output-dir'] = Path(self._CONFIG['dirs']['output-dir']).resolve()
 		self._CONFIG['dirs']['output-dir'].mkdir(parents=True, exist_ok=True)
 
 		if not 'files' in self._CONFIG:
@@ -84,5 +178,8 @@ if __name__ == '__main__':
 	ap.add_argument("-y", "--yml", required=True, help="yml file name to generate dot from")
 	args = vars(ap.parse_args())
 
-	generator = GanttchartFromYml(config_path=args["config"], yml_name=args["yml"])
+	config = yaml.load(open(args["config"], 'r', encoding='utf-8'), Loader=yaml.FullLoader)
+
+	logger.LOG_LEVEL = config.get('log-level', 0)
+	generator = GanttchartFromYml(config=config, yml_name=args["yml"])
 	generator.run()

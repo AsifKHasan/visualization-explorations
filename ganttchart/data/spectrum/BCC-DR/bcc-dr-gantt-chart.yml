@@ -1,3 +1,4 @@
+# gantt-chart related paramas
 theme:              task-day-default
 view:               day
 start-date:         "2025-07-01"
@@ -18,6 +19,16 @@ holiday-list:
 
 collapsed-ranges:   []
 
+
+# if data is from gsheet, these must be there, this overrides any in-yaml data if included
+gsheet:                     'BCC-EDGE-DR__ganttchart'
+worksheet:                  'gantt-chart'
+start-row:                  4
+task-columns:               3
+span-column:                4
+
+
+# if data is from this yaml itself, data must be here
 items:
 - hash:      0
   text:      Starting and Closing of Project  
